@@ -249,7 +249,7 @@ const Login = (props) => {
                 </div>
                 <div className={styles.signup}>
                     <Link href="/signup" passHref>
-                        <span>You don't have an account? <a>Sign up here!</a></span>
+                        <span>{"You don't have an account?"} <a>Sign up here!</a></span>
                     </Link>
                 </div>
             </div>

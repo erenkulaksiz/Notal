@@ -18,7 +18,7 @@ const Home = (props) => {
       <link rel="icon" href="/favicon.ico" />
     </Head>
     <div className={styles.selam}>
-      SELAM! notal'ı yeni yapmaya başladım.<br />
+      {"SELAM! notal'ı yeni yapmaya başladım."}<br />
       {auth.authUser?.displayName}<br />
 
       {auth.authUser?.email}
