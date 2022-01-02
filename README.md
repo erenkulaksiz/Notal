@@ -4,6 +4,8 @@
 
 ## Keep your notes & todo lists simple with Notal.
 
+Notal uses NextJS and Firebase Auth, Firebase Real Time Database to keep things simple. You can login with both Google and your custom e-mail blazing fast.
+
 <br/>
 
 ## Getting Started with NextJS (./notal)

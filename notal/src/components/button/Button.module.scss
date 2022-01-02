@@ -1,0 +1,48 @@
+@import "constants";
+
+@mixin button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 1.2em;
+  height: 60px;
+  background-color: #19181e;
+  border: none;
+  text-decoration: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
+  width: 100%;
+
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+
+  &:active {
+    transform: scale(0.97, 0.97);
+  }
+}
+
+.button {
+  @include button();
+
+  &:hover {
+    background-color: #35343d;
+    transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
+  }
+
+  &__reversed {
+    @include button();
+
+    color: white;
+    background-color: white;
+    border-style: solid;
+    border-width: 4px;
+    border-color: $primary_color;
+    height: 60px;
+
+    &:hover {
+      background-color: rgb(212, 212, 212);
+      transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
+    }
+  }
+}

@@ -1,0 +1,93 @@
+@import "breakpoints";
+@import "constants";
+
+.content_login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  min-height: 840px;
+  width: 96%;
+
+  @include sm {
+    width: 550px;
+  }
+
+  @include lg {
+    width: 600px;
+    margin: 0;
+  }
+
+  @include lg {
+    width: 650px;
+    margin: 0;
+  }
+
+  .login {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: $primary_color;
+    border-radius: 12px;
+    box-sizing: border-box;
+
+    form {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      padding: 24px;
+      .errorMsg {
+        color: $error_red;
+        margin-top: 16px;
+      }
+      .alt {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        margin-top: 18px;
+        .remember {
+          width: 50%;
+          label {
+            font-size: 1.2em;
+            margin-left: 8px;
+            color: white;
+          }
+          input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+          }
+        }
+        .forgot {
+          display: flex;
+          justify-content: flex-end;
+          width: 50%;
+          font-size: 1.2em;
+          a {
+            text-decoration: none;
+            color: white;
+          }
+        }
+      }
+    }
+
+    h1 {
+      font-size: 1.7rem;
+      color: white;
+      margin-top: 24px;
+    }
+  }
+
+  .signup {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 24px;
+    font-size: 1.2em;
+    a {
+      color: blue;
+      cursor: pointer;
+      font-weight: 500;
+    }
+  }
+}

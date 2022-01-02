@@ -1,0 +1,38 @@
+@mixin input {
+  display: flex;
+  font-family: Roboto;
+  flex: 90%;
+  height: 38px;
+  border: none;
+  background-color: white;
+  padding-left: 8px;
+  font-size: 16px;
+}
+
+.input {
+  display: flex;
+  background-color: white;
+  border-radius: 4px;
+  overflow: hidden;
+  .iconContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    min-width: 40px;
+  }
+  input {
+    @include input();
+  }
+  textarea {
+    @include input();
+  }
+  .visible {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    background-color: white;
+    cursor: pointer;
+  }
+}

@@ -1,7 +1,15 @@
 import '../../styles/globals.css';
+import '../app/firebaseApp';
+import { AuthProvider } from '../hooks/auth';
+import AuthStateChanged from '../layout/AuthStateChanged';
 
-function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+const MyApp = ({ Component, pageProps }) => {
+
+  return (<AuthProvider>
+    <AuthStateChanged>
+      <Component {...pageProps} />
+    </AuthStateChanged>
+  </AuthProvider>)
 }
 
 export default MyApp

@@ -1,0 +1,11 @@
+@import "breakpoints";
+@import "constants";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  //overflow-y: hidden;
+}
