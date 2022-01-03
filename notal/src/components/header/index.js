@@ -7,11 +7,9 @@ import UserIcon from '../../../public/icons/user.svg';
 import AddIcon from '../../../public/icons/add.svg';
 import BackIcon from '../../../public/icons/back.svg';
 
-import Logo from '../../../public/icon_white.png';
-
 import Button from '../../components/button';
 
-const Header = ({ menuToggle, onMenuToggle, userData, onLogout, onCreate, showBackButton, onBack, showCreate }) => {
+const Header = ({ menuToggle, onMenuToggle, userData, onLogout, onCreate, onProfile, avatarURL, showBackButton, onBack, showCreate }) => {
 
     return (<div className={styles.container} >
         <div className={styles.container__left}>
@@ -21,19 +19,16 @@ const Header = ({ menuToggle, onMenuToggle, userData, onLogout, onCreate, showBa
                 className={styles.back}
                 icon={<BackIcon height={24} width={24} fill={"#19181e"} />}
                 reversed
-            /> : <>made by eren.</>}
+            /> : <>yes, made by eren.</>}
         </div>
         <div className={styles.container__middle}>
             <Link href="#">
                 <a>
-                    <Image
-                        src={Logo}
-                        alt="Logo of Snipetti"
-                        priority={true}
+                    <img
+                        src={"./icon_white.png"}
+                        alt="Logo of Notal"
                         width={140}
                         height={45}
-                        layout="intrinsic"
-                        quality={100}
                     />
                 </a>
             </Link>
@@ -52,12 +47,31 @@ const Header = ({ menuToggle, onMenuToggle, userData, onLogout, onCreate, showBa
                 />
             }
             <div className={menuToggle ? styles.nav__toggle : styles.nav} onBlur={() => onMenuToggle(false)}>
-                <div className={styles.navUser} style={{ fontSize: "1.5em", fontWeight: 600 }}>
-                    {userData && (userData.name || "")}
+                <div className={styles.navContainer}>
+                    <div className={styles.user}>
+                        <img
+                            src={avatarURL}
+                            alt="Avatar"
+                            width={44}
+                            height={44}
+                        />
+                    </div>
+                    <div>
+                        <div className={styles.navUser} style={{ fontSize: "1.2em", fontWeight: 600 }}>
+                            {userData.fullname || ""}
+                        </div>
+                        <div className={styles.navUser}>
+                            {userData.email || ""}
+                        </div>
+                    </div>
                 </div>
-                <div className={styles.navUser} style={{ marginBottom: 12 }}>
-                    {userData && (userData.email || "")}
-                </div>
+                <Button
+                    text="Profile"
+                    //onFocus={() => onLogout()}
+                    onClick={() => onProfile()}
+                    style={{ height: 48 }}
+                    reversed
+                />
                 <Button
                     text="Logout"
                     //onFocus={() => onLogout()}

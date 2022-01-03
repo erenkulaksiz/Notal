@@ -8,7 +8,7 @@ export default function useAuth() {
 }
 
 export function AuthProvider(props) {
-    const [user, setUser] = useState("helll world");
+    const [user, setUser] = useState(null);
     const [error, setError] = useState(null);
 
     const loginWithGoogle = async () => {

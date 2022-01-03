@@ -47,6 +47,8 @@
         width: 100%;
         margin-top: 18px;
         .remember {
+          display: flex;
+          justify-content: flex-end;
           width: 50%;
           label {
             font-size: 1.2em;
@@ -60,7 +62,7 @@
         }
         .forgot {
           display: flex;
-          justify-content: flex-end;
+          justify-content: flex-start;
           width: 50%;
           font-size: 1.2em;
           a {

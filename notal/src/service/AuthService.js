@@ -1,5 +1,5 @@
 import { getAuth, signInWithPopup, signInWithEmailAndPassword, GoogleAuthProvider, sendPasswordResetEmail, createUserWithEmailAndPassword } from "firebase/auth";
-import { getDatabase, ref, set } from "firebase/database";
+import { get, getDatabase, ref, set, child } from "firebase/database";
 
 /**
  * AuthService for Notal
@@ -14,14 +14,23 @@ const AuthService = {
     loginWithGoogle: async () => {
         const auth = getAuth();
         const provider = new GoogleAuthProvider();
+        //const dbRef = ref(getDatabase());
+        //const db = getDatabase();
         return signInWithPopup(auth, provider)
             .then((result) => {
-                // This gives you a Google Access Token. You can use it to access the Google API.
                 const credential = GoogleAuthProvider.credentialFromResult(result);
                 const token = credential.accessToken;
-                const user = result.user;
+                const { user } = result;
 
-                // Check in database if this user exist, if not then set fullname as displayName
+                /*
+                get(child(dbRef, `users/${user.uid}`)).then((snapshot) => {
+                    if (!snapshot.exists()) {
+                        set(ref(db, `users/${user.uid}`), {
+                            fullname: user?.displayName || "",
+                        });
+                    }
+                })
+                */
 
                 return { user, token }
             }).catch((error) => {
@@ -38,9 +47,20 @@ const AuthService = {
     loginWithPassword: async ({ email, password }) => {
         const auth = getAuth();
         return signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
+            .then(async (userCredential) => {
                 // Signed in 
                 const user = userCredential.user;
+
+                /*
+                let fullname = "";
+
+                await get(child(dbRef, `users/${user.uid}`)).then((snapshot) => {
+                    if (snapshot.exists()) {
+                        fullname = snapshot.val().fullname;
+                    }
+                });
+                */
+
                 return { user }
             })
             .catch((error) => {
@@ -61,13 +81,14 @@ const AuthService = {
     },
     createUser: async ({ email, password, fullname }) => {
         const auth = getAuth();
-        const database = getDatabase();
+        const db = getDatabase();
         return createUserWithEmailAndPassword(auth, email, password)
             .then(async (userCredential) => {
                 // on register, save fullname to real time database
                 const user = userCredential.user;
-                await set(ref(database, `users/${user.uid}`), {
-                    fullname
+                await set(ref(db, `users/${user.uid}`), {
+                    fullname,
+                    avatar: "https://imgyukle.com/f/2022/01/03/oxgaeS.jpg", // default avatar #TODO: make normal avatar
                 });
                 return { user }
             })

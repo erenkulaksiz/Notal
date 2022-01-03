@@ -1,0 +1,24 @@
+@import "breakpoints";
+
+.content_home {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+
+  @include sm {
+    width: 550px;
+  }
+
+  @include md {
+    width: 700px;
+  }
+
+  @include lg {
+    width: 800px;
+  }
+
+  @include xl {
+    width: 90%;
+  }
+}

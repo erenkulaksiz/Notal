@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import styles from '../../styles/App.module.scss';
 import { useRouter } from 'next/router';
@@ -11,7 +10,6 @@ import { withPublic } from '../hooks/route';
 import Button from '../components/button';
 import Input from '../components/input';
 
-import Logo from '/public/icon_white.png';
 import EmailIcon from '../../public/icons/email.svg';
 import PasswordIcon from '../../public/icons/password.svg';
 import LoginIcon from '../../public/icons/login.svg';
@@ -69,7 +67,7 @@ const Login = (props) => {
 
         const login = await loginWithPassword({ email, password });
 
-        if (login?.authError?.errorCode == "auth/user-not-found") {
+        if (login?.authError?.errorCode == "auth/user-not-found" || login?.authError?.errorCode == "auth/wrong-password") {
             setError({ ...error, login: "This email and password combination is incorrect." });
             return;
         } else {
@@ -111,14 +109,11 @@ const Login = (props) => {
             <div className={styles.content_login}>
                 <div className={styles.login}>
                     <form id="login" onSubmit={e => onLogin(e)}>
-                        <Image
-                            src={Logo}
+                        <img
+                            src={"./icon_white.png"}
                             alt="Logo of Notal"
-                            priority={true}
                             width={210}
                             height={60}
-                            layout="fixed"
-                            quality={100}
                         />
                         {
                             view == "email" ? <>
@@ -165,12 +160,12 @@ const Login = (props) => {
                                 {error.login != false && <p className={styles.errorMsg}>{error.login}</p>}
                                 <div className={styles.alt}>
                                     {/* contains remember me checkbox and forgot password link */}
+                                    <div className={styles.forgot}>
+                                        <a href="#" onClick={() => { setView("forgot"); setForgotError("") }}>Forgot Password?</a>
+                                    </div>
                                     <div className={styles.remember}>
                                         {/*<input name="rememberme" type="checkbox" id="rememberme" value={rememberMe} onClick={() => setRememberMe(!rememberMe)} />
                                         <label htmlFor="rememberme" >Remember Me</label>*/}
-                                    </div>
-                                    <div className={styles.forgot}>
-                                        <a href="#" onClick={() => { setView("forgot"); setForgotError("") }}>Forgot Password?</a>
                                     </div>
                                 </div>
                                 <Button

@@ -23,21 +23,21 @@ import { withPublic } from '../hooks/route';
 const Signup = (props) => {
     const router = useRouter();
 
-    const { createUser } = useAuth();
+    const { createUser, authError } = useAuth();
 
     const [fullname, setFullname] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [passwordConfirm, setPasswordConfirm] = useState("");
 
-    const [error, setError] = useState({ fullname: false, email: false, password: false, });
+    const [error, setError] = useState({ fullname: false, email: false, password: false, signup: false });
 
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirmVisible, setConfirmVisible] = useState(false);
 
     const [successAlert, setSuccessAlert] = useState(false);
 
-    const onRegister = (e) => {
+    const onRegister = async (e) => {
         e.preventDefault();
         if (!email || email.length == 0 || !(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email))) {
             setError({ ...error, email: "Please enter a valid e-mail." });
@@ -66,8 +66,16 @@ const Signup = (props) => {
 
         setError({ ...error, email: false, password: false, fullname: false });
 
-        createUser({ email, password, fullname });
+        const register = await createUser({ email, password, fullname });
 
+        console.log("Autherror: ", register?.authError);
+
+        if (register?.authError?.errorCode == "auth/email-already-in-use") {
+            setError({ email: "This email is already in use.", password: false, fullname: false, });
+            return;
+        } else {
+            setError({ email: false, password: false, fullname: false });
+        }
     }
 
     return (
