@@ -17,6 +17,7 @@ import SignupIcon from '../../public/icons/signup.svg';
 import WarningIcon from '../../public/icons/warning.svg';
 import BackIcon from '../../public/icons/back.svg';
 import GoogleIcon from '../../public/icons/google.svg';
+import GithubIcon from '../../public/icons/github.svg';
 import RefreshIcon from '../../public/icons/refresh.svg';
 import CheckIcon from '../../public/icons/check.svg';
 
@@ -25,7 +26,7 @@ import AuthService from '../service/AuthService';
 const Login = (props) => {
     const router = useRouter();
 
-    const { authUser, loginWithGoogle, loginWithPassword, authError } = useAuth();
+    const { authUser, loginWithGoogle, loginWithPassword, loginWithGithub, authError } = useAuth();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -224,10 +225,18 @@ const Login = (props) => {
                                 </h1>
                             </> : <><h1>Sign in using...</h1>
                                 <Button
+                                    text="GitHub"
+                                    type="button"
+                                    icon={<GithubIcon height={24} width={24} fill={"#000"} style={{ marginRight: 8 }} />}
+                                    style={{ marginTop: 24, border: "none" }}
+                                    reversed
+                                    onClick={loginWithGithub}
+                                />
+                                <Button
                                     text="Google"
                                     type="button"
                                     icon={<GoogleIcon height={30} width={30} fill={"#000"} style={{ marginRight: 8 }} />}
-                                    style={{ marginTop: 24, border: "none" }}
+                                    style={{ marginTop: 12, border: "none" }}
                                     reversed
                                     onClick={loginWithGoogle}
                                 />

@@ -26,11 +26,12 @@ const Signup = (props) => {
     const { createUser, authError } = useAuth();
 
     const [fullname, setFullname] = useState("");
+    const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [passwordConfirm, setPasswordConfirm] = useState("");
 
-    const [error, setError] = useState({ fullname: false, email: false, password: false, signup: false });
+    const [error, setError] = useState({ fullname: false, email: false, password: false, username: false });
 
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirmVisible, setConfirmVisible] = useState(false);
@@ -45,7 +46,7 @@ const Signup = (props) => {
         } else {
             setError({ ...error, email: false });
         }
-        if (fullname.length < 3 && fullname == '') {
+        if (fullname.length < 3 || fullname == '') {
             setError({ ...error, fullname: "Please enter a valid fullname." });
             return;
         } else {
@@ -63,18 +64,30 @@ const Signup = (props) => {
         } else {
             setError({ ...error, password: false });
         }
+        if (username.length == 0 || !username) {
+            setError({ ...error, username: "Please enter a valid username." });
+            return;
+        } else {
+            setError({ ...error, username: false });
+        }
 
-        setError({ ...error, email: false, password: false, fullname: false });
+        setError({ email: false, password: false, fullname: false, username: false });
 
-        const register = await createUser({ email, password, fullname });
+        const register = await createUser({ email, password, fullname, username });
 
         console.log("Autherror: ", register?.authError);
 
         if (register?.authError?.errorCode == "auth/email-already-in-use") {
-            setError({ email: "This email is already in use.", password: false, fullname: false, });
+            setError({ email: "This email is already in use.", password: false, fullname: false, username: false });
+            return;
+        } else if (register?.authError?.errorCode == "auth/username-already-in-use") {
+            setError({ email: false, password: false, fullname: false, username: "This username is already in use." });
+            return;
+        } else if (register?.authError?.errorCode == "auth/weak-password") {
+            setError({ email: false, password: "Weak password.", fullname: false, username: false });
             return;
         } else {
-            setError({ email: false, password: false, fullname: false });
+            setError({ email: false, password: false, fullname: false, username: false });
         }
     }
 
@@ -85,13 +98,12 @@ const Signup = (props) => {
                 <meta name="description" content="Signup to Notal, the greatest note app" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-
             <div className={styles.content_signup}>
                 <div className={styles.signup}>
                     <form id="signup" onSubmit={e => onRegister(e)}>
                         <Image
                             src={Logo}
-                            alt="Logo of Snipetti"
+                            alt="Logo of Notal"
                             priority={true}
                             width={210}
                             height={60}
@@ -100,18 +112,43 @@ const Signup = (props) => {
                         />
                         <h1>Sign up</h1>
 
-                        <Input
-                            type="text"
-                            placeholder="Fullname"
-                            onChange={e => setFullname(e.target.value)}
-                            value={fullname}
-                            icon={<UserIcon height={24} width={24} fill={"#19181e"} />}
-                            error={error.fullname != false}
-                            required
-                            style={{ marginTop: 18 }}
-                        />
+                        <div style={{ display: "flex", flexDirection: "row", marginTop: 18, justifyContent: "space-between" }}>
 
-                        {error.fullname != false && <p className={styles.errorMsg}>{error.fullname}</p>}
+                            <div style={{ width: "48%" }}>
+                                <Input
+                                    type="text"
+                                    placeholder="Username"
+                                    onChange={e => setUsername(e.target.value.replace(/[^\w\s]/gi, "").replace(/\s/g, ''))}
+                                    value={username}
+                                    icon={<UserIcon height={24} width={24} fill={"#19181e"} />}
+                                    error={error.username != false}
+                                    required
+                                    style={{ width: "100%" }}
+                                    maxLength={24}
+                                />
+
+                                {error.username != false && <p className={styles.errorMsg}>{error.username}</p>}
+
+                            </div>
+
+                            <div style={{ width: "48%" }}>
+                                <Input
+                                    type="text"
+                                    placeholder="Fullname"
+                                    onChange={e => setFullname(e.target.value)}
+                                    value={fullname}
+                                    icon={<UserIcon height={24} width={24} fill={"#19181e"} />}
+                                    error={error.fullname != false}
+                                    required
+                                    maxLength={64}
+                                    style={{ width: "100%" }}
+                                />
+
+                                {error.fullname != false && <p className={styles.errorMsg}>{error.fullname}</p>}
+                            </div>
+
+                        </div>
+
 
                         <Input
                             type="email"
