@@ -57,17 +57,17 @@ export function AuthProvider(props) {
         }
     }
 
-    const editUser = async ({ uid, fullname }) => {
+    const editUser = async ({ uid, fullname, username }) => {
         const data = await fetch(`${server}/api/editProfile`, {
             'Content-Type': 'application/json',
             method: "POST",
-            body: JSON.stringify({ uid, fullname }),
+            body: JSON.stringify({ uid, fullname, username }),
         }).then(response => response.json());
 
         if (data.success) {
             return { success: true }
         } else {
-            return { error: data }
+            return { success: false, error: data }
         }
     }
 

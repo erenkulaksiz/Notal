@@ -12,6 +12,7 @@ import EditIcon from '../../../public/icons/edit.svg';
 import CrossIcon from '../../../public/icons/cross.svg';
 import CheckIcon from '../../../public/icons/check.svg';
 import UserIcon from '../../../public/icons/user.svg';
+import AtIcon from '../../../public/icons/at.svg';
 
 import Header from '../../components/header';
 import Button from '../../components/button';
@@ -24,26 +25,52 @@ const Profile = (props) => {
     const [menuToggle, setMenuToggle] = useState(false);
 
     const [editingProfile, setEditingProfile] = useState(false);
-    const [editProfile, setEditProfile] = useState({ fullname: props.validate?.data?.fullname });
+    const [editProfile, setEditProfile] = useState({ fullname: props.validate?.data?.fullname, username: props.validate?.data?.username });
+
+    const [editErrors, setEditErrors] = useState({ fullname: false, username: false });
 
     useEffect(() => {
         console.log("props: ", props);
     }, []);
 
-    const onFinishEditing = async () => {
-        setEditingProfile(false);
-        if (editProfile.fullname != props.validate?.data?.fullname) {
-            const data = await auth.editUser({ uid: auth.authUser?.uid, fullname: editProfile.fullname });
+    const onFinishEditing = async (e) => {
+        e.preventDefault();
+
+        if (editProfile.fullname.length < 3) {
+            setEditErrors({ ...editErrors, fullname: "Please enter a valid fullname." });
+            return;
+        } else {
+            setEditErrors({ ...editErrors, fullname: false });
+        }
+        if (editProfile.username.length < 3) {
+            setEditErrors({ ...editErrors, username: "Please enter a valid username." });
+            return;
+        } else {
+            setEditErrors({ ...editErrors, username: false });
+        }
+
+        if (editProfile.fullname != props.validate?.data?.fullname || editProfile.username != props.validate?.data?.username) {
+            const data = await auth.editUser({ uid: auth.authUser?.uid, fullname: editProfile.fullname, username: editProfile.username });
+
+            console.log("data on edit: ", data);
 
             if (data.success) {
                 // editing fullname works but it doesnt update immideatly #TODO: fix
+
+                // Fixed :)
+                router.replace(`/profile/${editProfile.username}`);
+                setEditingProfile(false);
+
+            } else if (data.success == false && data.error.error == 'auth/username-already-in-use') {
+                setEditErrors({ fullname: false, username: "This username is already in use." });
+                return;
             }
         }
     }
 
     return (<div className={styles.container}>
         <Head>
-            <title>Notal</title>
+            <title>{props.profile?.success == true ? "Viewing " + props.validate?.data?.username + "'s profile" : "Not Found"}</title>
             <meta name="description" content="Notal" />
             <link rel="icon" href="/favicon.ico" />
         </Head>
@@ -60,6 +87,8 @@ const Profile = (props) => {
             onProfile={() => router.push(`/profile/${props.validate?.data?.username}`)}
             onHeaderHome={() => router.push("/")}
             showCreate={false}
+            showBackButton
+            onBack={() => router.back()}
         />
 
         <div className={styles.content_profile}>
@@ -86,42 +115,71 @@ const Profile = (props) => {
                             />
                         </div>
                         <div className={styles.usernameSide}>
-                            <div className={styles.fullname}>
-                                {editingProfile ? <Input
-                                    type="text"
-                                    placeholder="Fullname"
-                                    onChange={e => setEditProfile({ ...editProfile, fullname: e.target.value })}
-                                    value={editProfile.fullname}
-                                    icon={<UserIcon height={24} width={24} fill={"#19181e"} />}
-                                    style={{ marginTop: 0 }}
-                                /> : <h1>{props.profile.data.fullname}</h1>}
-                                {((auth?.authUser?.uid == props.profile?.uid) && !editingProfile) && <Button
-                                    text="Edit Profile"
-                                    icon={<EditIcon height={24} width={24} fill={"#000"} style={{ marginRight: 8 }} />}
-                                    style={{ width: "50%", height: 48 }}
-                                    onClick={() => setEditingProfile(true)}
-                                    reversed
-                                />}
-                                {((auth?.authUser?.uid == props.profile?.uid) && editingProfile) && <div style={{ display: "flex", flexDirection: "row" }}>
-                                    <Button
-                                        text="Cancel"
-                                        icon={<CrossIcon height={24} width={24} fill={"#000"} style={{ marginRight: 8 }} />}
-                                        style={{ width: "70%", height: 48 }}
-                                        onClick={() => setEditingProfile(false)}
-                                        reversed
-                                    />
-                                    <Button
-                                        text="Save"
-                                        icon={<CheckIcon height={24} width={24} fill={"#000"} style={{ marginRight: 8 }} />}
-                                        style={{ width: "70%", height: 48 }}
-                                        onClick={() => onFinishEditing()}
-                                        reversed
-                                    />
-                                </div>}
-                            </div>
-                            <div className={styles.username}>
-                                <h1>@{props.profile.data.username}</h1>
-                            </div>
+                            <form id="editProfile" onSubmit={e => onFinishEditing(e)}>
+                                <div className={styles.fullname}>
+                                    {editingProfile ? <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+                                        <Input
+                                            type="text"
+                                            placeholder="Fullname"
+                                            onChange={e => setEditProfile({ ...editProfile, fullname: e.target.value })}
+                                            value={editProfile.fullname}
+                                            icon={<UserIcon height={24} width={24} fill={"#19181e"} />}
+                                            style={{ width: "100%" }}
+                                            error={editErrors.fullname != false}
+                                            maxLength={24}
+                                        />
+                                        {editErrors.fullname != false && <p className={styles.errorMsg}>{editErrors.fullname}</p>}
+                                    </div> : <h1>{props.profile.data.fullname}</h1>}
+                                </div>
+                                <div className={styles.username}>
+                                    {editingProfile ? <div>
+                                        <Input
+                                            type="text"
+                                            placeholder="Username"
+                                            onChange={e => setEditProfile({ ...editProfile, username: e.target.value.replace(/[^\w\s]/gi, "").replace(/\s/g, '') })}
+                                            value={editProfile.username}
+                                            icon={<AtIcon height={24} width={24} fill={"#19181e"} />}
+                                            style={{ marginTop: 4 }}
+                                            error={editErrors.username != false}
+                                            maxLength={24}
+                                        />
+                                        {editErrors.username != false && <p className={styles.errorMsg}>{editErrors.username}</p>}
+                                    </div> : <h1>@{props.profile.data.username}</h1>}
+
+                                    {((auth?.authUser?.uid == props.profile?.uid) && !editingProfile) && <div style={{ display: "flex", alignItems: "center" }}>
+                                        <Button
+                                            text="Edit Profile"
+                                            icon={<EditIcon height={24} width={24} fill={"#000"} style={{ marginRight: 8 }} />}
+                                            style={{ width: "50%", height: 48, minWidth: 240 }}
+                                            onClick={() => setEditingProfile(true)}
+                                            reversed
+                                        />
+                                    </div>}
+                                    {((auth?.authUser?.uid == props.profile?.uid) && editingProfile) && <div style={{ display: "flex", flexDirection: "row" }}>
+                                        <Button
+                                            text="Cancel"
+                                            icon={<CrossIcon height={24} width={24} fill={"#000"} style={{ marginRight: 8 }} />}
+                                            style={{ width: "70%", height: 48, minWidth: 120 }}
+                                            onClick={() => {
+                                                setEditingProfile(false);
+                                                setEditErrors({ username: false, fullname: false });
+                                                setEditProfile({ fullname: props.validate?.data?.fullname, username: props.validate?.data?.username });
+                                            }}
+                                            reversed
+                                        />
+                                        <Button
+                                            text="Save"
+                                            icon={<CheckIcon height={24} width={24} fill={"#000"} style={{ marginRight: 8 }} />}
+                                            style={{ width: "70%", height: 48, minWidth: 120 }}
+                                            type="submit"
+                                            form="editProfile"
+                                            reversed
+                                        />
+                                    </div>}
+                                </div>
+                            </form>
+
+
                         </div>
                     </div>
                 </div>
@@ -143,7 +201,7 @@ export async function getServerSideProps(ctx) {
         const authCookie = req.cookies.auth;
         //const emailCookie = req.cookies.email;
 
-        const profileData = await fetch(`${server}/api/profile/${queryUsername}`, {
+        const profileData = await fetch(`${server}/api/profile/${queryUsername.toLowerCase()}`, {
             'Content-Type': 'application/json',
             method: "POST",
         }).then(response => response.json());

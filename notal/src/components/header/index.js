@@ -17,12 +17,12 @@ const Header = ({ menuToggle, onMenuToggle, userData, onLogout, onCreate, onProf
     return (<div className={styles.container} >
         <div className={styles.container__left}>
             {showBackButton ? <Button
-                text="Dashboard"
+                text="Back"
                 onClick={() => onBack()}
                 className={styles.back}
                 icon={<BackIcon height={24} width={24} fill={"#19181e"} />}
                 reversed
-            /> : <>yes, made by eren.</>}
+            /> : <></>}
         </div>
         <div className={styles.container__middle}>
             <a onClick={() => onHeaderHome()}>

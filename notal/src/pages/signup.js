@@ -73,7 +73,7 @@ const Signup = (props) => {
 
         setError({ email: false, password: false, fullname: false, username: false });
 
-        const register = await createUser({ email, password, fullname, username });
+        const register = await createUser({ email: email.toLowerCase(), password, fullname, username: username.toLowerCase() });
 
         console.log("Autherror: ", register?.authError);
 

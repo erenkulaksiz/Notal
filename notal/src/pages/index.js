@@ -55,7 +55,7 @@ const Home = (props) => {
       setRegErr({ ...regErr, fullname: false });
     }
 
-    const result = await auth.updateUser({ uid: props.auth.authUser.uid, fullname: register.fullname, username: register.username });
+    const result = await auth.updateUser({ uid: props.auth.authUser.uid, fullname: register.fullname, username: register.username.toLowerCase() });
     console.log("res: ", result.error?.error ?? "");
     if (result.success) {
       setRegisterAlertVisible(false);

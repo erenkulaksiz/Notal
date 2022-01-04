@@ -12,15 +12,23 @@ if (!admin.apps.length) {
 
 export default async function handler(req, res) {
     const data = JSON.parse(req.body);
-    if (req.method !== 'POST' || !data.uid || !data.fullname) {
+    if (req.method !== 'POST' || !data.uid || !data.fullname || !data.username) {
         res.status(400).send({ success: false });
     }
 
-    await admin.database().ref(`/users/${data.uid}`).update({
-        fullname: data.fullname,
-    }, () => {
-        res.status(200).json({ success: true, data: { username: data.username, fullname: data.fullname, uid: data.uid } });
-    }).catch(err => {
-        res.status(400).json({ success: false, error: err });
+    await admin.database().ref(`/users`).orderByChild("username").equalTo(data.username).limitToFirst(1).once("value", async (snapshot) => {
+        if (snapshot.exists()) {
+            console.log("find username : ", snapshot.val());
+            res.status(400).json({ success: false, error: "auth/username-already-in-use" });
+        } else {
+            await admin.database().ref(`/users/${data.uid}`).update({
+                fullname: data.fullname,
+                username: data.username,
+            }, () => {
+                res.status(200).json({ success: true, data: { username: data.username, fullname: data.fullname, uid: data.uid } });
+            }).catch(err => {
+                res.status(400).json({ success: false, error: err });
+            });
+        }
     });
 }
