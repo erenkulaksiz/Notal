@@ -85,7 +85,7 @@ const About = (props) => {
                         <h1>More</h1>
                     </div>
                     <div className={styles.desc}>
-                        <p>The project is currently still in beta. Even this page is built new. I'll update this page whenever i add new stuff to Notal. See you :)</p>
+                        <p>The project is currently still in beta. Even this page is built new. Ill update this page whenever i add new stuff to Notal. See you :)</p>
                     </div>
                 </div>
             </div>
