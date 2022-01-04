@@ -42,12 +42,30 @@ const Login = (props) => {
 
     const [error, setError] = useState({ email: false, password: false, login: false });
 
+    const [oauthError, setOauthError] = useState(false);
+
     useEffect(() => {
         if (view == "forgot") {
             if ((/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)))
                 setForgotEmail(email);
         }
     }, [view]);
+
+    const onLoginWithGoogle = async (e) => {
+        const login = await loginWithGoogle();
+
+        console.log("google login errors: ", login?.authError);
+    }
+
+    const onLoginWithGithub = async (e) => {
+        const login = await loginWithGithub();
+
+        console.log("github login errors: ", login?.authError);
+
+        if (login?.authError?.errorCode == "auth/account-exists-with-different-credential") {
+            setOauthError("This account exist with different credential. Please try another method.");
+        }
+    }
 
     const onLogin = async (e) => {
         e.preventDefault();
@@ -67,6 +85,8 @@ const Login = (props) => {
         }
 
         const login = await loginWithPassword({ email, password });
+
+        console.log("errors: ", login?.authError);
 
         if (login?.authError?.errorCode == "auth/user-not-found" || login?.authError?.errorCode == "auth/wrong-password") {
             setError({ ...error, login: "This email and password combination is incorrect." });
@@ -230,7 +250,7 @@ const Login = (props) => {
                                     icon={<GithubIcon height={24} width={24} fill={"#000"} style={{ marginRight: 8 }} />}
                                     style={{ marginTop: 24, border: "none" }}
                                     reversed
-                                    onClick={loginWithGithub}
+                                    onClick={onLoginWithGithub}
                                 />
                                 <Button
                                     text="Google"
@@ -238,7 +258,7 @@ const Login = (props) => {
                                     icon={<GoogleIcon height={30} width={30} fill={"#000"} style={{ marginRight: 8 }} />}
                                     style={{ marginTop: 12, border: "none" }}
                                     reversed
-                                    onClick={loginWithGoogle}
+                                    onClick={onLoginWithGoogle}
                                 />
                                 <Button
                                     text="E-mail"
@@ -247,7 +267,10 @@ const Login = (props) => {
                                     style={{ marginTop: 12, border: "none" }}
                                     onClick={() => setView("email")}
                                     reversed
-                                /></>
+                                />
+
+                                {oauthError != false && <p className={styles.errorMsg}>{oauthError}</p>}
+                            </>
                         }
                     </form>
                 </div>

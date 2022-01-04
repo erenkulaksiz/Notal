@@ -22,15 +22,18 @@ export function AuthProvider(props) {
 
     const loginWithGithub = async () => {
         const { error, user } = await AuthService.loginWithGithub();
+        console.log("loginWithGithub User: ", user);
+        console.log("loginWithGithub Error: ", error);
         setUser(user ?? null);
-        setError(error?.code ?? "");
+        setError(error?.code ?? null);
+        return { authError: error ?? null, authUser: user ?? null }
     }
 
     const loginWithPassword = async ({ email, password }) => {
         const { error, user } = await AuthService.loginWithPassword({ email, password });
         setUser(user ?? null);
         setError(error ?? "");
-        return { authError: error || null }
+        return { authError: error ?? null }
     };
 
     const createUser = async ({ email, password, fullname, username }) => {
@@ -54,12 +57,26 @@ export function AuthProvider(props) {
         }
     }
 
+    const editUser = async ({ uid, fullname }) => {
+        const data = await fetch(`${server}/api/editProfile`, {
+            'Content-Type': 'application/json',
+            method: "POST",
+            body: JSON.stringify({ uid, fullname }),
+        }).then(response => response.json());
+
+        if (data.success) {
+            return { success: true }
+        } else {
+            return { error: data }
+        }
+    }
+
     const logout = async () => {
         await AuthService.logout();
         setUser(null);
     }
 
-    const value = { authUser: user, authError: error, loginWithGoogle, loginWithPassword, loginWithGithub, updateUser, logout, setUser, createUser };
+    const value = { authUser: user, authError: error, loginWithGoogle, loginWithPassword, loginWithGithub, editUser, updateUser, logout, setUser, createUser };
 
     return <authContext.Provider value={value} {...props} />
 }

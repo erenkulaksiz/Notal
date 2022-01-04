@@ -3,6 +3,8 @@ const { firebaseConfig } = require('../../config/firebaseApp.config');
 
 const googleService = JSON.parse(process.env.NEXT_PUBLIC_GOOGLE_SERVICE);
 
+console.log("googleService: ", googleService);
+
 if (!admin.apps.length) {
     admin.initializeApp({
         credential: admin.credential.cert(googleService),

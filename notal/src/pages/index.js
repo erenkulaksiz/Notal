@@ -1,8 +1,9 @@
 import Head from 'next/head';
-import styles from '../../styles/App.module.scss';
 import { useState, useEffect } from 'react';
-import { server } from '../config';
+import { useRouter } from 'next/router';
 
+import styles from '../../styles/App.module.scss';
+import { server } from '../config';
 import LogoutIcon from '../../public/icons/logout.svg';
 import UserIcon from '../../public/icons/user.svg';
 
@@ -17,6 +18,8 @@ import useAuth from '../hooks/auth';
 
 const Home = (props) => {
   const auth = useAuth();
+  const router = useRouter();
+
   const [menuToggle, setMenuToggle] = useState(false);
 
   const [validate, setValidate] = useState(props.validate);
@@ -136,7 +139,8 @@ const Home = (props) => {
       userData={{ fullname: validate?.data?.fullname, email: auth.authUser.email }}
       avatarURL={validate.data?.avatar}
       onLogout={() => auth.logout()}
-      onProfile={() => { }}
+      onProfile={() => router.push(`/profile/${validate?.data?.username}`)}
+      onHeaderHome={() => router.replace('/')}
       showCreate={false}
     />
 
