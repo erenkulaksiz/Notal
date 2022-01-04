@@ -32,6 +32,22 @@
     border-radius: 12px;
     box-sizing: border-box;
 
+    .logoContainer {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      button {
+        width: 100%;
+      }
+      @include sm {
+        flex-direction: row;
+        button {
+          width: 40%;
+        }
+      }
+    }
+
     form {
       display: flex;
       flex-direction: column;

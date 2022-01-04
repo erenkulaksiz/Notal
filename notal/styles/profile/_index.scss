@@ -16,6 +16,10 @@
     width: 800px;
   }
 
+  @include xl {
+    width: 1000px;
+  }
+
   .errorFindUser {
     display: flex;
     flex-direction: column;
@@ -45,9 +49,12 @@
     .header {
       display: flex;
       width: 100%;
-      height: 180px;
+      padding-bottom: 32px;
+      padding-top: 16px;
       background-color: $primary_color;
       border-radius: 0;
+
+      flex-direction: column;
 
       @include md {
         border-bottom-left-radius: 16px;
@@ -58,75 +65,100 @@
         border-bottom-left-radius: 16px;
         border-bottom-right-radius: 16px;
       }
-
-      .avatarSide {
+      .top {
         display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 25%;
-        min-width: 120px;
-        height: 100%;
-
-        @include sm {
-          min-width: 200px;
-        }
-        img {
-          object-fit: cover;
-          border-radius: 128px;
-          border: 2px solid gray;
-          padding: 2px;
-          width: 96px;
-          height: 96px;
+        flex-direction: row;
+        .avatarSide {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 25%;
+          min-width: 120px;
+          height: 100%;
 
           @include sm {
-            width: 128px;
-            height: 128px;
+            min-width: 200px;
           }
-        }
-      }
-      .errorMsg {
-        color: $error_red;
-        margin-top: 4px;
-      }
-      .usernameSide {
-        display: flex;
-        align-items: flex-start;
-        flex-direction: column;
-        padding-top: 32px;
-        form {
-          display: flex;
-          flex-direction: column;
-          height: 100%;
-          .fullname {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            h1 {
-              font-size: 1.4em;
-              @include md {
-                font-size: 1.8em;
-              }
-              font-weight: 500;
-              color: white;
+          img {
+            object-fit: cover;
+            border-radius: 128px;
+            border: 2px solid gray;
+            padding: 2px;
+            width: 96px;
+            height: 96px;
+
+            @include sm {
+              width: 128px;
+              height: 128px;
             }
           }
-          .username {
+        }
+        .errorMsg {
+          color: $error_red;
+          margin-top: 4px;
+        }
+        .usernameSide {
+          display: flex;
+          align-items: flex-start;
+          flex-direction: column;
+          width: 100%;
+          padding-right: 24px;
+          form {
             display: flex;
             flex-direction: column;
+            width: 100%;
             height: 100%;
-            justify-content: space-between;
-            padding-bottom: 24px;
-            h1 {
-              font-size: 1em;
-              @include md {
-                font-size: 1.2em;
+            .fullname {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              width: 100%;
+              h1 {
+                font-size: 1.4em;
+                @include md {
+                  font-size: 1.8em;
+                }
+                font-weight: 500;
+                color: white;
               }
-              font-weight: 500;
+            }
+            .username {
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              h1 {
+                font-size: 1em;
+                @include md {
+                  font-size: 1.2em;
+                }
+                font-weight: 500;
+                color: white;
+              }
+            }
+            .bio {
+              display: flex;
+              flex-direction: column;
+              align-items: flex-start;
+              flex: 1;
+              width: 100%;
+              margin-top: 24px;
               color: white;
+              .title {
+                display: flex;
+                font-weight: 600;
+                margin-bottom: 14px;
+                border-bottom: 1px solid white;
+                padding-bottom: 8px;
+                width: 100%;
+                font-size: 1.4em;
+              }
             }
           }
         }
+      }
+      .bottom {
+        width: 100%;
+        margin-top: 16px;
       }
     }
   }

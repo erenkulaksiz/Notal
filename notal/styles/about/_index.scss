@@ -1,0 +1,84 @@
+.content_about {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  flex: 1;
+  height: 100%;
+  width: 90%;
+
+  @include sm {
+    width: 550px;
+  }
+
+  @include md {
+    width: 700px;
+  }
+
+  @include lg {
+    width: 1000px;
+  }
+
+  .aboutTitle {
+    margin-top: 48px;
+    h1 {
+      font-size: 2em;
+      font-weight: 600;
+    }
+  }
+
+  .aboutDesc {
+    margin-top: 24px;
+    border-bottom: 1px solid $primary_color;
+    padding-bottom: 32px;
+    p {
+      font-size: 1.4em;
+    }
+  }
+
+  .takeNotes {
+    width: 100%;
+    margin-top: 24px;
+    border-bottom: 1px solid $primary_color;
+    padding-bottom: 32px;
+  }
+
+  .addTodos {
+    margin-top: 24px;
+    border-bottom: 1px solid $primary_color;
+    padding-bottom: 32px;
+  }
+
+  .more {
+    margin-top: 24px;
+  }
+
+  .title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    .icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 6px;
+      background-color: $primary_color;
+      border-radius: 32px;
+      width: 32px;
+      height: 32px;
+      margin-right: 16px;
+    }
+    h1 {
+      font-size: 2em;
+      font-weight: 500;
+    }
+  }
+
+  .desc {
+    width: 100%;
+    margin-top: 16px;
+    p {
+      font-size: 1.4em;
+      color: $primary_color;
+    }
+  }
+}

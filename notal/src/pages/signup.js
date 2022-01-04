@@ -118,13 +118,13 @@ const Signup = (props) => {
                                 <Input
                                     type="text"
                                     placeholder="Username"
-                                    onChange={e => setUsername(e.target.value.replace(/[^\w\s]/gi, "").replace(/\s/g, ''))}
+                                    onChange={e => setUsername(e.target.value.replace(/[^\w\s]/gi, "").replace(/\s/g, '').toLowerCase())}
                                     value={username}
                                     icon={<UserIcon height={24} width={24} fill={"#19181e"} />}
                                     error={error.username != false}
                                     required
                                     style={{ width: "100%" }}
-                                    maxLength={24}
+                                    maxLength={16}
                                 />
 
                                 {error.username != false && <p className={styles.errorMsg}>{error.username}</p>}

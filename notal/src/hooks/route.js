@@ -2,6 +2,9 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import useAuth from './auth';
 
+import styles from '../../styles/App.module.scss';
+import SyncIcon from '../../public/icons/sync.svg';
+
 /**
  * Checks if user logined, returns to home if logined.
  *
@@ -14,7 +17,9 @@ export function withPublic(Component) {
 
         if (auth.authUser) {
             router.replace("/");
-            return <h1>loading...</h1>
+            return <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
+                <SyncIcon height={24} width={24} fill={"#000"} className={styles.loadingIconAuth} />
+            </div>
         }
         return <Component auth={auth} {...props} />
     }
@@ -33,7 +38,9 @@ export function withAuth(Component) {
 
         if (!auth.authUser) {
             router.replace("/login");
-            return <h1>loading...</h1>
+            return <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
+                <SyncIcon height={24} width={24} fill={"#000"} className={styles.loadingIconAuth} />
+            </div>
         }
         return <Component auth={auth} {...props} />
     }

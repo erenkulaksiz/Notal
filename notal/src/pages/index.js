@@ -146,7 +146,7 @@ const Home = (props) => {
 
     <div className={styles.content_home}>
       {"Notal."}<br />
-      {validate.data.fullname}<br />
+      {validate?.data?.fullname}<br />
 
       {auth.authUser?.email}
 

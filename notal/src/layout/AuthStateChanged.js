@@ -3,6 +3,10 @@ import { onAuthStateChanged, getAuth } from "firebase/auth";
 import useAuth from '../hooks/auth';
 import cookie from 'js-cookie';
 
+import SyncIcon from '../../public/icons/sync.svg';
+
+import styles from '../../styles/App.module.scss';
+
 export default function AuthStateChanged({ children }) {
     const { setUser } = useAuth();
     const [loading, setLoading] = useState(true);
@@ -24,7 +28,9 @@ export default function AuthStateChanged({ children }) {
     }, []);
 
     if (loading) {
-        return <h1>loading</h1>
+        return <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
+            <SyncIcon height={24} width={24} fill={"#000"} className={styles.loadingIconAuth} />
+        </div>
     }
 
     return children;

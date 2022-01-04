@@ -20,6 +20,7 @@ import GoogleIcon from '../../public/icons/google.svg';
 import GithubIcon from '../../public/icons/github.svg';
 import RefreshIcon from '../../public/icons/refresh.svg';
 import CheckIcon from '../../public/icons/check.svg';
+import QuestionIcon from '../../public/icons/question.svg';
 
 import AuthService from '../service/AuthService';
 
@@ -130,12 +131,22 @@ const Login = (props) => {
             <div className={styles.content_login}>
                 <div className={styles.login}>
                     <form id="login" onSubmit={e => onLogin(e)}>
-                        <img
-                            src={"./icon_white.png"}
-                            alt="Logo of Notal"
-                            width={210}
-                            height={60}
-                        />
+                        <div className={styles.logoContainer}>
+                            <img
+                                src={"./icon_white.png"}
+                                alt="Logo of Notal"
+                                width={210}
+                                height={60}
+                            />
+                            <Button
+                                text="What's Notal?"
+                                type="button"
+                                icon={<QuestionIcon height={24} width={24} fill={"#000"} style={{ marginRight: 8 }} />}
+                                style={{ marginTop: 24, border: "none", height: 48 }}
+                                onClick={() => router.push("/about")}
+                                reversed
+                            />
+                        </div>
                         {
                             view == "email" ? <>
                                 <Button

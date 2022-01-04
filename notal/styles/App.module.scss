@@ -3,3 +3,17 @@
 @import "signup";
 @import "home";
 @import "profile";
+@import "about";
+
+.loadingIconAuth {
+  -webkit-animation: loadingRotation 1.2s infinite linear;
+}
+
+@-webkit-keyframes loadingRotation {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(359deg);
+  }
+}
