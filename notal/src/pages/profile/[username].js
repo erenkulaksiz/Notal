@@ -65,6 +65,8 @@ const Profile = (props) => {
                 setEditErrors({ fullname: false, username: "This username is already in use.", bio: false });
                 return;
             }
+        } else {
+            setEditingProfile(false);
         }
     }
 
@@ -82,7 +84,12 @@ const Profile = (props) => {
             avatarURL={props.validate.data?.avatar}
             loggedIn={auth?.authUser != null}
             onLogin={() => router.push("/login")}
-            onLogout={() => auth.logout()}
+            onLogout={() => {
+                auth.logout();
+                setEditingProfile(false);
+                setEditErrors({ fullname: false, username: false, bio: false })
+                setMenuToggle(false);
+            }}
             profileVisible={auth?.authUser?.uid != props.profile?.uid}
             onProfile={() => router.push(`/profile/${props.validate?.data?.username}`)}
             onHeaderHome={() => router.push("/")}
