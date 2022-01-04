@@ -65,7 +65,7 @@ const Profile = (props) => {
         <div className={styles.content_profile}>
             {
                 (props.profile?.success == false && props.profile?.error == "cant-find-user") && <div className={styles.errorFindUser}>
-                    <h1>We couldn't reach to this user.</h1>
+                    <h1>We couldnt reach to this user.</h1>
                     <Button
                         text="Back"
                         icon={<BackIcon height={24} width={24} fill={"#fff"} style={{ marginRight: 8 }} />}
