@@ -110,8 +110,6 @@ const Profile = (props) => {
                             <img
                                 src={props.profile.data.avatar}
                                 alt="Avatar of a profile"
-                                width={128}
-                                height={128}
                             />
                         </div>
                         <div className={styles.usernameSide}>
