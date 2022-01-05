@@ -13,6 +13,7 @@ import CrossIcon from '../../../public/icons/cross.svg';
 import CheckIcon from '../../../public/icons/check.svg';
 import UserIcon from '../../../public/icons/user.svg';
 import AtIcon from '../../../public/icons/at.svg';
+import SyncIcon from '../../../public/icons/sync.svg';
 
 import Header from '../../components/header';
 import Button from '../../components/button';
@@ -28,6 +29,8 @@ const Profile = (props) => {
     const [editProfile, setEditProfile] = useState({ fullname: props.validate?.data?.fullname, username: props.validate?.data?.username, bio: props.validate?.data?.bio });
 
     const [editErrors, setEditErrors] = useState({ fullname: false, username: false, bio: false });
+
+    const [editAvatarLoading, setEditAvatarLoading] = useState(false);
 
     useEffect(() => {
         console.log("props: ", props);
@@ -70,6 +73,27 @@ const Profile = (props) => {
         }
     }
 
+    const onAvatarEditChange = async (e) => {
+        if (e.target.files[0]) {
+            console.log("files:", e.target.files[0]);
+            if (e.target.files[0].type == "image/jpeg" || e.target.files[0].type == "image/png" || e.target.files[0].type == "image/jpg") {
+                setEditAvatarLoading(true);
+                setEditingProfile(false);
+                const res = await auth.uploadAvatar({ avatar: e.target.files[0], uid: auth?.authUser?.uid });
+                if (res.success) {
+                    console.log("this side response: ", res);
+                    setEditAvatarLoading(false);
+                    router.replace(`/profile/${editProfile.username}`);
+                } else {
+                    console.log("avatar upload error: ", res);
+                    setEditAvatarLoading(false);
+                }
+            } else {
+                alert("only png, jpeg and jpg is allowed");
+            }
+        }
+    }
+
     return (<div className={styles.container}>
         <Head>
             <title>{props.profile?.success == true ? "Viewing " + props.validate?.data?.username + "'s profile" : "Not Found"}</title>
@@ -87,7 +111,7 @@ const Profile = (props) => {
             onLogout={() => {
                 auth.logout();
                 setEditingProfile(false);
-                setEditErrors({ fullname: false, username: false, bio: false })
+                setEditErrors({ fullname: false, username: false, bio: false });
                 setMenuToggle(false);
             }}
             profileVisible={auth?.authUser?.uid != props.profile?.uid}
@@ -115,10 +139,21 @@ const Profile = (props) => {
                     <div className={styles.header}>
                         <div className={styles.top}>
                             <div className={styles.avatarSide}>
-                                <img
-                                    src={props.profile.data.avatar}
-                                    alt="Avatar of a profile"
-                                />
+                                <div className={styles.avatarContainer}>
+                                    <img
+                                        src={props.profile.data.avatar}
+                                        className={styles.avatar}
+                                        alt="Avatar of a profile"
+                                    /> {/*  */}
+                                    {editingProfile && <div className={styles.editAvatarContainer}>
+                                        <input type="file" className={styles.editAvatar} onChange={onAvatarEditChange} />
+                                        <EditIcon height={24} width={24} fill={"#fff"} />
+                                    </div>}
+                                    {editAvatarLoading && <div className={styles.editAvatarLoadingContainer}>
+                                        <SyncIcon height={24} width={24} fill={"#fff"} className={styles.loadingIconAvatar} />
+                                        <div className={styles.editAvatarLoadingBack} />
+                                    </div>}
+                                </div>
                             </div>
                             <div className={styles.usernameSide}>
                                 <form id="editProfile" onSubmit={e => onFinishEditing(e)}>
@@ -154,7 +189,7 @@ const Profile = (props) => {
                                     </div>
                                     {(props.profile?.data?.bio || editingProfile) && <div className={styles.bio}>
                                         <div className={styles.title}>Bio</div>
-                                        {((auth?.authUser?.uid == props.profile?.uid) && !editingProfile) ? props.profile?.data?.bio : <Input
+                                        {!editingProfile ? props.profile?.data?.bio : <Input
                                             type="text"
                                             placeholder="Bio (optional, you can leave it blank)"
                                             onChange={e => setEditProfile({ ...editProfile, bio: e.target.value })}
@@ -178,7 +213,7 @@ const Profile = (props) => {
                                     text="Edit Profile"
                                     icon={<EditIcon height={24} width={24} fill={"#000"} style={{ marginRight: 8 }} />}
                                     style={{ height: 48, minWidth: 240, marginLeft: 16, marginRight: 16 }}
-                                    onClick={() => setEditingProfile(true)}
+                                    onClick={() => { if (!editAvatarLoading) setEditingProfile(true) }}
                                     reversed
                                 />
                             </div>}

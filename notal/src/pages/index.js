@@ -33,6 +33,11 @@ const Home = (props) => {
   useEffect(() => {
     console.log("props: ", props);
 
+    if (props.validate?.data?.error == "auth/id-token-expired") {
+      auth.logout();
+      return;
+    }
+
     if (!props.validate.data?.username?.length) { // if theres no username is present
       setRegisterAlertVisible(true);
     }
@@ -172,8 +177,11 @@ export async function getServerSideProps(ctx) {
       }).then(response => response.json());
 
       console.log("data (index.js): ", data);
+
       if (data.success) {
         validate = { ...data };
+      } else {
+        validate = { error: data.error?.code }
       }
     }
   }

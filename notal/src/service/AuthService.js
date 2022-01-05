@@ -1,5 +1,6 @@
 import { getAuth, signInWithPopup, signInWithEmailAndPassword, GoogleAuthProvider, sendPasswordResetEmail, createUserWithEmailAndPassword, GithubAuthProvider } from "firebase/auth";
-import { get, getDatabase, ref, set, child, orderByChild, query, limitToFirst, equalTo, orderByKey, startAt } from "firebase/database";
+import { get, getDatabase, ref, set, child, orderByChild, query, limitToFirst, equalTo, orderByKey, startAt, update } from "firebase/database";
+import { getStorage, ref as stRef, uploadBytes, getDownloadURL } from "firebase/storage";
 
 /**
  * AuthService for Notal
@@ -9,6 +10,7 @@ import { get, getDatabase, ref, set, child, orderByChild, query, limitToFirst, e
  * @sendPasswordResetLink // Send a password reset link to email
  * @createUser // Create an user with specified email and password
  * @logout // Logout from auth services
+ * @uploadAvatar // change or upload an avatar for specified UID
  */
 const AuthService = {
     loginWithGoogle: async () => {
@@ -92,7 +94,7 @@ const AuthService = {
     },
     sendPasswordResetLink: async ({ email }) => {
         const auth = getAuth();
-        return sendPasswordResetEmail(auth, email)
+        return await sendPasswordResetEmail(auth, email)
             .then(() => {
                 return { success: true }
             })
@@ -130,6 +132,27 @@ const AuthService = {
                         return { error: { errorCode, errorMessage } }
                     });
             }
+        });
+    },
+    uploadAvatar: async ({ avatar, uid }) => {
+        const storage = getStorage();
+        const storageRef = stRef(storage, `avatars/${uid}`);
+        const db = getDatabase();
+
+        return await uploadBytes(storageRef, avatar).then((snapshot) => {
+            console.log(snapshot);
+
+            return getDownloadURL(snapshot.ref).then(async (downloadURL) => {
+                console.log('File available at', downloadURL);
+
+                await update(ref(db, `users/${uid}`), {
+                    avatar: downloadURL,
+                });
+
+                return { success: true, url: downloadURL }
+            });
+        }).catch(error => {
+            return { success: false, error }
         });
     },
     logout: async () => {
