@@ -76,12 +76,17 @@ export function AuthProvider(props) {
         return res;
     }
 
+    const createWorkspace = async ({ title, desc }) => {
+        const res = await AuthService.createWorkspace({ title, desc });
+        return res;
+    }
+
     const logout = async () => {
         await AuthService.logout();
         setUser(null);
     }
 
-    const value = { authUser: user, authError: error, loginWithGoogle, loginWithPassword, uploadAvatar, loginWithGithub, editUser, updateUser, logout, setUser, createUser };
+    const value = { authUser: user, authError: error, loginWithGoogle, loginWithPassword, uploadAvatar, loginWithGithub, editUser, updateUser, logout, setUser, createUser, createWorkspace };
 
     return <authContext.Provider value={value} {...props} />
 }

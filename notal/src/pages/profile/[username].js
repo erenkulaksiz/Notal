@@ -34,6 +34,10 @@ const Profile = (props) => {
 
     useEffect(() => {
         console.log("props: ", props);
+
+        if (props.validate?.error == "auth/id-token-expired") {
+            auth.logout();
+        }
     }, []);
 
     const onFinishEditing = async (e) => {
@@ -96,7 +100,7 @@ const Profile = (props) => {
 
     return (<div className={styles.container}>
         <Head>
-            <title>{props.profile?.success == true ? "Viewing " + props.validate?.data?.username + "'s profile" : "Not Found"}</title>
+            <title>{props.profile?.success == true ? "Viewing " + props.profile?.data?.username + "'s profile" : "Not Found"}</title>
             <meta name="description" content="Notal" />
             <link rel="icon" href="/favicon.ico" />
         </Head>
@@ -195,7 +199,7 @@ const Profile = (props) => {
                                             onChange={e => setEditProfile({ ...editProfile, bio: e.target.value })}
                                             value={editProfile.bio}
                                             style={{ marginTop: 4, }}
-                                            multilineStyle={{ maxWidth: "100%", maxHeight: 60, minHeight: 60, maxWidth: 450, }}
+                                            multilineStyle={{ maxHeight: 100, minHeight: 60, maxWidth: 450, minWidth: 300 }}
                                             error={editErrors.bio != false}
                                             maxLength={128}
                                             multiline
@@ -278,6 +282,8 @@ export async function getServerSideProps(ctx) {
             console.log("data (index.js): ", data);
             if (data.success) {
                 validate = { ...data };
+            } else {
+                validate = { error: data.error?.code }
             }
         }
     }

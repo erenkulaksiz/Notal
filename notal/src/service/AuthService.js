@@ -2,6 +2,8 @@ import { getAuth, signInWithPopup, signInWithEmailAndPassword, GoogleAuthProvide
 import { get, getDatabase, ref, set, child, orderByChild, query, limitToFirst, equalTo, orderByKey, startAt, update } from "firebase/database";
 import { getStorage, ref as stRef, uploadBytes, getDownloadURL } from "firebase/storage";
 
+import { server } from "../config";
+
 /**
  * AuthService for Notal
  *
@@ -154,6 +156,23 @@ const AuthService = {
         }).catch(error => {
             return { success: false, error }
         });
+    },
+    createWorkspace: async ({ title, desc }) => {
+        const auth = getAuth();
+
+        console.log("auth: ", auth);
+
+        const data = await fetch(`${server}/api/workspace`, {
+            'Content-Type': 'application/json',
+            method: "POST",
+            body: JSON.stringify({ uid: auth?.currentUser?.uid, title, desc, action: "CREATE" }),
+        }).then(response => response.json());
+
+        if (data?.success) {
+            return { ...data }
+        } else {
+            return { error: data?.error }
+        }
     },
     logout: async () => {
         const auth = getAuth();

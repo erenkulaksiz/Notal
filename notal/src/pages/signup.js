@@ -113,7 +113,6 @@ const Signup = (props) => {
                         <h1>Sign up</h1>
 
                         <div style={{ display: "flex", flexDirection: "row", marginTop: 18, justifyContent: "space-between" }}>
-
                             <div style={{ width: "48%" }}>
                                 <Input
                                     type="text"
@@ -126,11 +125,8 @@ const Signup = (props) => {
                                     style={{ width: "100%" }}
                                     maxLength={16}
                                 />
-
                                 {error.username != false && <p className={styles.errorMsg}>{error.username}</p>}
-
                             </div>
-
                             <div style={{ width: "48%" }}>
                                 <Input
                                     type="text"
@@ -143,12 +139,9 @@ const Signup = (props) => {
                                     maxLength={64}
                                     style={{ width: "100%" }}
                                 />
-
                                 {error.fullname != false && <p className={styles.errorMsg}>{error.fullname}</p>}
                             </div>
-
                         </div>
-
 
                         <Input
                             type="email"
@@ -160,9 +153,7 @@ const Signup = (props) => {
                             required
                             style={{ marginTop: 18 }}
                         />
-
                         {error.email != false && <p className={styles.errorMsg}>{error.email}</p>}
-
                         <Input
                             type="password"
                             placeholder="Password"
@@ -176,9 +167,7 @@ const Signup = (props) => {
                             required
                             style={{ marginTop: 18 }}
                         />
-
                         {error.password != false && <p className={styles.errorMsg}>{error.password}</p>}
-
                         <Input
                             type="password"
                             placeholder="Confirm Password"
@@ -192,7 +181,6 @@ const Signup = (props) => {
                             required
                             style={{ marginTop: 18 }}
                         />
-
                         <Button
                             text="Sign Up"
                             type="submit"

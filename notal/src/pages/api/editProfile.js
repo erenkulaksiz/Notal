@@ -22,7 +22,7 @@ export default async function handler(req, res) {
 
                 await admin.database().ref(`/users/${data.uid}`).update({
                     fullname: data.fullname,
-                    bio: (snapshot.val()[Object.keys(snapshot.val())[0]].bio != data?.bio) ? data.bio : "",
+                    bio: data.bio,
                 }, () => {
                     res.status(200).json({ success: true, data: { username: data.username, fullname: data.fullname, uid: data.uid } });
                 }).catch(err => {

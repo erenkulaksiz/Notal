@@ -25,7 +25,12 @@ export default async function handler(req, res) {
         res.status(200).json({ success: false, error: err });
     })
 
-    console.log("Data:", data);
+    console.log("Data VALIDATE:", data);
+
+    if (!data) {
+        res.status(200).json({ success: false, error: "cannot-validate-user" });
+        return;
+    }
 
     /*
     if (data.firebase.sign_in_provider === "password") {
@@ -36,18 +41,18 @@ export default async function handler(req, res) {
     await admin.database().ref(`/users/${data.uid}`).once("value", async (snapshot) => {
         if (snapshot.exists()) {
             console.log("data: ", snapshot.val());
-            res.status(200).json({ success: true, data: snapshot.val() });
+            res.status(200).json({ success: true, data: snapshot.val(), uid: data.uid });
         } else {
             console.log("trying to create user");
             if (data.firebase.sign_in_provider != "password") {
-                return await admin.database().ref(`/users/${data.uid}`).set({
+                return await admin.database().ref(`/users/${data.uid}`).update({
                     fullname: data.name || "",
                     avatar: data.picture || "https://imgur.com/jNNT4LE",
                     email: data.email,
                 }, async () => {
                     return await admin.database().ref(`/users/${data.uid}`).once("value", async (snapshot) => {
                         if (snapshot.exists()) {
-                            res.status(200).json({ success: true, data: snapshot.val() });
+                            res.status(200).json({ success: true, data: snapshot.val(), uid: data.uid });
                         } else {
                             res.status(200).json({ success: false });
                         }

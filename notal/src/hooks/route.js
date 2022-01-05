@@ -23,7 +23,6 @@ export function withPublic(Component) {
         }
         return <Component auth={auth} {...props} />
     }
-
 }
 
 /**
