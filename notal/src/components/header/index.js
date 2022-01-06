@@ -75,7 +75,7 @@ const Header = ({ menuToggle, onMenuToggle, userData, onLogout, onCreate, onProf
                         reversed
                     />}
                     <Button
-                        text="Logout"
+                        text="Sign Out"
                         //onFocus={() => onLogout()}
                         onClick={() => onLogout()}
                         style={{ height: 48 }}

@@ -170,14 +170,13 @@ const Home = (props) => {
       setNewWorkspace({ ...newWorkspace, title: "", desc: "", starred: "" });
     },
     getWorkspacesWithFilter: (workspaces) => {
-
       if (filter == "favorites") {
-        const newWorkspaces = workspaces.filter(el => el.starred == true);
-        return [...newWorkspaces]
+        if (workspaces) return workspaces.filter(el => el.starred == true);
+        else return []
       } else {
         // no filter
-        const newWorkspaces = workspaces.sort((a, b) => b.starred - a.starred);
-        return [...newWorkspaces]
+        if (workspaces) return workspaces.sort((a, b) => b.starred - a.starred);
+        else return []
       }
     }
   }

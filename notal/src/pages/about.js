@@ -32,7 +32,6 @@ const About = (props) => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-
             <Header
                 menuToggle={menuToggle}
                 onMenuToggle={val => setMenuToggle(val)}
@@ -96,7 +95,7 @@ const About = (props) => {
                         <h1>Customize Your Profile</h1>
                     </div>
                     <div className={styles.desc}>
-                        <p>You can change your fullname, bio and username on your profile section. Also your username is the link. {props.validate?.data?.username && <div>For example, your profile link is <a href={`${server}/profile/${props.validate?.data?.username}`}>{`${server}/profile/${props.validate?.data?.username}`}</a></div>}</p>
+                        <p>You can change your fullname, bio and username on your profile section. Also your username is the link. {auth.authUser != null && <div>For example, your profile link is <a href={`${server}/profile/${props.validate?.data?.username}`}>{`${server}/profile/${props.validate?.data?.username}`}</a></div>}</p>
                     </div>
                 </div>
                 <div className={styles.section}>
