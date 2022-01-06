@@ -228,7 +228,7 @@ const Home = (props) => {
         <Button
           text="Boards"
           onClick={() => { }}
-          style={{ height: 54, justifyContent: "flex-start", borderRadius: 8, width: "90%", marginTop: 24 }}
+          style={{ justifyContent: "flex-start", borderRadius: 8, width: "90%", }}
           icon={<DashboardIcon height={24} width={24} fill={viewing == "boards" ? "#fff" : "#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />}
           reversed={viewing != "boards"}
         />

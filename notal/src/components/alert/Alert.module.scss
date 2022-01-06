@@ -68,10 +68,13 @@
         display: flex;
         position: relative;
         align-items: center;
-        font-size: 1.6em;
+        font-size: 1.2em;
         height: 25%;
         color: white;
         padding: 24px;
+        @include md {
+          font-size: 1.6em;
+        }
       }
 
       .body {
