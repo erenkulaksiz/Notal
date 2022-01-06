@@ -33,6 +33,8 @@ const AuthService = {
                             avatar: user?.photoURL,
                             username: null,
                             email: user?.email,
+                            createdAt: Date.now(),
+                            updatedAt: Date.now(),
                         });
                     }
                 }).catch(err => console.log("error with get in signinwithpopup: ", err));
@@ -43,7 +45,7 @@ const AuthService = {
                 const errorMessage = error.message;
                 const email = error.email;
                 const credential = GoogleAuthProvider.credentialFromError(error);
-                // ...
+
                 return { error: { errorCode, errorMessage } }
             });
     },
@@ -58,6 +60,19 @@ const AuthService = {
                 const user = result.user;
 
                 console.log("github user: ", user);
+
+                get(child(dbRef, `users/${user.uid}`)).then((snapshot) => {
+                    if (!snapshot.exists()) {
+                        set(ref(db, `users/${user.uid}`), {
+                            fullname: user?.displayName,
+                            avatar: user?.photoURL,
+                            username: null,
+                            email: user?.email,
+                            createdAt: Date.now(),
+                            updatedAt: Date.now(),
+                        });
+                    }
+                }).catch(err => console.log("error with get in signinwithpopup github: ", err));
 
                 return { user, token }
             }).catch((error) => {
@@ -125,6 +140,8 @@ const AuthService = {
                             avatar: "https://imgyukle.com/f/2022/01/03/oxgaeS.jpg", // default avatar #TODO: make normal avatar
                             username,
                             email,
+                            createdAt: Date.now(),
+                            updatedAt: Date.now(),
                         });
                         return { user }
                     })
@@ -157,13 +174,13 @@ const AuthService = {
             return { success: false, error }
         });
     },
-    createWorkspace: async ({ title, desc }) => {
+    createWorkspace: async ({ title, desc, starred }) => {
         const auth = getAuth();
 
         const data = await fetch(`${server}/api/workspace`, {
             'Content-Type': 'application/json',
             method: "POST",
-            body: JSON.stringify({ uid: auth?.currentUser?.uid, title, desc, action: "CREATE" }),
+            body: JSON.stringify({ uid: auth?.currentUser?.uid, title, desc, starred, action: "CREATE" }),
         }).then(response => response.json());
 
         if (data?.success) {
@@ -193,6 +210,21 @@ const AuthService = {
         console.log("currToken: ", token);
 
         return { token };
+    },
+    starWorkspace: async ({ id }) => {
+        const auth = getAuth();
+
+        const data = await fetch(`${server}/api/workspace`, {
+            'Content-Type': 'application/json',
+            method: "POST",
+            body: JSON.stringify({ id, action: "STAR", uid: auth?.currentUser?.uid }),
+        }).then(response => response.json());
+
+        if (data?.success) {
+            return { success: true }
+        } else {
+            return { error: data?.error }
+        }
     },
     logout: async () => {
         const auth = getAuth();

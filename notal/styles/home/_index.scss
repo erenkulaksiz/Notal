@@ -71,14 +71,6 @@
     flex-direction: column;
     width: 100%;
     min-width: 180px;
-    margin-top: 84px;
-
-    @include sm {
-      margin-top: 24px;
-    }
-    @include md {
-      margin-top: 24px;
-    }
   }
 
   .workspaces {

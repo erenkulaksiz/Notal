@@ -14,7 +14,7 @@ if (!admin.apps.length) {
 
 export default async function handler(req, res) {
 
-    const { uid, title, desc, action } = JSON.parse(req.body);
+    const { uid, title, desc, action, starred, id } = JSON.parse(req.body);
 
     if (!uid || !action) {
         res.status(400).send({ success: false })
@@ -24,7 +24,7 @@ export default async function handler(req, res) {
     if (action == "CREATE") {
         const ref = await admin.database().ref(`/workspaces/${uid}`).push();
         await ref.set({
-            title, desc,
+            title, desc, starred, createdAt: Date.now(), updatedAt: Date.now(),
         });
         res.status(200).send({ success: true });
     } else if (action == "GET") {
@@ -43,7 +43,6 @@ export default async function handler(req, res) {
             }
         });
     } else if (action == "DELETE") {
-        const { id, uid } = JSON.parse(req.body); // id of workspace
 
         if (!uid) {
             res.status(400).send({ success: false });
@@ -54,6 +53,28 @@ export default async function handler(req, res) {
             res.status(200).send({ success: true });
         }).catch(error => {
             res.status(400).send({ success: false, error })
+        });
+    } else if (action == "STAR") {
+
+        if (!uid) {
+            res.status(400).send({ success: false });
+            return;
+        }
+
+        await admin.database().ref(`/workspaces`).child(uid).child(id).once("value", async (snapshot) => {
+            if (snapshot.exists()) {
+                const starred = !snapshot.val().starred;
+
+                await admin.database().ref(`/workspaces`).child(uid).child(id).update({ starred, updatedAt: Date.now() }, () => {
+                    res.status(200).send({ success: true });
+                }).catch(error => {
+                    res.status(400).send({ success: false, error });
+                });
+            } else {
+                res.status(400).send({ success: false });
+            }
+        }).catch(error => {
+            res.status(400).send({ success: false, error });
         });
     }
 }

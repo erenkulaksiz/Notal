@@ -43,12 +43,14 @@ export default async function handler(req, res) {
             console.log("data: ", snapshot.val());
             res.status(200).json({ success: true, data: snapshot.val(), uid: data.uid });
         } else {
-            console.log("trying to create user");
             if (data.firebase.sign_in_provider != "password") {
+                console.log("trying to create user (not password login)");
                 return await admin.database().ref(`/users/${data.uid}`).update({
                     fullname: data.name || "",
-                    avatar: data.picture || "https://imgur.com/jNNT4LE",
+                    avatar: data.picture || "https://imgyukle.com/f/2022/01/03/oxgaeS.jpg",
                     email: data.email,
+                    createdAt: Date.now(),
+                    updatedAt: Date.now(),
                 }, async () => {
                     return await admin.database().ref(`/users/${data.uid}`).once("value", async (snapshot) => {
                         if (snapshot.exists()) {

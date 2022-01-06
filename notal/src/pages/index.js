@@ -140,6 +140,17 @@ const Home = (props) => {
         router.replace(router.asPath);
       }
     },
+    star: async ({ id }) => {
+      // recieve workspace id and star it
+
+      const data = await auth.starWorkspace({ id });
+
+      if (data.success) {
+        router.replace(router.asPath);
+      } else {
+        console.log("star error: ", data?.error);
+      }
+    },
     closeModal: () => {
       setNewWorkspaceVisible(false);
       setNewWorkspaceErr({ ...newWorkspace, desc: false, title: false });
@@ -228,7 +239,7 @@ const Home = (props) => {
         <Button
           text="Boards"
           onClick={() => { }}
-          style={{ justifyContent: "flex-start", borderRadius: 8, width: "90%", }}
+          style={{ justifyContent: "flex-start", borderRadius: 8, width: "90%", marginTop: 24 }}
           icon={<DashboardIcon height={24} width={24} fill={viewing == "boards" ? "#fff" : "#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />}
           reversed={viewing != "boards"}
         />
@@ -244,17 +255,12 @@ const Home = (props) => {
             </div>
           </div>
           <div className={styles.content}>
-            {(props.workspaces?.data.length > 0 && props.workspaces.data.map((element, index) => <div className={styles.workspace} key={index}>
-              <div style={{ position: "absolute", width: "100%", height: "100%", zIndex: 1 }}>
-                <Link href="/workspace/[pid]" as={`/workspace/${element.id}`}>
-                  <a style={{ position: "absolute", width: "100%", height: "100%", }}></a>
-                </Link>
-                <button className={styles.deleteWorkspace} onClick={() => setDeleteModal({ workspace: element.id, visible: true })}>
-                  <DeleteIcon height={24} width={24} fill={"#19181e"} />
-                </button>
-              </div>
-              <div style={{ padding: 16 }}>
-                <div className={styles.footer}>
+            {props.workspaces?.data ? (props.workspaces?.data.length > 0 && props.workspaces.data.map((element, index) => <div className={styles.workspace} key={index}>
+              <Link href="/workspace/[pid]" as={`/workspace/${element.id}`}>
+                <a style={{ position: "absolute", width: "100%", height: "100%", zIndex: 1 }}></a>
+              </Link>
+              <div style={{ zIndex: 2, marginLeft: 16, marginBottom: 16 }}>
+                <div className={styles.footer} >
                   <div className={styles.title}>
                     {element.title}
                   </div>
@@ -262,11 +268,14 @@ const Home = (props) => {
                     {element.desc}
                   </div>
                 </div>
-                <button className={styles.fav} onClick={() => StarWorkspace({ workspace: element, index })} >
-                  {element.starred ? <StarFilledIcon height={24} width={24} fill={"#dbb700"} /> : <StarOutlineIcon height={24} width={24} fill={"#19181e"} />}
+                <button className={styles.fav} onClick={() => workspace.star({ id: element.id })} >
+                  {element?.starred == true ? <StarFilledIcon height={24} width={24} fill={"#dbb700"} /> : <StarOutlineIcon height={24} width={24} fill={"#19181e"} />}
+                </button>
+                <button className={styles.deleteWorkspace} onClick={() => setDeleteModal({ workspace: element.id, visible: true })}>
+                  <DeleteIcon height={24} width={24} fill={"#19181e"} />
                 </button>
               </div>
-            </div>))}
+            </div>)) : <div>you dont have any workspaces yet...</div>}
           </div>
         </div>
       </div>
@@ -329,6 +338,16 @@ const Home = (props) => {
                   style={{ marginTop: 18 }}
                 />
                 {newWorkspaceErr.desc != false && <p className={styles.errorMsg}>{newWorkspaceErr.desc}</p>}
+              </div>
+              <div className={styles.inputContainer}>
+                {/*<div>
+                  <input type="checkbox" id="useTemplate" name="useTemplate" />
+                  <label htmlFor="useTemplate" style={{ marginLeft: 8, fontSize: "1.2em", color: "white" }}>Use Template</label>
+                </div>*/}
+                <div>
+                  <input type="checkbox" id="starred" name="starred" onChange={e => setNewWorkspace({ ...newWorkspace, starred: e.target.checked })} value={newWorkspace.starred} />
+                  <label htmlFor="starred" style={{ marginLeft: 8, fontSize: "1.2em", color: "white" }}>Star this workspace</label>
+                </div>
               </div>
             </form>
           </div>
@@ -408,8 +427,12 @@ export async function getServerSideProps(ctx) {
         }).then(response => response.json());
 
         if (dataWorkspaces.success) {
-          const getWorkspaces = Object.keys(dataWorkspaces.data).map((el, index) => { return { ...dataWorkspaces.data[el], id: Object.keys(dataWorkspaces.data)[index] } });
-          workspaces = { data: getWorkspaces, success: true };
+          if (dataWorkspaces?.data) {
+            const getWorkspaces = Object.keys(dataWorkspaces.data).map((el, index) => { return { ...dataWorkspaces.data[el], id: Object.keys(dataWorkspaces.data)[index] } });
+            workspaces = { data: getWorkspaces, success: true };
+          } else {
+            workspaces = { success: true }
+          }
         }
       } else {
         validate = { error: dataValidate?.error?.code }

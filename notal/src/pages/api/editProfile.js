@@ -23,6 +23,7 @@ export default async function handler(req, res) {
                 await admin.database().ref(`/users/${data.uid}`).update({
                     fullname: data.fullname,
                     bio: data.bio,
+                    updatedAt: Date.now(),
                 }, () => {
                     res.status(200).json({ success: true, data: { username: data.username, fullname: data.fullname, uid: data.uid } });
                 }).catch(err => {
@@ -36,6 +37,8 @@ export default async function handler(req, res) {
             await admin.database().ref(`/users/${data.uid}`).update({
                 fullname: data.fullname,
                 username: data.username,
+                bio: data.bio || "",
+                updatedAt: Date.now(),
             }, () => {
                 res.status(200).json({ success: true, data: { username: data.username, fullname: data.fullname, uid: data.uid } });
             }).catch(err => {

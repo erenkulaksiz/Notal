@@ -24,11 +24,14 @@ export default async function handler(req, res) {
             await admin.database().ref(`/users/${data.uid}`).update({
                 username: data.username,
                 fullname: data.fullname,
+                updatedAt: Date.now(),
             }, () => {
                 res.status(200).json({ success: true, data: { username: data.username, fullname: data.fullname, uid: data.uid } });
             }).catch(err => {
                 res.status(400).json({ success: false, error: err });
             });
         }
+    }).catch(err => {
+        res.status(400).json({ success: false, error: err });
     });
 }
