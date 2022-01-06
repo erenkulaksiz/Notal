@@ -33,7 +33,9 @@ const Home = (props) => {
 
   const [validate, setValidate] = useState(props.validate);
 
-  const [viewing, setViewing] = useState("boards");
+  //filter and view
+  const [viewing, setViewing] = useState("workspaces");
+  const [filter, setFilter] = useState(null);
 
   // delete modal
   const [deleteModal, setDeleteModal] = useState({ workspace: -1, visible: false });
@@ -48,6 +50,14 @@ const Home = (props) => {
   const [regErr, setRegErr] = useState({ fullname: false, username: false, register: false });
   const [registerAlertVisible, setRegisterAlertVisible] = useState(false);
   //
+
+  useEffect(() => {
+    if (viewing == "favorites") {
+      setFilter("favorites");
+    } else {
+      setFilter(null);
+    }
+  }, [viewing]);
 
   useEffect(async () => {
     console.log("props indexjs: ", props);
@@ -154,6 +164,18 @@ const Home = (props) => {
     closeModal: () => {
       setNewWorkspaceVisible(false);
       setNewWorkspaceErr({ ...newWorkspace, desc: false, title: false });
+      setNewWorkspace({ ...newWorkspace, title: "", desc: "", starred: "" });
+    },
+    getWorkspacesWithFilter: (workspaces) => {
+
+      if (filter == "favorites") {
+        const newWorkspaces = workspaces.filter(el => el.starred == true);
+        return [...newWorkspaces]
+      } else {
+        // no filter
+        const newWorkspaces = workspaces.sort((a, b) => b.starred - a.starred);
+        return [...newWorkspaces]
+      }
     }
   }
 
@@ -237,11 +259,18 @@ const Home = (props) => {
     <div className={styles.content_home}>
       <div className={styles.buttons}>
         <Button
-          text="Boards"
-          onClick={() => { }}
-          style={{ justifyContent: "flex-start", borderRadius: 8, width: "90%", marginTop: 24 }}
-          icon={<DashboardIcon height={24} width={24} fill={viewing == "boards" ? "#fff" : "#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />}
-          reversed={viewing != "boards"}
+          text="Workspaces"
+          onClick={() => setViewing("workspaces")}
+          style={{ justifyContent: "flex-start", borderRadius: 8, width: "90%", marginTop: 24, height: 54 }}
+          icon={<DashboardIcon height={24} width={24} fill={viewing == "workspaces" ? "#fff" : "#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />}
+          reversed={viewing != "workspaces"}
+        />
+        <Button
+          text="Favorites"
+          onClick={() => setViewing("favorites")}
+          style={{ justifyContent: "flex-start", borderRadius: 8, width: "90%", marginTop: 12, height: 54 }}
+          icon={viewing == "favorites" ? <StarFilledIcon height={24} width={24} fill={"#fff"} style={{ marginLeft: 8, marginRight: 8, }} /> : <StarOutlineIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />}
+          reversed={viewing != "favorites"}
         />
       </div>
       <div className={styles.workspaces}>
@@ -255,7 +284,7 @@ const Home = (props) => {
             </div>
           </div>
           <div className={styles.content}>
-            {props.workspaces?.data ? (props.workspaces?.data.length > 0 && props.workspaces.data.map((element, index) => <div className={styles.workspace} key={index}>
+            {(workspace.getWorkspacesWithFilter(props.workspaces?.data).length > 0 ? workspace.getWorkspacesWithFilter(props.workspaces?.data).map((element, index) => <div className={styles.workspace} key={index}>
               <Link href="/workspace/[pid]" as={`/workspace/${element.id}`}>
                 <a style={{ position: "absolute", width: "100%", height: "100%", zIndex: 1 }}></a>
               </Link>
@@ -275,7 +304,7 @@ const Home = (props) => {
                   <DeleteIcon height={24} width={24} fill={"#19181e"} />
                 </button>
               </div>
-            </div>)) : <div>you dont have any workspaces yet...</div>}
+            </div>) : <div>it seems like theres no workspaces here...</div>)}
           </div>
         </div>
       </div>

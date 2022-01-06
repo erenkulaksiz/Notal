@@ -2,7 +2,7 @@
 
 .content_home {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   flex-direction: column;
   height: 90%;
@@ -13,6 +13,7 @@
   @include sm {
     width: 550px;
     flex-direction: row;
+    justify-content: center;
     .workspaces {
       &__wrapper {
         .workspace {

@@ -55,7 +55,18 @@ const About = (props) => {
                 <div className={styles.aboutDesc}>
                     <p>Notal is a basic todo tracking and taking notes platform. It is currently being built by a college student in Turkey, Istanbul named <a href="https://github.com/erenkulaksiz">Eren Kulaksiz</a>.</p>
                 </div>
-                <div className={styles.takeNotes}>
+                <div className={styles.section}>
+                    <div className={styles.title}>
+                        <div className={styles.icon}>
+                            <AddIcon height={24} width={24} fill={"#fff"} />
+                        </div>
+                        <h1>Create Workspaces</h1>
+                    </div>
+                    <div className={styles.desc}>
+                        <p>Creating a workspaces will make you be able to create todos and notes. Also you can share your workspaces, or you can just set them to private.</p>
+                    </div>
+                </div>
+                <div className={styles.section}>
                     <div className={styles.title}>
                         <div className={styles.icon}>
                             <EditIcon height={24} width={24} fill={"#fff"} />
@@ -66,7 +77,7 @@ const About = (props) => {
                         <p>Want to take notes about your project? simply open a workspace then add notes.</p>
                     </div>
                 </div>
-                <div className={styles.addTodos}>
+                <div className={styles.section}>
                     <div className={styles.title}>
                         <div className={styles.icon}>
                             <AddIcon height={24} width={24} fill={"#fff"} />
@@ -77,7 +88,18 @@ const About = (props) => {
                         <p>Want to add todos for your project? you can create from a workspace. You can even categorize them or add notes into todos.</p>
                     </div>
                 </div>
-                <div className={styles.more}>
+                <div className={styles.section}>
+                    <div className={styles.title}>
+                        <div className={styles.icon}>
+                            <EditIcon height={24} width={24} fill={"#fff"} />
+                        </div>
+                        <h1>Customize Your Profile</h1>
+                    </div>
+                    <div className={styles.desc}>
+                        <p>You can change your fullname, bio and username on your profile section. Also your username is the link. {props.validate?.data?.username && <div>For example, your profile link is <a href={`${server}/profile/${props.validate?.data?.username}`}>{`${server}/profile/${props.validate?.data?.username}`}</a></div>}</p>
+                    </div>
+                </div>
+                <div className={styles.section}>
                     <div className={styles.title}>
                         <div className={styles.icon}>
                             <QuestionIcon height={24} width={24} fill={"#fff"} />

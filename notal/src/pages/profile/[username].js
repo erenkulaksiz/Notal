@@ -8,6 +8,8 @@ import useAuth from '../../hooks/auth';
 import { server } from '../../config';
 
 import BackIcon from '../../../public/icons/back.svg';
+import HomeFilledIcon from '../../../public/icons/home_filled.svg';
+
 import EditIcon from '../../../public/icons/edit.svg';
 import CrossIcon from '../../../public/icons/cross.svg';
 import CheckIcon from '../../../public/icons/check.svg';
@@ -129,12 +131,18 @@ const Profile = (props) => {
         <div className={styles.content_profile}>
             {
                 (props.profile?.success == false && props.profile?.error == "cant-find-user") && <div className={styles.errorFindUser}>
-                    <h1>We couldnt reach to this user.</h1>
+                    <h1 style={{ fontSize: "2.2em", fontWeight: "600", textAlign: "center" }}>We couldnt reach to this user.</h1>
+                    <Button
+                        text="Home"
+                        icon={<HomeFilledIcon height={24} width={24} fill={"#fff"} style={{ marginRight: 8 }} />}
+                        style={{ marginTop: 24, width: "50%" }}
+                        onClick={() => router.replace("/")}
+                    />
                     <Button
                         text="Back"
-                        icon={<BackIcon height={24} width={24} fill={"#fff"} style={{ marginRight: 8 }} />}
-                        style={{ marginTop: 24, width: "50%" }}
                         onClick={() => router.back()}
+                        style={{ marginTop: 12, width: "50%" }}
+                        icon={<BackIcon height={24} width={24} fill={"#fff"} style={{ marginRight: 8 }} />}
                     />
                 </div>
             }
