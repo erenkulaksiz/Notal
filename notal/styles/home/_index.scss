@@ -192,6 +192,12 @@
     width: 50%;
     align-items: center;
     justify-content: center;
+    button {
+      font-size: 1em;
+      @include sm {
+        font-size: 1.3em;
+      }
+    }
   }
 }
 
@@ -211,13 +217,13 @@
     .alert {
       width: 50%;
       position: relative;
-      min-width: 380px;
+      min-width: 300px;
       background-color: $primary_color;
       border-radius: 12px;
       padding: 24px;
 
       @include sm {
-        min-width: 500px;
+        min-width: 480px;
         //padding-left: 24px;
         //padding-right: 24px;
       }
@@ -336,7 +342,10 @@
         font-size: 1.6em;
         height: 25%;
         color: white;
-        padding: 24px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid white;
+        margin: 24px;
+        margin-bottom: 0;
       }
 
       .body {

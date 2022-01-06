@@ -2,6 +2,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import cookie from 'js-cookie';
 
 import styles from '../../styles/App.module.scss';
 import { server } from '../config';
@@ -19,6 +20,7 @@ import QuestionIcon from '../../public/icons/question.svg';
 import Input from '../components/input';
 import Button from '../components/button';
 import Header from '../components/header';
+import Alert from '../components/alert';
 
 import { withAuth } from '../hooks/route';
 import useAuth from '../hooks/auth';
@@ -33,6 +35,9 @@ const Home = (props) => {
 
   const [viewing, setViewing] = useState("boards");
 
+  // delete modal
+  const [deleteModal, setDeleteModal] = useState({ workspace: -1, visible: false });
+
   // new workspace states
   const [newWorkspaceVisible, setNewWorkspaceVisible] = useState(false);
   const [newWorkspace, setNewWorkspace] = useState({ title: "", desc: "", starred: false });
@@ -44,12 +49,21 @@ const Home = (props) => {
   const [registerAlertVisible, setRegisterAlertVisible] = useState(false);
   //
 
-  useEffect(() => {
+  useEffect(async () => {
     console.log("props indexjs: ", props);
 
-    if (props.validate?.error == "auth/id-token-expired") {
-      auth.logout();
-      return;
+    if (props.validate?.error == "auth/id-token-expired" || props.validate?.error == "auth/argument-error") {
+      try {
+        const { token } = await auth.getIdToken();
+        console.log("token: ", token);
+        cookie.set("auth", token, { expires: 1 });
+        router.replace(router.asPath);
+        return;
+      } catch (err) {
+        console.error(err);
+        auth.logout();
+        return;
+      }
     }
 
     if (!props.validate.data?.username?.length) { // if theres no username is present
@@ -117,8 +131,18 @@ const Home = (props) => {
       }
 
     },
+    delete: async ({ id }) => {
+      setDeleteModal({ visible: false, workspace: -1 }); // set visiblity to false and id to -1
+
+      const data = await auth.deleteWorkspace({ id });
+
+      if (data.success) {
+        router.replace(router.asPath);
+      }
+    },
     closeModal: () => {
       setNewWorkspaceVisible(false);
+      setNewWorkspaceErr({ ...newWorkspace, desc: false, title: false });
     }
   }
 
@@ -220,14 +244,7 @@ const Home = (props) => {
             </div>
           </div>
           <div className={styles.content}>
-
-            {
-              Object.keys(props.workspaces).map(el => props.workspaces[el]).filter(el => el != true).map(el => {
-                return <div key={Object.keys(el)[0]}>{JSON.stringify(el)}<br /></div>
-              })
-            }
-
-            {(props.workspaces?.length > 0 && props.workspaces.map((element, index) => <div className={styles.workspace} key={index}>
+            {(props.workspaces?.data.length > 0 && props.workspaces.data.map((element, index) => <div className={styles.workspace} key={index}>
               <div style={{ position: "absolute", width: "100%", height: "100%", zIndex: 1 }}>
                 <Link href="/workspace/[pid]" as={`/workspace/${element.id}`}>
                   <a style={{ position: "absolute", width: "100%", height: "100%", }}></a>
@@ -260,14 +277,14 @@ const Home = (props) => {
         <Button
           text="Create Workspace"
           onClick={() => setNewWorkspaceVisible(true)}
-          style={{ height: 54, borderRadius: 8, minWidth: 200 }}
+          style={{ height: 54, borderRadius: 8, minWidth: 160 }}
           icon={<AddIcon height={24} width={24} fill={"#19181e"} />}
           reversed
         />
         <Button
           text="About"
           onClick={() => router.push("/about")}
-          style={{ height: 54, borderRadius: 8, minWidth: 200 }}
+          style={{ height: 54, borderRadius: 8, minWidth: 160 }}
           icon={<QuestionIcon height={24} width={24} fill={"#19181e"} />}
           reversed
         />
@@ -334,6 +351,32 @@ const Home = (props) => {
       </div>
       <span className={styles.overlay} />
     </div>}
+    <Alert
+      visible={deleteModal.visible}
+      icon={<DeleteIcon height={24} width={24} fill={"#fff"} style={{ marginRight: 8 }} />}
+      title="Delete Workspace"
+      textColor="#fff"
+      text="Are you sure want to delete this workspace?"
+      closeVisible
+      onCloseClick={() => {
+        setDeleteModal({ workspace: -1, visible: false })
+      }}
+      buttons={[
+        <Button
+          text="Cancel"
+          onClick={() => setDeleteModal({ ...deleteModal, visible: false })}
+          key={0}
+        />,
+        <Button
+          text="Delete"
+          icon={<DeleteIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
+          style={{ borderStyle: "none" }}
+          onClick={() => workspace.delete({ id: deleteModal.workspace })}
+          reversed
+          key={1}
+        />
+      ]}
+    />
   </div>)
 }
 
@@ -365,7 +408,8 @@ export async function getServerSideProps(ctx) {
         }).then(response => response.json());
 
         if (dataWorkspaces.success) {
-          workspaces = dataWorkspaces;
+          const getWorkspaces = Object.keys(dataWorkspaces.data).map((el, index) => { return { ...dataWorkspaces.data[el], id: Object.keys(dataWorkspaces.data)[index] } });
+          workspaces = { data: getWorkspaces, success: true };
         }
       } else {
         validate = { error: dataValidate?.error?.code }

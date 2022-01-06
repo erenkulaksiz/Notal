@@ -160,8 +160,6 @@ const AuthService = {
     createWorkspace: async ({ title, desc }) => {
         const auth = getAuth();
 
-        console.log("auth: ", auth);
-
         const data = await fetch(`${server}/api/workspace`, {
             'Content-Type': 'application/json',
             method: "POST",
@@ -173,6 +171,28 @@ const AuthService = {
         } else {
             return { error: data?.error }
         }
+    },
+    removeWorkspace: async ({ id }) => {
+        const auth = getAuth();
+
+        const data = await fetch(`${server}/api/workspace`, {
+            'Content-Type': 'application/json',
+            method: "POST",
+            body: JSON.stringify({ id, action: "DELETE", uid: auth?.currentUser?.uid }),
+        }).then(response => response.json());
+
+        if (data?.success) {
+            return { success: true }
+        } else {
+            return { error: data?.error }
+        }
+    },
+    getIdToken: async () => {
+        const token = await getAuth().currentUser.getIdToken();
+
+        console.log("currToken: ", token);
+
+        return { token };
     },
     logout: async () => {
         const auth = getAuth();

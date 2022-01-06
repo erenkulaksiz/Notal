@@ -41,6 +41,19 @@ export default async function handler(req, res) {
             } else {
                 res.status(200).send({ success: true });
             }
-        })
+        });
+    } else if (action == "DELETE") {
+        const { id, uid } = JSON.parse(req.body); // id of workspace
+
+        if (!uid) {
+            res.status(400).send({ success: false });
+            return;
+        }
+
+        await admin.database().ref(`/workspaces`).child(uid).child(id).remove(() => {
+            res.status(200).send({ success: true });
+        }).catch(error => {
+            res.status(400).send({ success: false, error })
+        });
     }
 }

@@ -148,7 +148,7 @@ const Profile = (props) => {
                                         src={props.profile.data.avatar}
                                         className={styles.avatar}
                                         alt="Avatar of a profile"
-                                    /> {/*  */}
+                                    />
                                     {editingProfile && <div className={styles.editAvatarContainer}>
                                         <input type="file" className={styles.editAvatar} onChange={onAvatarEditChange} />
                                         <EditIcon height={24} width={24} fill={"#fff"} />
@@ -199,7 +199,7 @@ const Profile = (props) => {
                                             onChange={e => setEditProfile({ ...editProfile, bio: e.target.value })}
                                             value={editProfile.bio}
                                             style={{ marginTop: 4, }}
-                                            multilineStyle={{ maxHeight: 100, minHeight: 60, maxWidth: 450, minWidth: 300 }}
+                                            multilineStyle={{ maxHeight: 100, minHeight: 60, maxWidth: 450 }}
                                             error={editErrors.bio != false}
                                             maxLength={128}
                                             multiline
