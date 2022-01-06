@@ -59,26 +59,29 @@ const Home = (props) => {
     }
   }, [viewing]);
 
-  useEffect(async () => {
+  useEffect(() => {
     console.log("props indexjs: ", props);
 
-    if (props.validate?.error == "auth/id-token-expired" || props.validate?.error == "auth/argument-error") {
-      try {
-        const { token } = await auth.getIdToken();
-        console.log("token: ", token);
-        cookie.set("auth", token, { expires: 1 });
-        router.replace(router.asPath);
-        return;
-      } catch (err) {
-        console.error(err);
-        auth.logout();
-        return;
+    const checkToken = async () => {
+      if (props.validate?.error == "auth/id-token-expired" || props.validate?.error == "auth/argument-error") {
+        try {
+          const { token } = await auth.getIdToken();
+          console.log("token: ", token);
+          cookie.set("auth", token, { expires: 1 });
+          router.replace(router.asPath);
+          return;
+        } catch (err) {
+          console.error(err);
+          auth.logout();
+          return;
+        }
+      }
+      if (!props.validate.data?.username?.length) { // if theres no username is present
+        setRegisterAlertVisible(true);
       }
     }
 
-    if (!props.validate.data?.username?.length) { // if theres no username is present
-      setRegisterAlertVisible(true);
-    }
+    checkToken();
   }, []);
 
   const registerUser = async (e) => {

@@ -11,7 +11,7 @@ const Page404 = () => {
 
         <h1 style={{ marginBottom: 24, fontSize: "4em", fontWeight: "600", textAlign: "center" }}>[404]</h1>
         <div style={{ fontSize: "1.8em", fontWeight: "600", textAlign: "center" }}>
-            We couldn't find the page you were looking for.
+            We couldnt find the page you were looking for.
         </div>
         <Button
             text="Home"
