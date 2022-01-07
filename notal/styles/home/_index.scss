@@ -115,6 +115,18 @@
           width: 240px;
           min-width: 150px;
 
+          transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
+
+          &:hover {
+            transform: scale(0.98, 0.98);
+            transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
+          }
+
+          &:active {
+            transform: scale(0.97, 0.97);
+            transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
+          }
+
           .footer {
             display: flex;
             flex-direction: column;

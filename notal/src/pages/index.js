@@ -31,8 +31,6 @@ const Home = (props) => {
 
   const [menuToggle, setMenuToggle] = useState(false);
 
-  const [validate, setValidate] = useState(props.validate);
-
   //filter and view
   const [viewing, setViewing] = useState("workspaces");
   const [filter, setFilter] = useState(null);
@@ -67,7 +65,7 @@ const Home = (props) => {
         try {
           const { token } = await auth.getIdToken();
           console.log("token: ", token);
-          cookie.set("auth", token, { expires: 1 });
+          await cookie.set("auth", token, { expires: 1 });
           router.replace(router.asPath);
           return;
         } catch (err) {
@@ -106,7 +104,8 @@ const Home = (props) => {
     if (result.success) {
       setRegisterAlertVisible(false);
       setRegErr({ fullname: false, username: false, register: false });
-      setValidate({ ...validate, data: { ...validate.data, fullname: register.fullname, username: register.username } })
+      //setValidate({ ...validate, data: { ...validate.data, fullname: register.fullname, username: register.username } })
+      router.replace(router.asPath);
     } else if (result.error?.success == false && result?.error?.error == "auth/username-already-in-use") {
       setRegErr({ fullname: false, username: "This username is already in use.", register: false });
       return;
@@ -175,7 +174,7 @@ const Home = (props) => {
         else return []
       } else {
         // no filter
-        if (workspaces) return workspaces.sort((a, b) => b.starred - a.starred);
+        if (workspaces) return workspaces;
         else return []
       }
     }
@@ -250,10 +249,10 @@ const Home = (props) => {
     <Header
       menuToggle={menuToggle}
       onMenuToggle={val => setMenuToggle(val)}
-      userData={{ fullname: validate?.data?.fullname, email: auth.authUser.email }}
-      avatarURL={validate.data?.avatar}
+      userData={{ fullname: props.validate?.data?.fullname, email: auth.authUser.email }}
+      avatarURL={props.validate?.data?.avatar}
       onLogout={() => auth.logout()}
-      onProfile={() => router.push(`/profile/${validate?.data?.username}`)}
+      onProfile={() => router.push(`/profile/${props?.validate?.data?.username}`)}
       onHeaderHome={() => router.replace('/')}
       showCreate={false}
     />
@@ -454,7 +453,7 @@ export async function getServerSideProps(ctx) {
         const dataWorkspaces = await fetch(`${server}/api/workspace`, {
           'Content-Type': 'application/json',
           method: "POST",
-          body: JSON.stringify({ uid: dataValidate.uid, action: "GET" }),
+          body: JSON.stringify({ uid: dataValidate.uid, action: "GET_WORKSPACES" }),
         }).then(response => response.json());
 
         if (dataWorkspaces.success) {

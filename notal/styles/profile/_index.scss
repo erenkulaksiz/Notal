@@ -41,9 +41,11 @@
     padding-top: 0;
 
     @include md {
+      margin-top: 16px;
     }
 
     @include lg {
+      margin-top: 16px;
     }
 
     .header {
@@ -57,13 +59,13 @@
       flex-direction: column;
 
       @include md {
-        border-bottom-left-radius: 16px;
-        border-bottom-right-radius: 16px;
+        border-radius: 12px;
+        padding-top: 32px;
       }
 
       @include lg {
-        border-bottom-left-radius: 16px;
-        border-bottom-right-radius: 16px;
+        border-radius: 12px;
+        padding-top: 32px;
       }
       .top {
         display: flex;

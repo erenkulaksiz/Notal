@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import cookie from 'js-cookie';
 
 import styles from '../../../styles/App.module.scss';
 
@@ -37,9 +38,23 @@ const Profile = (props) => {
     useEffect(() => {
         console.log("props: ", props);
 
-        if (props.validate?.error == "auth/id-token-expired") {
-            auth.logout();
+        const checkToken = async () => {
+            if (props.validate?.error == "auth/id-token-expired" || props.validate?.error == "auth/argument-error") {
+                try {
+                    const { token } = await auth.getIdToken();
+                    console.log("token: ", token);
+                    await cookie.set("auth", token, { expires: 1 });
+                    router.replace(router.asPath);
+                    return;
+                } catch (err) {
+                    console.error(err);
+                    auth.logout();
+                    return;
+                }
+            }
         }
+
+        checkToken();
     }, []);
 
     const onFinishEditing = async (e) => {
