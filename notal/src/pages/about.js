@@ -10,6 +10,8 @@ import { server } from '../config';
 import QuestionIcon from '../../public/icons/question.svg';
 import AddIcon from '../../public/icons/add.svg';
 import EditIcon from '../../public/icons/edit.svg';
+import LockOutlineIcon from '../../public/icons/lock_outline.svg';
+import SpeedIcon from '../../public/icons/speed.svg';
 
 import Button from '../components/button';
 import Input from '../components/input';
@@ -52,7 +54,10 @@ const About = (props) => {
                     <h1>Welcome to Notal.</h1>
                 </div>
                 <div className={styles.aboutDesc}>
-                    <p>Notal is a basic todo tracking and taking notes platform. It is currently being built by a college student in Turkey, Istanbul named <a href="https://github.com/erenkulaksiz">Eren Kulaksiz</a>.</p>
+                    <p>Notal is a basic todo tracking and taking notes platform.
+                        <br />It is currently being built by me in Istanbul, Turkey which my name is <a href="https://github.com/erenkulaksiz">Eren Kulaksiz</a>.
+                        <br />You can directly contact with me with my email <a href="mailto:erenkulaksz@gmail.com">erenkulaksz@gmail.com</a>.
+                    </p>
                 </div>
                 <div className={styles.section}>
                     <div className={styles.title}>
@@ -62,7 +67,9 @@ const About = (props) => {
                         <h1>Create Workspaces</h1>
                     </div>
                     <div className={styles.desc}>
-                        <p>Creating a workspaces will make you be able to create todos and notes. Also you can share your workspaces, or you can just set them to private.</p>
+                        <p>Creating a workspaces will make you be able to create todos and notes inside them. Also you can share your workspaces, or you can just set them to private only you, or you can set who can see your workspace with username of users.
+                            <br /> Currently, teams and permission system is being built along with development of workspaces.
+                        </p>
                     </div>
                 </div>
                 <div className={styles.section}>
@@ -99,6 +106,42 @@ const About = (props) => {
                     </div>
                 </div>
                 <div className={styles.section}>
+                    <div className={styles.title}>
+                        <div className={styles.icon}>
+                            <LockOutlineIcon height={24} width={24} fill={"#fff"} />
+                        </div>
+                        <h1>Privacy & Security</h1>
+                    </div>
+                    <div className={styles.desc}>
+                        <p>
+                            Im building Notal with privacy and security in-mind.
+                            <br />You can register with Google, GitHub and Email at this point.
+                            <br />All stored data is stored with using <b>SHA256 and other types of encryption</b> in our servers.
+                            <br />Backend written with NodeJS & Firebase Admin and all API requests are Auth protected.
+                            <br />Notal will never sell your data, even workspace data is kept in our secure servers.
+                            <br />Even though i wrote Frontend & Backend just by myself, my pentest tools are limited. But
+                            if you are interested in pentesting, im open to offers at <a href="mailto:erenkulaksz@gmail.com">erenkulaksz@gmail.com</a>.
+                        </p>
+                    </div>
+                </div>
+                <div className={styles.section}>
+                    <div className={styles.title}>
+                        <div className={styles.icon}>
+                            <SpeedIcon height={24} width={24} fill={"#fff"} />
+                        </div>
+                        <h1>Peformance & Speed</h1>
+                    </div>
+                    <div className={styles.desc}>
+                        <p>
+                            Performance and speed is always important since it affects your waiting time, also efficiency.
+                            <br />Im aware of performance and speed issues (technically its not issues).
+                            <br />At this stage, starring your workspaces, deleting workspaces, retrieving workspaces and editing workspaces might seem your internet speed is low. As soon as you click to buttons, we recieve the API call but its not showed on Frontend.
+                            <br />This is a intended behaviour and will be fixed at production build on near end of Q1 in 2022.
+                            <br />Note that you are using a Beta version of a new platform built from scratch.
+                        </p>
+                    </div>
+                </div>
+                <div className={styles.section} style={{ marginBottom: 32 }}>
                     <div className={styles.title}>
                         <div className={styles.icon}>
                             <QuestionIcon height={24} width={24} fill={"#fff"} />

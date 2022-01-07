@@ -14,120 +14,129 @@ export default async function handler(req, res) {
 
     const { uid, title, desc, action, starred, id } = JSON.parse(req.body);
 
-    if (action == "CREATE") {
-
-        if (!uid || !action) {
-            res.status(400).send({ success: false })
-            return;
-        }
-
-        const ref = await admin.database().ref(`/workspaces`).push();
-        await ref.set({
-            title, desc, starred, createdAt: Date.now(), updatedAt: Date.now(), owner: uid
-        });
-        res.status(200).send({ success: true });
-    } else if (action == "GET_WORKSPACES") {
-        const { uid } = JSON.parse(req.body);
-
-        if (!uid) {
-            res.status(400).send({ success: false });
-            return;
-        }
-
-        await admin.database().ref(`/workspaces`).orderByChild("owner").equalTo(uid).once("value", async (snapshot) => {
-            if (snapshot.exists()) {
-                res.status(200).send({ success: true, data: snapshot.val() });
-            } else {
-                res.status(200).send({ success: true });
+    const workspaceAction = {
+        create: async () => {
+            if (!uid || !action) {
+                res.status(400).send({ success: false })
+                return;
             }
-        });
-    } else if (action == "DELETE") {
 
-        if (!uid) {
-            res.status(400).send({ success: false });
-            return;
-        }
+            const ref = await admin.database().ref(`/workspaces`).push();
+            await ref.set({
+                title, desc, starred, createdAt: Date.now(), updatedAt: Date.now(), owner: uid
+            });
+            res.status(200).send({ success: true });
+        },
+        get_workspaces: async () => {
+            const { uid } = JSON.parse(req.body);
 
-        await admin.database().ref(`/workspaces/${id}`).once("value", async (snapshot) => {
-            if (snapshot.exists()) {
-                await admin.database().ref(`/workspaces/${id}`).remove(() => {
+            if (!uid) {
+                res.status(400).send({ success: false });
+                return;
+            }
+
+            await admin.database().ref(`/workspaces`).orderByChild("owner").equalTo(uid).once("value", async (snapshot) => {
+                if (snapshot.exists()) {
+                    res.status(200).send({ success: true, data: snapshot.val() });
+                } else {
                     res.status(200).send({ success: true });
-                }).catch(error => {
-                    res.status(400).send({ success: false, error });
-                });
-            } else {
+                }
+            });
+        },
+        get_workspace: async () => {
+            if (!id) {
                 res.status(400).send({ success: false });
+                return;
             }
-        });
-    } else if (action == "STAR") {
 
-        if (!uid || !id) {
-            res.status(400).send({ success: false });
-            return;
-        }
+            await admin.database().ref(`/workspaces/${id}`).once("value", async (snapshot) => {
+                if (snapshot.exists()) {
+                    res.status(200).send({ success: true, data: snapshot.val() });
+                } else {
+                    res.status(400).send({ success: false });
+                }
+            }).catch(error => {
+                res.status(400).send({ success: false, error });
+            });
+        },
+        delete: async () => {
+            if (!uid) {
+                res.status(400).send({ success: false });
+                return;
+            }
 
-        await admin.database().ref(`/workspaces`).orderByKey().equalTo(id).once("value", async (snapshot) => {
-            if (snapshot.exists()) {
-                const data = snapshot.val()[Object.keys(snapshot.val())[0]];
-
-                const starred = !data.starred;
-
-                if (data.owner == uid) {
-
-                    await admin.database().ref(`/workspaces/${id}`).update({ starred, updatedAt: Date.now() }, () => {
+            await admin.database().ref(`/workspaces/${id}`).once("value", async (snapshot) => {
+                if (snapshot.exists()) {
+                    await admin.database().ref(`/workspaces/${id}`).remove(() => {
                         res.status(200).send({ success: true });
                     }).catch(error => {
                         res.status(400).send({ success: false, error });
                     });
                 } else {
-                    res.status(400).send({ success: false, error: "unauthorized" });
+                    res.status(400).send({ success: false });
                 }
-            } else {
+            });
+        },
+        star: async () => {
+
+            if (!uid || !id) {
                 res.status(400).send({ success: false });
+                return;
             }
-        }).catch(error => {
-            res.status(400).send({ success: false, error });
-        });
-    } else if (action == "GET_WORKSPACE") {
 
-        if (!id) {
-            res.status(400).send({ success: false });
-            return;
-        }
+            await admin.database().ref(`/workspaces`).orderByKey().equalTo(id).once("value", async (snapshot) => {
+                if (snapshot.exists()) {
+                    const data = snapshot.val()[Object.keys(snapshot.val())[0]];
 
-        await admin.database().ref(`/workspaces/${id}`).once("value", async (snapshot) => {
-            if (snapshot.exists()) {
-                res.status(200).send({ success: true, data: snapshot.val() });
-            } else {
-                res.status(400).send({ success: false });
-            }
-        }).catch(error => {
-            res.status(400).send({ success: false, error });
-        });
-    } else if (action == "EDIT") {
+                    const starred = !data.starred;
 
-        if (!id || !uid) {
-            res.status(400).send({ success: false });
-            return;
-        }
+                    if (data.owner == uid) {
 
-        await admin.database().ref(`/workspaces/${id}`).once("value", async (snapshot) => {
-            if (snapshot.exists()) {
-                if (snapshot.val().owner == uid) {
-
-                    await admin.database().ref(`/workspaces/${id}`).update({ title, desc, updatedAt: Date.now() }, () => {
-                        res.status(200).send({ success: true });
-                    }).catch(error => {
-                        res.status(400).send({ success: false, error });
-                    });
+                        await admin.database().ref(`/workspaces/${id}`).update({ starred, updatedAt: Date.now() }, () => {
+                            res.status(200).send({ success: true });
+                        }).catch(error => {
+                            res.status(400).send({ success: false, error });
+                        });
+                    } else {
+                        res.status(400).send({ success: false, error: "unauthorized" });
+                    }
                 } else {
-                    res.status(400).send({ success: false, error: "unauthorized" });
+                    res.status(400).send({ success: false });
                 }
-            } else {
+            }).catch(error => {
+                res.status(400).send({ success: false, error });
+            });
+        },
+        edit: async () => {
+            if (!id || !uid) {
                 res.status(400).send({ success: false });
+                return;
             }
-        }).catch(error => {
-            res.status(400).send({ success: false, error });
-        });
+
+            await admin.database().ref(`/workspaces/${id}`).once("value", async (snapshot) => {
+                if (snapshot.exists()) {
+                    if (snapshot.val().owner == uid) {
+
+                        await admin.database().ref(`/workspaces/${id}`).update({ title, desc, updatedAt: Date.now() }, () => {
+                            res.status(200).send({ success: true });
+                        }).catch(error => {
+                            res.status(400).send({ success: false, error });
+                        });
+                    } else {
+                        res.status(400).send({ success: false, error: "unauthorized" });
+                    }
+                } else {
+                    res.status(400).send({ success: false });
+                }
+            }).catch(error => {
+                res.status(400).send({ success: false, error });
+            });
+        }
+    }
+
+    if (!workspaceAction[action.toLowerCase()]) {
+        res.status(400).send({ success: false, action });
+    } else {
+        workspaceAction[action.toLowerCase()]();
     }
 }

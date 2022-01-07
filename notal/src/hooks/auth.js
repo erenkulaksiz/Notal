@@ -76,6 +76,10 @@ export function AuthProvider(props) {
         logout: async () => {
             await AuthService.logout();
             setUser(null);
+        },
+        getIdToken: async () => {
+            const token = await AuthService.getIdToken();
+            return token;
         }
     }
 
@@ -98,12 +102,7 @@ export function AuthProvider(props) {
         }
     }
 
-    const getIdToken = async () => {
-        const token = await AuthService.getIdToken();
-        return token;
-    }
-
-    const value = { authUser: user, authError: error, setUser, getIdToken, login, users, workspace };
+    const value = { authUser: user, authError: error, setUser, login, users, workspace };
 
     return <authContext.Provider value={value} {...props} />
 }

@@ -70,7 +70,7 @@ const Home = (props) => {
           return;
         } catch (err) {
           console.error(err);
-          auth.logout();
+          auth.users.logout();
           return;
         }
       }
@@ -376,7 +376,7 @@ const Home = (props) => {
                 </div>*/}
                 <div>
                   <input type="checkbox" id="starred" name="starred" onChange={e => setNewWorkspace({ ...newWorkspace, starred: e.target.checked })} value={newWorkspace.starred} />
-                  <label htmlFor="starred" style={{ marginLeft: 8, fontSize: "1.2em", color: "white" }}>Star this workspace</label>
+                  <label htmlFor="starred" style={{ marginLeft: 8, fontSize: "1.2em", color: "white" }}>Add this workspace to Favorites</label>
                 </div>
               </div>
             </form>

@@ -15,6 +15,7 @@ import CheckIcon from '../../../public/icons/check.svg';
 import StarOutlineIcon from '../../../public/icons/star_outline.svg';
 import StarFilledIcon from '../../../public/icons/star_filled.svg';
 import VisibleIcon from '../../../public/icons/visible.svg';
+import DeleteIcon from '../../../public/icons/delete.svg';
 
 import Header from '../../components/header';
 import Button from '../../components/button';
@@ -129,19 +130,34 @@ const Workspace = (props) => {
                             </button>
                         </div>)}
                     </div>
-                    <div className={styles.star}>
+                    {!editing && <><div className={styles.workspaceBtn}>
                         <button onClick={() => handle.starWorkspace()} >
                             {props.workspace?.data?.starred ? <StarFilledIcon height={24} width={24} style={{ fill: "#dbb700" }} /> : <StarOutlineIcon height={24} width={24} />}
                         </button>
                     </div>
-                    <div className={styles.visibility}>
-                        <button onClick={() => { }} >
-                            <VisibleIcon height={24} width={24} />
-                        </button>
-                    </div>
+                        <div className={styles.workspaceBtn}>
+                            <button onClick={() => { }} >
+                                <VisibleIcon height={24} width={24} />
+                            </button>
+                        </div>
+                        <div className={styles.workspaceBtn}>
+                            <button onClick={() => { }} >
+                                <DeleteIcon height={24} width={24} />
+                            </button>
+                        </div>
+                    </>}
                 </div>
                 <div className={styles.wrapper}>
-
+                    <div className={styles.fields}>
+                        <div className={styles.field}>
+                            <div className={styles.header}>
+                                <h1>header</h1>
+                            </div>
+                            <div className={styles.todo}>
+                                this is a todo
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </> : <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", width: "100%", height: "100%" }}>
                 <h1 style={{ marginBottom: 24, fontSize: "4em", fontWeight: "600", textAlign: "center" }}>[404]</h1>
@@ -162,7 +178,6 @@ const Workspace = (props) => {
                 />
             </div>
             }
-
         </div>
     </div>)
 }
