@@ -15,7 +15,7 @@
   }
 
   @include md {
-    width: 800px;
+    width: 750px;
   }
 
   @include lg {
@@ -30,14 +30,27 @@
   .nav {
     display: flex;
     align-items: flex-start;
-    padding-top: 12px;
+    padding-top: 0px;
+    background-color: $primary_color;
+    padding-bottom: 12px;
+    @include sm {
+      padding-top: 12px;
+      background-color: transparent;
+      padding-bottom: 0px;
+    }
     .meta {
       display: flex;
-      background-color: $primary_color;
       padding: 12px;
-      border-radius: 8px;
       flex-direction: row;
+      border-radius: 0px;
+
+      @include sm {
+        border-radius: 8px;
+        background-color: $primary_color;
+      }
       .details {
+        display: flex;
+        flex-direction: column;
         h1 {
           font-size: 1.4em;
           color: white;
@@ -46,25 +59,117 @@
           color: rgb(163, 163, 163);
         }
       }
-    }
-    .editBtn {
-      display: flex;
-      margin-left: 16px;
-      button {
-        background-color: transparent;
-        border: none;
-        cursor: pointer;
-        transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
-        &:hover {
-          svg {
-            fill: rgb(163, 163, 163);
+      .editBtn {
+        display: flex;
+        margin-left: 16px;
+        button {
+          display: flex;
+          background-color: white;
+          border-radius: 6px;
+          align-items: center;
+          justify-content: center;
+          border: none;
+          cursor: pointer;
+          transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
+          &:hover {
+            background-color: rgb(179, 179, 179);
             transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
+            transform: scale(0.95, 0.95);
+          }
+          &:active {
+            transform: scale(0.9, 0.9);
+            svg {
+              fill: rgb(80, 80, 80);
+              transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
+            }
           }
         }
+      }
+    }
+    .star {
+      display: flex;
+      margin-left: 4px;
+      height: 100%;
+      width: 64px;
+      align-items: center;
+      @include sm {
+        margin-left: 12px;
+      }
+      button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 60%;
+        flex: 1;
+        border: none;
+        cursor: pointer;
+        border-radius: 8px;
+        background-color: white;
+        transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
+        &:hover {
+          opacity: 0.9;
+          transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
+          transform: scale(0.95, 0.95);
+        }
         &:active {
+          opacity: 0.8;
+          transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
+          transform: scale(0.9, 0.9);
+        }
+        @include sm {
+          background-color: $primary_color;
+          height: 100%;
+        }
+        svg {
+          fill: $primary_color;
+        }
+        @include sm {
           svg {
-            fill: rgb(80, 80, 80);
-            transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
+            fill: white;
+          }
+        }
+      }
+    }
+    .visibility {
+      display: flex;
+      margin-left: 16px;
+      height: 100%;
+      width: 64px;
+      align-items: center;
+      @include sm {
+        margin-left: 12px;
+      }
+      button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 60%;
+        flex: 1;
+        border: none;
+        cursor: pointer;
+        border-radius: 8px;
+        background-color: white;
+        transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
+        &:hover {
+          opacity: 0.9;
+          transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
+          transform: scale(0.95, 0.95);
+        }
+        &:active {
+          opacity: 0.8;
+          transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
+          transform: scale(0.9, 0.9);
+        }
+        @include sm {
+          background-color: $primary_color;
+          height: 100%;
+        }
+        svg {
+          fill: $primary_color;
+        }
+        @include sm {
+          svg {
+            fill: white;
           }
         }
       }

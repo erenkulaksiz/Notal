@@ -48,7 +48,7 @@ const Profile = (props) => {
                     return;
                 } catch (err) {
                     console.error(err);
-                    auth.logout();
+                    auth.users.logout();
                     return;
                 }
             }
@@ -74,7 +74,7 @@ const Profile = (props) => {
         }
 
         if (editProfile.fullname != props.validate?.data?.fullname || editProfile.username != props.validate?.data?.username || editProfile.bio != props.validate?.data?.bio) {
-            const data = await auth.editUser({ uid: auth.authUser?.uid, fullname: editProfile.fullname, username: editProfile.username, bio: editProfile.bio });
+            const data = await auth.users.editUser({ uid: auth.authUser?.uid, fullname: editProfile.fullname, username: editProfile.username, bio: editProfile.bio });
 
             console.log("data on edit: ", data);
 
@@ -100,7 +100,7 @@ const Profile = (props) => {
             if (e.target.files[0].type == "image/jpeg" || e.target.files[0].type == "image/png" || e.target.files[0].type == "image/jpg") {
                 setEditAvatarLoading(true);
                 setEditingProfile(false);
-                const res = await auth.uploadAvatar({ avatar: e.target.files[0], uid: auth?.authUser?.uid });
+                const res = await auth.users.uploadAvatar({ avatar: e.target.files[0], uid: auth?.authUser?.uid });
                 if (res.success) {
                     console.log("this side response: ", res);
                     setEditAvatarLoading(false);
@@ -130,7 +130,7 @@ const Profile = (props) => {
             loggedIn={auth?.authUser != null}
             onLogin={() => router.push("/login")}
             onLogout={() => {
-                auth.logout();
+                auth.users.logout();
                 setEditingProfile(false);
                 setEditErrors({ fullname: false, username: false, bio: false });
                 setMenuToggle(false);

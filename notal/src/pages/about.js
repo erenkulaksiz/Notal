@@ -39,7 +39,7 @@ const About = (props) => {
                 avatarURL={props.validate.data?.avatar}
                 loggedIn={auth?.authUser != null}
                 onLogin={() => router.push("/login")}
-                onLogout={() => auth.logout()}
+                onLogout={() => auth.users.logout()}
                 onProfile={() => router.push(`/profile/${props.validate?.data?.username}`)}
                 onHeaderHome={() => router.push("/")}
                 showCreate={false}

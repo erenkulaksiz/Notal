@@ -204,6 +204,21 @@ const AuthService = {
             return { error: data?.error }
         }
     },
+    editWorkspace: async ({ id, title, desc }) => {
+        const auth = getAuth();
+
+        const data = await fetch(`${server}/api/workspace`, {
+            'Content-Type': 'application/json',
+            method: "POST",
+            body: JSON.stringify({ id, action: "EDIT", uid: auth?.currentUser?.uid, title, desc }),
+        }).then(response => response.json());
+
+        if (data?.success) {
+            return { success: true }
+        } else {
+            return { error: data?.error }
+        }
+    },
     getIdToken: async () => {
         const token = await getAuth().currentUser.getIdToken();
 

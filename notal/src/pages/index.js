@@ -63,7 +63,7 @@ const Home = (props) => {
     const checkToken = async () => {
       if (props.validate?.error == "auth/id-token-expired" || props.validate?.error == "auth/argument-error") {
         try {
-          const { token } = await auth.getIdToken();
+          const { token } = await auth.users.getIdToken();
           console.log("token: ", token);
           await cookie.set("auth", token, { expires: 1 });
           router.replace(router.asPath);
@@ -99,7 +99,7 @@ const Home = (props) => {
       setRegErr({ ...regErr, fullname: false });
     }
 
-    const result = await auth.updateUser({ uid: props.auth.authUser.uid, fullname: register.fullname, username: register.username.toLowerCase() });
+    const result = await auth.users.updateUser({ uid: props.auth.authUser.uid, fullname: register.fullname, username: register.username.toLowerCase() });
     console.log("res: ", result.error?.error ?? "");
     if (result.success) {
       setRegisterAlertVisible(false);
@@ -132,7 +132,7 @@ const Home = (props) => {
 
       setNewWorkspaceErr({ ...newWorkspaceErr, desc: false, title: false, });
 
-      const data = await auth.createWorkspace({ title: newWorkspace.title, desc: newWorkspace.desc, starred: newWorkspace.starred });
+      const data = await auth.workspace.createWorkspace({ title: newWorkspace.title, desc: newWorkspace.desc, starred: newWorkspace.starred });
 
       console.log("data: ", data);
 
@@ -146,7 +146,7 @@ const Home = (props) => {
     delete: async ({ id }) => {
       setDeleteModal({ visible: false, workspace: -1 }); // set visiblity to false and id to -1
 
-      const data = await auth.deleteWorkspace({ id });
+      const data = await auth.workspace.deleteWorkspace({ id });
 
       if (data.success) {
         router.replace(router.asPath);
@@ -155,7 +155,7 @@ const Home = (props) => {
     star: async ({ id }) => {
       // recieve workspace id and star it
 
-      const data = await auth.starWorkspace({ id });
+      const data = await auth.workspace.starWorkspace({ id });
 
       if (data.success) {
         router.replace(router.asPath);
@@ -194,7 +194,7 @@ const Home = (props) => {
               <Input
                 type="text"
                 placeholder="Username (e.g. erentr)"
-                onChange={e => setRegister({ ...register, username: e.target.value.replace(/[^\w\s]/gi, "").replace(/\s/g, '') })}
+                onChange={e => setRegister({ ...register, username: e.target.value.replace(/[^\w\s]/gi, "").replace(/\s/g, '').toLowerCase() })}
                 value={register.username}
                 icon={<UserIcon height={24} width={24} fill={"#19181e"} />}
                 error={regErr.username != false}
@@ -223,7 +223,7 @@ const Home = (props) => {
           <Button
             text="Logout"
             style={{ border: "none", margin: 24, marginBottom: 0, }}
-            onClick={() => auth.logout()}
+            onClick={() => auth.users.logout()}
           />
           <Button
             text="Complete"
@@ -251,7 +251,7 @@ const Home = (props) => {
       onMenuToggle={val => setMenuToggle(val)}
       userData={{ fullname: props.validate?.data?.fullname, email: auth.authUser.email }}
       avatarURL={props.validate?.data?.avatar}
-      onLogout={() => auth.logout()}
+      onLogout={() => auth.users.logout()}
       onProfile={() => router.push(`/profile/${props?.validate?.data?.username}`)}
       onHeaderHome={() => router.replace('/')}
       showCreate={false}

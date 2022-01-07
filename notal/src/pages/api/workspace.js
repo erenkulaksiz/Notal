@@ -104,5 +104,30 @@ export default async function handler(req, res) {
         }).catch(error => {
             res.status(400).send({ success: false, error });
         });
+    } else if (action == "EDIT") {
+
+        if (!id || !uid) {
+            res.status(400).send({ success: false });
+            return;
+        }
+
+        await admin.database().ref(`/workspaces/${id}`).once("value", async (snapshot) => {
+            if (snapshot.exists()) {
+                if (snapshot.val().owner == uid) {
+
+                    await admin.database().ref(`/workspaces/${id}`).update({ title, desc, updatedAt: Date.now() }, () => {
+                        res.status(200).send({ success: true });
+                    }).catch(error => {
+                        res.status(400).send({ success: false, error });
+                    });
+                } else {
+                    res.status(400).send({ success: false, error: "unauthorized" });
+                }
+            } else {
+                res.status(400).send({ success: false });
+            }
+        }).catch(error => {
+            res.status(400).send({ success: false, error });
+        });
     }
 }

@@ -27,7 +27,7 @@ import AuthService from '../service/AuthService';
 const Login = (props) => {
     const router = useRouter();
 
-    const { authUser, loginWithGoogle, loginWithPassword, loginWithGithub, authError } = useAuth();
+    const auth = useAuth();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -53,13 +53,13 @@ const Login = (props) => {
     }, [view]);
 
     const onLoginWithGoogle = async (e) => {
-        const login = await loginWithGoogle();
+        const login = await auth.login.google();
 
         console.log("google login errors: ", login?.authError);
     }
 
     const onLoginWithGithub = async (e) => {
-        const login = await loginWithGithub();
+        const login = await auth.login.github();
 
         console.log("github login errors: ", login?.authError);
 
@@ -85,7 +85,7 @@ const Login = (props) => {
             setError({ ...error, password: false });
         }
 
-        const login = await loginWithPassword({ email, password });
+        const login = await auth.login.password({ email, password });
 
         console.log("errors: ", login?.authError);
 
@@ -153,7 +153,7 @@ const Login = (props) => {
                                     text="Back"
                                     type="button"
                                     icon={<BackIcon height={24} width={24} fill={"#000"} style={{ marginRight: 8 }} />}
-                                    style={{ marginTop: 24, border: "none", height: 48, width: "25%", minWidth: 100 }}
+                                    style={{ marginTop: 24, border: "none", height: 48, width: "25%", minWidth: 160 }}
                                     onClick={() => {
                                         setView(null);
                                         setError({ email: false, password: false, login: false });
@@ -213,7 +213,7 @@ const Login = (props) => {
                                     text="Back"
                                     type="button"
                                     icon={<BackIcon height={24} width={24} fill={"#000"} style={{ marginRight: 8 }} />}
-                                    style={{ marginTop: 24, border: "none", height: 48, width: "25%", minWidth: 100 }}
+                                    style={{ marginTop: 24, border: "none", height: 48, width: "25%", minWidth: 160 }}
                                     onClick={() => {
                                         setView("email");
                                         setForgotEmail("");
@@ -246,7 +246,7 @@ const Login = (props) => {
                                     text="Login"
                                     type="button"
                                     icon={<BackIcon height={24} width={24} fill={"#000"} style={{ marginRight: 8 }} />}
-                                    style={{ marginTop: 12, border: "none", height: 48, width: "25%", minWidth: 100 }}
+                                    style={{ marginTop: 12, border: "none", height: 48, width: "25%", minWidth: 160 }}
                                     onClick={() => setView(null)}
                                     reversed
                                 />
