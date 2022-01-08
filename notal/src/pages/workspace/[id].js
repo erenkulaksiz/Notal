@@ -16,6 +16,8 @@ import StarOutlineIcon from '../../../public/icons/star_outline.svg';
 import StarFilledIcon from '../../../public/icons/star_filled.svg';
 import VisibleIcon from '../../../public/icons/visible.svg';
 import DeleteIcon from '../../../public/icons/delete.svg';
+import AddIcon from '../../../public/icons/add.svg';
+import MoreIcon from '../../../public/icons/more.svg';
 
 import Header from '../../components/header';
 import Button from '../../components/button';
@@ -30,7 +32,7 @@ const Workspace = (props) => {
 
     // editing states
     const [editing, setEditing] = useState(false);
-    const [editedField, setEditedFiled] = useState({
+    const [editedField, setEditedField] = useState({
         title: props.workspace?.success ? props.workspace?.data.title : null,
         desc: props.workspace?.success ? props.workspace?.data.desc : null
     });
@@ -106,14 +108,14 @@ const Workspace = (props) => {
                             {editing ? <input type="text"
                                 onKeyDown={handle.fieldEditing}
                                 defaultValue={props.workspace?.data?.title}
-                                onChange={e => setEditedFiled({ ...editedField, title: e.target.value })}
+                                onChange={e => setEditedField({ ...editedField, title: e.target.value })}
                                 placeholder={"Workspace Title"}
                             /> : <h1>{props.workspace?.data?.title}</h1>}
 
                             {editing ? <input type="text"
                                 onKeyDown={handle.fieldEditing}
                                 defaultValue={props.workspace?.data?.desc}
-                                onChange={e => setEditedFiled({ ...editedField, desc: e.target.value })}
+                                onChange={e => setEditedField({ ...editedField, desc: e.target.value })}
                                 placeholder={"Workspace Description"}
                             /> : <span>{props.workspace?.data?.desc}</span>}
                         </div>
@@ -145,13 +147,26 @@ const Workspace = (props) => {
                                 <DeleteIcon height={24} width={24} />
                             </button>
                         </div>
+                        <div className={styles.workspaceBtn}>
+                            <button onClick={() => { }} >
+                                <AddIcon height={24} width={24} />
+                            </button>
+                        </div>
                     </>}
                 </div>
                 <div className={styles.wrapper}>
                     <div className={styles.fields}>
                         <div className={styles.field}>
                             <div className={styles.header}>
-                                <h1>header</h1>
+                                <a href="#">Yapilacaklar</a>
+                                <div className={styles.controls}>
+                                    <button>
+                                        <DeleteIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
+                                    </button>
+                                    <button>
+                                        <MoreIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
+                                    </button>
+                                </div>
                             </div>
                             <div className={styles.todo}>
                                 this is a todo
