@@ -1,25 +1,52 @@
+@import "breakpoints";
+@import "constants";
+
 .content_about {
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
   flex: 1;
   height: 100%;
+  overflow-y: auto;
   width: 90%;
+
+  @include md {
+    flex-direction: row;
+  }
+
+  .aboutContainer {
+    width: 100%;
+    padding-left: 0;
+    @include md {
+      padding-left: 24px;
+      width: 75%;
+    }
+  }
 
   @include sm {
     width: 550px;
   }
 
   @include md {
-    width: 700px;
+    width: 750px;
   }
 
   @include lg {
-    width: 1000px;
+    width: 95%;
+    max-width: 1400px;
+  }
+
+  .nav {
+    //argin-bottom: 24px;
+    width: 100%;
+    @include md {
+      width: 25%;
+    }
   }
 
   .aboutTitle {
     margin-top: 48px;
+    display: flex;
+    flex-direction: row;
     h1 {
       font-size: 2em;
       font-weight: 600;

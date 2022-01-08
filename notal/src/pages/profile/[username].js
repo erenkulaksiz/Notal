@@ -21,6 +21,7 @@ import SyncIcon from '../../../public/icons/sync.svg';
 import Header from '../../components/header';
 import Button from '../../components/button';
 import Input from '../../components/input';
+import { CheckToken } from '../../utils';
 
 const Profile = (props) => {
     const auth = useAuth();
@@ -38,23 +39,7 @@ const Profile = (props) => {
     useEffect(() => {
         console.log("props: ", props);
 
-        const checkToken = async () => {
-            if (props.validate?.error == "auth/id-token-expired" || props.validate?.error == "auth/argument-error") {
-                try {
-                    const { token } = await auth.users.getIdToken();
-                    console.log("token: ", token);
-                    await cookie.set("auth", token, { expires: 1 });
-                    router.replace(router.asPath);
-                    return;
-                } catch (err) {
-                    console.error(err);
-                    auth.users.logout();
-                    return;
-                }
-            }
-        }
-
-        checkToken();
+        CheckToken({ auth, router, props });
     }, []);
 
     const onFinishEditing = async (e) => {

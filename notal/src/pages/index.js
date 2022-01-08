@@ -2,7 +2,6 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import cookie from 'js-cookie';
 
 import styles from '../../styles/App.module.scss';
 import { server } from '../config';
@@ -24,6 +23,7 @@ import Alert from '../components/alert';
 
 import { withAuth } from '../hooks/route';
 import useAuth from '../hooks/auth';
+import { CheckToken } from '../utils';
 
 const Home = (props) => {
   const auth = useAuth();
@@ -60,26 +60,16 @@ const Home = (props) => {
   useEffect(() => {
     console.log("props indexjs: ", props);
 
-    const checkToken = async () => {
-      if (props.validate?.error == "auth/id-token-expired" || props.validate?.error == "auth/argument-error") {
-        try {
-          const { token } = await auth.users.getIdToken();
-          console.log("token: ", token);
-          await cookie.set("auth", token, { expires: 1 });
-          router.replace(router.asPath);
-          return;
-        } catch (err) {
-          console.error(err);
-          auth.users.logout();
-          return;
-        }
-      }
-      if (!props.validate.data?.username?.length) { // if theres no username is present
-        setRegisterAlertVisible(true);
-      }
-    }
+    (async () => {
+      const res = await CheckToken({ auth, router, props });
 
-    checkToken();
+      if (res && !props.validate.data?.username) { // if theres no username is present
+        setRegisterAlertVisible(true);
+        console.warn("register alert open!!!");
+      } else {
+        console.warn("register alert close");
+      }
+    })();
   }, []);
 
   const registerUser = async (e) => {
