@@ -241,6 +241,21 @@ const AuthService = {
             return { error: data?.error }
         }
     },
+    addField: async ({ title, id }) => {
+        const auth = getAuth();
+
+        const data = await fetch(`${server}/api/workspace`, {
+            'Content-Type': 'application/json',
+            method: "POST",
+            body: JSON.stringify({ title, id, action: "ADDFIELD", uid: auth?.currentUser?.uid }),
+        }).then(response => response.json());
+
+        if (data?.success) {
+            return { success: true }
+        } else {
+            return { error: data?.error }
+        }
+    },
     logout: async () => {
         const auth = getAuth();
         auth.signOut();

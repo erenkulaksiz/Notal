@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     const workspaceAction = {
         create: async () => {
             if (!uid || !action) {
-                res.status(400).send({ success: false })
+                res.status(400).send({ success: false, error: "invalid-params" })
                 return;
             }
 
@@ -31,7 +31,7 @@ export default async function handler(req, res) {
             const { uid } = JSON.parse(req.body);
 
             if (!uid) {
-                res.status(400).send({ success: false });
+                res.status(400).send({ success: false, error: "invalid-params" });
                 return;
             }
 
@@ -45,7 +45,7 @@ export default async function handler(req, res) {
         },
         get_workspace: async () => {
             if (!id) {
-                res.status(400).send({ success: false });
+                res.status(400).send({ success: false, error: "invalid-params" });
                 return;
             }
 
@@ -61,7 +61,7 @@ export default async function handler(req, res) {
         },
         delete: async () => {
             if (!uid) {
-                res.status(400).send({ success: false });
+                res.status(400).send({ success: false, error: "invalid-params" });
                 return;
             }
 
@@ -80,7 +80,7 @@ export default async function handler(req, res) {
         star: async () => {
 
             if (!uid || !id) {
-                res.status(400).send({ success: false });
+                res.status(400).send({ success: false, error: "invalid-params" });
                 return;
             }
 
@@ -109,7 +109,7 @@ export default async function handler(req, res) {
         },
         edit: async () => {
             if (!id || !uid) {
-                res.status(400).send({ success: false });
+                res.status(400).send({ success: false, error: "invalid-params" });
                 return;
             }
 
@@ -131,6 +131,18 @@ export default async function handler(req, res) {
             }).catch(error => {
                 res.status(400).send({ success: false, error });
             });
+        },
+        addfield: async () => {
+            if (!id || !uid) {
+                res.status(400).send({ success: false, error: "invalid-params" });
+                return;
+            }
+
+            const ref = await admin.database().ref(`/workspaces/${id}/fields`).push();
+            await ref.set({
+                title, createdAt: Date.now(), updatedAt: Date.now(),
+            });
+            res.status(200).send({ success: true });
         }
     }
 

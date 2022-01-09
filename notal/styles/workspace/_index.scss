@@ -37,7 +37,7 @@
       padding-top: 12px;
       background-color: transparent;
       padding-bottom: 12px;
-      border-bottom: 2px solid $primary_color;
+      //border-bottom: 2px solid $primary_color;
     }
     .meta {
       display: flex;
@@ -49,6 +49,10 @@
         border-radius: 8px;
         background-color: $primary_color;
         margin-right: 12px;
+      }
+      .addField {
+        display: flex;
+        flex-direction: row;
       }
       .details {
         display: flex;
@@ -165,18 +169,36 @@
 
         @include md {
           width: 48%;
+          &:only-child {
+            width: 50%;
+          }
         }
 
-        @include rwd(1000) {
-          width: 24%;
-          min-width: 325px;
+        @include xl {
+          width: 48%;
+          &:only-child {
+            width: 50%;
+          }
+        }
+
+        @include rwd(1200) {
+          width: 40%;
+          min-width: 340px;
+          &:only-child {
+            width: 40%;
+            min-width: 360px;
+          }
         }
 
         .field {
           display: flex;
           flex-direction: column;
           padding: 24px;
+
           margin-top: 12px;
+
+          margin-bottom: 12px;
+
           margin-right: 0;
           background-color: $primary_color;
           border-radius: 0;
@@ -184,6 +206,7 @@
 
           @include sm {
             border-radius: 8px;
+            margin-top: 0;
           }
 
           @include md {
@@ -200,7 +223,7 @@
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid white;
+            //border-bottom: 1px solid white;
             padding-bottom: 12px;
             margin-bottom: 12px;
             a {
@@ -211,7 +234,7 @@
             }
             .controls {
               display: flex;
-              margin-left: 12px;
+              //margin-left: 12px;
               height: 100%;
               button {
                 border: none;
@@ -268,6 +291,7 @@
                 width: 8px;
                 height: 8px;
                 border-radius: 32px;
+                margin-left: 16px;
               }
               button {
                 display: flex;

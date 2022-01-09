@@ -99,6 +99,12 @@ export function AuthProvider(props) {
         editWorkspace: async ({ id, title, desc }) => {
             const res = await AuthService.editWorkspace({ id, title, desc });
             return res;
+        },
+        field: {
+            addField: async ({ id, title }) => {
+                const res = AuthService.addField({ id, title });
+                return res;
+            }
         }
     }
 

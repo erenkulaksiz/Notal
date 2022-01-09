@@ -1,6 +1,6 @@
 import cookie from "js-cookie";
 
-export const CheckToken = async ({ auth, router, props }) => {
+export const CheckToken = async ({ auth, props }) => {
     console.log("jwtyi kontrol edicem bi canım");
 
     if (props.validate?.error == "auth/id-token-expired" || props.validate?.error == "auth/argument-error") {
@@ -8,7 +8,6 @@ export const CheckToken = async ({ auth, router, props }) => {
             const { token } = await auth.users.getIdToken();
             console.log("token: ", token);
             await cookie.set("auth", token, { expires: 1 });
-            router.replace(router.asPath);
             return true
         } catch (err) {
             console.error(err);

@@ -32,7 +32,10 @@ const About = (props) => {
     const [viewing, setViewing] = useState("about");
 
     useEffect(() => {
-        CheckToken({ auth, router, props });
+        (async () => {
+            const res = await CheckToken({ auth, props });
+            if (res) router.replace(router.asPath);
+        })();
     }, []);
 
     return (

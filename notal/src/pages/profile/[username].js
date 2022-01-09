@@ -38,8 +38,10 @@ const Profile = (props) => {
 
     useEffect(() => {
         console.log("props: ", props);
-
-        CheckToken({ auth, router, props });
+        (async () => {
+            const res = await CheckToken({ auth, props });
+            if (res) router.replace(router.asPath);
+        })();
     }, []);
 
     const onFinishEditing = async (e) => {

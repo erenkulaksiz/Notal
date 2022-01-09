@@ -61,7 +61,8 @@ const Home = (props) => {
     console.log("props indexjs: ", props);
 
     (async () => {
-      const res = await CheckToken({ auth, router, props });
+      const res = await CheckToken({ auth, props });
+      if (res) router.replace(router.asPath);
 
       if (res && !props.validate.data?.username) { // if theres no username is present
         setRegisterAlertVisible(true);
