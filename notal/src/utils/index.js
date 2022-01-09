@@ -16,5 +16,6 @@ export const CheckToken = async ({ auth, props }) => {
         }
     } else {
         console.log("kontrol ettim sorun yok kralsın");
+        return false;
     }
 };

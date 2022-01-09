@@ -62,9 +62,10 @@ const Home = (props) => {
 
     (async () => {
       const res = await CheckToken({ auth, props });
+
       if (res) router.replace(router.asPath);
 
-      if (res && !props.validate.data?.username) { // if theres no username is present
+      if (props.validate.success && !props.validate.data?.username) { // if theres no username is present
         setRegisterAlertVisible(true);
         console.warn("register alert open!!!");
       } else {

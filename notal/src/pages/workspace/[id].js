@@ -123,7 +123,7 @@ const Workspace = (props) => {
             onLogin={() => router.push("/login")}
             onLogout={() => {
                 auth.users.logout();
-                router.push("/login");
+                //router.push("/login");
             }}
             onProfile={() => router.push(`/profile/${props.validate?.data?.username}`)}
             onHeaderHome={() => router.push("/")}
@@ -142,6 +142,7 @@ const Workspace = (props) => {
                                 placeholder="Field Name"
                                 onChange={e => setAddField({ ...addField, title: e.target.value })}
                                 style={{ width: "100%" }}
+                                onKeyDown={e => (e.key === "Enter") && handle.addField()}
                                 autoFocus
                             />
                             <div className={styles.editBtn}>
@@ -158,14 +159,14 @@ const Workspace = (props) => {
                             </div>
                         </div> : <div className={styles.details}>
                             {editingWorkspace ? <input type="text"
-                                onKeyDown={handle.fieldEditing}
+                                onKeyDown={e => e.key === "Enter" && handle.finishEditing()}
                                 defaultValue={props.workspace?.data?.title}
                                 onChange={e => setEditedWorkspace({ ...editedWorkspace, title: e.target.value })}
                                 placeholder={"Workspace Title"}
                             /> : <h1>{props.workspace?.data?.title}</h1>}
 
                             {editingWorkspace ? <input type="text"
-                                onKeyDown={handle.fieldEditing}
+                                onKeyDown={e => e.key === "Enter" && handle.finishEditing()}
                                 defaultValue={props.workspace?.data?.desc}
                                 onChange={e => setEditedWorkspace({ ...editedWorkspace, desc: e.target.value })}
                                 placeholder={"Workspace Description"}
