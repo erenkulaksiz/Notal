@@ -41,7 +41,7 @@ export default async function handler(req, res) {
                         }).catch(err => res.status(400).json({ success: false, error: err }));
                     }).catch(err => res.status(400).json({ success: false, error: err }));
                 } else {
-                    res.status(200).json({ success: true, data: data });
+                    res.status(200).json({ success: true, data: decodedToken, });
                 }
             }
         }).catch(err => {
