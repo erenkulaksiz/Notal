@@ -184,7 +184,7 @@ const Signup = (props) => {
                         <Button
                             text="Sign Up"
                             type="submit"
-                            icon={<CheckIcon height={24} width={24} fill={"#000"} style={{ marginRight: 8 }} />}
+                            icon={<CheckIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
                             style={{ marginTop: 24, border: "none" }}
                             reversed
                         />

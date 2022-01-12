@@ -288,7 +288,7 @@ const Home = (props) => {
           </div>
           <div className={styles.content}>
             {loadingWorkspaces ? <div style={{ display: "flex", width: "100%", height: "100%", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
-              <SyncIcon height={24} width={24} fill={"#000"} className={styles.loadingIconAuth} style={{ marginTop: 24 }} />
+              <SyncIcon height={24} width={24} fill={"#19181e"} className={styles.loadingIconAuth} style={{ marginTop: 24 }} />
               <span style={{ marginTop: 24, fontSize: "1.2em", fontWeight: "500" }}>Loading Workspaces...</span>
             </div> : (workspace.getWorkspacesWithFilter(props.workspaces?.data).length > 0 ? workspace.getWorkspacesWithFilter(props.workspaces?.data).map((element, index) => <div className={styles.workspace} key={index}>
               <Link href="/workspace/[pid]" as={`/workspace/${element.id}`}>

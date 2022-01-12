@@ -58,8 +58,6 @@ const Workspace = (props) => {
             const token = await auth.users.getIdToken();
             const res = await CheckToken({ token, props });
 
-            console.log("toeeeen:", token);
-
             if (props.validate?.error == "no-token" || res) {
                 router.replace(router.asPath);
             }
@@ -120,6 +118,15 @@ const Workspace = (props) => {
                 router.replace(router.asPath);
             } else {
                 console.log("delete field error: ", data?.error);
+            }
+        },
+        deleteWorkspace: async () => {
+            const data = await auth.workspace.deleteWorkspace({ id: props.workspace.data.id });
+
+            if (data.success) {
+                router.replace("/");
+            } else {
+                console.log("delete workspace error: ", data?.error);
             }
         }
     }
@@ -333,7 +340,7 @@ const Workspace = (props) => {
                     text="Delete"
                     icon={<DeleteIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
                     style={{ borderStyle: "none" }}
-                    onClick={() => { }}
+                    onClick={() => handle.deleteWorkspace()}
                     reversed
                     key={1}
                 />

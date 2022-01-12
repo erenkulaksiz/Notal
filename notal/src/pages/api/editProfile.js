@@ -16,6 +16,8 @@ export default async function handler(req, res) {
         res.status(400).send({ success: false });
     }
 
+    // UNNECCESARY CHECK HERE, FIX IT LATEER
+
     await admin.database().ref(`/users`).orderByChild("username").equalTo(data.username).limitToFirst(1).once("value", async (snapshot) => {
         if (snapshot.exists()) {
             if (Object.keys(snapshot.val())[0] == data.uid) {
@@ -24,6 +26,7 @@ export default async function handler(req, res) {
                     fullname: data.fullname,
                     bio: data.bio,
                     updatedAt: Date.now(),
+                    profileVisible: data.profileVisible,
                 }, () => {
                     res.status(200).json({ success: true, data: { username: data.username, fullname: data.fullname, uid: data.uid } });
                 }).catch(err => {
@@ -39,6 +42,7 @@ export default async function handler(req, res) {
                 username: data.username,
                 bio: data.bio || "",
                 updatedAt: Date.now(),
+                profileVisible,
             }, () => {
                 res.status(200).json({ success: true, data: { username: data.username, fullname: data.fullname, uid: data.uid } });
             }).catch(err => {

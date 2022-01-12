@@ -15,6 +15,7 @@ import SpeedIcon from '../../public/icons/speed.svg';
 import RoadIcon from '../../public/icons/road.svg';
 import ScrollIcon from '../../public/icons/scroll.svg';
 import SlidershIcon from '../../public/icons/sliders-h.svg';
+import TimeIcon from '../../public/icons/time.svg';
 
 import Button from '../components/button';
 import Input from '../components/input';
@@ -85,6 +86,13 @@ const About = (props) => {
                         reversed={viewing != "vision"}
                     />
                     <Button
+                        text="Changelog"
+                        onClick={() => setViewing("changelog")}
+                        style={{ justifyContent: "flex-start", borderRadius: 8, width: "100%", marginTop: 12, height: 54, textAlign: "left" }}
+                        icon={<TimeIcon height={24} width={24} style={{ marginLeft: 8, marginRight: 8 }} fill={viewing == "changelog" ? "#fff" : "#19181e"} />}
+                        reversed={viewing != "changelog"}
+                    />
+                    <Button
                         text="Credits"
                         onClick={() => setViewing("credits")}
                         style={{ justifyContent: "flex-start", borderRadius: 8, width: "100%", marginTop: 12, height: 54 }}
@@ -92,107 +100,113 @@ const About = (props) => {
                         reversed={viewing != "credits"}
                     />
                 </div>
-                {viewing == "about" && <div className={styles.aboutContainer}>
-                    <div className={styles.aboutTitle}>
-                        <h1>🎉 Welcome to Notal.</h1>
-                    </div>
-                    <div className={styles.aboutDesc}>
-                        <p>Notal is a basic todo tracking and taking notes platform.
-                            <br />It is currently being built <a href="https://github.com/erenkulaksiz">Eren Kulaksiz</a>.
-                            <br />You can directly contact with me with my email <a href="mailto:erenkulaksz@gmail.com">erenkulaksz@gmail.com</a>.
-                        </p>
-                    </div>
-                    <div className={styles.section}>
-                        <div className={styles.title}>
-                            <div className={styles.icon}>
-                                <AddIcon height={24} width={24} fill={"#fff"} />
-                            </div>
-                            <h1>Create Workspaces</h1>
+                {
+                    viewing == "about" && <div className={styles.aboutContainer}>
+                        <div className={styles.aboutTitle}>
+                            <h1>🎉 Welcome to Notal.</h1>
                         </div>
-                        <div className={styles.desc}>
-                            <p>Creating a workspaces will make you be able to create todos and notes inside them. Also you can share your workspaces, or you can just set them to private only you, or you can set who can see your workspace with username of users.
-                                <br /> Currently, teams and permission system is being built along with development of workspaces.
+                        <div className={styles.aboutDesc}>
+                            <p>Notal is a basic todo tracking and taking notes platform.
+                                <br />It is currently being built <a href="https://github.com/erenkulaksiz">Eren Kulaksiz</a>.
+                                <br />You can directly contact with me with my email <a href="mailto:erenkulaksz@gmail.com">erenkulaksz@gmail.com</a>.
                             </p>
                         </div>
-                    </div>
-                    <div className={styles.section}>
-                        <div className={styles.title}>
-                            <div className={styles.icon}>
-                                <EditIcon height={24} width={24} fill={"#fff"} />
+                        <div className={styles.section}>
+                            <div className={styles.title}>
+                                <div className={styles.icon}>
+                                    <AddIcon height={24} width={24} fill={"#fff"} />
+                                </div>
+                                <h1>Create Workspaces</h1>
                             </div>
-                            <h1>Take Notes</h1>
-                        </div>
-                        <div className={styles.desc}>
-                            <p>Want to take notes about your project? simply open a workspace then add notes.</p>
-                        </div>
-                    </div>
-                    <div className={styles.section}>
-                        <div className={styles.title}>
-                            <div className={styles.icon}>
-                                <AddIcon height={24} width={24} fill={"#fff"} />
+                            <div className={styles.desc}>
+                                <p>Creating a workspaces will make you be able to create todos and notes inside them. Also you can share your workspaces, or you can just set them to private only you, or you can set who can see your workspace with username of users.
+                                    <br /> Currently, teams and permission system is being built along with development of workspaces.
+                                </p>
                             </div>
-                            <h1>Add Todos</h1>
                         </div>
-                        <div className={styles.desc}>
-                            <p>Want to add todos for your project? you can create from a workspace. You can even categorize them or add notes into todos.</p>
-                        </div>
-                    </div>
-                    <div className={styles.section}>
-                        <div className={styles.title}>
-                            <div className={styles.icon}>
-                                <EditIcon height={24} width={24} fill={"#fff"} />
+                        <div className={styles.section}>
+                            <div className={styles.title}>
+                                <div className={styles.icon}>
+                                    <EditIcon height={24} width={24} fill={"#fff"} />
+                                </div>
+                                <h1>Take Notes</h1>
                             </div>
-                            <h1>Customize Your Profile</h1>
-                        </div>
-                        <div className={styles.desc}>
-                            <p>You can change your fullname, bio and username on your profile section. Also your username is the link. {auth.authUser != null && <>For example, your profile link is <a href={`${server}/profile/${props.validate?.data?.username}`}>{`${server}/profile/${props.validate?.data?.username}`}</a></>}</p>
-                        </div>
-                    </div>
-                    <div className={styles.section}>
-                        <div className={styles.title}>
-                            <div className={styles.icon}>
-                                <LockOutlineIcon height={24} width={24} fill={"#fff"} />
+                            <div className={styles.desc}>
+                                <p>Want to take notes about your project? simply open a workspace then add notes.</p>
                             </div>
-                            <h1>Privacy & Security</h1>
                         </div>
-                        <div className={styles.desc}>
-                            <p>
-                                Im building Notal with privacy and security in-mind.
-                                <br />You can register with Google, GitHub and Email at this point.
-                                <br />All stored data is stored with using <b>SHA256 and other types of encryption</b> in our servers.
-                            </p>
-                        </div>
-                    </div>
-                    <div className={styles.section}>
-                        <div className={styles.title}>
-                            <div className={styles.icon}>
-                                <SpeedIcon height={24} width={24} fill={"#fff"} />
+                        <div className={styles.section}>
+                            <div className={styles.title}>
+                                <div className={styles.icon}>
+                                    <AddIcon height={24} width={24} fill={"#fff"} />
+                                </div>
+                                <h1>Add Todos</h1>
                             </div>
-                            <h1>Peformance & Speed</h1>
-                        </div>
-                        <div className={styles.desc}>
-                            <p>
-                                Performance and speed is always important since it affects your waiting time, also efficiency.
-                                <br />Im aware of performance and speed issues (technically its not issues).
-                                <br />At this stage, starring your workspaces, deleting workspaces, retrieving workspaces and editing workspaces might seem your internet speed is low. As soon as you click to buttons, we recieve the API call but its not showed on Frontend.
-                                <br />This is a intended behaviour and will be fixed at production build on near end of Q1 in 2022.
-                                <br />Note that you are using a Beta version of a new platform built from scratch.
-                            </p>
-                        </div>
-                    </div>
-                    <div className={styles.section}>
-                        <div className={styles.title}>
-                            <div className={styles.icon}>
-                                <QuestionIcon height={24} width={24} fill={"#fff"} />
+                            <div className={styles.desc}>
+                                <p>Want to add todos for your project? you can create from a workspace. You can even categorize them or add notes into todos.</p>
                             </div>
-                            <h1>More</h1>
                         </div>
-                        <div className={styles.desc}>
-                            <p>The project is currently still in beta. Even this page is built new. Ill update this page whenever i add new stuff to Notal. See you :)</p>
+                        <div className={styles.section}>
+                            <div className={styles.title}>
+                                <div className={styles.icon}>
+                                    <EditIcon height={24} width={24} fill={"#fff"} />
+                                </div>
+                                <h1>Customize Your Profile</h1>
+                            </div>
+                            <div className={styles.desc}>
+                                <p>You can change your fullname, bio and username on your profile section. Also your username is the link. {auth.authUser != null && <>For example, your profile link is <a href={`${server}/profile/${props.validate?.data?.username}`}>{`${server}/profile/${props.validate?.data?.username}`}</a></>}</p>
+                            </div>
+                        </div>
+                        <div className={styles.section}>
+                            <div className={styles.title}>
+                                <div className={styles.icon}>
+                                    <LockOutlineIcon height={24} width={24} fill={"#fff"} />
+                                </div>
+                                <h1>Privacy & Security</h1>
+                            </div>
+                            <div className={styles.desc}>
+                                <p>
+                                    Im building Notal with privacy and security in-mind.
+                                    <br />You can register with Google, GitHub and Email at this point.
+                                    <br />All stored data is stored with using <b>SHA256 and other types of encryption</b> in our servers.
+                                </p>
+                            </div>
+                        </div>
+                        <div className={styles.section}>
+                            <div className={styles.title}>
+                                <div className={styles.icon}>
+                                    <SpeedIcon height={24} width={24} fill={"#fff"} />
+                                </div>
+                                <h1>Peformance & Speed</h1>
+                            </div>
+                            <div className={styles.desc}>
+                                <p>
+                                    Performance and speed is always important since it affects your waiting time, also efficiency.
+                                    <br />Im aware of performance and speed issues (technically its not issues).
+                                    <br />At this stage, starring your workspaces, deleting workspaces, retrieving workspaces and editing workspaces might seem your internet speed is low. As soon as you click to buttons, we recieve the API call but its not showed on Frontend.
+                                    <br />This is a intended behaviour and will be fixed at production build on near end of Q1 in 2022.
+                                    <br />Note that you are using a Beta version of a new platform built from scratch.
+                                </p>
+                            </div>
+                        </div>
+                        <div className={styles.section}>
+                            <div className={styles.title}>
+                                <div className={styles.icon}>
+                                    <QuestionIcon height={24} width={24} fill={"#fff"} />
+                                </div>
+                                <h1>More</h1>
+                            </div>
+                            <div className={styles.desc}>
+                                <p>The project is currently still in beta. Even this page is built new. Ill update this page whenever i add new stuff to Notal. See you :)</p>
+                            </div>
                         </div>
                     </div>
-                </div>}
-
+                }
+                {
+                    viewing != "about" && <div style={{ width: "100%", height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                        <h1 style={{ fontSize: "1.4em", fontWeight: "500" }}>🚧 This section is under construction 🚧</h1>
+                    </div>
+                }
             </div>
         </div>
     )

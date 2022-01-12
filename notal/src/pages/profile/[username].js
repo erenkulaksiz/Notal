@@ -17,6 +17,11 @@ import CheckIcon from '../../../public/icons/check.svg';
 import UserIcon from '../../../public/icons/user.svg';
 import AtIcon from '../../../public/icons/at.svg';
 import SyncIcon from '../../../public/icons/sync.svg';
+import AddIcon from '../../../public/icons/add.svg';
+import SendIcon from '../../../public/icons/send.svg';
+import LockIcon from '../../../public/icons/lock_outline.svg';
+import VisibleIcon from '../../../public/icons/visible.svg';
+import VisibleOffIcon from '../../../public/icons/visible_off.svg';
 
 import Header from '../../components/header';
 import Button from '../../components/button';
@@ -30,7 +35,12 @@ const Profile = (props) => {
     const [menuToggle, setMenuToggle] = useState(false);
 
     const [editingProfile, setEditingProfile] = useState(false);
-    const [editProfile, setEditProfile] = useState({ fullname: props.validate?.data?.fullname, username: props.validate?.data?.username, bio: props.validate?.data?.bio });
+    const [editProfile, setEditProfile] = useState({
+        fullname: props.validate?.data?.fullname,
+        username: props.validate?.data?.username,
+        bio: props.validate?.data?.bio,
+        visibility: props.validate?.data?.profileVisible || true
+    });
 
     const [editErrors, setEditErrors] = useState({ fullname: false, username: false, bio: false });
 
@@ -64,8 +74,14 @@ const Profile = (props) => {
             setEditErrors({ ...editErrors, username: false });
         }
 
-        if (editProfile.fullname != props.validate?.data?.fullname || editProfile.username != props.validate?.data?.username || editProfile.bio != props.validate?.data?.bio) {
-            const data = await auth.users.editUser({ uid: auth.authUser?.uid, fullname: editProfile.fullname, username: editProfile.username, bio: editProfile.bio });
+        if (editProfile.fullname != props.validate?.data?.fullname || editProfile.username != props.validate?.data?.username || editProfile.bio != props.validate?.data?.bio || editProfile.visibility != props.validate?.data?.profileVisible) {
+            const data = await auth.users.editUser({
+                uid: auth.authUser?.uid,
+                fullname: editProfile.fullname,
+                username: editProfile.username,
+                bio: editProfile.bio,
+                profileVisible: editProfile.visibility,
+            });
 
             console.log("data on edit: ", data);
 
@@ -188,7 +204,7 @@ const Profile = (props) => {
                                                 maxLength={24}
                                             />
                                             {editErrors.fullname != false && <p className={styles.errorMsg}>{editErrors.fullname}</p>}
-                                        </div> : <h1>{props.profile.data.fullname}</h1>}
+                                        </div> : <h1 style={{ display: "flex", alignItems: "center" }}>{props.profile.data.fullname}{props.profile?.data?.profileVisible == false && <LockIcon height={24} width={24} fill={"#fff"} style={{ marginLeft: 8 }} />}</h1>}
                                     </div>
                                     <div className={styles.username}>
                                         {editingProfile ? <div>
@@ -222,34 +238,80 @@ const Profile = (props) => {
                                 </form>
 
 
+
                             </div>
                         </div>
                         <div className={styles.bottom}>
 
-                            {((auth?.authUser?.uid == props.profile?.uid) && !editingProfile) && <div style={{ display: "flex", alignItems: "center" }}>
+                            {editingProfile && <div className={styles.setVisibility}>
+                                <Button
+                                    text={`Profile visibility: ${editProfile.visibility == false ? "private" : "public"}`}
+                                    icon={editProfile.visibility == false ? <VisibleOffIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} /> : <VisibleIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
+                                    style={{ height: 48 }}
+                                    onClick={() => setEditProfile({ ...editProfile, visibility: !editProfile.visibility })}
+                                    reversed
+                                />
+                            </div>}
+
+                            {((auth?.authUser?.uid == props.profile?.uid) && !editingProfile) && <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
                                 <Button
                                     text="Edit Profile"
-                                    icon={<EditIcon height={24} width={24} fill={"#000"} style={{ marginRight: 8 }} />}
+                                    icon={<EditIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
                                     style={{ height: 48, minWidth: 240, marginLeft: 16, marginRight: 16 }}
                                     onClick={() => { if (!editAvatarLoading) setEditingProfile(true) }}
                                     reversed
                                 />
                             </div>}
-                            {((auth?.authUser?.uid == props.profile?.uid) && editingProfile) && <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around" }}>
+
+                            {(auth?.authUser?.uid == props.profile?.uid) || <div className={styles.interactive}>
+                                <Button
+                                    text="Follow"
+                                    icon={<AddIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
+                                    style={{ height: 48, marginLeft: 16, }}
+                                    onClick={() => {
+                                        if (!auth?.authUser) {
+                                            router.replace("/login");
+                                        } else {
+                                            alert("Feature not available yet")
+                                        }
+                                    }}
+                                    reversed
+                                />
+                                <Button
+                                    text="Message"
+                                    icon={<SendIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
+                                    style={{ height: 48, marginRight: 16 }}
+                                    onClick={() => {
+                                        if (!auth?.authUser) {
+                                            router.replace("/login");
+                                        } else {
+                                            alert("Feature not available yet")
+                                        }
+                                    }}
+                                    reversed
+                                />
+                            </div>}
+
+                            {((auth?.authUser?.uid == props.profile?.uid) && editingProfile) && <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around", width: "100%" }}>
                                 <Button
                                     text="Cancel"
-                                    icon={<CrossIcon height={24} width={24} fill={"#000"} style={{ marginRight: 8 }} />}
+                                    icon={<CrossIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
                                     style={{ height: 48, minWidth: 120, width: "48%" }}
                                     onClick={() => {
                                         setEditingProfile(false);
                                         setEditErrors({ username: false, fullname: false, bio: false });
-                                        setEditProfile({ fullname: props.validate?.data?.fullname, username: props.validate?.data?.username, bio: props.validate?.data?.bio });
+                                        setEditProfile({
+                                            fullname: props.validate?.data?.fullname,
+                                            username: props.validate?.data?.username,
+                                            bio: props.validate?.data?.bio,
+                                            visibility: props.validate?.data?.profileVisible || true
+                                        });
                                     }}
                                     reversed
                                 />
                                 <Button
                                     text="Save"
-                                    icon={<CheckIcon height={24} width={24} fill={"#000"} style={{ marginRight: 8 }} />}
+                                    icon={<CheckIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
                                     style={{ height: 48, minWidth: 120, width: "48%" }}
                                     type="submit"
                                     form="editProfile"
@@ -257,9 +319,15 @@ const Profile = (props) => {
                                 />
                             </div>}
                         </div>
-
                     </div>
                 </div>
+            }
+
+            {
+                (props.profile?.data?.profileVisible == false && !(auth?.authUser?.uid == props.profile?.uid)) ? <div className={styles.privateProfile}>
+                    <LockIcon height={24} width={24} fill={"#19181e"} />
+                    <h1>This profile visibility is set to private.</h1>
+                </div> : <div>should be content here...</div>
             }
         </div>
     </div>)
