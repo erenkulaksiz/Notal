@@ -78,8 +78,13 @@ export function AuthProvider(props) {
             setUser(null);
         },
         getIdToken: async () => {
-            const token = await AuthService.getIdToken();
-            return token;
+            try {
+                const res = await AuthService.getIdToken();
+                return res;
+            } catch (error) {
+                //console.log("error with authService.getIdToken", error);
+                return { success: false, errorMessage: error }
+            }
         }
     }
 
@@ -103,6 +108,10 @@ export function AuthProvider(props) {
         field: {
             addField: async ({ id, title }) => {
                 const res = AuthService.addField({ id, title });
+                return res;
+            },
+            removeField: async ({ id, workspaceId }) => {
+                const res = AuthService.removeField({ id, workspaceId });
                 return res;
             }
         }

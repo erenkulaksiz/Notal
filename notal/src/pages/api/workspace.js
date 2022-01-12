@@ -12,7 +12,7 @@ if (!admin.apps.length) {
 
 export default async function handler(req, res) {
 
-    const { uid, title, desc, action, starred, id } = JSON.parse(req.body);
+    const { uid, title, desc, action, starred, id, workspaceId } = JSON.parse(req.body);
 
     const workspaceAction = {
         create: async () => {
@@ -78,7 +78,6 @@ export default async function handler(req, res) {
             });
         },
         star: async () => {
-
             if (!uid || !id) {
                 res.status(400).send({ success: false, error: "invalid-params" });
                 return;
@@ -141,14 +140,31 @@ export default async function handler(req, res) {
             const ref = await admin.database().ref(`/workspaces/${id}/fields`).push();
             await ref.set({
                 title, createdAt: Date.now(), updatedAt: Date.now(),
+            }, () => {
+                res.status(200).send({ success: true });
+            }).catch((error) => {
+                res.status(400).send({ success: false, error });
             });
-            res.status(200).send({ success: true });
-        }
+        },
+        removefield: async () => {
+            if (!id || !uid || !workspaceId) {
+                res.status(400).send({ success: false, error: "invalid-params" });
+                return;
+            }
+
+            console.log("Workspace id: ", workspaceId, " id of field: ", id);
+
+            await admin.database().ref(`/workspaces/${workspaceId}/fields/${id}`).remove(() => {
+                res.status(200).send({ success: true });
+            }).catch((error) => {
+                res.status(400).send({ success: false, error });
+            });
+        },
     }
 
     if (!workspaceAction[action.toLowerCase()]) {
-        res.status(400).send({ success: false, action });
+        res.status(400).send({ success: false });
     } else {
-        workspaceAction[action.toLowerCase()]();
+        await workspaceAction[action.toLowerCase()]();
     }
 }

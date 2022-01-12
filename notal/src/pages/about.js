@@ -98,7 +98,7 @@ const About = (props) => {
                     </div>
                     <div className={styles.aboutDesc}>
                         <p>Notal is a basic todo tracking and taking notes platform.
-                            <br />It is currently being built by me in Istanbul, Turkey which my name is <a href="https://github.com/erenkulaksiz">Eren Kulaksiz</a>.
+                            <br />It is currently being built <a href="https://github.com/erenkulaksiz">Eren Kulaksiz</a>.
                             <br />You can directly contact with me with my email <a href="mailto:erenkulaksz@gmail.com">erenkulaksz@gmail.com</a>.
                         </p>
                     </div>
@@ -160,10 +160,6 @@ const About = (props) => {
                                 Im building Notal with privacy and security in-mind.
                                 <br />You can register with Google, GitHub and Email at this point.
                                 <br />All stored data is stored with using <b>SHA256 and other types of encryption</b> in our servers.
-                                <br />Backend written with NodeJS & Firebase Admin and all API requests are Auth protected.
-                                <br />Notal will never sell your data, even workspace data is kept in our secure servers.
-                                <br />Even though i wrote Frontend & Backend just by myself, my pentest tools are limited. But
-                                if you are interested in pentesting, im open to offers at <a href="mailto:erenkulaksz@gmail.com">erenkulaksz@gmail.com</a>.
                             </p>
                         </div>
                     </div>

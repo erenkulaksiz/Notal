@@ -39,8 +39,12 @@ const Profile = (props) => {
     useEffect(() => {
         console.log("props: ", props);
         (async () => {
-            const res = await CheckToken({ auth, props });
-            if (res) router.replace(router.asPath);
+            const token = await auth.users.getIdToken();
+            const res = await CheckToken({ token, props });
+
+            if (props.validate?.error == "no-token" || res) {
+                router.replace(router.asPath);
+            }
         })();
     }, []);
 
@@ -295,6 +299,8 @@ export async function getServerSideProps(ctx) {
             } else {
                 validate = { error: data.error?.code }
             }
+        } else {
+            validate = { error: "no-token" }
         }
     }
     return { props: { validate, profile } }

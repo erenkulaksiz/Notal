@@ -220,11 +220,9 @@ const AuthService = {
         }
     },
     getIdToken: async () => {
-        const token = await getAuth().currentUser.getIdToken();
+        const res = await getAuth().currentUser.getIdToken();
 
-        console.log("currToken: ", token);
-
-        return { token };
+        return { res };
     },
     starWorkspace: async ({ id }) => {
         const auth = getAuth();
@@ -249,6 +247,23 @@ const AuthService = {
             method: "POST",
             body: JSON.stringify({ title, id, action: "ADDFIELD", uid: auth?.currentUser?.uid }),
         }).then(response => response.json());
+
+        if (data?.success) {
+            return { success: true }
+        } else {
+            return { error: data?.error }
+        }
+    },
+    removeField: async ({ id, workspaceId }) => {
+        const auth = getAuth();
+
+        const data = await fetch(`${server}/api/workspace`, {
+            'Content-Type': 'application/json',
+            method: "POST",
+            body: JSON.stringify({ id, action: "REMOVEFIELD", uid: auth?.currentUser?.uid, workspaceId }),
+        }).then(response => response.json());
+
+        console.log("delete field res: ", data);
 
         if (data?.success) {
             return { success: true }

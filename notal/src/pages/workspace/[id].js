@@ -23,6 +23,7 @@ import DragIcon from '../../../public/icons/drag.svg';
 import Header from '../../components/header';
 import Button from '../../components/button';
 import Input from '../../components/input';
+import Alert from '../../components/alert';
 
 import { server } from '../../config';
 import { CheckToken } from '../../utils';
@@ -47,12 +48,21 @@ const Workspace = (props) => {
     const [addingField, setAddingField] = useState(false);
     const [addField, setAddField] = useState({ title: "" });
 
+    // delete modal
+    const [deleteModal, setDeleteModal] = useState(false);
+
 
     useEffect(() => {
         console.log("props: ", props);
         (async () => {
-            const res = await CheckToken({ auth, props });
-            if (res) router.replace(router.asPath);
+            const token = await auth.users.getIdToken();
+            const res = await CheckToken({ token, props });
+
+            console.log("toeeeen:", token);
+
+            if (props.validate?.error == "no-token" || res) {
+                router.replace(router.asPath);
+            }
         })();
     }, []);
 
@@ -101,6 +111,15 @@ const Workspace = (props) => {
                 } else {
                     console.log("addfield error: ", data?.error);
                 }
+            }
+        },
+        deleteField: async ({ id }) => {
+            const data = await auth.workspace.field.removeField({ id, workspaceId: props.workspace.data.id });
+
+            if (data.success) {
+                router.replace(router.asPath);
+            } else {
+                console.log("delete field error: ", data?.error);
             }
         }
     }
@@ -197,7 +216,7 @@ const Workspace = (props) => {
                             </button>
                         </div>
                         <div className={styles.workspaceBtn}>
-                            <button onClick={() => { }} >
+                            <button onClick={() => setDeleteModal(true)} >
                                 <DeleteIcon height={24} width={24} />
                             </button>
                         </div>
@@ -210,67 +229,68 @@ const Workspace = (props) => {
                 </div>
                 <div className={styles.wrapper}>
                     <div className={styles.fields}>
-                        {props.workspace?.data?.fields.length == 0 ? <div>no fields to list. press + icon on top nav bar</div> : props.workspace?.data?.fields.map(el => {
-                            return <div className={styles.fieldWrapper} key={el.id}>
-                                <div className={styles.field}>
-                                    <div className={styles.header}>
-                                        {editingField.editing ? <div>
-                                            <Input
-                                                type="text"
-                                                placeholder="Field Name"
-                                                onChange={e => setEditedField({ title: e.target.value })}
-                                                defaultValue={"Yapılacaklar"}
-                                                style={{ width: "100%" }}
-                                            />
-                                        </div> : <a href="#" onClick={() => setEditingField({ ...editingField, editing: true })}>
-                                            {el.title}
-                                        </a>}
-                                        {editingField.editing ? <div className={styles.controls}>
-                                            <button onClick={() => setEditingField({ ...editingField, editing: false })}>
-                                                <CrossIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
-                                            </button>
-                                            <button>
-                                                <CheckIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
-                                            </button>
-                                        </div> : <div className={styles.controls}>
-                                            {isOwner && <button>
-                                                <DeleteIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
-                                            </button>}
-                                            <button>
-                                                <MoreIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
-                                            </button>
-                                        </div>}
-                                    </div>
-                                    <div className={styles.todo}>
-                                        <div className={styles.content}>
-                                            <div className={styles.title}>
-                                                <AddIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8, }} />
-                                                <h1>Selam bu bir todo</h1>
+                        {props.workspace?.data?.fields.length == 0 ? <div>no fields to list. press + icon on top nav bar</div> :
+                            props.workspace?.data?.fields.map(el => {
+                                return <div className={styles.fieldWrapper} key={el.id}>
+                                    <div className={styles.field}>
+                                        <div className={styles.header}>
+                                            {editingField.editing ? <div>
+                                                <Input
+                                                    type="text"
+                                                    placeholder="Field Name"
+                                                    onChange={e => setEditedField({ title: e.target.value })}
+                                                    defaultValue={"Yapılacaklar"}
+                                                    style={{ width: "100%" }}
+                                                />
+                                            </div> : <a href="#" onClick={() => setEditingField({ ...editingField, editing: true })}>
+                                                {el.title}
+                                            </a>}
+                                            {editingField.editing ? <div className={styles.controls}>
+                                                <button onClick={() => setEditingField({ ...editingField, editing: false })}>
+                                                    <CrossIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
+                                                </button>
+                                                <button>
+                                                    <CheckIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
+                                                </button>
+                                            </div> : <div className={styles.controls}>
+                                                {isOwner && <button onClick={() => handle.deleteField({ id: el.id })}>
+                                                    <DeleteIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
+                                                </button>}
+                                                <button>
+                                                    <MoreIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
+                                                </button>
+                                            </div>}
+                                        </div>
+                                        <div className={styles.todo}>
+                                            <div className={styles.content}>
+                                                <div className={styles.title}>
+                                                    <AddIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8, }} />
+                                                    <h1>Selam bu bir todo</h1>
+                                                </div>
+                                                <div className={styles.desc}>
+                                                    loremdfgfffffffffffffffffffffffffffffffsdfgfddfs
+                                                </div>
                                             </div>
-                                            <div className={styles.desc}>
-                                                loremdfgfffffffffffffffffffffffffffffffsdfgfddfs
+                                            <div className={styles.controls}>
+                                                <div className={styles.color} style={{ backgroundColor: "red" }} />
+                                                <button>
+                                                    <MoreIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 2, marginRight: 2, }} />
+                                                </button>
+                                                {isOwner && <button>
+                                                    <DragIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 2, marginRight: 2, }} />
+                                                </button>}
                                             </div>
                                         </div>
-                                        <div className={styles.controls}>
-                                            <div className={styles.color} style={{ backgroundColor: "red" }} />
-                                            <button>
-                                                <MoreIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 2, marginRight: 2, }} />
-                                            </button>
-                                            {isOwner && <button>
-                                                <DragIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 2, marginRight: 2, }} />
-                                            </button>}
-                                        </div>
+                                        {isOwner && <Button
+                                            text="Add a card..."
+                                            onClick={() => { }}
+                                            style={{ height: 48, borderRadius: 8, marginTop: 10, border: "none" }}
+                                            icon={<AddIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
+                                            reversed
+                                        />}
                                     </div>
-                                    {isOwner && <Button
-                                        text="Add a card..."
-                                        onClick={() => { }}
-                                        style={{ height: 48, borderRadius: 8, marginTop: 10, border: "none" }}
-                                        icon={<AddIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
-                                        reversed
-                                    />}
                                 </div>
-                            </div>
-                        })}
+                            })}
                     </div>
                 </div>
             </> : <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", width: "100%", height: "100%" }}>
@@ -293,6 +313,32 @@ const Workspace = (props) => {
             </div>
             }
         </div>
+        <Alert
+            visible={deleteModal}
+            icon={<DeleteIcon height={24} width={24} fill={"#fff"} style={{ marginRight: 8 }} />}
+            title="Delete Workspace"
+            textColor="#fff"
+            text="Are you sure want to delete this workspace?"
+            closeVisible
+            onCloseClick={() => {
+                setDeleteModal(false)
+            }}
+            buttons={[
+                <Button
+                    text="Cancel"
+                    onClick={() => setDeleteModal(false)}
+                    key={0}
+                />,
+                <Button
+                    text="Delete"
+                    icon={<DeleteIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
+                    style={{ borderStyle: "none" }}
+                    onClick={() => { }}
+                    reversed
+                    key={1}
+                />
+            ]}
+        />
     </div>)
 }
 
@@ -342,6 +388,8 @@ export async function getServerSideProps(ctx) {
             } else {
                 validate = { error: dataValidate?.error?.code }
             }
+        } else {
+            validate = { error: "no-token" }
         }
     }
     return { props: { validate, workspace } }

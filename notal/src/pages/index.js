@@ -15,6 +15,7 @@ import CrossIcon from '../../public/icons/cross.svg';
 import CheckIcon from '../../public/icons/check.svg';
 import DeleteIcon from '../../public/icons/delete.svg';
 import QuestionIcon from '../../public/icons/question.svg';
+import SyncIcon from '../../public/icons/sync.svg';
 
 import Input from '../components/input';
 import Button from '../components/button';
@@ -49,6 +50,8 @@ const Home = (props) => {
   const [registerAlertVisible, setRegisterAlertVisible] = useState(false);
   //
 
+  const [loadingWorkspaces, setLoadingWorkspaces] = useState(true);
+
   useEffect(() => {
     if (viewing == "favorites") {
       setFilter("favorites");
@@ -61,9 +64,12 @@ const Home = (props) => {
     console.log("props indexjs: ", props);
 
     (async () => {
-      const res = await CheckToken({ auth, props });
+      const token = await auth.users.getIdToken();
+      const res = await CheckToken({ token, props });
 
-      if (res) router.replace(router.asPath);
+      if (props.validate?.error == "no-token" || res) {
+        router.replace(router.asPath);
+      }
 
       if (props.validate.success && !props.validate.data?.username) { // if theres no username is present
         setRegisterAlertVisible(true);
@@ -73,6 +79,10 @@ const Home = (props) => {
       }
     })();
   }, []);
+
+  useEffect(() => {
+    if (props.workspaces?.success == true) setLoadingWorkspaces(false);
+  }, [props.workspaces]);
 
   const registerUser = async (e) => {
     e.preventDefault();
@@ -277,7 +287,10 @@ const Home = (props) => {
             </div>
           </div>
           <div className={styles.content}>
-            {(workspace.getWorkspacesWithFilter(props.workspaces?.data).length > 0 ? workspace.getWorkspacesWithFilter(props.workspaces?.data).map((element, index) => <div className={styles.workspace} key={index}>
+            {loadingWorkspaces ? <div style={{ display: "flex", width: "100%", height: "100%", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
+              <SyncIcon height={24} width={24} fill={"#000"} className={styles.loadingIconAuth} style={{ marginTop: 24 }} />
+              <span style={{ marginTop: 24, fontSize: "1.2em", fontWeight: "500" }}>Loading Workspaces...</span>
+            </div> : (workspace.getWorkspacesWithFilter(props.workspaces?.data).length > 0 ? workspace.getWorkspacesWithFilter(props.workspaces?.data).map((element, index) => <div className={styles.workspace} key={index}>
               <Link href="/workspace/[pid]" as={`/workspace/${element.id}`}>
                 <a style={{ position: "absolute", width: "100%", height: "100%", zIndex: 1 }}></a>
               </Link>
@@ -437,7 +450,9 @@ export async function getServerSideProps(ctx) {
         'Content-Type': 'application/json',
         method: "POST",
         body: JSON.stringify({ token: authCookie }),
-      }).then(response => response.json());
+      }).then(response => response.json()).catch(error => {
+        return { success: false, error: { code: "validation-error", error } }
+      });
 
       if (dataValidate.success) {
         validate = { ...dataValidate };
@@ -459,6 +474,8 @@ export async function getServerSideProps(ctx) {
       } else {
         validate = { error: dataValidate?.error?.code }
       }
+    } else {
+      validate = { error: "no-token" }
     }
   }
   return { props: { validate, workspaces } }
