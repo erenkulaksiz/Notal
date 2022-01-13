@@ -1,0 +1,100 @@
+@import "breakpoints";
+@import "constants";
+
+.todo {
+  display: flex;
+  flex-direction: row;
+  background-color: white;
+  padding: 12px;
+  border-radius: 8px;
+  justify-content: space-between;
+  margin-bottom: 12px;
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    .title {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      h1 {
+        font-size: 1.2em;
+        word-wrap: break-word;
+      }
+    }
+    .desc {
+      display: flex;
+      margin-top: 8px;
+      line-break: anywhere;
+      flex-wrap: wrap;
+    }
+  }
+  .controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    flex: 1;
+    margin-left: 8px;
+    position: relative;
+    .more {
+      display: flex;
+      flex-direction: row;
+      position: absolute;
+      bottom: 100%;
+      background-color: $primary_color;
+      padding: 8px;
+      border-radius: 8px;
+      button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 8px;
+        padding: 8px;
+        &:not(:first-child) {
+          margin-left: 8px;
+        }
+        &:hover {
+          background-color: rgb(192, 192, 192);
+          transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
+          transform: scale(0.95, 0.95);
+        }
+        &:active {
+          transform: scale(0.9, 0.9);
+        }
+      }
+    }
+    .color {
+      width: 8px;
+      height: 8px;
+      border-radius: 32px;
+      margin-left: 16px;
+    }
+    .control {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      margin-left: 12px;
+      background-color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 8px;
+      &:hover {
+        background-color: rgb(192, 192, 192);
+        transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
+        transform: scale(0.95, 0.95);
+      }
+      &:active {
+        transform: scale(0.9, 0.9);
+      }
+      &:last-of-type {
+        margin-left: 4px;
+      }
+    }
+  }
+}

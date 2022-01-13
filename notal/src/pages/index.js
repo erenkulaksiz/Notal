@@ -257,6 +257,7 @@ const Home = (props) => {
       onProfile={() => router.push(`/profile/${props?.validate?.data?.username}`)}
       onHeaderHome={() => router.replace('/')}
       showCreate={false}
+      loggedIn={props.validate?.success == true}
     />
     {/* ------------------------------------------------------------------------------------------------------------ */}
     <div className={styles.content_home}>

@@ -1,0 +1,44 @@
+@import "breakpoints";
+@import "constants";
+
+.addCardWrapper {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding: 12px;
+  border-radius: 8px;
+  .buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .inputContainer {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+    h1 {
+      font-size: 1.2em;
+    }
+    select {
+      padding: 12px;
+      margin-top: 8px;
+    }
+    .color {
+      width: 8px;
+      height: 8px;
+      border-radius: 32px;
+      margin-left: 16px;
+      box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+        rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+        rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    }
+    /*
+        input[type="text"] {
+          border-width: 2px;
+          border-style: solid;
+          border-color: $primary_color;
+          margin-top: 12px;
+        }
+        */
+  }
+}

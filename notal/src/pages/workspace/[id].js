@@ -2,7 +2,6 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import cookie from 'js-cookie';
 
 import styles from '../../../styles/App.module.scss';
 import useAuth from '../../hooks/auth';
@@ -18,13 +17,14 @@ import VisibleIcon from '../../../public/icons/visible.svg';
 import DeleteIcon from '../../../public/icons/delete.svg';
 import AddIcon from '../../../public/icons/add.svg';
 import MoreIcon from '../../../public/icons/more.svg';
-import DragIcon from '../../../public/icons/drag.svg';
 import SyncIcon from '../../../public/icons/sync.svg';
 
 import Header from '../../components/header';
 import Button from '../../components/button';
 import Input from '../../components/input';
 import Alert from '../../components/alert';
+import Card from '../../components/card';
+import AddCard from '../../components/addCard';
 
 import { server } from '../../config';
 import { CheckToken } from '../../utils';
@@ -49,7 +49,6 @@ const Workspace = (props) => {
 
     // add card
     const [addingCard, setAddingCard] = useState({ fieldId: "", adding: false });
-    const [addedCard, setAddedCard] = useState({ title: "", desc: "", color: "red", });
 
     // delete modal
     const [deleteWorkspaceModal, setDeleteWorkspaceModal] = useState(false);
@@ -59,6 +58,7 @@ const Workspace = (props) => {
 
     // card state
     const [cardMore, setCardMore] = useState({ visible: false, cardId: "" });
+    const [cardEditing, setCardEditing] = useState({ editing: false, id: "", title: "", desc: "", color: "red" });
 
     useEffect(() => {
         console.log("props: ", props);
@@ -151,17 +151,16 @@ const Workspace = (props) => {
                 console.log("delete workspace error: ", data?.error);
             }
         },
-        addCardToField: async ({ fieldId }) => {
+        addCardToField: async ({ fieldId, title, desc, color }) => {
             const data = await auth.workspace.field.addCard({
                 id: fieldId,
                 workspaceId: props.workspace.data.id,
-                title: addedCard.title,
-                desc: addedCard.desc,
-                color: addedCard.color,
+                title: title,
+                desc: desc,
+                color: color,
             });
 
             if (data.success) {
-                setAddedCard({ ...addedCard, title: "", desc: "", color: "red" });
                 setAddingCard({ ...addingCard, fieldId: "", adding: false });
                 router.replace(router.asPath);
             } else {
@@ -324,6 +323,7 @@ const Workspace = (props) => {
                                                 type="text"
                                                 placeholder="Field Title"
                                                 onChange={e => {
+                                                    //#TODO: not working enter btn
                                                     if (e.key === "Enter" || e.keyCode === 13) {
                                                         handle.editField({ id: el.id });
                                                     } else {
@@ -345,18 +345,15 @@ const Workspace = (props) => {
                                                 <CheckIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
                                             </button>
                                         </div> : <div className={styles.controls}>
-                                            {/*isOwner && <button onClick={() => handle.deleteField({ id: el.id })}>
-                                                    <DeleteIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
-                                            </button>*/}
-                                            {(isOwner && !deleteField.deleting) || deleteField.fieldId != el.id ? <button onClick={() => setDeleteField({ ...deleteField, deleting: true, fieldId: el.id })}>
+                                            {!(isOwner && deleteField.fieldId == el.id) ? (isOwner && <button onClick={() => setDeleteField({ ...deleteField, deleting: true, fieldId: el.id })}>
                                                 <DeleteIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
-                                            </button> :
+                                            </button>) :
                                                 <button onClick={() => setDeleteField({ ...deleteField, deleting: false, fieldId: "" })}>
                                                     <CrossIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
                                                 </button>}
-                                            {(isOwner && !deleteField.deleting) || deleteField.fieldId != el.id ? <button>
+                                            {!(isOwner && deleteField.fieldId == el.id) ? (isOwner && <button>
                                                 <MoreIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
-                                            </button> :
+                                            </button>) :
                                                 <button onClick={() => {
                                                     setDeleteField({ ...deleteField, deleting: false, fieldId: "" });
                                                     handle.deleteField({ id: deleteField.fieldId });
@@ -367,37 +364,16 @@ const Workspace = (props) => {
                                     </div>
                                     <div className={styles.cardContainer}>
                                         {el.cards && el.cards.map((card, index) => {
-                                            return <div className={styles.todo} key={index}>
-                                                <div className={styles.content}>
-                                                    <div className={styles.title}>
-                                                        <div>
-                                                            <AddIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />
-                                                        </div>
-                                                        <h1>{card.title}</h1>
-                                                    </div>
-                                                    <div className={styles.desc}>
-                                                        {card.desc}
-                                                    </div>
-                                                </div>
-                                                <div className={styles.controls}>
-                                                    <div className={styles.color} style={{ backgroundColor: card.color }} />
-                                                    {isOwner && <button className={styles.control}
-                                                        onClick={() => setCardMore({ ...cardMore, visible: (cardMore.cardId == card.id ? !cardMore.visible : true), cardId: card.id })}>
-                                                        <MoreIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 2, marginRight: 2, }} />
-                                                    </button>}
-                                                    {isOwner && <button className={styles.control} >
-                                                        <DragIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 2, marginRight: 2, }} />
-                                                    </button>}
-                                                    {(cardMore.visible && cardMore.cardId == card.id) && <div className={styles.more}>
-                                                        <button>
-                                                            <EditIcon height={24} width={24} fill={"#19181e"} />
-                                                        </button>
-                                                        <button onClick={() => handle.deleteCard({ cardId: card.id, fieldId: el.id })}>
-                                                            <DeleteIcon height={24} width={24} fill={"#19181e"} />
-                                                        </button>
-                                                    </div>}
-                                                </div>
-                                            </div>
+                                            return <Card
+                                                key={index}
+                                                card={card}
+                                                isOwner={isOwner}
+                                                cardMore={cardMore}
+                                                onMoreClick={() => setCardMore({ ...cardMore, visible: (cardMore.cardId == card.id ? !cardMore.visible : true), cardId: card.id })}
+                                                onDeleteClick={() => handle.deleteCard({ cardId: card.id, fieldId: el.id })}
+                                                onEditClick={() => setCardEditing({ ...cardEditing, editing: true, id: card.id })}
+                                                editing={cardEditing.editing && (cardEditing.id == card.id)}
+                                            />
                                         })}
                                     </div>
                                     <div className={styles.addCardBtn}>
@@ -409,60 +385,14 @@ const Workspace = (props) => {
                                             reversed
                                         />}
                                     </div>
-                                    {addingCard.adding && addingCard.fieldId == el.id && <div className={styles.addCardWrapper}>
-                                        <div className={styles.inputContainer}>
-                                            <h1>Title</h1>
-                                            <Input
-                                                type="text"
-                                                placeholder="Card Title"
-                                                value={addedCard.title}
-                                                onChange={e => setAddedCard({ ...addedCard, title: e.target.value })}
-                                                style={{ width: "100%", borderWidth: 1, borderColor: "#19181e", borderStyle: "solid", marginTop: 8 }}
-                                            />
-                                        </div>
-                                        <div className={styles.inputContainer}>
-                                            <h1>Description</h1>
-                                            <Input
-                                                type="text"
-                                                placeholder="Card Description"
-                                                value={addedCard.desc}
-                                                onChange={e => setAddedCard({ ...addedCard, desc: e.target.value })}
-                                                style={{ width: "100%", borderWidth: 1, borderColor: "#19181e", borderStyle: "solid", marginTop: 8 }}
-                                                multiline
-                                            />
-                                        </div>
-                                        <div className={styles.inputContainer}>
-                                            <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                                                <h1>Color</h1>
-                                                <div className={styles.color} style={{ backgroundColor: addedCard.color }} />
-                                            </div>
-                                            <select id="addCardColor" onChange={e => setAddedCard({ ...addedCard, color: e.target.value })}>
-                                                <option value="red">red</option>
-                                                <option value="blue">blue</option>
-                                                <option value="green">green</option>
-                                                <option value="orange">orange</option>
-                                                <option value="yellow">yellow</option>
-                                            </select>
-                                        </div>
-                                        <div className={styles.buttons}>
-                                            <Button
-                                                text="Cancel"
-                                                icon={<CrossIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
-                                                style={{ borderStyle: "none", height: 48, width: "48%" }}
-                                                onClick={() => {
-                                                    setAddedCard({ ...addedCard, title: "", desc: "", color: "red" });
-                                                    setAddingCard({ ...addingCard, adding: false, fieldId: "" });
-                                                }}
-                                                reversed
-                                            />
-                                            <Button
-                                                text="Add"
-                                                icon={<AddIcon height={24} width={24} fill={"#fff"} style={{ marginRight: 8 }} />}
-                                                style={{ borderStyle: "none", height: 48, width: "48%" }}
-                                                onClick={() => handle.addCardToField({ fieldId: el.id })}
-                                            />
-                                        </div>
-                                    </div>}
+                                    {addingCard.adding && addingCard.fieldId == el.id && <AddCard
+                                        onCancel={() => {
+                                            setAddingCard({ ...addingCard, adding: false, fieldId: "" });
+                                        }}
+                                        onSubmit={({ title, desc, color }) => {
+                                            handle.addCardToField({ fieldId: el.id, title, desc, color })
+                                        }} />}
+
                                 </div>
                             })}
                     </div>

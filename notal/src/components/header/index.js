@@ -39,16 +39,14 @@ const Header = ({ menuToggle, onMenuToggle, userData, onLogout, onCreate, onProf
             <button onClick={() => onMenuToggle(!menuToggle)} className={styles.navButton}>
                 <UserIcon height={24} width={24} fill={"#19181e"} />
             </button>
-            {
-                showCreate && <Button
-                    text="Create"
-                    onClick={() => onCreate()}
-                    style={{ width: 120, height: "60%", marginRight: 16 }}
-                    icon={<AddIcon height={24} width={24} fill={"#19181e"} />}
-                    reversed
-                />
-            }
-            {menuToggle && <div className={styles.nav} onBlur={() => onMenuToggle(false)}>
+            {showCreate && <Button
+                text="Create"
+                onClick={() => onCreate()}
+                style={{ width: 120, height: "60%", marginRight: 16 }}
+                icon={<AddIcon height={24} width={24} fill={"#19181e"} />}
+                reversed
+            />}
+            {<div className={menuToggle ? styles.nav : styles.nav__hidden} onBlur={() => onMenuToggle(false)} hidden={menuToggle}>
                 {loggedIn && <div className={styles.navContainer}>
                     <div className={styles.user}>
                         <img
@@ -73,6 +71,7 @@ const Header = ({ menuToggle, onMenuToggle, userData, onLogout, onCreate, onProf
                         //onFocus={() => onLogout()}
                         onClick={() => onProfile()}
                         icon={<UserIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
+                        style={{ height: 48 }}
                         reversed
                     />}
                     <Button
@@ -80,6 +79,7 @@ const Header = ({ menuToggle, onMenuToggle, userData, onLogout, onCreate, onProf
                         //onFocus={() => onLogout()}
                         onClick={() => onLogout()}
                         icon={<LogoutIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
+                        style={{ height: 48 }}
                         reversed
                     />
                 </> : <> <Button
@@ -92,7 +92,7 @@ const Header = ({ menuToggle, onMenuToggle, userData, onLogout, onCreate, onProf
                 </>}
             </div>}
         </div>
-    </div >)
+    </div>)
 }
 
 export default Header;

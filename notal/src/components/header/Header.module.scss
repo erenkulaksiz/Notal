@@ -19,6 +19,9 @@
     z-index: 999;
     border-bottom-left-radius: 16px;
     border-bottom-right-radius: 16px;
+    &__hidden {
+      display: none;
+    }
     .navContainer {
       width: 100%;
       display: flex;
