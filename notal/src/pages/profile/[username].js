@@ -39,12 +39,7 @@ const Profile = (props) => {
 
     //edit
     const [editingProfile, setEditingProfile] = useState(false);
-    const [editProfile, setEditProfile] = useState({
-        fullname: props.validate?.data?.fullname,
-        username: props.validate?.data?.username,
-        bio: props.validate?.data?.bio,
-        visibility: props.validate?.data?.profileVisible
-    });
+    const [editProfile, setEditProfile] = useState(null);
     const [editErrors, setEditErrors] = useState({ fullname: false, username: false, bio: false });
     const [editAvatarLoading, setEditAvatarLoading] = useState(false);
 
@@ -60,8 +55,15 @@ const Profile = (props) => {
     }, []);
 
     useEffect(() => {
-        if (props.profile?.success == true) setLoadingProfile(false);
-        if (props.profile?.success == false && props.profile?.error == "cant-find-user") setLoadingProfile(false);
+        if ((props.profile?.success == true) || (props.profile?.success == false && props.profile?.error == "cant-find-user")) {
+            setLoadingProfile(false);
+            setEditProfile({
+                fullname: props.validate?.data?.fullname,
+                username: props.validate?.data?.username,
+                bio: props.validate?.data?.bio,
+                visibility: props.validate?.data?.profileVisible
+            });
+        };
     }, [props.profile]);
 
     const onFinishEditing = async (e) => {
