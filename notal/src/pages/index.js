@@ -67,7 +67,7 @@ const Home = (props) => {
       const token = await auth.users.getIdToken();
       const res = await CheckToken({ token, props });
 
-      if (props.validate?.error == "no-token" || res) {
+      if (props.validate?.error == "no-token" || res || props.validate?.error == "validation-error" || props.valite?.error == "auth/id-token-expired") {
         router.replace(router.asPath);
       }
 
@@ -278,15 +278,15 @@ const Home = (props) => {
       </div>
       <div className={styles.workspaces}>
         <div className={styles.workspaces__wrapper}>
-          <div className={styles.title}>
-            <div className={styles.title__icon}>
-              <UserIcon height={24} width={24} fill={"#fff"} style={{ marginLeft: 8, marginRight: 8, }} />
-            </div>
-            <div className={styles.title__title}>
-              Your Workspaces
-            </div>
-          </div>
           <div className={styles.content}>
+            <div className={styles.title}>
+              <div className={styles.title__icon}>
+                <UserIcon height={24} width={24} fill={"#fff"} style={{ marginLeft: 8, marginRight: 8, }} />
+              </div>
+              <div className={styles.title__title}>
+                Your {filter == "favorites" ? "Favorites" : "Workspaces"}
+              </div>
+            </div>
             {loadingWorkspaces ? <div style={{ display: "flex", width: "100%", height: "100%", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
               <SyncIcon height={24} width={24} fill={"#19181e"} className={styles.loadingIconAuth} style={{ marginTop: 24 }} />
               <span style={{ marginTop: 24, fontSize: "1.2em", fontWeight: "500" }}>Loading Workspaces...</span>
@@ -321,16 +321,15 @@ const Home = (props) => {
         <Button
           text="Create Workspace"
           onClick={() => setNewWorkspaceVisible(true)}
-          style={{ height: 54, borderRadius: 8, minWidth: 160 }}
-          icon={<AddIcon height={24} width={24} fill={"#19181e"} />}
-          reversed
+          style={{ height: 48, borderRadius: 8, maxWidth: 240, }}
+          icon={<AddIcon height={24} width={24} fill={"#fff"} style={{ padding: 4, borderRadius: 8, backgroundColor: "#19181e", marginRight: 8 }} />}
+
         />
         <Button
           text="About"
           onClick={() => router.push("/about")}
-          style={{ height: 54, borderRadius: 8, minWidth: 160 }}
-          icon={<QuestionIcon height={24} width={24} fill={"#19181e"} />}
-          reversed
+          style={{ height: 48, borderRadius: 8, maxWidth: 240 }}
+          icon={<QuestionIcon height={24} width={24} fill={"#fff"} style={{ padding: 4, borderRadius: 8, backgroundColor: "#19181e", marginRight: 8 }} />}
         />
       </div>
     </div>
@@ -390,6 +389,7 @@ const Home = (props) => {
             <Button
               text="Cancel"
               onClick={() => workspace.closeModal()}
+              icon={<CrossIcon height={24} width={24} fill={"#fff"} style={{ marginRight: 8 }} />}
               style={{ height: 54, borderRadius: 8, width: "49%" }}
             />
             <Button
@@ -419,6 +419,7 @@ const Home = (props) => {
         <Button
           text="Cancel"
           onClick={() => setDeleteModal({ ...deleteModal, visible: false })}
+          icon={<CrossIcon height={24} width={24} fill={"#fff"} style={{ marginRight: 8 }} />}
           key={0}
         />,
         <Button
@@ -451,7 +452,7 @@ export async function getServerSideProps(ctx) {
         method: "POST",
         body: JSON.stringify({ token: authCookie }),
       }).then(response => response.json()).catch(error => {
-        return { success: false, error: { code: "validation-error", error } }
+        return { success: false, error: { code: "validation-error", errorMessage: error } }
       });
 
       if (dataValidate.success) {

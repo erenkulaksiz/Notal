@@ -34,16 +34,18 @@ const Profile = (props) => {
 
     const [menuToggle, setMenuToggle] = useState(false);
 
+    //loading
+    const [loadingProfile, setLoadingProfile] = useState(true);
+
+    //edit
     const [editingProfile, setEditingProfile] = useState(false);
     const [editProfile, setEditProfile] = useState({
         fullname: props.validate?.data?.fullname,
         username: props.validate?.data?.username,
         bio: props.validate?.data?.bio,
-        visibility: props.validate?.data?.profileVisible || true
+        visibility: props.validate?.data?.profileVisible
     });
-
     const [editErrors, setEditErrors] = useState({ fullname: false, username: false, bio: false });
-
     const [editAvatarLoading, setEditAvatarLoading] = useState(false);
 
     useEffect(() => {
@@ -51,12 +53,16 @@ const Profile = (props) => {
         (async () => {
             const token = await auth.users.getIdToken();
             const res = await CheckToken({ token, props });
-
-            if (props.validate?.error == "no-token" || res) {
+            if (props.validate?.error == "no-token" || res || props.validate?.error == "validation-error" || props.valite?.error == "auth/id-token-expired") {
                 router.replace(router.asPath);
             }
         })();
     }, []);
+
+    useEffect(() => {
+        if (props.profile?.success == true) setLoadingProfile(false);
+        if (props.profile?.success == false && props.profile?.error == "cant-find-user") setLoadingProfile(false);
+    }, [props.profile]);
 
     const onFinishEditing = async (e) => {
         e.preventDefault();
@@ -120,6 +126,13 @@ const Profile = (props) => {
                 alert("only png, jpeg and jpg is allowed");
             }
         }
+    }
+
+    if (loadingProfile) {
+        return <div style={{ display: "flex", width: "100%", height: "100%", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
+            <SyncIcon height={24} width={24} fill={"#19181e"} className={styles.loadingIconAuth} style={{ marginTop: 24 }} />
+            <span style={{ marginTop: 24, fontSize: "1.2em", fontWeight: "500" }}>Loading Profile...</span>
+        </div>
     }
 
     return (<div className={styles.container}>
@@ -190,55 +203,66 @@ const Profile = (props) => {
                                 </div>
                             </div>
                             <div className={styles.usernameSide}>
-                                <form id="editProfile" onSubmit={e => onFinishEditing(e)}>
-                                    <div className={styles.fullname}>
-                                        {editingProfile ? <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
-                                            <Input
-                                                type="text"
-                                                placeholder="Fullname"
-                                                onChange={e => setEditProfile({ ...editProfile, fullname: e.target.value })}
-                                                value={editProfile.fullname}
-                                                icon={<UserIcon height={24} width={24} fill={"#19181e"} />}
-                                                style={{ width: "100%" }}
-                                                error={editErrors.fullname != false}
-                                                maxLength={24}
-                                            />
-                                            {editErrors.fullname != false && <p className={styles.errorMsg}>{editErrors.fullname}</p>}
-                                        </div> : <h1 style={{ display: "flex", alignItems: "center" }}>{props.profile.data.fullname}{props.profile?.data?.profileVisible == false && <LockIcon height={24} width={24} fill={"#fff"} style={{ marginLeft: 8 }} />}</h1>}
+                                <form id="editProfile" onSubmit={e => onFinishEditing(e)} >
+                                    <div style={{ width: editingProfile ? "100%" : "auto" }}>
+                                        <div className={styles.fullname}>
+                                            {editingProfile ? <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+                                                <Input
+                                                    type="text"
+                                                    placeholder="Fullname"
+                                                    onChange={e => setEditProfile({ ...editProfile, fullname: e.target.value })}
+                                                    value={editProfile.fullname}
+                                                    icon={<UserIcon height={24} width={24} fill={"#19181e"} />}
+                                                    style={{ width: "100%" }}
+                                                    error={editErrors.fullname != false}
+                                                    maxLength={24}
+                                                />
+                                                {editErrors.fullname != false && <p className={styles.errorMsg}>{editErrors.fullname}</p>}
+                                            </div> : <h1 style={{ display: "flex", alignItems: "center" }}>{props.profile.data.fullname}{props.profile?.data?.profileVisible == false && <LockIcon height={24} width={24} fill={"#fff"} style={{ marginLeft: 8 }} />}</h1>}
+                                        </div>
+                                        <div className={styles.username}>
+                                            {editingProfile ? <div>
+                                                <Input
+                                                    type="text"
+                                                    placeholder="Username"
+                                                    onChange={e => setEditProfile({ ...editProfile, username: e.target.value.replace(/[^\w\s]/gi, "").replace(/\s/g, '').toLowerCase() })}
+                                                    value={editProfile.username}
+                                                    icon={<AtIcon height={24} width={24} fill={"#19181e"} />}
+                                                    style={{ marginTop: 4 }}
+                                                    error={editErrors.username != false}
+                                                    maxLength={16}
+                                                />
+                                                {editErrors.username != false && <p className={styles.errorMsg}>{editErrors.username}</p>}
+                                            </div> : <h1>@{props.profile.data.username}</h1>}
+                                        </div>
+
                                     </div>
-                                    <div className={styles.username}>
-                                        {editingProfile ? <div>
-                                            <Input
-                                                type="text"
-                                                placeholder="Username"
-                                                onChange={e => setEditProfile({ ...editProfile, username: e.target.value.replace(/[^\w\s]/gi, "").replace(/\s/g, '').toLowerCase() })}
-                                                value={editProfile.username}
-                                                icon={<AtIcon height={24} width={24} fill={"#19181e"} />}
-                                                style={{ marginTop: 4 }}
-                                                error={editErrors.username != false}
-                                                maxLength={16}
-                                            />
-                                            {editErrors.username != false && <p className={styles.errorMsg}>{editErrors.username}</p>}
-                                        </div> : <h1>@{props.profile.data.username}</h1>}
-                                    </div>
-                                    {(props.profile?.data?.bio || editingProfile) && <div className={styles.bio}>
-                                        <div className={styles.title}>Bio</div>
-                                        {!editingProfile ? props.profile?.data?.bio : <Input
-                                            type="text"
-                                            placeholder="Bio (optional, you can leave it blank)"
-                                            onChange={e => setEditProfile({ ...editProfile, bio: e.target.value })}
-                                            value={editProfile.bio}
-                                            style={{ marginTop: 4, }}
-                                            multilineStyle={{ maxHeight: 100, minHeight: 60, maxWidth: 450 }}
-                                            error={editErrors.bio != false}
-                                            maxLength={128}
-                                            multiline
-                                        />}
+                                    {!editingProfile && props.profile.data.username == "eren" && <div className={styles.profileRightSide}>
+                                        <a href="#">
+                                            <span>1</span>
+                                            <h1>followers</h1>
+                                        </a>
+                                        <a href="#">
+                                            <span>1</span>
+                                            <h1>following</h1>
+                                        </a>
                                     </div>}
                                 </form>
 
-
-
+                                {(props.profile?.data?.bio || editingProfile) && <div className={styles.bio}>
+                                    <div className={styles.title}>Bio</div>
+                                    {!editingProfile ? props.profile?.data?.bio : <Input
+                                        type="text"
+                                        placeholder="Bio (optional, you can leave it blank)"
+                                        onChange={e => setEditProfile({ ...editProfile, bio: e.target.value })}
+                                        value={editProfile.bio}
+                                        style={{ marginTop: 4, }}
+                                        multilineStyle={{ maxHeight: 100, minHeight: 60, maxWidth: 450 }}
+                                        error={editErrors.bio != false}
+                                        maxLength={128}
+                                        multiline
+                                    />}
+                                </div>}
                             </div>
                         </div>
                         <div className={styles.bottom}>
@@ -327,7 +351,7 @@ const Profile = (props) => {
                 (props.profile?.data?.profileVisible == false && !(auth?.authUser?.uid == props.profile?.uid)) ? <div className={styles.privateProfile}>
                     <LockIcon height={24} width={24} fill={"#19181e"} />
                     <h1>This profile visibility is set to private.</h1>
-                </div> : <div>should be content here...</div>
+                </div> : <div className={styles.privateProfile}>should be content here...</div>
             }
         </div>
     </div>)

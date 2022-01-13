@@ -8,6 +8,7 @@ import { server } from '../../config';
 import UserIcon from '../../../public/icons/user.svg';
 import AddIcon from '../../../public/icons/add.svg';
 import BackIcon from '../../../public/icons/back.svg';
+import LogoutIcon from '../../../public/icons/logout.svg';
 
 import Button from '../../components/button';
 import { route } from 'next/dist/server/router';
@@ -47,7 +48,7 @@ const Header = ({ menuToggle, onMenuToggle, userData, onLogout, onCreate, onProf
                     reversed
                 />
             }
-            <div className={menuToggle ? styles.nav__toggle : styles.nav} style={{ height: loggedIn ? 160 : 60, bottom: loggedIn ? -180 : -80 }} onBlur={() => onMenuToggle(false)}>
+            {menuToggle && <div className={styles.nav} onBlur={() => onMenuToggle(false)}>
                 {loggedIn && <div className={styles.navContainer}>
                     <div className={styles.user}>
                         <img
@@ -71,14 +72,14 @@ const Header = ({ menuToggle, onMenuToggle, userData, onLogout, onCreate, onProf
                         text="Profile"
                         //onFocus={() => onLogout()}
                         onClick={() => onProfile()}
-                        style={{ height: 48 }}
+                        icon={<UserIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
                         reversed
                     />}
                     <Button
                         text="Sign Out"
                         //onFocus={() => onLogout()}
                         onClick={() => onLogout()}
-                        style={{ height: 48 }}
+                        icon={<LogoutIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
                         reversed
                     />
                 </> : <> <Button
@@ -89,7 +90,7 @@ const Header = ({ menuToggle, onMenuToggle, userData, onLogout, onCreate, onProf
                     reversed
                 />
                 </>}
-            </div>
+            </div>}
         </div>
     </div >)
 }

@@ -19,6 +19,7 @@ import DeleteIcon from '../../../public/icons/delete.svg';
 import AddIcon from '../../../public/icons/add.svg';
 import MoreIcon from '../../../public/icons/more.svg';
 import DragIcon from '../../../public/icons/drag.svg';
+import SyncIcon from '../../../public/icons/sync.svg';
 
 import Header from '../../components/header';
 import Button from '../../components/button';
@@ -40,29 +41,39 @@ const Workspace = (props) => {
         title: props.workspace?.success ? props.workspace?.data.title : null,
         desc: props.workspace?.success ? props.workspace?.data.desc : null
     });
-    const [editingField, setEditingField] = useState({ editing: false, field: -1 });
+    const [editingField, setEditingField] = useState({ editing: false, fieldId: "" });
     const [editedField, setEditedField] = useState({ title: "" });
-    //
-
-    // adding field states
     const [addingField, setAddingField] = useState(false);
     const [addField, setAddField] = useState({ title: "" });
+    //
+
+    // add card
+    const [addingCard, setAddingCard] = useState({ fieldId: "", adding: false });
+    const [addedCard, setAddedCard] = useState({ title: "", desc: "", color: "red", });
 
     // delete modal
-    const [deleteModal, setDeleteModal] = useState(false);
+    const [deleteWorkspaceModal, setDeleteWorkspaceModal] = useState(false);
+    const [deleteField, setDeleteField] = useState({ fieldId: "", deleting: false });
 
+    const [loadingWorkspace, setLoadingWorkspace] = useState(true);
+
+    // card state
+    const [cardMore, setCardMore] = useState({ visible: false, cardId: "" });
 
     useEffect(() => {
         console.log("props: ", props);
         (async () => {
             const token = await auth.users.getIdToken();
             const res = await CheckToken({ token, props });
-
-            if (props.validate?.error == "no-token" || res) {
+            if (props.validate?.error == "no-token" || res || props.validate?.error == "validation-error" || props.valite?.error == "auth/id-token-expired") {
                 router.replace(router.asPath);
             }
         })();
     }, []);
+
+    useEffect(() => {
+        if (props.workspace?.success == true) setLoadingWorkspace(false);
+    }, [props.workspace]);
 
     const handle = {
         fieldEditing: async (e) => {
@@ -111,6 +122,17 @@ const Workspace = (props) => {
                 }
             }
         },
+        editField: async ({ id }) => {
+            const data = await auth.workspace.field.editField({ id, title: editedField.title, workspaceId: props.workspace.data.id });
+
+            if (data.success) {
+                setEditedField({ ...editedField, title: "" });
+                setEditingField({ ...editingField, editing: false, fieldId: "" });
+                router.replace(router.asPath);
+            } else {
+                console.log("edit field error: ", data?.error);
+            }
+        },
         deleteField: async ({ id }) => {
             const data = await auth.workspace.field.removeField({ id, workspaceId: props.workspace.data.id });
 
@@ -128,10 +150,48 @@ const Workspace = (props) => {
             } else {
                 console.log("delete workspace error: ", data?.error);
             }
+        },
+        addCardToField: async ({ fieldId }) => {
+            const data = await auth.workspace.field.addCard({
+                id: fieldId,
+                workspaceId: props.workspace.data.id,
+                title: addedCard.title,
+                desc: addedCard.desc,
+                color: addedCard.color,
+            });
+
+            if (data.success) {
+                setAddedCard({ ...addedCard, title: "", desc: "", color: "red" });
+                setAddingCard({ ...addingCard, fieldId: "", adding: false });
+                router.replace(router.asPath);
+            } else {
+                console.log("add card error: ", data?.error);
+            }
+        },
+        deleteCard: async ({ cardId, fieldId }) => {
+            const data = await auth.workspace.field.removeCard({
+                id: cardId,
+                fieldId,
+                workspaceId: props.workspace.data.id,
+            });
+
+            if (data.success) {
+                setCardMore({ ...cardMore, visible: false, cardId: "", fieldId: "" });
+                router.replace(router.asPath);
+            } else {
+                console.log("rem card error: ", data?.error);
+            }
         }
     }
 
     const isOwner = (props.workspace?.success == true ? props.workspace.data.owner == auth.authUser?.uid : false);
+
+    if (loadingWorkspace) {
+        return <div style={{ display: "flex", width: "100%", height: "100%", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
+            <SyncIcon height={24} width={24} fill={"#19181e"} className={styles.loadingIconAuth} style={{ marginTop: 24 }} />
+            <span style={{ marginTop: 24, fontSize: "1.2em", fontWeight: "500" }}>Loading Workspace...</span>
+        </div>
+    }
 
     return (<div className={styles.container}>
         <Head>
@@ -211,6 +271,24 @@ const Workspace = (props) => {
                             </button>
                         </div>)}
                     </div>
+                    {!isOwner && <div className={styles.workspaceOwnerWrapper}>
+                        <Link href="/profile/[username]" as={`/profile/${props.workspace?.data?.profile?.username}`} passHref>
+                            <a>
+                                <div className={styles.avatar}>
+                                    <img
+                                        src={props.workspace?.data?.profile?.avatar}
+                                        alt="Avatar"
+                                        width={33}
+                                        height={33}
+                                    />
+                                </div>
+                                <div className={styles.data}>
+                                    <h1>{props.workspace?.data?.profile?.fullname}</h1>
+                                    <h2>@{props.workspace?.data?.profile?.username}</h2>
+                                </div>
+                            </a>
+                        </Link>
+                    </div>}
                     {!editingWorkspace && !addingField && isOwner && <>
                         <div className={styles.workspaceBtn}>
                             <button onClick={() => handle.starWorkspace()} >
@@ -223,7 +301,7 @@ const Workspace = (props) => {
                             </button>
                         </div>
                         <div className={styles.workspaceBtn}>
-                            <button onClick={() => setDeleteModal(true)} >
+                            <button onClick={() => setDeleteWorkspaceModal(true)} >
                                 <DeleteIcon height={24} width={24} />
                             </button>
                         </div>
@@ -238,64 +316,153 @@ const Workspace = (props) => {
                     <div className={styles.fields}>
                         {props.workspace?.data?.fields.length == 0 ? <div>no fields to list. press + icon on top nav bar</div> :
                             props.workspace?.data?.fields.map(el => {
-                                return <div className={styles.fieldWrapper} key={el.id}>
-                                    <div className={styles.field}>
-                                        <div className={styles.header}>
-                                            {editingField.editing ? <div>
-                                                <Input
-                                                    type="text"
-                                                    placeholder="Field Name"
-                                                    onChange={e => setEditedField({ title: e.target.value })}
-                                                    defaultValue={"Yapılacaklar"}
-                                                    style={{ width: "100%" }}
-                                                />
-                                            </div> : <a href="#" onClick={() => setEditingField({ ...editingField, editing: true })}>
-                                                {el.title}
-                                            </a>}
-                                            {editingField.editing ? <div className={styles.controls}>
-                                                <button onClick={() => setEditingField({ ...editingField, editing: false })}>
-                                                    <CrossIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
-                                                </button>
-                                                <button>
-                                                    <CheckIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
-                                                </button>
-                                            </div> : <div className={styles.controls}>
-                                                {isOwner && <button onClick={() => handle.deleteField({ id: el.id })}>
+
+                                return <div className={styles.field} key={el.id}>
+                                    <div className={styles.header}>
+                                        {(editingField.editing && editingField.fieldId == el.id) ? <div>
+                                            <Input
+                                                type="text"
+                                                placeholder="Field Title"
+                                                onChange={e => {
+                                                    if (e.key === "Enter" || e.keyCode === 13) {
+                                                        handle.editField({ id: el.id });
+                                                    } else {
+                                                        setEditedField({ ...editedField, title: e.target.value });
+                                                    }
+                                                }}
+                                                defaultValue={el.title}
+                                                style={{ width: "90%" }}
+                                            />
+                                        </div> : <a href="#" onClick={() => isOwner && setEditingField({ ...editingField, editing: true, fieldId: el.id })}>
+                                            {el.title}
+                                            {isOwner && <EditIcon height={24} width={24} fill={"#fff"} style={{ marginLeft: 8, marginRight: 8, }} />}
+                                        </a>}
+                                        {(editingField.editing && editingField.fieldId == el.id) ? <div className={styles.controls}>
+                                            <button onClick={() => setEditingField({ ...editingField, editing: false, fieldId: "" })} style={{ marginLeft: 0 }}>
+                                                <CrossIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
+                                            </button>
+                                            <button style={{ marginLeft: 4 }} onClick={() => handle.editField({ id: el.id })}>
+                                                <CheckIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
+                                            </button>
+                                        </div> : <div className={styles.controls}>
+                                            {/*isOwner && <button onClick={() => handle.deleteField({ id: el.id })}>
                                                     <DeleteIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
+                                            </button>*/}
+                                            {(isOwner && !deleteField.deleting) || deleteField.fieldId != el.id ? <button onClick={() => setDeleteField({ ...deleteField, deleting: true, fieldId: el.id })}>
+                                                <DeleteIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
+                                            </button> :
+                                                <button onClick={() => setDeleteField({ ...deleteField, deleting: false, fieldId: "" })}>
+                                                    <CrossIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
                                                 </button>}
-                                                <button>
-                                                    <MoreIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
-                                                </button>
-                                            </div>}
-                                        </div>
-                                        <div className={styles.todo}>
-                                            <div className={styles.content}>
-                                                <div className={styles.title}>
-                                                    <AddIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8, }} />
-                                                    <h1>Selam bu bir todo</h1>
+                                            {(isOwner && !deleteField.deleting) || deleteField.fieldId != el.id ? <button>
+                                                <MoreIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
+                                            </button> :
+                                                <button onClick={() => {
+                                                    setDeleteField({ ...deleteField, deleting: false, fieldId: "" });
+                                                    handle.deleteField({ id: deleteField.fieldId });
+                                                }}>
+                                                    <CheckIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
+                                                </button>}
+                                        </div>}
+                                    </div>
+                                    <div className={styles.cardContainer}>
+                                        {el.cards && el.cards.map((card, index) => {
+                                            return <div className={styles.todo} key={index}>
+                                                <div className={styles.content}>
+                                                    <div className={styles.title}>
+                                                        <div>
+                                                            <AddIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />
+                                                        </div>
+                                                        <h1>{card.title}</h1>
+                                                    </div>
+                                                    <div className={styles.desc}>
+                                                        {card.desc}
+                                                    </div>
                                                 </div>
-                                                <div className={styles.desc}>
-                                                    loremdfgfffffffffffffffffffffffffffffffsdfgfddfs
+                                                <div className={styles.controls}>
+                                                    <div className={styles.color} style={{ backgroundColor: card.color }} />
+                                                    {isOwner && <button className={styles.control}
+                                                        onClick={() => setCardMore({ ...cardMore, visible: (cardMore.cardId == card.id ? !cardMore.visible : true), cardId: card.id })}>
+                                                        <MoreIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 2, marginRight: 2, }} />
+                                                    </button>}
+                                                    {isOwner && <button className={styles.control} >
+                                                        <DragIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 2, marginRight: 2, }} />
+                                                    </button>}
+                                                    {(cardMore.visible && cardMore.cardId == card.id) && <div className={styles.more}>
+                                                        <button>
+                                                            <EditIcon height={24} width={24} fill={"#19181e"} />
+                                                        </button>
+                                                        <button onClick={() => handle.deleteCard({ cardId: card.id, fieldId: el.id })}>
+                                                            <DeleteIcon height={24} width={24} fill={"#19181e"} />
+                                                        </button>
+                                                    </div>}
                                                 </div>
                                             </div>
-                                            <div className={styles.controls}>
-                                                <div className={styles.color} style={{ backgroundColor: "red" }} />
-                                                <button>
-                                                    <MoreIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 2, marginRight: 2, }} />
-                                                </button>
-                                                {isOwner && <button>
-                                                    <DragIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 2, marginRight: 2, }} />
-                                                </button>}
-                                            </div>
-                                        </div>
-                                        {isOwner && <Button
+                                        })}
+                                    </div>
+                                    <div className={styles.addCardBtn}>
+                                        {(isOwner && addingCard.fieldId != el.id) && <Button
                                             text="Add a card..."
-                                            onClick={() => { }}
+                                            onClick={() => setAddingCard({ ...addingCard, fieldId: el.id, adding: true })}
                                             style={{ height: 48, borderRadius: 8, marginTop: 10, border: "none" }}
                                             icon={<AddIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
                                             reversed
                                         />}
                                     </div>
+                                    {addingCard.adding && addingCard.fieldId == el.id && <div className={styles.addCardWrapper}>
+                                        <div className={styles.inputContainer}>
+                                            <h1>Title</h1>
+                                            <Input
+                                                type="text"
+                                                placeholder="Card Title"
+                                                value={addedCard.title}
+                                                onChange={e => setAddedCard({ ...addedCard, title: e.target.value })}
+                                                style={{ width: "100%", borderWidth: 1, borderColor: "#19181e", borderStyle: "solid", marginTop: 8 }}
+                                            />
+                                        </div>
+                                        <div className={styles.inputContainer}>
+                                            <h1>Description</h1>
+                                            <Input
+                                                type="text"
+                                                placeholder="Card Description"
+                                                value={addedCard.desc}
+                                                onChange={e => setAddedCard({ ...addedCard, desc: e.target.value })}
+                                                style={{ width: "100%", borderWidth: 1, borderColor: "#19181e", borderStyle: "solid", marginTop: 8 }}
+                                                multiline
+                                            />
+                                        </div>
+                                        <div className={styles.inputContainer}>
+                                            <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                                                <h1>Color</h1>
+                                                <div className={styles.color} style={{ backgroundColor: addedCard.color }} />
+                                            </div>
+                                            <select id="addCardColor" onChange={e => setAddedCard({ ...addedCard, color: e.target.value })}>
+                                                <option value="red">red</option>
+                                                <option value="blue">blue</option>
+                                                <option value="green">green</option>
+                                                <option value="orange">orange</option>
+                                                <option value="yellow">yellow</option>
+                                            </select>
+                                        </div>
+                                        <div className={styles.buttons}>
+                                            <Button
+                                                text="Cancel"
+                                                icon={<CrossIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
+                                                style={{ borderStyle: "none", height: 48, width: "48%" }}
+                                                onClick={() => {
+                                                    setAddedCard({ ...addedCard, title: "", desc: "", color: "red" });
+                                                    setAddingCard({ ...addingCard, adding: false, fieldId: "" });
+                                                }}
+                                                reversed
+                                            />
+                                            <Button
+                                                text="Add"
+                                                icon={<AddIcon height={24} width={24} fill={"#fff"} style={{ marginRight: 8 }} />}
+                                                style={{ borderStyle: "none", height: 48, width: "48%" }}
+                                                onClick={() => handle.addCardToField({ fieldId: el.id })}
+                                            />
+                                        </div>
+                                    </div>}
                                 </div>
                             })}
                     </div>
@@ -321,19 +488,19 @@ const Workspace = (props) => {
             }
         </div>
         <Alert
-            visible={deleteModal}
+            visible={deleteWorkspaceModal}
             icon={<DeleteIcon height={24} width={24} fill={"#fff"} style={{ marginRight: 8 }} />}
             title="Delete Workspace"
             textColor="#fff"
             text="Are you sure want to delete this workspace?"
             closeVisible
             onCloseClick={() => {
-                setDeleteModal(false)
+                setDeleteWorkspaceModal(false)
             }}
             buttons={[
                 <Button
                     text="Cancel"
-                    onClick={() => setDeleteModal(false)}
+                    onClick={() => setDeleteWorkspaceModal(false)}
                     key={0}
                 />,
                 <Button
@@ -346,7 +513,7 @@ const Workspace = (props) => {
                 />
             ]}
         />
-    </div>)
+    </div >)
 }
 
 export default Workspace;
@@ -374,6 +541,15 @@ export async function getServerSideProps(ctx) {
             fields = Object.keys(dataWorkspace.data.fields).map((el, index) => {
                 return { ...dataWorkspace.data?.fields[el], id: Object.keys(dataWorkspace.data.fields)[index] }
             });
+            fields.map((el, index) => {
+                console.log("fields:", el);
+                if (el.cards) {
+                    const cards = Object.keys(el.cards).map((elx, index) => {
+                        return { ...el.cards[elx], id: Object.keys(el.cards)[index] }
+                    });
+                    fields[index].cards = cards;
+                }
+            })
         }
 
         if (dataWorkspace.success) {

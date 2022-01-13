@@ -263,7 +263,53 @@ const AuthService = {
             body: JSON.stringify({ id, action: "REMOVEFIELD", uid: auth?.currentUser?.uid, workspaceId }),
         }).then(response => response.json());
 
-        console.log("delete field res: ", data);
+        if (data?.success) {
+            return { success: true }
+        } else {
+            return { error: data?.error }
+        }
+    },
+    addCard: async ({ id, workspaceId, title, desc, color }) => {
+        // id field id
+        const auth = getAuth();
+
+        const data = await fetch(`${server}/api/workspace`, {
+            'Content-Type': 'application/json',
+            method: "POST",
+            body: JSON.stringify({ id, action: "ADDCARD", uid: auth?.currentUser?.uid, workspaceId, title, desc, color }),
+        }).then(response => response.json());
+
+        console.log("add field res: ", data);
+
+        if (data?.success) {
+            return { success: true }
+        } else {
+            return { error: data?.error }
+        }
+    },
+    removeCard: async ({ id, workspaceId, fieldId }) => {
+        const auth = getAuth();
+
+        const data = await fetch(`${server}/api/workspace`, {
+            'Content-Type': 'application/json',
+            method: "POST",
+            body: JSON.stringify({ id, action: "REMOVECARD", uid: auth?.currentUser?.uid, workspaceId, fieldId }),
+        }).then(response => response.json());
+
+        if (data?.success) {
+            return { success: true }
+        } else {
+            return { error: data?.error }
+        }
+    },
+    editField: async ({ id, workspaceId, title }) => {
+        const auth = getAuth();
+
+        const data = await fetch(`${server}/api/workspace`, {
+            'Content-Type': 'application/json',
+            method: "POST",
+            body: JSON.stringify({ id, action: "EDITFIELD", uid: auth?.currentUser?.uid, workspaceId, title }),
+        }).then(response => response.json());
 
         if (data?.success) {
             return { success: true }

@@ -1,40 +1,36 @@
 @import "constants";
+@import "breakpoints";
 
 .container {
   display: flex;
   width: 100%;
   height: 80px;
   min-height: 80px;
-  background-color: $primary_color;
   position: relative;
-
   .nav {
-    display: none;
-
-    &__toggle {
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    top: 100%;
+    background-color: $primary_color;
+    width: 260px;
+    padding: 16px;
+    padding-bottom: 16px;
+    z-index: 999;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    .navContainer {
+      width: 100%;
       display: flex;
-      position: absolute;
-      flex-direction: column;
-      bottom: -180px;
-      background-color: $primary_color;
-      width: 260px;
-      height: 160px;
-      padding: 16px;
-      padding-bottom: 8px;
-      z-index: 999;
-      .navContainer {
-        width: 100%;
+      margin-bottom: 12px;
+      .user {
+        width: 30%;
         display: flex;
-        margin-bottom: 12px;
-        .user {
-          width: 30%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          img {
-            border-radius: 64px;
-            object-fit: cover;
-          }
+        justify-content: center;
+        align-items: center;
+        img {
+          border-radius: 64px;
+          object-fit: cover;
         }
       }
     }
@@ -68,11 +64,16 @@
   }
 
   &__left {
+    background-color: $primary_color;
     display: flex;
     flex: 1;
     align-items: center;
     padding-left: 24px;
     color: white;
+    @include md {
+      margin-left: 48px;
+      border-bottom-left-radius: 16px;
+    }
     button {
       min-width: 100px;
       max-width: 160px;
@@ -81,16 +82,22 @@
     }
   }
   &__middle {
+    background-color: $primary_color;
     display: flex;
     justify-content: center;
     align-items: center;
     flex: 1;
   }
   &__right {
+    background-color: $primary_color;
     display: flex;
     align-items: center;
     flex-direction: row-reverse;
     padding-right: 24px;
     flex: 1;
+    @include md {
+      margin-right: 48px;
+      border-bottom-right-radius: 16px;
+    }
   }
 }

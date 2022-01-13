@@ -12,7 +12,7 @@ if (!admin.apps.length) {
 
 export default async function handler(req, res) {
 
-    const { uid, title, desc, action, starred, id, workspaceId } = JSON.parse(req.body);
+    const { uid, title, desc, action, starred, id, workspaceId, color, fieldId } = JSON.parse(req.body);
 
     const workspaceAction = {
         create: async () => {
@@ -51,7 +51,17 @@ export default async function handler(req, res) {
 
             await admin.database().ref(`/workspaces/${id}`).once("value", async (snapshot) => {
                 if (snapshot.exists()) {
-                    res.status(200).send({ success: true, data: snapshot.val() });
+                    const workspace = snapshot.val();
+
+                    await admin.database().ref(`/users/${workspace.owner}`).once("value", async (snapshot) => {
+                        if (snapshot.exists()) {
+                            res.status(200).send({ success: true, data: { ...workspace, profile: snapshot.val() } });
+                        } else {
+                            res.status(400).send({ success: false });
+                        }
+                    }).catch(error => {
+                        res.status(400).send({ success: false, error });
+                    });
                 } else {
                     res.status(400).send({ success: false });
                 }
@@ -157,6 +167,50 @@ export default async function handler(req, res) {
             await admin.database().ref(`/workspaces/${workspaceId}/fields/${id}`).remove(() => {
                 res.status(200).send({ success: true });
             }).catch((error) => {
+                res.status(400).send({ success: false, error });
+            });
+        },
+        addcard: async () => {
+
+            // id: field id
+
+            console.log(color, title, desc, workspaceId, uid, id);
+            if (!id || !uid || !workspaceId || !title || !desc || !color) {
+                res.status(400).send({ success: false, error: "invalid-params" });
+                return;
+            }
+
+            const ref = await admin.database().ref(`/workspaces/${workspaceId}/fields/${id}/cards`).push();
+
+            await ref.set({
+                title, createdAt: Date.now(), updatedAt: Date.now(), title, desc, color
+            }, () => {
+                res.status(200).send({ success: true });
+            }).catch((error) => {
+                res.status(400).send({ success: false, error });
+            });
+        },
+        removecard: async () => {
+            if (!id || !uid || !workspaceId || !fieldId) {
+                res.status(400).send({ success: false, error: "invalid-params" });
+                return;
+            }
+
+            await admin.database().ref(`/workspaces/${workspaceId}/fields/${fieldId}/cards/${id}`).remove(() => {
+                res.status(200).send({ success: true });
+            }).catch((error) => {
+                res.status(400).send({ success: false, error });
+            });
+        },
+        editfield: async () => {
+            if (!id || !uid || !workspaceId || !title) {
+                res.status(400).send({ success: false, error: "invalid-params" });
+                return;
+            }
+
+            await admin.database().ref(`/workspaces/${workspaceId}/fields/${id}`).update({ title, updatedAt: Date.now() }, () => {
+                res.status(200).send({ success: true });
+            }).catch(error => {
                 res.status(400).send({ success: false, error });
             });
         }

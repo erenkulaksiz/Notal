@@ -39,6 +39,38 @@
       padding-bottom: 12px;
       //border-bottom: 2px solid $primary_color;
     }
+    .workspaceOwnerWrapper {
+      display: flex;
+      flex-direction: row;
+      height: 100%;
+      background-color: $primary_color;
+      border-radius: 8px;
+      a {
+        display: flex;
+        flex-direction: row;
+        text-decoration: none;
+        color: white;
+        padding: 12px;
+
+        .avatar {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex: 40;
+          img {
+            border-radius: 100%;
+          }
+        }
+        .data {
+          display: flex;
+          justify-content: center;
+          flex-direction: column;
+          flex: 60;
+          margin-left: 12px;
+        }
+      }
+    }
+
     .meta {
       display: flex;
       padding: 12px;
@@ -150,108 +182,115 @@
       display: flex;
       flex-direction: column;
       align-items: flex-start;
+
       //overflow: auto;
 
       flex-wrap: wrap;
+      justify-content: flex-start;
 
-      @include md {
+      @include sm {
         flex-direction: row;
-        justify-content: space-between;
+        //justify-content: space-between;
+        justify-content: center;
       }
 
-      .fieldWrapper {
+      @include md {
+        justify-content: flex-start;
+      }
+
+      .field {
         display: flex;
+        flex-direction: column;
+
+        margin-top: 12px;
+
+        margin-right: 0;
+        background-color: $primary_color;
+        border-radius: 0;
+
         width: 100%;
+
+        padding-top: 24px;
+        padding-bottom: 24px;
 
         @include sm {
           width: 100%;
+          border-radius: 8px;
+          margin-top: 0;
+          margin-bottom: 12px;
+          padding: 24px;
         }
 
         @include md {
           width: 48%;
-          &:only-child {
-            width: 50%;
-          }
+          margin-right: 8px;
+          padding: 24px;
         }
 
         @include xl {
-          width: 48%;
-          &:only-child {
-            width: 50%;
-          }
+          width: 24%;
+          padding: 24px;
         }
 
         @include rwd(1200) {
-          width: 40%;
-          min-width: 340px;
-          &:only-child {
-            width: 40%;
-            min-width: 360px;
-          }
+          width: 24%;
+          max-width: 340px;
+          padding: 24px;
         }
 
-        .field {
+        .header {
           display: flex;
-          flex-direction: column;
-          padding: 24px;
-
-          margin-top: 12px;
-
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          //border-bottom: 1px solid white;
+          padding-bottom: 12px;
           margin-bottom: 12px;
 
-          margin-right: 0;
-          background-color: $primary_color;
-          border-radius: 0;
-          width: 100%;
+          padding-left: 16px;
+          padding-right: 16px;
 
           @include sm {
-            border-radius: 8px;
-            margin-top: 0;
+            padding-left: 0px;
+            padding-right: 0px;
           }
-
-          @include md {
-            //min-width: 300px;
-            flex: 1;
+          a {
+            font-size: 1.7em;
+            color: white;
+            font-weight: 500;
+            text-decoration: none;
           }
-
-          @include lg {
-            //max-width: 500px;
-          }
-
-          .header {
+          .controls {
             display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-            //border-bottom: 1px solid white;
-            padding-bottom: 12px;
-            margin-bottom: 12px;
-            a {
-              font-size: 1.7em;
-              color: white;
-              font-weight: 500;
-              text-decoration: none;
-            }
-            .controls {
-              display: flex;
-              //margin-left: 12px;
-              height: 100%;
-              button {
-                border: none;
-                cursor: pointer;
-                border-radius: 8px;
-                height: 32px;
-                margin-left: 8px;
-                &:hover {
-                  background-color: rgb(202, 202, 202);
-                  transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
-                  transform: scale(0.95, 0.95);
-                }
-                &:active {
-                  transform: scale(0.9, 0.9);
-                }
+            //margin-left: 12px;
+            height: 100%;
+            button {
+              border: none;
+              cursor: pointer;
+              border-radius: 8px;
+              height: 32px;
+              margin-left: 8px;
+              &:hover {
+                background-color: rgb(202, 202, 202);
+                transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
+                transform: scale(0.95, 0.95);
+              }
+              &:active {
+                transform: scale(0.9, 0.9);
               }
             }
+          }
+        }
+        .cardContainer {
+          display: flex;
+          flex-direction: column;
+
+          padding-left: 16px;
+          padding-right: 16px;
+
+          @include sm {
+            padding-left: 0px;
+            padding-right: 0px;
           }
           .todo {
             display: flex;
@@ -261,6 +300,7 @@
             border-radius: 8px;
             justify-content: space-between;
             margin-bottom: 12px;
+
             .content {
               display: flex;
               flex-direction: column;
@@ -271,6 +311,7 @@
                 align-items: center;
                 h1 {
                   font-size: 1.2em;
+                  word-wrap: break-word;
                 }
               }
               .desc {
@@ -287,13 +328,44 @@
               align-items: center;
               flex: 1;
               margin-left: 8px;
+              position: relative;
+              .more {
+                display: flex;
+                flex-direction: row;
+                position: absolute;
+                bottom: 100%;
+                background-color: $primary_color;
+                padding: 8px;
+                border-radius: 8px;
+                button {
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  background-color: white;
+                  border: none;
+                  cursor: pointer;
+                  border-radius: 8px;
+                  padding: 8px;
+                  &:not(:first-child) {
+                    margin-left: 8px;
+                  }
+                  &:hover {
+                    background-color: rgb(192, 192, 192);
+                    transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
+                    transform: scale(0.95, 0.95);
+                  }
+                  &:active {
+                    transform: scale(0.9, 0.9);
+                  }
+                }
+              }
               .color {
                 width: 8px;
                 height: 8px;
                 border-radius: 32px;
                 margin-left: 16px;
               }
-              button {
+              .control {
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -316,6 +388,60 @@
                 }
               }
             }
+          }
+        }
+
+        .addCardBtn {
+          padding-left: 16px;
+          padding-right: 16px;
+
+          @include sm {
+            padding-left: 0px;
+            padding-right: 0px;
+          }
+        }
+
+        .addCardWrapper {
+          display: flex;
+          flex-direction: column;
+          background-color: white;
+          padding: 12px;
+          border-radius: 8px;
+          .buttons {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+          }
+          .inputContainer {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 12px;
+            h1 {
+              font-size: 1.2em;
+            }
+            select {
+              padding: 12px;
+              margin-top: 8px;
+            }
+            .color {
+              width: 8px;
+              height: 8px;
+              border-radius: 32px;
+              margin-left: 16px;
+              box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+                rgba(0, 0, 0, 0.12) 0px -12px 30px,
+                rgba(0, 0, 0, 0.12) 0px 4px 6px,
+                rgba(0, 0, 0, 0.17) 0px 12px 13px,
+                rgba(0, 0, 0, 0.09) 0px -3px 5px;
+            }
+            /*
+              input[type="text"] {
+                border-width: 2px;
+                border-style: solid;
+                border-color: $primary_color;
+                margin-top: 12px;
+              }
+              */
           }
         }
       }

@@ -34,8 +34,11 @@ const About = (props) => {
 
     useEffect(() => {
         (async () => {
-            const res = await CheckToken({ auth, props });
-            if (res) router.replace(router.asPath);
+            const token = await auth.users.getIdToken();
+            const res = await CheckToken({ token, props });
+            if (props.validate?.error == "no-token" || res || props.validate?.error == "validation-error" || props.valite?.error == "auth/id-token-expired") {
+                router.replace(router.asPath);
+            }
         })();
     }, []);
 
@@ -102,6 +105,7 @@ const About = (props) => {
                 </div>
                 {
                     viewing == "about" && <div className={styles.aboutContainer}>
+                        <img src='https://raw.githubusercontent.com/erenkulaksiz/erenkulaksiz/master/dino.gif' style={{ width: "100%" }} />
                         <div className={styles.aboutTitle}>
                             <h1>🎉 Welcome to Notal.</h1>
                         </div>
