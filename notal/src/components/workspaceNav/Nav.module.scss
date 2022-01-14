@@ -1,0 +1,148 @@
+@import "breakpoints";
+@import "constants";
+
+.nav {
+  display: flex;
+  align-items: flex-start;
+  padding-top: 0px;
+  background-color: $primary_color;
+  padding-bottom: 12px;
+  @include sm {
+    padding-top: 12px;
+    background-color: transparent;
+    padding-bottom: 12px;
+    //border-bottom: 2px solid $primary_color;
+  }
+  .workspaceOwnerWrapper {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    background-color: $primary_color;
+    border-radius: 8px;
+    a {
+      display: flex;
+      flex-direction: row;
+      text-decoration: none;
+      color: white;
+      padding: 12px;
+
+      .avatar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex: 40;
+        img {
+          border-radius: 100%;
+        }
+      }
+      .data {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        flex: 60;
+        margin-left: 12px;
+      }
+    }
+  }
+
+  .meta {
+    display: flex;
+    padding: 12px;
+    flex-direction: row;
+    border-radius: 0px;
+
+    @include sm {
+      border-radius: 8px;
+      background-color: $primary_color;
+      margin-right: 12px;
+    }
+    .addField {
+      display: flex;
+      flex-direction: row;
+    }
+    .details {
+      display: flex;
+      flex-direction: column;
+      h1 {
+        font-size: 1.4em;
+        color: white;
+      }
+      span {
+        color: rgb(163, 163, 163);
+      }
+    }
+    .editBtn {
+      display: flex;
+      margin-left: 16px;
+      button {
+        display: flex;
+        background-color: white;
+        border-radius: 6px;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        cursor: pointer;
+        width: 64px;
+        transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
+        &:hover {
+          background-color: rgb(202, 202, 202);
+          transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
+          transform: scale(0.95, 0.95);
+        }
+        &:active {
+          transform: scale(0.9, 0.9);
+          svg {
+            fill: rgb(80, 80, 80);
+            transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
+          }
+        }
+      }
+    }
+  }
+  .workspaceBtn {
+    display: flex;
+    margin-right: 4px;
+    height: 100%;
+    width: 64px;
+    align-items: center;
+    @include sm {
+      margin-right: 12px;
+    }
+    button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 60%;
+      flex: 1;
+      border: none;
+      cursor: pointer;
+      border-radius: 8px;
+      background-color: white;
+      transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
+
+      svg {
+        fill: $primary_color;
+      }
+
+      @include sm {
+        background-color: $primary_color;
+        height: 100%;
+        svg {
+          fill: white;
+        }
+      }
+
+      &:hover {
+        opacity: 0.9;
+        transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
+        transform: scale(0.95, 0.95);
+      }
+
+      &:active {
+        opacity: 0.8;
+        transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
+        transform: scale(0.9, 0.9);
+      }
+    }
+  }
+}

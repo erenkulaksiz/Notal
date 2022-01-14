@@ -1,0 +1,127 @@
+import styles from './Field.module.scss';
+
+import { useState } from 'react';
+
+import CheckIcon from '../../../public/icons/check.svg';
+import EditIcon from '../../../public/icons/edit.svg';
+import AddIcon from '../../../public/icons/add.svg';
+import MoreIcon from '../../../public/icons/more.svg';
+import DeleteIcon from '../../../public/icons/delete.svg';
+import CrossIcon from '../../../public/icons/cross.svg';
+
+import Input from '../../components/input';
+import Card from '../../components/card';
+import AddCard from '../../components/addCard';
+import Button from '../button';
+
+const Field = ({ isOwner, key, field, onEditCard, onDeleteField, onEditField, onDeleteCard }) => {
+
+    const [addingCard, setAddingCard] = useState({ fieldId: "", adding: false });
+
+    const [editedField, setEditedField] = useState({ title: "" });
+    const [editingField, setEditingField] = useState({ editing: false, fieldId: "" });
+    const [deleteField, setDeleteField] = useState({ fieldId: "", deleting: false });
+
+    const [cardMore, setCardMore] = useState({ visible: false, cardId: "" });
+    const [cardEditing, setCardEditing] = useState({ editing: false, id: "", title: "", desc: "", color: "red" });
+
+
+    return (<div className={styles.field} key={key}>
+        <div className={styles.header}>
+            {(editingField.editing && editingField.fieldId == field.id) ? <div>
+                <Input
+                    type="text"
+                    placeholder="Field Title"
+                    onChange={e => {
+                        //#TODO: not working enter btn
+                        if (e.key === "Enter" || e.keyCode === 13) {
+                            //handle.editField({ id: field.id });
+                            setEditingField({ editing: false, fieldId: "" });
+                            onEditField({ id: field.id, title: editedField.title });
+                        } else {
+                            setEditedField({ ...editedField, title: e.target.value });
+                        }
+                    }}
+                    defaultValue={field.title}
+                    style={{ width: "90%" }}
+                />
+            </div> : <a href="#" onClick={() => {
+                if (isOwner) {
+                    setEditingField({ ...editingField, editing: true, fieldId: field.id });
+                }
+            }}>
+                {field.title}
+                {isOwner && <EditIcon height={24} width={24} fill={"#fff"} style={{ marginLeft: 8, marginRight: 8, }} />}
+            </a>}
+            {(editingField.editing && editingField.fieldId == field.id) ? <div className={styles.controls}>
+                <button onClick={() => setEditingField({ ...editingField, editing: false, fieldId: "" })} style={{ marginLeft: 0 }}>
+                    <CrossIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
+                </button>
+                <button style={{ marginLeft: 4 }} onClick={() => {
+                    setEditingField({ editing: false, fieldId: "" });
+                    onEditField({ id: field.id, title: editedField.title });
+                    //handle.editField({ id: field.id });
+                }}>
+                    <CheckIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
+                </button>
+            </div> : <div className={styles.controls}>
+                {!(isOwner && deleteField.fieldId == field.id) ? (isOwner && <button onClick={() => setDeleteField({ ...deleteField, deleting: true, fieldId: field.id })}>
+                    <DeleteIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
+                </button>) :
+                    <button onClick={() => setDeleteField({ ...deleteField, deleting: false, fieldId: "" })}>
+                        <CrossIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
+                    </button>}
+                {!(isOwner && deleteField.fieldId == field.id) ? (isOwner && <button>
+                    <MoreIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
+                </button>) :
+                    <button onClick={() => {
+                        onDeleteField({ id: deleteField.fieldId });
+                        setDeleteField({ ...deleteField, deleting: false, fieldId: "" });
+                        //handle.deleteField({ id: deleteField.fieldId });
+                    }}>
+                        <CheckIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
+                    </button>}
+            </div>}
+        </div>
+        <div className={styles.cardContainer}>
+            {field.cards && field.cards.map((card, index) => {
+                return <Card
+                    key={index}
+                    card={card}
+                    isOwner={isOwner}
+                    cardMore={cardMore}
+                    onMoreClick={() => setCardMore({ ...cardMore, visible: (cardMore.cardId == card.id ? !cardMore.visible : true), cardId: card.id })}
+                    onDeleteClick={() => {
+                        onDeleteCard({ cardId: card.id, fieldId: field.id });
+                        //handle.deleteCard({ cardId: card.id, fieldId: field.id })
+                    }}
+                    onEditClick={() => setCardEditing({ ...cardEditing, editing: true, id: card.id })}
+                    editing={cardEditing.editing && (cardEditing.id == card.id)}
+                    onEditCancel={() => {
+                        setCardEditing({ ...cardEditing, editing: false, id: "" });
+                        setCardMore({ ...cardMore, visible: false, cardId: "" });
+                    }} // handle.editCard({ title, desc, color, id: card.id, fieldId: field.id })
+                    onEditSubmit={({ title, desc, color }) => onEditCard({ title, desc, color, cardId: card.id })}
+                />
+            })}
+        </div>
+        <div className={styles.addCardBtn}>
+            {(isOwner && addingCard.fieldId != field.id) && <Button
+                text="Add a card..."
+                onClick={() => setAddingCard({ ...addingCard, fieldId: field.id, adding: true })}
+                style={{ height: 48, borderRadius: 8, marginTop: 10, border: "none" }}
+                icon={<AddIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
+                reversed
+            />}
+        </div>
+        {addingCard.adding && addingCard.fieldId == field.id && <AddCard
+            onCancel={() => {
+                setAddingCard({ ...addingCard, adding: false, fieldId: "" });
+            }}
+            onSubmit={({ title, desc, color }) => {
+                handle.addCardToField({ fieldId: field.id, title, desc, color })
+            }} />}
+    </div>)
+}
+
+export default Field;

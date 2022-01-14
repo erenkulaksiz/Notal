@@ -213,6 +213,18 @@ export default async function handler(req, res) {
             }).catch(error => {
                 res.status(400).send({ success: false, error });
             });
+        },
+        editcard: async () => {
+            if (!id || !uid || !workspaceId || !title || !desc || !color || !fieldId) {
+                res.status(400).send({ success: false, error: "invalid-params" });
+                return;
+            }
+
+            await admin.database().ref(`/workspaces/${workspaceId}/fields/${fieldId}/cards/${id}`).update({ title, desc, color, updatedAt: Date.now() }, () => {
+                res.status(200).send({ success: true });
+            }).catch(error => {
+                res.status(400).send({ success: false, error });
+            });
         }
     }
 

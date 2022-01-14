@@ -118,6 +118,10 @@ export function AuthProvider(props) {
                 const res = AuthService.editField({ id, title, workspaceId });
                 return res;
             },
+            editCard: async ({ id, workspaceId, fieldId, title, desc, color }) => {
+                const res = AuthService.editCard({ id, workspaceId, fieldId, title, desc, color });
+                return res;
+            },
             addCard: async ({ id, workspaceId, title, desc, color }) => {
                 // id as field id
                 const res = AuthService.addCard({ id, workspaceId, title, desc, color });

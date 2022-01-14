@@ -317,6 +317,21 @@ const AuthService = {
             return { error: data?.error }
         }
     },
+    editCard: async ({ id, workspaceId, fieldId, title, desc, color }) => {
+        const auth = getAuth();
+
+        const data = await fetch(`${server}/api/workspace`, {
+            'Content-Type': 'application/json',
+            method: "POST",
+            body: JSON.stringify({ id, action: "EDITCARD", uid: auth?.currentUser?.uid, workspaceId, title, desc, color, fieldId }),
+        }).then(response => response.json());
+
+        if (data?.success) {
+            return { success: true }
+        } else {
+            return { error: data?.error }
+        }
+    },
     logout: async () => {
         const auth = getAuth();
         auth.signOut();
