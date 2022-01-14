@@ -63,6 +63,7 @@ const Home = (props) => {
   useEffect(() => {
     console.log("props indexjs: ", props);
 
+
     (async () => {
       const token = await auth.users.getIdToken();
       const res = await CheckToken({ token, props });

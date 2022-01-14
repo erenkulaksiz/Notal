@@ -13,11 +13,11 @@ import DeleteIcon from '../../../public/icons/delete.svg';
 import CrossIcon from '../../../public/icons/cross.svg';
 import CheckIcon from '../../../public/icons/check.svg';
 
-const Card = ({ card, cardKey, isOwner, onMoreClick, cardMore, onDeleteClick, onEditClick, editing, onEditCancel, onEditSubmit }) => {
+const Card = ({ card, isOwner, onMoreClick, cardMore, onDeleteClick, onEditClick, editing, onEditCancel, onEditSubmit }) => {
 
     const [editCard, setEditCard] = useState({ title: card.title, desc: card.desc, color: card.color })
 
-    return (<div className={styles.todo} key={cardKey}>
+    return (<div className={styles.todo}>
         {editing != true ? <><div className={styles.content}>
             <div className={styles.title}>
                 <div>

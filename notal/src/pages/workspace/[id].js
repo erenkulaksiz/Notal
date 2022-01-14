@@ -213,7 +213,7 @@ const Workspace = (props) => {
                             props.workspace?.data?.fields.map(el => {
                                 return <Field
                                     isOwner={isOwner}
-                                    fieldKey={el.id}
+                                    key={el.id}
                                     field={el}
                                     onEditField={({ id, title }) => {
                                         handle.editField({ id, title });

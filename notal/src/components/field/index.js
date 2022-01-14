@@ -14,7 +14,7 @@ import Card from '../../components/card';
 import AddCard from '../../components/addCard';
 import Button from '../button';
 
-const Field = ({ isOwner, fieldKey, field, onEditCard, onDeleteField, onEditField, onDeleteCard, onAddCardToField }) => {
+const Field = ({ isOwner, field, onEditCard, onDeleteField, onEditField, onDeleteCard, onAddCardToField }) => {
 
     const [addingCard, setAddingCard] = useState({ fieldId: "", adding: false });
 
@@ -26,7 +26,7 @@ const Field = ({ isOwner, fieldKey, field, onEditCard, onDeleteField, onEditFiel
     const [cardEditing, setCardEditing] = useState({ editing: false, id: "", title: "", desc: "", color: "red" });
 
 
-    return (<div className={styles.field} key={fieldKey}>
+    return (<div className={styles.field}>
         <div className={styles.header}>
             {(editingField.editing && editingField.fieldId == field.id) ? <div>
                 <Input
@@ -86,7 +86,7 @@ const Field = ({ isOwner, fieldKey, field, onEditCard, onDeleteField, onEditFiel
         <div className={styles.cardContainer}>
             {field.cards && field.cards.map((card, index) => {
                 return <Card
-                    cardKey={card.id}
+                    key={card.id}
                     card={card}
                     isOwner={isOwner}
                     cardMore={cardMore}
