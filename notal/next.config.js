@@ -1,6 +1,5 @@
 const path = require('path')
 const withSass = require('@zeit/next-sass');
-const nextBuildId = require('next-build-id');
 
 module.exports = withSass({
   cssModules: true
