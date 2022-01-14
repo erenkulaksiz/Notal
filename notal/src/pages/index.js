@@ -63,7 +63,7 @@ const Home = (props) => {
   useEffect(() => {
     console.log("props indexjs: ", props);
 
-
+    console.log("ID: ", process.env.VERCEL_GIT_REPO_ID);
     (async () => {
       const token = await auth.users.getIdToken();
       const res = await CheckToken({ token, props });
