@@ -69,13 +69,22 @@
   &__left {
     background-color: $primary_color;
     display: flex;
+    flex-direction: row;
     flex: 1;
     align-items: center;
     padding-left: 24px;
     color: white;
+    @include sm {
+      button {
+        width: 50%;
+      }
+    }
     @include md {
       margin-left: 48px;
       border-bottom-left-radius: 16px;
+      button {
+        width: 300px;
+      }
     }
     button {
       min-width: 100px;

@@ -251,12 +251,11 @@ const Home = (props) => {
     <Header
       menuToggle={menuToggle}
       onMenuToggle={val => setMenuToggle(val)}
-      userData={{ fullname: props.validate?.data?.fullname, email: auth.authUser.email }}
+      userData={{ fullname: props.validate?.data?.fullname, email: props.validate?.data?.email }}
       avatarURL={props.validate?.data?.avatar}
       onLogout={() => auth.users.logout()}
       onProfile={() => router.push(`/profile/${props?.validate?.data?.username}`)}
       onHeaderHome={() => router.replace('/')}
-      showCreate={false}
       loggedIn={props.validate?.success == true}
     />
     {/* ------------------------------------------------------------------------------------------------------------ */}

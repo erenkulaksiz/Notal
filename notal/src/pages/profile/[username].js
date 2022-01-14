@@ -147,7 +147,7 @@ const Profile = (props) => {
         <Header
             menuToggle={menuToggle}
             onMenuToggle={val => setMenuToggle(val)}
-            userData={{ fullname: props.validate?.data?.fullname, email: auth?.authUser?.email }}
+            userData={{ fullname: props.validate?.data?.fullname, email: props.validate?.data?.email }}
             avatarURL={props.validate.data?.avatar}
             loggedIn={auth?.authUser != null}
             onLogin={() => router.push("/login")}
@@ -157,12 +157,22 @@ const Profile = (props) => {
                 setEditErrors({ fullname: false, username: false, bio: false });
                 setMenuToggle(false);
             }}
-            profileVisible={auth?.authUser?.uid != props.profile?.uid}
             onProfile={() => router.push(`/profile/${props.validate?.data?.username}`)}
             onHeaderHome={() => router.push("/")}
-            showCreate={false}
-            showBackButton
-            onBack={() => router.back()}
+            leftContainer={<div style={{ display: "flex", flexDirection: "row" }}>
+                <Button
+                    text="Back"
+                    onClick={() => router.back()}
+                    style={{ height: 44, borderRadius: 8, width: "45%" }}
+                    icon={<BackIcon height={24} width={24} fill={"#fff"} style={{ marginRight: 8 }} />}
+                />
+                <Button
+                    text="Home"
+                    onClick={() => router.replace("/")}
+                    style={{ height: 44, borderRadius: 8, width: "45%" }}
+                    icon={<HomeFilledIcon height={24} width={24} fill={"#fff"} style={{ marginRight: 8 }} />}
+                />
+            </div>}
         />
 
         <div className={styles.content_profile}>
@@ -273,7 +283,7 @@ const Profile = (props) => {
                                 <Button
                                     text={`Profile visibility: ${editProfile.visibility == false ? "private" : "public"}`}
                                     icon={editProfile.visibility == false ? <VisibleOffIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} /> : <VisibleIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
-                                    style={{ height: 48 }}
+                                    style={{ height: 48, borderStyle: "none" }}
                                     onClick={() => setEditProfile({ ...editProfile, visibility: !editProfile.visibility })}
                                     reversed
                                 />
@@ -283,7 +293,7 @@ const Profile = (props) => {
                                 <Button
                                     text="Edit Profile"
                                     icon={<EditIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
-                                    style={{ height: 48, minWidth: 240, marginLeft: 16, marginRight: 16 }}
+                                    style={{ height: 48, minWidth: 240, marginLeft: 16, marginRight: 16, borderStyle: "none" }}
                                     onClick={() => { if (!editAvatarLoading) setEditingProfile(true) }}
                                     reversed
                                 />
@@ -293,7 +303,7 @@ const Profile = (props) => {
                                 <Button
                                     text="Follow"
                                     icon={<AddIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
-                                    style={{ height: 48, marginLeft: 16, }}
+                                    style={{ height: 48, marginLeft: 16, borderStyle: "none" }}
                                     onClick={() => {
                                         if (!auth?.authUser) {
                                             router.replace("/login");
@@ -306,7 +316,7 @@ const Profile = (props) => {
                                 <Button
                                     text="Message"
                                     icon={<SendIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
-                                    style={{ height: 48, marginRight: 16 }}
+                                    style={{ height: 48, marginRight: 16, borderStyle: "none" }}
                                     onClick={() => {
                                         if (!auth?.authUser) {
                                             router.replace("/login");
@@ -322,7 +332,7 @@ const Profile = (props) => {
                                 <Button
                                     text="Cancel"
                                     icon={<CrossIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
-                                    style={{ height: 48, minWidth: 120, width: "48%" }}
+                                    style={{ height: 48, minWidth: 120, width: "48%", borderStyle: "none" }}
                                     onClick={() => {
                                         setEditingProfile(false);
                                         setEditErrors({ username: false, fullname: false, bio: false });
@@ -338,7 +348,7 @@ const Profile = (props) => {
                                 <Button
                                     text="Save"
                                     icon={<CheckIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
-                                    style={{ height: 48, minWidth: 120, width: "48%" }}
+                                    style={{ height: 48, minWidth: 120, width: "48%", borderStyle: "none" }}
                                     type="submit"
                                     form="editProfile"
                                     reversed

@@ -30,7 +30,12 @@ const WorkspaceNav = ({ workspace, isOwner, onAddField, onFinishEditing, onDelet
                     placeholder="Field Name"
                     onChange={e => setAddField({ ...addField, title: e.target.value })}
                     style={{ width: "100%" }}
-                    onKeyDown={e => (e.key === "Enter") && onAddField()}
+                    onKeyDown={e => {
+                        if (e.key === "Enter") {
+                            onAddField({ title: addField.title });
+                            setAddingField(false);
+                        }
+                    }}
                     autoFocus
                 />
                 <div className={styles.editBtn}>
@@ -51,14 +56,14 @@ const WorkspaceNav = ({ workspace, isOwner, onAddField, onFinishEditing, onDelet
                 </div>
             </div> : <div className={styles.details}>
                 {editingWorkspace ? <input type="text"
-                    onKeyDown={e => e.key === "Enter" && onFinishEditing()}
+                    onKeyDown={e => e.key === "Enter" && onFinishEditing({ title: editedWorkspace.title, desc: editedWorkspace.desc })}
                     defaultValue={workspace?.data?.title}
                     onChange={e => setEditedWorkspace({ ...editedWorkspace, title: e.target.value })}
                     placeholder={"Workspace Title"}
                 /> : <h1>{workspace?.data?.title}</h1>}
 
                 {editingWorkspace ? <input type="text"
-                    onKeyDown={e => e.key === "Enter" && onFinishEditing()}
+                    onKeyDown={e => e.key === "Enter" && onFinishEditing({ title: editedWorkspace.title, desc: editedWorkspace.desc })}
                     defaultValue={workspace?.data?.desc}
                     onChange={e => setEditedWorkspace({ ...editedWorkspace, desc: e.target.value })}
                     placeholder={"Workspace Description"}

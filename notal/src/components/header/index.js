@@ -1,29 +1,18 @@
 import styles from './Header.module.scss';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useState } from 'react';
 
 import { server } from '../../config';
 
 import UserIcon from '../../../public/icons/user.svg';
-import AddIcon from '../../../public/icons/add.svg';
-import BackIcon from '../../../public/icons/back.svg';
 import LogoutIcon from '../../../public/icons/logout.svg';
+import LoginIcon from '../../../public/icons/login.svg';
 
 import Button from '../../components/button';
-import { route } from 'next/dist/server/router';
 
-const Header = ({ menuToggle, onMenuToggle, userData, onLogout, onCreate, onProfile, avatarURL, showBackButton, onBack, showCreate, loggedIn = true, onLogin, onHeaderHome, profileVisible = true }) => {
+const Header = ({ menuToggle, onMenuToggle, leftContainer, userData, onLogout, onProfile, avatarURL, showBackButton, loggedIn = false, onLogin, onHeaderHome }) => {
 
     return (<div className={styles.container} >
         <div className={styles.container__left}>
-            {showBackButton ? <Button
-                text="Back"
-                onClick={() => onBack()}
-                className={styles.back}
-                icon={<BackIcon height={24} width={24} fill={"#19181e"} />}
-                reversed
-            /> : <></>}
+            {leftContainer}
         </div>
         <div className={styles.container__middle}>
             <a onClick={() => onHeaderHome()}>
@@ -39,13 +28,6 @@ const Header = ({ menuToggle, onMenuToggle, userData, onLogout, onCreate, onProf
             <button onClick={() => onMenuToggle(!menuToggle)} className={styles.navButton}>
                 <UserIcon height={24} width={24} fill={"#19181e"} />
             </button>
-            {showCreate && <Button
-                text="Create"
-                onClick={() => onCreate()}
-                style={{ width: 120, height: "60%", marginRight: 16 }}
-                icon={<AddIcon height={24} width={24} fill={"#19181e"} />}
-                reversed
-            />}
             {<div className={menuToggle ? styles.nav : styles.nav__hidden} onBlur={() => onMenuToggle(false)} hidden={menuToggle}>
                 {loggedIn && <div className={styles.navContainer}>
                     <div className={styles.user}>
@@ -66,20 +48,20 @@ const Header = ({ menuToggle, onMenuToggle, userData, onLogout, onCreate, onProf
                     </div>
                 </div>}
                 {loggedIn ? <>
-                    {profileVisible && <Button
+                    <Button
                         text="Profile"
                         //onFocus={() => onLogout()}
                         onClick={() => onProfile()}
                         icon={<UserIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
-                        style={{ height: 48 }}
+                        style={{ height: 48, borderStyle: "none" }}
                         reversed
-                    />}
+                    />
                     <Button
                         text="Sign Out"
                         //onFocus={() => onLogout()}
                         onClick={() => onLogout()}
                         icon={<LogoutIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
-                        style={{ height: 48 }}
+                        style={{ height: 48, borderStyle: "none", marginTop: 8 }}
                         reversed
                     />
                 </> : <> <Button
@@ -87,6 +69,7 @@ const Header = ({ menuToggle, onMenuToggle, userData, onLogout, onCreate, onProf
                     //onFocus={() => onLogout()}
                     onClick={() => onLogin()}
                     style={{ height: 48 }}
+                    icon={<LoginIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
                     reversed
                 />
                 </>}

@@ -16,9 +16,9 @@ import RoadIcon from '../../public/icons/road.svg';
 import ScrollIcon from '../../public/icons/scroll.svg';
 import SlidershIcon from '../../public/icons/sliders-h.svg';
 import TimeIcon from '../../public/icons/time.svg';
+import HomeFilledIcon from '../../public/icons/home_filled.svg';
 
 import Button from '../components/button';
-import Input from '../components/input';
 import Header from '../components/header';
 
 import useAuth from '../hooks/auth';
@@ -53,16 +53,19 @@ const About = (props) => {
             <Header
                 menuToggle={menuToggle}
                 onMenuToggle={val => setMenuToggle(val)}
-                userData={{ fullname: props.validate?.data?.fullname, email: auth?.authUser?.email }}
+                userData={{ fullname: props.validate?.data?.fullname, email: props.validate?.data?.email }}
                 avatarURL={props.validate.data?.avatar}
-                loggedIn={auth?.authUser != null}
+                loggedIn={props.validate?.success == true}
                 onLogin={() => router.push("/login")}
                 onLogout={() => auth.users.logout()}
                 onProfile={() => router.push(`/profile/${props.validate?.data?.username}`)}
                 onHeaderHome={() => router.push("/")}
-                showCreate={false}
-                showBackButton
-                onBack={() => router.back()}
+                leftContainer={<Button
+                    text="Home"
+                    onClick={() => router.replace("/")}
+                    style={{ height: 44, borderRadius: 8, }}
+                    icon={<HomeFilledIcon height={24} width={24} fill={"#fff"} style={{ marginRight: 8 }} />}
+                />}
             />
 
             <div className={styles.content_about}>

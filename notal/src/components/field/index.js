@@ -14,7 +14,7 @@ import Card from '../../components/card';
 import AddCard from '../../components/addCard';
 import Button from '../button';
 
-const Field = ({ isOwner, key, field, onEditCard, onDeleteField, onEditField, onDeleteCard }) => {
+const Field = ({ isOwner, fieldKey, field, onEditCard, onDeleteField, onEditField, onDeleteCard, onAddCardToField }) => {
 
     const [addingCard, setAddingCard] = useState({ fieldId: "", adding: false });
 
@@ -26,7 +26,7 @@ const Field = ({ isOwner, key, field, onEditCard, onDeleteField, onEditField, on
     const [cardEditing, setCardEditing] = useState({ editing: false, id: "", title: "", desc: "", color: "red" });
 
 
-    return (<div className={styles.field} key={key}>
+    return (<div className={styles.field} key={fieldKey}>
         <div className={styles.header}>
             {(editingField.editing && editingField.fieldId == field.id) ? <div>
                 <Input
@@ -86,13 +86,14 @@ const Field = ({ isOwner, key, field, onEditCard, onDeleteField, onEditField, on
         <div className={styles.cardContainer}>
             {field.cards && field.cards.map((card, index) => {
                 return <Card
-                    key={index}
+                    cardKey={card.id}
                     card={card}
                     isOwner={isOwner}
                     cardMore={cardMore}
                     onMoreClick={() => setCardMore({ ...cardMore, visible: (cardMore.cardId == card.id ? !cardMore.visible : true), cardId: card.id })}
                     onDeleteClick={() => {
-                        onDeleteCard({ cardId: card.id, fieldId: field.id });
+                        setCardMore({ ...cardMore, visible: false, cardId: "" });
+                        onDeleteCard({ id: card.id, fieldId: field.id });
                         //handle.deleteCard({ cardId: card.id, fieldId: field.id })
                     }}
                     onEditClick={() => setCardEditing({ ...cardEditing, editing: true, id: card.id })}
@@ -101,7 +102,11 @@ const Field = ({ isOwner, key, field, onEditCard, onDeleteField, onEditField, on
                         setCardEditing({ ...cardEditing, editing: false, id: "" });
                         setCardMore({ ...cardMore, visible: false, cardId: "" });
                     }} // handle.editCard({ title, desc, color, id: card.id, fieldId: field.id })
-                    onEditSubmit={({ title, desc, color }) => onEditCard({ title, desc, color, cardId: card.id })}
+                    onEditSubmit={({ title, desc, color }) => {
+                        setCardEditing({ ...cardEditing, editing: false, id: "" });
+                        setCardMore({ ...cardMore, visible: false, cardId: "" });
+                        onEditCard({ title, desc, color, cardId: card.id, fieldId: field.id });
+                    }}
                 />
             })}
         </div>
@@ -119,7 +124,8 @@ const Field = ({ isOwner, key, field, onEditCard, onDeleteField, onEditField, on
                 setAddingCard({ ...addingCard, adding: false, fieldId: "" });
             }}
             onSubmit={({ title, desc, color }) => {
-                handle.addCardToField({ fieldId: field.id, title, desc, color })
+                setAddingCard({ ...addingCard, fieldId: "", adding: false });
+                onAddCardToField({ fieldId: field.id, title, desc, color });
             }} />}
     </div>)
 }

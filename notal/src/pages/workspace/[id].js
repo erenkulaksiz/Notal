@@ -54,12 +54,6 @@ const Workspace = (props) => {
     }, [props.workspace]);
 
     const handle = {
-        fieldEditing: async (e) => {
-            if (e.key === "Enter") {
-                // finish editing workspace
-                handle.finishEditing();
-            }
-        },
         finishEditing: async ({ title, desc }) => {
             if (props.workspace.data.title != title || props.workspace.data.desc != desc) {
                 const res = await auth.workspace.editWorkspace({ id: props.workspace.data.id, title, desc });
@@ -82,33 +76,26 @@ const Workspace = (props) => {
                 console.log("star error: ", data?.error);
             }
         },
-        addingField: async (e) => {
-            if (e.key === "Enter") {
-                handle.addField();
-            }
-        },
         addField: async ({ title }) => {
-            if (title.length != 0) {
-                const data = await auth.workspace.field.addField({ title: title, id: props.workspace.data.id });
-                if (data.success) {
-                    router.replace(router.asPath);
-                } else {
-                    console.log("addfield error: ", data?.error);
-                }
+            const data = await auth.workspace.field.addField({ title: title, id: props.workspace.data.id });
+
+            if (data.success) {
+                router.replace(router.asPath);
+            } else {
+                console.log("addfield error: ", data?.error);
             }
         },
         editField: async ({ id, title }) => {
             const data = await auth.workspace.field.editField({ id, title, workspaceId: props.workspace.data.id });
 
             if (data.success) {
-                //setEditingField({ ...editingField, editing: false, fieldId: "" });
                 router.replace(router.asPath);
             } else {
                 console.log("edit field error: ", data?.error);
             }
         },
         deleteField: async ({ id }) => {
-            const data = await auth.workspace.field.removeField({ id: id.id, workspaceId: props.workspace.data.id });
+            const data = await auth.workspace.field.removeField({ id, workspaceId: props.workspace.data.id });
 
             if (data.success) {
                 router.replace(router.asPath);
@@ -135,21 +122,19 @@ const Workspace = (props) => {
             });
 
             if (data.success) {
-                setAddingCard({ ...addingCard, fieldId: "", adding: false });
                 router.replace(router.asPath);
             } else {
                 console.log("add card error: ", data?.error);
             }
         },
-        deleteCard: async ({ cardId, fieldId }) => {
+        deleteCard: async ({ id, fieldId }) => {
             const data = await auth.workspace.field.removeCard({
-                id: cardId,
+                id,
                 fieldId,
                 workspaceId: props.workspace.data.id,
             });
 
             if (data.success) {
-                setCardMore({ ...cardMore, visible: false, cardId: "", fieldId: "" });
                 router.replace(router.asPath);
             } else {
                 console.log("rem card error: ", data?.error);
@@ -194,9 +179,9 @@ const Workspace = (props) => {
         <Header
             menuToggle={menuToggle}
             onMenuToggle={val => setMenuToggle(val)}
-            userData={{ fullname: props.validate?.data?.fullname, email: auth?.authUser?.email }}
+            userData={{ fullname: props.validate?.data?.fullname, email: props.validate?.data?.email }}
             avatarURL={props.validate.data?.avatar}
-            loggedIn={auth?.authUser != null}
+            loggedIn={props.validate.success == true}
             onLogin={() => router.push("/login")}
             onLogout={() => {
                 auth.users.logout();
@@ -204,9 +189,12 @@ const Workspace = (props) => {
             }}
             onProfile={() => router.push(`/profile/${props.validate?.data?.username}`)}
             onHeaderHome={() => router.push("/")}
-            showCreate={false}
-            showBackButton
-            onBack={() => router.back()}
+            leftContainer={<Button
+                text="Home"
+                onClick={() => router.replace("/")}
+                style={{ height: 44, borderRadius: 8, }}
+                icon={<HomeFilledIcon height={24} width={24} fill={"#fff"} style={{ marginRight: 8 }} />}
+            />}
         />
 
         <div className={styles.content_workspace}>
@@ -219,20 +207,28 @@ const Workspace = (props) => {
                     onDeletePress={() => setDeleteWorkspaceModal(true)}
                     onStarPress={() => handle.starWorkspace()}
                 />
-
                 <div className={styles.wrapper}>
                     <div className={styles.fields}>
                         {props.workspace?.data?.fields.length == 0 ? <div>no fields to list. press + icon on top nav bar</div> :
                             props.workspace?.data?.fields.map(el => {
                                 return <Field
                                     isOwner={isOwner}
-                                    key={el.id}
+                                    fieldKey={el.id}
                                     field={el}
-                                    onEditField={(id, title) => {
+                                    onEditField={({ id, title }) => {
                                         handle.editField({ id, title });
                                     }}
-                                    onDeleteField={(id) => {
+                                    onDeleteField={({ id }) => {
                                         handle.deleteField({ id });
+                                    }}
+                                    onAddCardToField={({ fieldId, title, desc, color }) => {
+                                        handle.addCardToField({ fieldId, title, desc, color });
+                                    }}
+                                    onDeleteCard={({ id, fieldId }) => {
+                                        handle.deleteCard({ id, fieldId });
+                                    }}
+                                    onEditCard={({ title, desc, color, cardId, fieldId }) => {
+                                        handle.editCard({ title, desc, color, id: cardId, fieldId });
                                     }}
                                 />
                             })}
@@ -314,7 +310,6 @@ export async function getServerSideProps(ctx) {
                 return { ...dataWorkspace.data?.fields[el], id: Object.keys(dataWorkspace.data.fields)[index] }
             });
             fields.map((el, index) => {
-                console.log("fields:", el);
                 if (el.cards) {
                     const cards = Object.keys(el.cards).map((elx, index) => {
                         return { ...el.cards[elx], id: Object.keys(el.cards)[index] }
