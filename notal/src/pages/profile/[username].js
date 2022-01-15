@@ -167,13 +167,13 @@ const Profile = (props) => {
                     text="Back"
                     onClick={() => router.back()}
                     style={{ height: 44, borderRadius: 8, width: "45%" }}
-                    icon={<BackIcon height={24} width={24} fill={"#fff"} style={{ marginRight: 8 }} />}
+                    icon={<BackIcon height={24} width={24} />}
                 />
                 <Button
                     text="Home"
                     onClick={() => router.replace("/")}
                     style={{ height: 44, borderRadius: 8, width: "45%" }}
-                    icon={<HomeFilledIcon height={24} width={24} fill={"#fff"} style={{ marginRight: 8 }} />}
+                    icon={<HomeFilledIcon height={24} width={24} />}
                 />
             </div>}
             currTheme={theme.UITheme}
@@ -336,7 +336,7 @@ const Profile = (props) => {
                             {((auth?.authUser?.uid == props.profile?.uid) && editingProfile) && <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around", width: "100%" }}>
                                 <Button
                                     text="Cancel"
-                                    icon={<CrossIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
+                                    icon={<CrossIcon height={24} width={24} style={{ marginRight: 8 }} />}
                                     style={{ height: 48, minWidth: 120, width: "48%", borderStyle: "none" }}
                                     onClick={() => {
                                         setEditingProfile(false);
@@ -352,7 +352,7 @@ const Profile = (props) => {
                                 />
                                 <Button
                                     text="Save"
-                                    icon={<CheckIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
+                                    icon={<CheckIcon height={24} width={24} style={{ marginRight: 8 }} />}
                                     style={{ height: 48, minWidth: 120, width: "48%", borderStyle: "none" }}
                                     type="submit"
                                     form="editProfile"

@@ -105,7 +105,7 @@ const WorkspaceNav = ({ workspace, isOwner, onAddField, onFinishEditing, onDelet
                 </a>
             </Link>
         </div>}
-        {!editingWorkspace && !addingField && isOwner && <>
+        {!editingWorkspace && !addingField && isOwner && <div className={styles.buttons}>
             <div className={styles.workspaceBtn}>
                 <button onClick={() => onStarPress()} >
                     {workspace?.data?.starred ? <StarFilledIcon height={24} width={24} style={{ fill: "#dbb700" }} /> : <StarOutlineIcon height={24} width={24} />}
@@ -126,7 +126,7 @@ const WorkspaceNav = ({ workspace, isOwner, onAddField, onFinishEditing, onDelet
                     <AddIcon height={24} width={24} />
                 </button>
             </div>
-        </>}
+        </div>}
     </div>)
 }
 

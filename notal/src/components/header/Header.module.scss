@@ -104,6 +104,17 @@
     padding-left: 24px;
     color: white;
 
+    button {
+      justify-content: center !important;
+      min-width: 64px !important;
+      span {
+        display: none;
+      }
+      svg {
+        margin-right: 0;
+      }
+    }
+
     p {
       margin-left: 16px;
       color: var(--text-color-reverse);
@@ -112,6 +123,12 @@
     @include sm {
       button {
         width: 50%;
+        span {
+          display: flex;
+        }
+        svg {
+          margin-right: 8px;
+        }
       }
     }
     @include md {

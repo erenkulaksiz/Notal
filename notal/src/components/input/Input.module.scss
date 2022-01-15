@@ -19,9 +19,10 @@
 
 .input {
   display: flex;
-  background-color: var(--background-color);
+  //background-color: var(--background-color);
   border-radius: 4px;
   overflow: hidden;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   .iconContainer {
     display: flex;
     justify-content: center;

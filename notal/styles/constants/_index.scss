@@ -62,7 +62,7 @@ $screen-xl-min: 1200px;
   --card-color: #{$card_color_light};
   --reverse-color: #{$primary_color};
   --link-color: #{$link_color};
-  --input-border: white;
+  --input-border: #{rgb(196, 196, 196)};
   transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
 }
 

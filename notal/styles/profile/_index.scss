@@ -61,7 +61,7 @@
     .header {
       display: flex;
       width: 100%;
-      padding-bottom: 32px;
+      padding-bottom: 16px;
       padding-top: 16px;
       background-color: var(--elevation-color);
       border-radius: 0;
@@ -215,7 +215,10 @@
                 margin-top: 24px;
                 color: white;
                 h1 {
-                  font-size: 1.2em;
+                  font-size: 0.8em;
+                  @include md {
+                    font-size: 1.2em;
+                  }
                 }
                 span {
                   // this is data inside profile
@@ -262,6 +265,10 @@
         width: 100%;
         margin-top: 16px;
         flex-direction: column;
+        button {
+          //background-color: var(--);
+          background-color: var(--background-color);
+        }
         .interactive {
           display: flex;
           justify-content: space-around;

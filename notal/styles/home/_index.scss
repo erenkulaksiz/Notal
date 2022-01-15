@@ -231,11 +231,15 @@
 
     button {
       font-size: 0.8em;
+      width: 50%;
+      max-width: 180px !important;
       &:first-child {
         margin-right: 16px;
       }
       @include sm {
         font-size: 1.3em;
+        max-width: 300px !important;
+        width: 100%;
       }
     }
   }

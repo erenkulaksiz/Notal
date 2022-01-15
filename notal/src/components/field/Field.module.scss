@@ -28,6 +28,9 @@
     width: 48%;
     margin-right: 8px;
     padding: 24px;
+    &:not(:only-child) {
+      width: 34%;
+    }
   }
 
   @include xl {
@@ -117,7 +120,7 @@
         fill: var(--text-color);
       }
       &:hover {
-        background-color: var(--button-hover-color);
+        background-color: var(--input-border);
       }
     }
 

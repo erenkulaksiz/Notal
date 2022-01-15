@@ -195,7 +195,7 @@ const Workspace = (props) => {
                 text="Home"
                 onClick={() => router.replace("/")}
                 style={{ height: 44, borderRadius: 8, }}
-                icon={<HomeFilledIcon height={24} width={24} fill={"#fff"} style={{ marginRight: 8 }} />}
+                icon={<HomeFilledIcon height={24} width={24} />}
             />}
             currTheme={theme.UITheme}
             onThemeChange={() => theme.toggleTheme()}
