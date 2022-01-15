@@ -32,8 +32,8 @@ const WorkspaceNav = ({ workspace, isOwner, onAddField, onFinishEditing, onDelet
                     style={{ width: "100%" }}
                     onKeyDown={e => {
                         if (e.key === "Enter") {
-                            onAddField({ title: addField.title });
                             setAddingField(false);
+                            onAddField({ title: addField.title });
                         }
                     }}
                     autoFocus
@@ -58,14 +58,24 @@ const WorkspaceNav = ({ workspace, isOwner, onAddField, onFinishEditing, onDelet
                 </div>
             </div> : <div className={styles.details}>
                 {editingWorkspace ? <input type="text"
-                    onKeyDown={e => e.key === "Enter" && onFinishEditing({ title: editedWorkspace.title, desc: editedWorkspace.desc })}
+                    onKeyDown={e => {
+                        if (e.key === "Enter") {
+                            setEditingWorkspace(false);
+                            onFinishEditing({ title: editedWorkspace.title, desc: editedWorkspace.desc });
+                        }
+                    }}
                     defaultValue={workspace?.data?.title}
                     onChange={e => setEditedWorkspace({ ...editedWorkspace, title: e.target.value })}
                     placeholder={"Workspace Title"}
                 /> : <h1>{workspace?.data?.title}</h1>}
 
                 {editingWorkspace ? <input type="text"
-                    onKeyDown={e => e.key === "Enter" && onFinishEditing({ title: editedWorkspace.title, desc: editedWorkspace.desc })}
+                    onKeyDown={e => {
+                        if (e.key === "Enter") {
+                            setEditingWorkspace(false);
+                            onFinishEditing({ title: editedWorkspace.title, desc: editedWorkspace.desc });
+                        }
+                    }}
                     defaultValue={workspace?.data?.desc}
                     onChange={e => setEditedWorkspace({ ...editedWorkspace, desc: e.target.value })}
                     placeholder={"Workspace Description"}
