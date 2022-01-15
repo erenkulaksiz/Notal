@@ -115,8 +115,7 @@ const Field = ({ isOwner, field, onEditCard, onDeleteField, onEditField, onDelet
                 text="Add a card..."
                 onClick={() => setAddingCard({ ...addingCard, fieldId: field.id, adding: true })}
                 style={{ height: 48, borderRadius: 8, marginTop: 10, border: "none" }}
-                icon={<AddIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
-                reversed
+                icon={<AddIcon height={24} width={24} style={{ marginRight: 8 }} />}
             />}
         </div>
         {addingCard.adding && addingCard.fieldId == field.id && <AddCard

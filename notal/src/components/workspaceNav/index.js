@@ -49,7 +49,9 @@ const WorkspaceNav = ({ workspace, isOwner, onAddField, onFinishEditing, onDelet
                     <button onClick={() => {
                         setAddingField(false);
                         setAddField({ title: "" });
-                        onAddField({ title: addField.title });
+                        if (addField.title) {
+                            onAddField({ title: addField.title });
+                        }
                     }}>
                         <CheckIcon height={24} width={24} fill={"#19181e"} />
                     </button>

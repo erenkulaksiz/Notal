@@ -23,6 +23,11 @@
     select {
       padding: 12px;
       margin-top: 8px;
+      background-color: var(--background-color);
+      border-radius: 6px;
+      color: var(--text-color);
+      border-color: var(--input-border);
+      outline: none;
     }
     .color {
       width: 8px;

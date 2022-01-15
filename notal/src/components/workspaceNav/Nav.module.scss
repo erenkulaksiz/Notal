@@ -63,6 +63,17 @@
     .details {
       display: flex;
       flex-direction: column;
+      input {
+        background-color: var(--background-color);
+        border: none;
+        padding: 4px;
+        color: var(--text-color);
+        font-size: 1em;
+        &:first-child {
+          margin-bottom: 4px;
+          font-size: 1.2em;
+        }
+      }
       h1 {
         font-size: 1.4em;
         color: white;

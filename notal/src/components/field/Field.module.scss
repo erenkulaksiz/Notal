@@ -81,6 +81,9 @@
           background-color: var(--button-hover-color);
           transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
           transform: scale(0.95, 0.95);
+          svg {
+            fill: var(--text-color-reverse);
+          }
         }
         &:active {
           transform: scale(0.9, 0.9);
@@ -104,6 +107,19 @@
   .addCardBtn {
     padding-left: 16px;
     padding-right: 16px;
+
+    button {
+      background-color: var(--background-color);
+      span {
+        color: var(--text-color);
+      }
+      svg {
+        fill: var(--text-color);
+      }
+      &:hover {
+        background-color: var(--button-hover-color);
+      }
+    }
 
     @include sm {
       padding-left: 0px;

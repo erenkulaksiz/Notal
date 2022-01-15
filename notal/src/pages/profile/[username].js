@@ -48,13 +48,6 @@ const Profile = (props) => {
 
     useEffect(() => {
         console.log("props: ", props);
-
-        /*
-        if (props.validate.success && !props.validate.data?.username) { // if theres no username is present
-            router.replace("/");
-        }
-        */
-
         (async () => {
             const token = await auth.users.getIdToken();
             const res = await CheckToken({ token, props });

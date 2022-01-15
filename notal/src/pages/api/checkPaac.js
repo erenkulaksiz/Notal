@@ -21,7 +21,7 @@ export default async function handler(req, res) {
     await admin.database().ref(`/paacodes`).orderByChild("code").equalTo(data.paac).limitToFirst(1).once("value", async (snapshot) => {
         if (snapshot.exists()) {
             await admin.database().ref(`/users/${data.uid}`).update({ paac: data.paac }).then(() => {
-                res.status(400).json({ success: true });
+                res.status(200).json({ success: true });
             }).catch((error) => {
                 res.status(400).json({ success: false, error });
             })

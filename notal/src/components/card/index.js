@@ -78,7 +78,10 @@ const Card = ({ card, isOwner, onMoreClick, cardMore, onDeleteClick, onEditClick
             <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
                 <Button
                     text="Cancel"
-                    onClick={() => onEditCancel()}
+                    onClick={() => {
+                        onEditCancel();
+                        setEditCard({ ...editCard, title: card.title, desc: card.desc, color: card.color });
+                    }}
                     style={{ height: 48, borderRadius: 8, marginTop: 10, border: "none", width: "48%" }}
                     icon={<CrossIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
                     reversed

@@ -66,7 +66,6 @@ const Home = (props) => {
   useEffect(() => {
     console.log("props indexjs: ", props);
 
-    console.log("PROJECTID: ", process.env.NEXT_PUBLIC_VERCEL_GIT_REPO_ID);
     (async () => {
       const token = await auth.users.getIdToken();
       const res = await CheckToken({ token, props });
@@ -273,6 +272,7 @@ const Home = (props) => {
       loggedIn={props.validate?.success == true}
       currTheme={theme.UITheme}
       onThemeChange={() => theme.toggleTheme()}
+      leftContainer={<p>{"build id: " + (process.env.NEXT_PUBLIC_VERCEL_GIT_REPO_ID || "not found")}</p>}
     />
     {/* ------------------------------------------------------------------------------------------------------------ */}
     <div className={styles.content_home}>

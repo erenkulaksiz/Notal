@@ -258,7 +258,7 @@ const Login = (props) => {
                                     onClick={() => setView(null)}
                                     reversed
                                 />
-                                <h1 style={{ marginTop: 8, }}>
+                                <h1 className={styles.sentPasswordReset}>
                                     <CheckIcon height={24} width={24} style={{ marginRight: 8 }} />
                                     A password reset link has been sent.
                                 </h1>

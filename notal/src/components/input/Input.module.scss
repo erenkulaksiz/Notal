@@ -8,11 +8,12 @@
   padding-left: 8px;
   font-size: 16px;
   color: var(--text-color);
-  outline: none;
+  outline-color: var(--input-border);
   border-width: 1px;
   border-color: var(--input-border);
   border-style: solid;
   border-radius: 4px;
+  overflow: hidden;
   //outline: 1px solid var(--text-color);
 }
 

@@ -79,6 +79,14 @@
       flex-direction: column;
       flex: 1;
       padding: 24px;
+      .sentPasswordReset {
+        display: flex;
+        align-items: center;
+        margin-top: 16px;
+        svg {
+          fill: var(--text-color-reverse);
+        }
+      }
       button {
         background-color: var(--background-color);
       }
