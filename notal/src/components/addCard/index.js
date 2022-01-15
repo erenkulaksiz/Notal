@@ -21,6 +21,7 @@ const AddCard = ({ onSubmit, onCancel }) => {
                     value={addedCard.title}
                     onChange={e => setAddedCard({ ...addedCard, title: e.target.value })}
                     style={{ width: "100%", marginTop: 8 }}
+                    autoFocus
                 />
             </div>
             <div className={styles.inputContainer}>

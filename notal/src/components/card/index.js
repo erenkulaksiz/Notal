@@ -54,6 +54,7 @@ const Card = ({ card, isOwner, onMoreClick, cardMore, onDeleteClick, onEditClick
                 onChange={e => setEditCard({ ...editCard, title: e.target.value })}
                 value={editCard.title}
                 style={{ width: "100%", borderWidth: 1, borderColor: "#19181e", borderStyle: "solid", marginTop: 8 }}
+                autoFocus
             />
             <h1 style={{ marginTop: 16 }}>Card Description</h1>
             <Input

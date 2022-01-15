@@ -183,7 +183,7 @@ const Profile = (props) => {
         <div className={styles.content_profile}>
             {
                 (props.profile?.success == false && props.profile?.error == "cant-find-user") && <div className={styles.errorFindUser}>
-                    <h1 style={{ fontSize: "2.2em", fontWeight: "600", textAlign: "center" }}>We couldnt reach to this user.</h1>
+                    <h1 className={styles.errorUserTitle}>We couldnt reach to this user.</h1>
                     <Button
                         text="Home"
                         icon={<HomeFilledIcon height={24} width={24} fill={"#fff"} style={{ marginRight: 8 }} />}
@@ -229,7 +229,7 @@ const Profile = (props) => {
                                                     placeholder="Fullname"
                                                     onChange={e => setEditProfile({ ...editProfile, fullname: e.target.value })}
                                                     value={editProfile.fullname}
-                                                    icon={<UserIcon height={24} width={24} fill={"#19181e"} />}
+                                                    icon={<UserIcon height={24} width={24} />}
                                                     style={{ width: "100%" }}
                                                     error={editErrors.fullname != false}
                                                     maxLength={24}
@@ -244,7 +244,7 @@ const Profile = (props) => {
                                                     placeholder="Username"
                                                     onChange={e => setEditProfile({ ...editProfile, username: e.target.value.replace(/[^\w\s]/gi, "").replace(/\s/g, '').toLowerCase() })}
                                                     value={editProfile.username}
-                                                    icon={<AtIcon height={24} width={24} fill={"#19181e"} />}
+                                                    icon={<AtIcon height={24} width={24} />}
                                                     style={{ marginTop: 4 }}
                                                     error={editErrors.username != false}
                                                     maxLength={16}
@@ -345,7 +345,7 @@ const Profile = (props) => {
                                             fullname: props.validate?.data?.fullname,
                                             username: props.validate?.data?.username,
                                             bio: props.validate?.data?.bio,
-                                            visibility: props.validate?.data?.profileVisible || true
+                                            visibility: props.validate?.data?.profileVisible
                                         });
                                     }}
                                     reversed
@@ -368,7 +368,7 @@ const Profile = (props) => {
                 (props.profile?.data?.profileVisible == false && !(auth?.authUser?.uid == props.profile?.uid)) ? <div className={styles.privateProfile}>
                     <LockIcon height={24} width={24} fill={"#19181e"} />
                     <h1>This profile visibility is set to private.</h1>
-                </div> : <div className={styles.privateProfile}>should be content here...</div>
+                </div> : props.profile?.success == true && <div className={styles.privateProfile}>should be content here...</div>
             }
         </div>
     </div>)

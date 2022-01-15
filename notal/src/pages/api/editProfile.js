@@ -18,13 +18,14 @@ export default async function handler(req, res) {
 
     // UNNECCESARY CHECK HERE, FIX IT LATEER
 
+    console.log("visibility: ", data.profileVisible);
+
     await admin.database().ref(`/users`).orderByChild("username").equalTo(data.username).limitToFirst(1).once("value", async (snapshot) => {
         if (snapshot.exists()) {
             if (Object.keys(snapshot.val())[0] == data.uid) {
-
                 await admin.database().ref(`/users/${data.uid}`).update({
                     fullname: data.fullname,
-                    bio: data.bio,
+                    bio: data.bio || "",
                     updatedAt: Date.now(),
                     profileVisible: data.profileVisible,
                 }, () => {
@@ -32,7 +33,6 @@ export default async function handler(req, res) {
                 }).catch(err => {
                     res.status(400).json({ success: false, error: err });
                 });
-
             } else {
                 res.status(400).json({ success: false, error: "auth/username-already-in-use" });
             }
@@ -42,7 +42,7 @@ export default async function handler(req, res) {
                 username: data.username,
                 bio: data.bio || "",
                 updatedAt: Date.now(),
-                profileVisible,
+                profileVisible: data.profileVisible,
             }, () => {
                 res.status(200).json({ success: true, data: { username: data.username, fullname: data.fullname, uid: data.uid } });
             }).catch(err => {
