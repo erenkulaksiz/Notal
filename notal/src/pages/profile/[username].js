@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import cookie from 'js-cookie';
 
 import styles from '../../../styles/App.module.scss';
 
@@ -27,10 +26,14 @@ import Header from '../../components/header';
 import Button from '../../components/button';
 import Input from '../../components/input';
 import { CheckToken } from '../../utils';
+import useTheme from '../../hooks/theme';
+
+import { withCheckUser } from '../../hooks/route';
 
 const Profile = (props) => {
     const auth = useAuth();
     const router = useRouter();
+    const theme = useTheme();
 
     const [menuToggle, setMenuToggle] = useState(false);
 
@@ -45,6 +48,13 @@ const Profile = (props) => {
 
     useEffect(() => {
         console.log("props: ", props);
+
+        /*
+        if (props.validate.success && !props.validate.data?.username) { // if theres no username is present
+            router.replace("/");
+        }
+        */
+
         (async () => {
             const token = await auth.users.getIdToken();
             const res = await CheckToken({ token, props });
@@ -137,7 +147,7 @@ const Profile = (props) => {
         </div>
     }
 
-    return (<div className={styles.container}>
+    return (<div className={styles.container} data-theme={theme.UITheme}>
         <Head>
             <title>{props.profile?.success == true ? "Viewing " + props.profile?.data?.username + "'s profile" : "Not Found"}</title>
             <meta name="description" content="Notal" />
@@ -159,7 +169,7 @@ const Profile = (props) => {
             }}
             onProfile={() => router.push(`/profile/${props.validate?.data?.username}`)}
             onHeaderHome={() => router.push("/")}
-            leftContainer={<div style={{ display: "flex", flexDirection: "row" }}>
+            leftContainer={<div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
                 <Button
                     text="Back"
                     onClick={() => router.back()}
@@ -173,6 +183,8 @@ const Profile = (props) => {
                     icon={<HomeFilledIcon height={24} width={24} fill={"#fff"} style={{ marginRight: 8 }} />}
                 />
             </div>}
+            currTheme={theme.UITheme}
+            onThemeChange={() => theme.toggleTheme()}
         />
 
         <div className={styles.content_profile}>
@@ -302,8 +314,8 @@ const Profile = (props) => {
                             {(auth?.authUser?.uid == props.profile?.uid) || <div className={styles.interactive}>
                                 <Button
                                     text="Follow"
-                                    icon={<AddIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
-                                    style={{ height: 48, marginLeft: 16, borderStyle: "none" }}
+                                    icon={<AddIcon height={24} width={24} style={{ marginRight: 8 }} />}
+                                    style={{ height: 48, marginLeft: 16, borderStyle: "none", width: "45%" }}
                                     onClick={() => {
                                         if (!auth?.authUser) {
                                             router.replace("/login");
@@ -315,8 +327,8 @@ const Profile = (props) => {
                                 />
                                 <Button
                                     text="Message"
-                                    icon={<SendIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
-                                    style={{ height: 48, marginRight: 16, borderStyle: "none" }}
+                                    icon={<SendIcon height={24} width={24} style={{ marginRight: 8 }} />}
+                                    style={{ height: 48, marginRight: 16, borderStyle: "none", width: "45%" }}
                                     onClick={() => {
                                         if (!auth?.authUser) {
                                             router.replace("/login");
@@ -369,7 +381,7 @@ const Profile = (props) => {
     </div>)
 }
 
-export default Profile
+export default withCheckUser(Profile)
 
 export async function getServerSideProps(ctx) {
     const { req, res, query } = ctx;

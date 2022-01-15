@@ -4,14 +4,21 @@
   flex: 90%;
   height: 38px;
   border: none;
-  background-color: white;
+  background-color: var(--background-color);
   padding-left: 8px;
   font-size: 16px;
+  color: var(--text-color);
+  outline: none;
+  border-width: 1px;
+  border-color: var(--input-border);
+  border-style: solid;
+  border-radius: 4px;
+  //outline: 1px solid var(--text-color);
 }
 
 .input {
   display: flex;
-  background-color: white;
+  background-color: var(--background-color);
   border-radius: 4px;
   overflow: hidden;
   .iconContainer {
@@ -20,6 +27,9 @@
     align-items: center;
     width: 40px;
     min-width: 40px;
+    svg {
+      fill: var(--text-color);
+    }
   }
   input {
     @include input();
@@ -32,7 +42,10 @@
     justify-content: center;
     align-items: center;
     border: none;
-    background-color: white;
     cursor: pointer;
+    background-color: var(--background-color);
+    svg {
+      fill: var(--text-color);
+    }
   }
 }

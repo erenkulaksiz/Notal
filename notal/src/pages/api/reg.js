@@ -11,7 +11,9 @@ if (!admin.apps.length) {
 }
 
 export default async function handler(req, res) {
+
     const data = JSON.parse(req.body);
+
     if (req.method !== 'POST' || !data.uid || !data.username || !data.fullname) {
         res.status(400).send({ success: false });
     }

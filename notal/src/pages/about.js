@@ -23,10 +23,13 @@ import Header from '../components/header';
 
 import useAuth from '../hooks/auth';
 import { CheckToken } from '../utils';
+import useTheme from '../hooks/theme';
+import { withCheckUser } from '../hooks/route';
 
 const About = (props) => {
     const router = useRouter();
     const auth = useAuth();
+    const theme = useTheme();
 
     const [menuToggle, setMenuToggle] = useState(false);
 
@@ -43,7 +46,7 @@ const About = (props) => {
     }, []);
 
     return (
-        <div className={styles.container}>
+        <div className={styles.container} data-theme={theme.UITheme}>
             <Head>
                 <title>About · Notal</title>
                 <meta name="description" content="About Notal, the greatest note app" />
@@ -66,6 +69,8 @@ const About = (props) => {
                     style={{ height: 44, borderRadius: 8, }}
                     icon={<HomeFilledIcon height={24} width={24} fill={"#fff"} style={{ marginRight: 8 }} />}
                 />}
+                currTheme={theme.UITheme}
+                onThemeChange={() => theme.toggleTheme()}
             />
 
             <div className={styles.content_about}>
@@ -74,35 +79,35 @@ const About = (props) => {
                         text="About"
                         onClick={() => setViewing("about")}
                         style={{ justifyContent: "flex-start", borderRadius: 8, width: "100%", marginTop: 24, height: 54 }}
-                        icon={<QuestionIcon height={24} width={24} fill={viewing == "about" ? "#fff" : "#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />}
+                        icon={<QuestionIcon height={24} width={24} style={{ marginLeft: 8, marginRight: 8, }} />}
                         reversed={viewing != "about"}
                     />
                     <Button
                         text="Features"
                         onClick={() => setViewing("features")}
                         style={{ justifyContent: "flex-start", borderRadius: 8, width: "100%", marginTop: 12, height: 54 }}
-                        icon={<SlidershIcon height={24} width={24} style={{ marginLeft: 8, marginRight: 8, color: viewing == "features" ? "#fff" : "#19181e" }} />}
+                        icon={<SlidershIcon height={24} width={24} style={{ marginLeft: 8, marginRight: 8 }} />}
                         reversed={viewing != "features"}
                     />
                     <Button
                         text="Vision & Mission"
                         onClick={() => setViewing("vision")}
                         style={{ justifyContent: "flex-start", borderRadius: 8, width: "100%", marginTop: 12, height: 54, textAlign: "left" }}
-                        icon={<RoadIcon height={24} width={24} style={{ marginLeft: 8, marginRight: 8, color: viewing == "vision" ? "#fff" : "#19181e" }} />}
+                        icon={<RoadIcon height={24} width={24} style={{ marginLeft: 8, marginRight: 8, }} />}
                         reversed={viewing != "vision"}
                     />
                     <Button
                         text="Changelog"
                         onClick={() => setViewing("changelog")}
                         style={{ justifyContent: "flex-start", borderRadius: 8, width: "100%", marginTop: 12, height: 54, textAlign: "left" }}
-                        icon={<TimeIcon height={24} width={24} style={{ marginLeft: 8, marginRight: 8 }} fill={viewing == "changelog" ? "#fff" : "#19181e"} />}
+                        icon={<TimeIcon height={24} width={24} style={{ marginLeft: 8, marginRight: 8 }} />}
                         reversed={viewing != "changelog"}
                     />
                     <Button
                         text="Credits"
                         onClick={() => setViewing("credits")}
                         style={{ justifyContent: "flex-start", borderRadius: 8, width: "100%", marginTop: 12, height: 54 }}
-                        icon={<ScrollIcon height={24} width={24} style={{ marginLeft: 8, marginRight: 8, color: viewing == "credits" ? "#fff" : "#19181e" }} />}
+                        icon={<ScrollIcon height={24} width={24} style={{ marginLeft: 8, marginRight: 8, }} />}
                         reversed={viewing != "credits"}
                     />
                 </div>
@@ -219,7 +224,7 @@ const About = (props) => {
     )
 }
 
-export default About;
+export default withCheckUser(About);
 
 export async function getServerSideProps(ctx) {
     const { req, res, query } = ctx;

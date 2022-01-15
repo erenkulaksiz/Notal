@@ -8,7 +8,7 @@
   margin-top: 12px;
 
   margin-right: 0;
-  background-color: $primary_color;
+  background-color: var(--elevation-color);
   border-radius: 0;
 
   width: 100%;
@@ -73,8 +73,12 @@
         border-radius: 8px;
         height: 32px;
         margin-left: 8px;
+        background-color: var(--button-bg-color-reverse);
+        svg {
+          fill: var(--text-color);
+        }
         &:hover {
-          background-color: rgb(202, 202, 202);
+          background-color: var(--button-hover-color);
           transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);
           transform: scale(0.95, 0.95);
         }

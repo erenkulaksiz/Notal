@@ -12,6 +12,7 @@ export default function useAuth() {
 export function AuthProvider(props) {
     const [user, setUser] = useState(null);
     const [error, setError] = useState(null);
+    const [theme, setTheme] = useState(null);
 
     const login = {
         google: async () => {
@@ -37,8 +38,9 @@ export function AuthProvider(props) {
     }
 
     const users = {
-        createUser: async ({ email, password, fullname, username }) => {
-            const { error, user } = await AuthService.createUser({ email, password, fullname, username }); // dont forget to put username here next time
+        createUser: async ({ email, password, fullname, username, paac }) => {
+            const { error, user } = await AuthService.createUser({ email, password, fullname, username, paac });
+            //check paac
             setUser(user ?? null);
             setError(error ?? "");
             return { authError: error ?? null, authUser: user ?? null }
@@ -134,7 +136,7 @@ export function AuthProvider(props) {
         }
     }
 
-    const value = { authUser: user, authError: error, setUser, login, users, workspace };
+    const value = { authUser: user, authError: error, setUser, login, users, workspace, theme, setTheme };
 
     return <authContext.Provider value={value} {...props} />
 }

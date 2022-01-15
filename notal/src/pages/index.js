@@ -2,6 +2,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import cookie from 'js-cookie';
 
 import styles from '../../styles/App.module.scss';
 import { server } from '../config';
@@ -22,13 +23,15 @@ import Button from '../components/button';
 import Header from '../components/header';
 import Alert from '../components/alert';
 
-import { withAuth } from '../hooks/route';
+import { withAuth, withCheckUser } from '../hooks/route';
 import useAuth from '../hooks/auth';
 import { CheckToken } from '../utils';
+import useTheme from '../hooks/theme';
 
 const Home = (props) => {
   const auth = useAuth();
   const router = useRouter();
+  const theme = useTheme();
 
   const [menuToggle, setMenuToggle] = useState(false);
 
@@ -63,13 +66,18 @@ const Home = (props) => {
   useEffect(() => {
     console.log("props indexjs: ", props);
 
-    console.log("ID: ", process.env.NEXT_PUBLIC_VERCEL_GIT_REPO_ID);
+    console.log("PROJECTID: ", process.env.NEXT_PUBLIC_VERCEL_GIT_REPO_ID);
     (async () => {
       const token = await auth.users.getIdToken();
       const res = await CheckToken({ token, props });
 
       if (props.validate?.error == "no-token" || res || props.validate?.error == "validation-error" || props.valite?.error == "auth/id-token-expired") {
         router.replace(router.asPath);
+      }
+
+      if (props.validate.success && !props.validate?.data?.paac) {
+        router.replace("/paac");
+        return;
       }
 
       if (props.validate.success && !props.validate.data?.username) { // if theres no username is present
@@ -183,12 +191,17 @@ const Home = (props) => {
     }
   }
 
-  if (registerAlertVisible) return <div className={styles.registerAlertContainer}>
+  if (registerAlertVisible) return <div className={styles.registerAlertContainer} data-theme={theme.UITheme}>
+    <Head>
+      <title>Complete Register · Notal</title>
+      <meta name="description" content="Login to Notal, the greatest note app" />
+      <link rel="icon" href="/favicon.ico" />
+    </Head>
     <div className={styles.content}>
       <div className={styles.alert}>
         <div className={styles.title}>
           <CheckIcon height={24} width={24} fill={"#fff"} />
-          <span style={{ color: "white", marginLeft: 8 }}>One more step...</span>
+          <span style={{ color: "white", marginLeft: 8 }}>Complete registration...</span>
         </div>
         <div className={styles.body}>
           <form id="register" onSubmit={e => registerUser(e)}>
@@ -242,7 +255,7 @@ const Home = (props) => {
     <span className={styles.overlay} />
   </div>
 
-  return (<div className={styles.container}>
+  return (<div className={styles.container} data-theme={theme.UITheme}>
     <Head>
       <title>Home · Notal</title>
       <meta name="description" content="Notal. The next generation taking notes and sharing todo snippets platform." />
@@ -258,6 +271,8 @@ const Home = (props) => {
       onProfile={() => router.push(`/profile/${props?.validate?.data?.username}`)}
       onHeaderHome={() => router.replace('/')}
       loggedIn={props.validate?.success == true}
+      currTheme={theme.UITheme}
+      onThemeChange={() => theme.toggleTheme()}
     />
     {/* ------------------------------------------------------------------------------------------------------------ */}
     <div className={styles.content_home}>
@@ -266,14 +281,14 @@ const Home = (props) => {
           text="Workspaces"
           onClick={() => setViewing("workspaces")}
           style={{ justifyContent: "flex-start", borderRadius: 8, width: "90%", marginTop: 24, height: 54 }}
-          icon={<DashboardIcon height={24} width={24} fill={viewing == "workspaces" ? "#fff" : "#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />}
+          icon={<DashboardIcon height={24} width={24} style={{ marginLeft: 8, marginRight: 8, }} />}
           reversed={viewing != "workspaces"}
         />
         <Button
           text="Favorites"
           onClick={() => setViewing("favorites")}
           style={{ justifyContent: "flex-start", borderRadius: 8, width: "90%", marginTop: 12, height: 54 }}
-          icon={viewing == "favorites" ? <StarFilledIcon height={24} width={24} fill={"#fff"} style={{ marginLeft: 8, marginRight: 8, }} /> : <StarOutlineIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />}
+          icon={viewing == "favorites" ? <StarFilledIcon height={24} width={24} style={{ marginLeft: 8, marginRight: 8, }} /> : <StarOutlineIcon height={24} width={24} style={{ marginLeft: 8, marginRight: 8, }} />}
           reversed={viewing != "favorites"}
         />
       </div>
@@ -288,9 +303,11 @@ const Home = (props) => {
                 Your {filter == "favorites" ? "Favorites" : "Workspaces"}
               </div>
             </div>
-            {loadingWorkspaces ? <div style={{ display: "flex", width: "100%", height: "100%", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
-              <SyncIcon height={24} width={24} fill={"#19181e"} className={styles.loadingIconAuth} style={{ marginTop: 24 }} />
-              <span style={{ marginTop: 24, fontSize: "1.2em", fontWeight: "500" }}>Loading Workspaces...</span>
+            {loadingWorkspaces ? <div className={styles.container} data-theme={theme.UITheme}>
+              <div className={styles.loadingContainer}>
+                <SyncIcon height={24} width={24} className={styles.loadingIconAuth} style={{ marginTop: 24 }} />
+                <span>Loading Workspaces...</span>
+              </div>
             </div> : (workspace.getWorkspacesWithFilter(props.workspaces?.data).length > 0 ? workspace.getWorkspacesWithFilter(props.workspaces?.data).map((element, index) => <div className={styles.workspace} key={index}>
               <Link href="/workspace/[pid]" as={`/workspace/${element.id}`}>
                 <a style={{ position: "absolute", width: "100%", height: "100%", zIndex: 1 }}></a>
@@ -305,10 +322,10 @@ const Home = (props) => {
                   </div>
                 </div>
                 <button className={styles.fav} onClick={() => workspace.star({ id: element.id })} >
-                  {element?.starred == true ? <StarFilledIcon height={24} width={24} fill={"#dbb700"} /> : <StarOutlineIcon height={24} width={24} fill={"#19181e"} />}
+                  {element?.starred == true ? <StarFilledIcon height={24} width={24} /> : <StarOutlineIcon height={24} width={24} />}
                 </button>
                 <button className={styles.deleteWorkspace} onClick={() => setDeleteModal({ workspace: element.id, visible: true })}>
-                  <DeleteIcon height={24} width={24} fill={"#19181e"} />
+                  <DeleteIcon height={24} width={24} />
                 </button>
               </div>
             </div>) : <div>it seems like theres no workspaces here...</div>)}
@@ -323,14 +340,14 @@ const Home = (props) => {
           text="Create Workspace"
           onClick={() => setNewWorkspaceVisible(true)}
           style={{ height: 48, borderRadius: 8, maxWidth: 240, }}
-          icon={<AddIcon height={24} width={24} fill={"#fff"} style={{ padding: 4, borderRadius: 8, backgroundColor: "#19181e", marginRight: 8 }} />}
+          icon={<AddIcon height={24} width={24} style={{ marginRight: 8 }} />}
 
         />
         <Button
           text="About"
           onClick={() => router.push("/about")}
           style={{ height: 48, borderRadius: 8, maxWidth: 240 }}
-          icon={<QuestionIcon height={24} width={24} fill={"#fff"} style={{ padding: 4, borderRadius: 8, backgroundColor: "#19181e", marginRight: 8 }} />}
+          icon={<QuestionIcon height={24} width={24} style={{ marginRight: 8 }} />}
         />
       </div>
     </div>
@@ -436,7 +453,7 @@ const Home = (props) => {
   </div>)
 }
 
-export default withAuth(Home);
+export default withCheckUser(withAuth(Home));
 
 export async function getServerSideProps(ctx) {
   const { req, res, query } = ctx;

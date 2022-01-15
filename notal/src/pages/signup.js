@@ -9,7 +9,7 @@ import Logo from '/public/icon_white.png';
 import EmailIcon from '../../public/icons/email.svg';
 import PasswordIcon from '../../public/icons/password.svg';
 import LoginIcon from '../../public/icons/login.svg';
-import SignupIcon from '../../public/icons/signup.svg';
+import CrossIcon from '../../public/icons/cross.svg';
 import UserIcon from '../../public/icons/user.svg';
 import CheckIcon from '../../public/icons/check.svg';
 
@@ -19,19 +19,22 @@ import Alert from '../components/alert';
 
 import useAuth from '../hooks/auth';
 import { withPublic } from '../hooks/route';
+import useTheme from '../hooks/theme';
 
 const Signup = (props) => {
     const router = useRouter();
+    const theme = useTheme();
 
-    const { createUser, authError } = useAuth();
+    const auth = useAuth();
 
     const [fullname, setFullname] = useState("");
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [passwordConfirm, setPasswordConfirm] = useState("");
+    const [PAAC, setPAAC] = useState("");
 
-    const [error, setError] = useState({ fullname: false, email: false, password: false, username: false });
+    const [error, setError] = useState({ fullname: false, email: false, password: false, username: false, paac: false });
 
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirmVisible, setConfirmVisible] = useState(false);
@@ -70,21 +73,28 @@ const Signup = (props) => {
         } else {
             setError({ ...error, username: false });
         }
+        if (PAAC.length == 0 || !PAAC) {
+            setError({ ...error, paac: "Please enter a valid PAAC." });
+            return;
+        } else {
+            setError({ ...error, paac: false });
+        }
 
-        setError({ email: false, password: false, fullname: false, username: false });
+        setError({ email: false, password: false, fullname: false, username: false, paac: false });
 
-        const register = await createUser({ email: email.toLowerCase(), password, fullname, username: username.toLowerCase() });
-
-        console.log("Autherror: ", register?.authError);
+        const register = await auth.users.createUser({ email: email.toLowerCase(), password, fullname, username: username.toLowerCase(), paac: PAAC });
 
         if (register?.authError?.errorCode == "auth/email-already-in-use") {
             setError({ email: "This email is already in use.", password: false, fullname: false, username: false });
             return;
         } else if (register?.authError?.errorCode == "auth/username-already-in-use") {
-            setError({ email: false, password: false, fullname: false, username: "This username is already in use." });
+            setError({ email: false, password: false, fullname: false, paac: false, username: "This username is already in use." });
             return;
         } else if (register?.authError?.errorCode == "auth/weak-password") {
-            setError({ email: false, password: "Weak password.", fullname: false, username: false });
+            setError({ email: false, password: "Weak password.", fullname: false, paac: false, username: false });
+            return;
+        } else if (register?.authError?.errorCode == "paac/invalid-code") {
+            setError({ email: false, password: false, fullname: false, username: false, paac: "This Prealpha access code is invalid.", })
             return;
         } else {
             setError({ email: false, password: false, fullname: false, username: false });
@@ -92,7 +102,7 @@ const Signup = (props) => {
     }
 
     return (
-        <div className={styles.container}>
+        <div className={styles.container} data-theme={theme.UITheme}>
             <Head>
                 <title>Signup · Notal</title>
                 <meta name="description" content="Signup to Notal, the greatest note app" />
@@ -181,6 +191,17 @@ const Signup = (props) => {
                             required
                             style={{ marginTop: 18 }}
                         />
+                        <Input
+                            type="text"
+                            placeholder="PAAC (Pre-alpha Access Code)"
+                            onChange={e => setPAAC(e.target.value)}
+                            value={PAAC}
+                            icon={<PasswordIcon height={24} width={24} fill={"#19181e"} />}
+                            error={error.paac != false}
+                            required
+                            style={{ marginTop: 18 }}
+                        />
+                        {error.paac != false && <p className={styles.errorMsg}>{error.paac}</p>}
                         <Button
                             text="Sign Up"
                             type="submit"
@@ -206,12 +227,13 @@ const Signup = (props) => {
                     <Button
                         text="Close"
                         onClick={() => setSuccessAlert(false)}
+                        icon={<CrossIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
                         key={0}
                     />,
                     <Link href="/login" key={1} passHref>
                         <Button
                             text="Login"
-                            icon={<LoginIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
+                            icon={<LoginIcon height={24} width={24} style={{ marginRight: 8 }} />}
                             style={{ borderStyle: "none" }}
                             reversed
                         />

@@ -2,7 +2,7 @@ import styles from './Input.module.scss';
 import VisibleIcon from '../../../public/icons/visible.svg';
 import InvisibleIcon from '../../../public/icons/invisible.svg';
 
-const Input = ({ onChange, value, type = "text", id, placeholder = "Placeholder", required = false, icon, error = false, onKeyDown, onVisibilityPress, visible, visibleButton = false, autoFocus = false, style, inputKey, multiline = false, maxLength = 128, multilineStyle = {}, defaultValue }) => {
+const Input = ({ onChange, value, type = "text", id, placeholder = "Placeholder", required = false, icon, error = false, onKeyDown, onVisibilityPress, visible, visibleButton = false, autoFocus = false, style, multiline = false, maxLength = 128, multilineStyle = {}, defaultValue }) => {
 
     return (
         <div className={styles.input} style={{ borderWidth: error && 2, borderColor: error && "#db0707", borderStyle: error && "solid", ...style }}>
@@ -17,9 +17,8 @@ const Input = ({ onChange, value, type = "text", id, placeholder = "Placeholder"
                 value={value}
                 required={required}
                 autoFocus={autoFocus}
-                key={inputKey}
                 defaultValue={defaultValue}
-                style={{ ...multilineStyle }}
+                style={{ ...multilineStyle, borderStyle: (icon || visibleButton) ? "none" : "solid" }}
                 onKeyDown={onKeyDown}
             /> : <input
                 type={visible ? "text" : type}
@@ -30,9 +29,9 @@ const Input = ({ onChange, value, type = "text", id, placeholder = "Placeholder"
                 value={value}
                 required={required}
                 autoFocus={autoFocus}
-                key={inputKey}
                 defaultValue={defaultValue}
                 onKeyDown={onKeyDown}
+                style={{ borderStyle: (icon || visibleButton) ? "none" : "solid" }}
             />}
             {
                 visibleButton && <button type="button" onClick={onVisibilityPress} className={styles.visible}>

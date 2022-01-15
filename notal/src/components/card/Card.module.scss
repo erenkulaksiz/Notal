@@ -4,18 +4,19 @@
 .todo {
   display: flex;
   flex-direction: row;
-  background-color: white;
+  background-color: var(--button-bg-color-reverse);
   padding: 12px;
   border-radius: 8px;
   justify-content: space-between;
   margin-bottom: 12px;
-
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   .editingCard {
     display: flex;
     flex-direction: column;
     width: 100%;
     h1 {
       font-size: 1.2em;
+      color: var(--text-color);
     }
     select {
       padding: 12px;
@@ -40,9 +41,13 @@
       display: flex;
       flex-direction: row;
       align-items: center;
+      svg {
+        fill: var(--text-color);
+      }
       h1 {
         font-size: 1.2em;
         word-wrap: break-word;
+        color: var(--text-color);
       }
     }
     .desc {
@@ -50,6 +55,7 @@
       margin-top: 8px;
       line-break: anywhere;
       flex-wrap: wrap;
+      color: var(--text-color);
     }
   }
   .controls {
@@ -65,18 +71,21 @@
       flex-direction: row;
       position: absolute;
       bottom: 100%;
-      background-color: $primary_color;
+      background-color: var(--background-color);
       padding: 8px;
       border-radius: 8px;
       button {
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: white;
+        background-color: var(--button-bg-color-reverse);
         border: none;
         cursor: pointer;
         border-radius: 8px;
         padding: 8px;
+        svg {
+          fill: var(--text-color-reverse);
+        }
         &:not(:first-child) {
           margin-left: 8px;
         }
@@ -102,10 +111,13 @@
       align-items: center;
       height: 100%;
       margin-left: 12px;
-      background-color: white;
+      background-color: var(--background-color);
       border: none;
       cursor: pointer;
       border-radius: 8px;
+      svg {
+        fill: var(--text-color);
+      }
       &:hover {
         background-color: rgb(192, 192, 192);
         transition: all 50ms cubic-bezier(0.42, 0, 0.58, 1);

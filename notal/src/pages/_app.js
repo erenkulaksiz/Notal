@@ -1,14 +1,17 @@
 import '../../styles/globals.css';
 import '../app/firebaseApp';
 import { AuthProvider } from '../hooks/auth';
+import { ThemeProvider } from '../hooks/theme';
 import AuthStateChanged from '../layout/AuthStateChanged';
 
 const MyApp = ({ Component, pageProps }) => {
 
   return (<AuthProvider>
-    <AuthStateChanged>
-      <Component {...pageProps} />
-    </AuthStateChanged>
+    <ThemeProvider>
+      <AuthStateChanged>
+        <Component {...pageProps} />
+      </AuthStateChanged>
+    </ThemeProvider>
   </AuthProvider>)
 }
 

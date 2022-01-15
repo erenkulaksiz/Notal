@@ -63,7 +63,7 @@
       width: 100%;
       padding-bottom: 32px;
       padding-top: 16px;
-      background-color: $primary_color;
+      background-color: var(--elevation-color);
       border-radius: 0;
 
       flex-direction: column;
@@ -264,6 +264,7 @@
         flex-direction: column;
         .interactive {
           display: flex;
+          justify-content: space-around;
         }
         .setVisibility {
           display: flex;

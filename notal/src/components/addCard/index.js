@@ -19,7 +19,7 @@ const AddCard = ({ onSubmit, onCancel }) => {
                 placeholder="Card Title"
                 value={addedCard.title}
                 onChange={e => setAddedCard({ ...addedCard, title: e.target.value })}
-                style={{ width: "100%", borderWidth: 1, borderColor: "#19181e", borderStyle: "solid", marginTop: 8 }}
+                style={{ width: "100%", marginTop: 8 }}
             />
         </div>
         <div className={styles.inputContainer}>
@@ -29,7 +29,7 @@ const AddCard = ({ onSubmit, onCancel }) => {
                 placeholder="Card Description"
                 value={addedCard.desc}
                 onChange={e => setAddedCard({ ...addedCard, desc: e.target.value })}
-                style={{ width: "100%", borderWidth: 1, borderColor: "#19181e", borderStyle: "solid", marginTop: 8 }}
+                style={{ width: "100%", marginTop: 8 }}
                 multiline
             />
         </div>

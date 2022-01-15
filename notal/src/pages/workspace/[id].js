@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 
 import styles from '../../../styles/App.module.scss';
 import useAuth from '../../hooks/auth';
+import useTheme from '../../hooks/theme';
 
 import HomeFilledIcon from '../../../public/icons/home_filled.svg';
 import BackIcon from '../../../public/icons/back.svg';
@@ -19,15 +20,14 @@ import Field from '../../components/field';
 
 import { server } from '../../config';
 import { CheckToken } from '../../utils';
+import { withCheckUser } from '../../hooks/route';
 
 const Workspace = (props) => {
     const auth = useAuth();
     const router = useRouter();
+    const theme = useTheme();
 
     const [menuToggle, setMenuToggle] = useState(false);
-
-    // add card
-    const [addingCard, setAddingCard] = useState({ fieldId: "", adding: false });
 
     // delete modal
     const [deleteWorkspaceModal, setDeleteWorkspaceModal] = useState(false);
@@ -163,13 +163,15 @@ const Workspace = (props) => {
     const isOwner = (props.workspace?.success == true ? props.workspace.data.owner == auth.authUser?.uid : false);
 
     if (loadingWorkspace) {
-        return <div style={{ display: "flex", width: "100%", height: "100%", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
-            <SyncIcon height={24} width={24} fill={"#19181e"} className={styles.loadingIconAuth} style={{ marginTop: 24 }} />
-            <span style={{ marginTop: 24, fontSize: "1.2em", fontWeight: "500" }}>Loading Workspace...</span>
+        return <div className={styles.container} data-theme={theme.UITheme}>
+            <div className={styles.loadingContainer}>
+                <SyncIcon height={24} width={24} className={styles.loadingIconAuth} style={{ marginTop: 24 }} />
+                <span>Loading Workspace...</span>
+            </div>
         </div>
     }
 
-    return (<div className={styles.container}>
+    return (<div className={styles.container} data-theme={theme.UITheme}>
         <Head>
             <title>{props.workspace?.success == true ? props.workspace.data.title : "404"}</title>
             <meta name="description" content="Notal" />
@@ -181,7 +183,7 @@ const Workspace = (props) => {
             onMenuToggle={val => setMenuToggle(val)}
             userData={{ fullname: props.validate?.data?.fullname, email: props.validate?.data?.email }}
             avatarURL={props.validate.data?.avatar}
-            loggedIn={props.validate.success == true}
+            loggedIn={auth?.authUser}
             onLogin={() => router.push("/login")}
             onLogout={() => {
                 auth.users.logout();
@@ -195,6 +197,8 @@ const Workspace = (props) => {
                 style={{ height: 44, borderRadius: 8, }}
                 icon={<HomeFilledIcon height={24} width={24} fill={"#fff"} style={{ marginRight: 8 }} />}
             />}
+            currTheme={theme.UITheme}
+            onThemeChange={() => theme.toggleTheme()}
         />
 
         <div className={styles.content_workspace}>
@@ -284,7 +288,7 @@ const Workspace = (props) => {
     </div >)
 }
 
-export default Workspace;
+export default withCheckUser(Workspace)
 
 export async function getServerSideProps(ctx) {
     const { req, res, query } = ctx;

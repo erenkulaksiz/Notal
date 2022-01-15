@@ -6,9 +6,11 @@ import cookie from 'js-cookie';
 import SyncIcon from '../../public/icons/sync.svg';
 
 import styles from '../../styles/App.module.scss';
+import useTheme from '../hooks/theme';
 
 export default function AuthStateChanged({ children }) {
     const { setUser } = useAuth();
+    const theme = useTheme();
     const [loading, setLoading] = useState(true);
 
     const auth = getAuth();
@@ -28,8 +30,11 @@ export default function AuthStateChanged({ children }) {
     }, []);
 
     if (loading) {
-        return <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
-            <SyncIcon height={24} width={24} fill={"#000"} className={styles.loadingIconAuth} />
+        return <div className={styles.container} data-theme={theme.UITheme}>
+            <div className={styles.loadingContainer}>
+                <SyncIcon height={24} width={24} className={styles.loadingIconAuth} style={{ marginTop: 24 }} />
+                <span>Loading...</span>
+            </div>
         </div>
     }
 

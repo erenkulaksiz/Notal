@@ -1,5 +1,5 @@
 import { getAuth, signInWithPopup, signInWithEmailAndPassword, GoogleAuthProvider, sendPasswordResetEmail, createUserWithEmailAndPassword, GithubAuthProvider } from "firebase/auth";
-import { get, getDatabase, ref, set, child, orderByChild, query, limitToFirst, equalTo, orderByKey, startAt, update } from "firebase/database";
+import { get, getDatabase, ref, set, child, orderByChild, query, limitToFirst, equalTo, orderByKey, startAt, update, push } from "firebase/database";
 import { getStorage, ref as stRef, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import { server } from "../config";
@@ -119,39 +119,52 @@ const AuthService = {
                 return { error }
             })
     },
-    createUser: async ({ email, password, fullname, username }) => {
+    createUser: async ({ email, password, fullname, username, paac }) => {
         const auth = getAuth();
         const db = getDatabase();
-        //const dbRef = ref(getDatabase());
 
-        // check if this username exist already
-        return await get(query(ref(db, "users"), orderByChild("username"), equalTo(username))).then((snapshot) => {
+        //await push(ref(db, "paacodes"), { valid: true, createDate: Date.now(), expireDate: Date.now() })
+
+        return await get(query(ref(db, "paacodes"), orderByChild("code"), equalTo(paac), limitToFirst(1))).then(async (snapshot) => {
             if (snapshot.exists()) {
-                console.log("val: ", snapshot.val());
-                return { error: { errorCode: "auth/username-already-in-use", errorMessage: "This username is already taken." } }
+                const data = snapshot.val()[Object.keys(snapshot.val())[0]];
+
+                return await get(query(ref(db, "users"), orderByChild("username"), equalTo(username))).then((snapshot) => {
+                    if (snapshot.exists()) {
+                        console.log("val: ", snapshot.val());
+                        return { error: { errorCode: "auth/username-already-in-use", errorMessage: "This username is already taken." } }
+                    } else {
+                        if (data.valid) {
+                            console.log("user doesnt exist, creating");
+                            return createUserWithEmailAndPassword(auth, email, password)
+                                .then(async (userCredential) => {
+                                    // on register, save fullname to real time database
+                                    const user = userCredential.user;
+                                    await set(ref(db, `users/${user.uid}`), {
+                                        fullname,
+                                        avatar: "https://imgyukle.com/f/2022/01/03/oxgaeS.jpg", // default avatar #TODO: make normal avatar
+                                        username,
+                                        email,
+                                        createdAt: Date.now(),
+                                        updatedAt: Date.now(),
+                                        paac: data.code,
+                                    });
+                                    return { user }
+                                })
+                                .catch((error) => {
+                                    const errorCode = error.code;
+                                    const errorMessage = error.message;
+                                    return { error: { errorCode, errorMessage } }
+                                });
+                        } else {
+                            return { error: { errorCode: "paac/invalid-code" } }
+                        }
+                    }
+                });
             } else {
-                console.log("user doesnt exist, creating");
-                return createUserWithEmailAndPassword(auth, email, password)
-                    .then(async (userCredential) => {
-                        // on register, save fullname to real time database
-                        const user = userCredential.user;
-                        await set(ref(db, `users/${user.uid}`), {
-                            fullname,
-                            avatar: "https://imgyukle.com/f/2022/01/03/oxgaeS.jpg", // default avatar #TODO: make normal avatar
-                            username,
-                            email,
-                            createdAt: Date.now(),
-                            updatedAt: Date.now(),
-                        });
-                        return { user }
-                    })
-                    .catch((error) => {
-                        const errorCode = error.code;
-                        const errorMessage = error.message;
-                        return { error: { errorCode, errorMessage } }
-                    });
+                return { error: { errorCode: "paac/invalid-code" } }
             }
-        });
+        })
     },
     uploadAvatar: async ({ avatar, uid }) => {
         const storage = getStorage();

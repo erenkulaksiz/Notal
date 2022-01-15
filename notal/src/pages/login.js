@@ -21,13 +21,16 @@ import GithubIcon from '../../public/icons/github.svg';
 import RefreshIcon from '../../public/icons/refresh.svg';
 import CheckIcon from '../../public/icons/check.svg';
 import QuestionIcon from '../../public/icons/question.svg';
+import DarkIcon from '../../public/icons/dark.svg';
+import LightIcon from '../../public/icons/light.svg';
 
 import AuthService from '../service/AuthService';
+import useTheme from '../hooks/theme';
 
 const Login = (props) => {
     const router = useRouter();
-
     const auth = useAuth();
+    const theme = useTheme();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -121,7 +124,7 @@ const Login = (props) => {
     }
 
     return (
-        <div className={styles.container}>
+        <div className={styles.container} data-theme={theme.UITheme}>
             <Head>
                 <title>Login · Notal</title>
                 <meta name="description" content="Login to Notal, the greatest note app" />
@@ -130,6 +133,11 @@ const Login = (props) => {
 
             <div className={styles.content_login}>
                 <div className={styles.login}>
+                    <div className={styles.themeSwitchContainer}>
+                        <button onClick={() => theme.toggleTheme()}>
+                            {theme.UITheme == "theme-dark" ? <LightIcon height={32} width={32} className={styles.themeIcon} /> : <DarkIcon height={32} width={32} className={styles.themeIcon} />}
+                        </button>
+                    </div>
                     <form id="login" onSubmit={e => onLogin(e)}>
                         <div className={styles.logoContainer}>
                             <img
@@ -141,7 +149,7 @@ const Login = (props) => {
                             <Button
                                 text="What's Notal?"
                                 type="button"
-                                icon={<QuestionIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
+                                icon={<QuestionIcon height={24} width={24} style={{ marginRight: 8 }} />}
                                 style={{ marginTop: 24, border: "none", height: 48 }}
                                 onClick={() => router.push("/about")}
                                 reversed
@@ -152,7 +160,7 @@ const Login = (props) => {
                                 <Button
                                     text="Back"
                                     type="button"
-                                    icon={<BackIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
+                                    icon={<BackIcon height={24} width={24} style={{ marginRight: 8 }} />}
                                     style={{ marginTop: 24, border: "none", height: 48, width: "25%", minWidth: 160 }}
                                     onClick={() => {
                                         setView(null);
@@ -169,7 +177,7 @@ const Login = (props) => {
                                     placeholder="E-mail"
                                     onChange={e => setEmail(e.target.value)}
                                     value={email}
-                                    icon={<EmailIcon height={24} width={24} fill={"#19181e"} />}
+                                    icon={<EmailIcon height={24} width={24} />}
                                     required
                                     style={{ marginTop: 18 }}
                                     error={error.email != false || error.login}
@@ -203,7 +211,7 @@ const Login = (props) => {
                                 <Button
                                     text="Login"
                                     type="submit"
-                                    icon={<LoginIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
+                                    icon={<LoginIcon height={24} width={24} style={{ marginRight: 8 }} />}
                                     style={{ marginTop: 18, border: "none" }}
                                     reversed
                                     onClick={onLogin}
@@ -212,7 +220,7 @@ const Login = (props) => {
                                 <Button
                                     text="Back"
                                     type="button"
-                                    icon={<BackIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
+                                    icon={<BackIcon height={24} width={24} style={{ marginRight: 8 }} />}
                                     style={{ marginTop: 24, border: "none", height: 48, width: "25%", minWidth: 160 }}
                                     onClick={() => {
                                         setView("email");
@@ -227,7 +235,7 @@ const Login = (props) => {
                                     placeholder="E-mail"
                                     onChange={e => setForgotEmail(e.target.value)}
                                     value={forgotEmail}
-                                    icon={<EmailIcon height={24} width={24} fill={"#19181e"} />}
+                                    icon={<EmailIcon height={24} width={24} />}
                                     required
                                     style={{ marginTop: 18 }}
                                     error={forgotError.length != 0}
@@ -236,7 +244,7 @@ const Login = (props) => {
                                 <Button
                                     text="Send Password Reset Link"
                                     type="button"
-                                    icon={<RefreshIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
+                                    icon={<RefreshIcon height={24} width={24} style={{ marginRight: 8 }} />}
                                     style={{ marginTop: 24, border: "none" }}
                                     reversed
                                     onClick={onForgotPassword}
@@ -245,20 +253,20 @@ const Login = (props) => {
                                 <Button
                                     text="Login"
                                     type="button"
-                                    icon={<BackIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
+                                    icon={<BackIcon height={24} width={24} style={{ marginRight: 8 }} />}
                                     style={{ marginTop: 12, border: "none", height: 48, width: "25%", minWidth: 160 }}
                                     onClick={() => setView(null)}
                                     reversed
                                 />
                                 <h1 style={{ marginTop: 8, }}>
-                                    <CheckIcon height={24} width={24} fill={"#fff"} style={{ marginRight: 8 }} />
+                                    <CheckIcon height={24} width={24} style={{ marginRight: 8 }} />
                                     A password reset link has been sent.
                                 </h1>
                             </> : <><h1>Sign in using...</h1>
                                 <Button
                                     text="GitHub"
                                     type="button"
-                                    icon={<GithubIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
+                                    icon={<GithubIcon height={24} width={24} style={{ marginRight: 8 }} />}
                                     style={{ marginTop: 24, border: "none" }}
                                     reversed
                                     onClick={onLoginWithGithub}
@@ -266,7 +274,7 @@ const Login = (props) => {
                                 <Button
                                     text="Google"
                                     type="button"
-                                    icon={<GoogleIcon height={30} width={30} fill={"#19181e"} style={{ marginRight: 8 }} />}
+                                    icon={<GoogleIcon height={30} width={30} style={{ marginRight: 8 }} />}
                                     style={{ marginTop: 12, border: "none" }}
                                     reversed
                                     onClick={onLoginWithGoogle}
@@ -274,7 +282,7 @@ const Login = (props) => {
                                 <Button
                                     text="E-mail"
                                     type="button"
-                                    icon={<EmailIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
+                                    icon={<EmailIcon height={24} width={24} style={{ marginRight: 8 }} />}
                                     style={{ marginTop: 12, border: "none" }}
                                     onClick={() => setView("email")}
                                     reversed

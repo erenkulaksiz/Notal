@@ -27,10 +27,36 @@
   .login {
     display: flex;
     flex-direction: column;
+    position: relative;
     width: 100%;
-    background-color: $primary_color;
+    background-color: var(--elevation-color);
     border-radius: 12px;
     box-sizing: border-box;
+
+    .themeSwitchContainer {
+      display: flex;
+      position: absolute;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      top: -64px;
+      button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 48px;
+        width: 48px;
+        border-radius: 128px;
+        padding-left: 14px;
+        padding-right: 14px;
+        border: none;
+        cursor: pointer;
+        background-color: var(--elevation-color);
+        svg {
+          color: var(--text-color-reverse);
+        }
+      }
+    }
 
     .logoContainer {
       display: flex;
@@ -53,6 +79,9 @@
       flex-direction: column;
       flex: 1;
       padding: 24px;
+      button {
+        background-color: var(--background-color);
+      }
       .errorMsg {
         color: $error_red;
         margin-top: 16px;
@@ -102,8 +131,9 @@
     width: 100%;
     margin-top: 24px;
     font-size: 1.2em;
+    color: var(--text-color);
     a {
-      color: #3374ff;
+      color: var(--link-color);
       cursor: pointer;
       font-weight: 500;
     }

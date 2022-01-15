@@ -4,6 +4,24 @@ import useAuth from './auth';
 
 import styles from '../../styles/App.module.scss';
 import SyncIcon from '../../public/icons/sync.svg';
+import useTheme from './theme';
+
+export function withCheckUser(Component) {
+    return function WithCheckUser(props) {
+        //const auth = useAuth();
+        const router = useRouter();
+
+        if (props.validate.success == true && !props.validate.data.paac) {
+            router.replace("/paac");
+        } else {
+            if (props.validate?.success == true && !props.validate?.data.username) {
+                router.replace("/");
+            }
+        }
+
+        return <Component {...props} />
+    }
+}
 
 /**
  * Checks if user logined, returns to home if logined.
@@ -14,11 +32,15 @@ export function withPublic(Component) {
     return function WithPublic(props) {
         const auth = useAuth();
         const router = useRouter();
+        const theme = useTheme();
 
         if (auth.authUser) {
             router.replace("/");
-            return <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
-                <SyncIcon height={24} width={24} fill={"#000"} className={styles.loadingIconAuth} />
+            return <div className={styles.container} data-theme={theme.UITheme}>
+                <div className={styles.loadingContainer}>
+                    <SyncIcon height={24} width={24} className={styles.loadingIconAuth} style={{ marginTop: 24 }} />
+                    <span>Loading</span>
+                </div>
             </div>
         }
         return <Component auth={auth} {...props} />
@@ -34,11 +56,15 @@ export function withAuth(Component) {
     return function WithAuth(props) {
         const auth = useAuth();
         const router = useRouter();
+        const theme = useTheme();
 
         if (!auth.authUser) {
             router.replace("/login");
-            return <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
-                <SyncIcon height={24} width={24} fill={"#000"} className={styles.loadingIconAuth} />
+            return <div className={styles.container} data-theme={theme.UITheme}>
+                <div className={styles.loadingContainer}>
+                    <SyncIcon height={24} width={24} className={styles.loadingIconAuth} style={{ marginTop: 24 }} />
+                    <span>Loading</span>
+                </div>
             </div>
         }
         return <Component auth={auth} {...props} />

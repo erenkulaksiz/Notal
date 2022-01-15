@@ -23,7 +23,7 @@ export default async function handler(req, res) {
             if (snapshot.exists()) {
                 res.status(200).json({ success: true, data: snapshot.val(), uid: decodedToken.uid });
             } else {
-                if (data.firebase.sign_in_provider != "password") {
+                if (decodedToken.firebase.sign_in_provider != "password") {
                     console.log("trying to create user (not password login)");
                     return await admin.database().ref(`/users/${decodedToken.uid}`).update({
                         fullname: data.name || "",

@@ -16,8 +16,10 @@
   .aboutContainer {
     width: 100%;
     padding-left: 0;
+    margin-top: 24px;
     @include md {
       padding-left: 24px;
+      margin-top: 0;
       width: 75%;
     }
   }
@@ -52,6 +54,7 @@
     h1 {
       font-size: 2em;
       font-weight: 600;
+      color: var(--text-color);
     }
   }
 
@@ -61,6 +64,11 @@
     padding-bottom: 32px;
     p {
       font-size: 1.4em;
+      color: var(--text-color);
+    }
+    a {
+      color: var(--link-color);
+      text-decoration: none;
     }
   }
 
@@ -78,7 +86,7 @@
         justify-content: center;
         align-items: center;
         padding: 6px;
-        background-color: $primary_color;
+        background-color: var(--elevation-color);
         border-radius: 32px;
         width: 32px;
         height: 32px;
@@ -87,6 +95,7 @@
       h1 {
         font-size: 2em;
         font-weight: 500;
+        color: var(--text-color);
       }
     }
     .desc {
@@ -95,9 +104,14 @@
       p {
         font-size: 1.4em;
         color: $primary_color;
+        color: var(--text-color);
       }
       b {
         font-weight: 600;
+      }
+      a {
+        color: var(--link-color);
+        text-decoration: none;
       }
     }
   }

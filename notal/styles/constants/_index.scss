@@ -1,5 +1,42 @@
+$grey-50: #fafafa;
+$grey-100: #f5f5f5;
+$grey-200: #eeeeee;
+$grey-300: #e0e0e0;
+$grey-400: #bdbdbd;
+$grey-500: #9e9e9e;
+$grey-600: #757575;
+$grey-700: #616161;
+$grey-800: #424242;
+$grey-900: #212121;
+
+$link_color: #3374ff;
+
+$workspace_background_dark: #262929;
+$workspace_background: transparent;
+
+$background_primary_dark: #191a1a;
+$elevation_dark: #262929;
+$button_background_dark: #262929;
+$button_hover_dark: #2c2e2f;
+$button_hover_light: #35343d;
+$button_hover_reversed_dark: #d4d4d4;
+$text_color_dark: $grey-50;
+$button_reversed_dark: #181a1b;
+
+$elevation_light: #19181e;
+
 $primary_color: #19181e;
+$primary_color_hover: #27262b;
+$primary_color_dark: #131516;
+
+$background_main: white;
+$background_main_dark: #181a1b;
+
+$card_color_dark: #181a1b;
+$card_color_light: white;
+
 $error_red: #db0707;
+
 // Small tablets and large smartphones (landscape view)
 $screen-sm-min: 576px;
 // Small tablets (portrait view)
@@ -8,3 +45,43 @@ $screen-md-min: 768px;
 $screen-lg-min: 992px;
 // Large tablets and desktops
 $screen-xl-min: 1200px;
+
+.container[data-theme="theme-light"],
+.registerAlertContainer[data-theme="theme-light"] {
+  --background-color: #{$grey-50};
+  --elevation-color: #{$elevation_light};
+  --secelevation: white;
+  --button-bg-color: #{$primary_color};
+  --button-bg-color-reverse: #{white};
+  --button-hover-color: #{$button_hover_light};
+  --button-hover-reverse: #{$button_hover_reversed_dark};
+  --button-reversed: #{$button_reversed_dark};
+  --text-color: #{$grey-900};
+  --text-color-reverse: #{$grey-50};
+  --workspace-background: #{$workspace_background};
+  --card-color: #{$card_color_light};
+  --reverse-color: #{$primary_color};
+  --link-color: #{$link_color};
+  --input-border: white;
+  transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+}
+
+.container[data-theme="theme-dark"],
+.registerAlertContainer[data-theme="theme-dark"] {
+  --background-color: #{$background_primary_dark};
+  --elevation-color: #{$elevation_dark};
+  --secelevation: #1b1c1d;
+  --button-bg-color: #{$button_background_dark};
+  --button-bg-color-reverse: #{$button_background_dark};
+  --button-hover-color: #{$button_hover_dark};
+  --button-hover-reverse: #{$grey-800};
+  --button-reversed: #{$button_reversed_dark};
+  --text-color: #{$text_color_dark};
+  --text-color-reverse: #{$grey-50};
+  --workspace-background: #{$workspace_background_dark};
+  --card-color: #{$card_color_dark};
+  --reverse-color: #{$grey-50};
+  --link-color: #{$link_color};
+  --input-border: #{$button_background_dark};
+  transition: all 200ms cubic-bezier(0.42, 0, 0.58, 1);
+}
