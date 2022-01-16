@@ -1,6 +1,6 @@
 import styles from './Card.module.scss';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Button from '../button';
 import Input from '../input';
@@ -12,18 +12,37 @@ import EditIcon from '../../../public/icons/edit.svg';
 import DeleteIcon from '../../../public/icons/delete.svg';
 import CrossIcon from '../../../public/icons/cross.svg';
 import CheckIcon from '../../../public/icons/check.svg';
+import { useDrag } from 'react-dnd';
+import { getEmptyImage } from 'react-dnd-html5-backend';
 
-const Card = ({ card, isOwner, onMoreClick, cardMore, onDeleteClick, onEditClick, editing, onEditCancel, onEditSubmit }) => {
+const Card = ({ card, isOwner, onMoreClick, cardMore, onDeleteClick, onEditClick, editing, onEditCancel, onEditSubmit, style }) => {
+
+    const [{ isDragging }, drag, dragPreview] = useDrag(() => ({
+        type: 'CARD',
+        item: card,
+        collect: (monitor) => {
+            const isDragging = !!monitor.isDragging();
+            const item = monitor.getItem();
+            return {
+                item,
+                isDragging,
+            };
+        }
+    }))
+
+    useEffect(() => {
+        dragPreview(getEmptyImage())
+    }, []);
 
     const [editCard, setEditCard] = useState({ title: card.title, desc: card.desc, color: card.color })
 
-    return (<div className={styles.todo}>
+    return (<div className={styles.todo} style={{ visibility: isDragging ? 'hidden' : 'inherit', ...style }}>
         {editing != true ? <><div className={styles.content}>
             <div className={styles.title}>
                 <div>
-                    <AddIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />
+                    <AddIcon height={24} width={24} style={{ marginRight: 8 }} />
                 </div>
-                <h1>{card.title}</h1> {editing && "editing :D"}
+                <h1>{card.title}</h1>
             </div>
             <div className={styles.desc}>
                 {card.desc}
@@ -35,7 +54,7 @@ const Card = ({ card, isOwner, onMoreClick, cardMore, onDeleteClick, onEditClick
                     onClick={() => onMoreClick()}>
                     <MoreIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 2, marginRight: 2, }} />
                 </button>}
-                {isOwner && <button className={styles.control} >
+                {isOwner && <button className={styles.control} ref={drag}>
                     <DragIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 2, marginRight: 2, }} />
                 </button>}
                 {(cardMore.visible && cardMore.cardId == card.id) && <div className={styles.more}>

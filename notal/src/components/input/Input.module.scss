@@ -22,7 +22,8 @@
   //background-color: var(--background-color);
   border-radius: 4px;
   overflow: hidden;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 5px 28px,
+    rgba(0, 0, 0, 0.05) 0px 10px 10px;
   .iconContainer {
     display: flex;
     justify-content: center;

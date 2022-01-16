@@ -25,6 +25,35 @@ const Field = ({ isOwner, field, onEditCard, onDeleteField, onEditField, onDelet
     const [cardMore, setCardMore] = useState({ visible: false, cardId: "" });
     const [cardEditing, setCardEditing] = useState({ editing: false, id: "", title: "", desc: "", color: "red" });
 
+    const editField = () => {
+        onEditField({ id: field.id, title: editedField.title });
+        setEditingField({ editing: false, fieldId: "" });
+    }
+
+    /*
+    <div style={{
+                // functional
+                transform: `translate(${currentOffset.x}px, ${currentOffset.y}px)`,
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                pointerEvents: 'none',
+                zIndex: 999,
+
+                // design only
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '150px',
+                height: '50px',
+                border: '1px solid red',
+                color: 'red'
+            }}>
+                Dragging {JSON.stringify(item)}
+            </div>
+    */
+
+
 
     return (<div className={styles.field}>
         <div className={styles.header}>
@@ -32,15 +61,13 @@ const Field = ({ isOwner, field, onEditCard, onDeleteField, onEditField, onDelet
                 <Input
                     type="text"
                     placeholder="Field Title"
-                    onChange={e => {
-                        //#TODO: not working enter btn
-                        if (e.key === "Enter" || e.keyCode === 13) {
-                            //handle.editField({ id: field.id });
-                            setEditingField({ editing: false, fieldId: "" });
-                            onEditField({ id: field.id, title: editedField.title });
-                        } else {
-                            setEditedField({ ...editedField, title: e.target.value });
+                    onKeyDown={e => {
+                        if (e.key === "Enter") {
+                            editField();
                         }
+                    }}
+                    onChange={e => {
+                        setEditedField({ ...editedField, title: e.target.value });
                     }}
                     defaultValue={field.title}
                     style={{ width: "90%" }}
@@ -57,11 +84,7 @@ const Field = ({ isOwner, field, onEditCard, onDeleteField, onEditField, onDelet
                 <button onClick={() => setEditingField({ ...editingField, editing: false, fieldId: "" })} style={{ marginLeft: 0 }}>
                     <CrossIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
                 </button>
-                <button style={{ marginLeft: 4 }} onClick={() => {
-                    setEditingField({ editing: false, fieldId: "" });
-                    onEditField({ id: field.id, title: editedField.title });
-                    //handle.editField({ id: field.id });
-                }}>
+                <button style={{ marginLeft: 4 }} onClick={() => editField()}>
                     <CheckIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 8, marginRight: 8, }} />
                 </button>
             </div> : <div className={styles.controls}>
@@ -94,14 +117,13 @@ const Field = ({ isOwner, field, onEditCard, onDeleteField, onEditField, onDelet
                     onDeleteClick={() => {
                         setCardMore({ ...cardMore, visible: false, cardId: "" });
                         onDeleteCard({ id: card.id, fieldId: field.id });
-                        //handle.deleteCard({ cardId: card.id, fieldId: field.id })
                     }}
                     onEditClick={() => setCardEditing({ ...cardEditing, editing: true, id: card.id })}
                     editing={cardEditing.editing && (cardEditing.id == card.id)}
                     onEditCancel={() => {
                         setCardEditing({ ...cardEditing, editing: false, id: "" });
                         setCardMore({ ...cardMore, visible: false, cardId: "" });
-                    }} // handle.editCard({ title, desc, color, id: card.id, fieldId: field.id })
+                    }}
                     onEditSubmit={({ title, desc, color }) => {
                         setCardEditing({ ...cardEditing, editing: false, id: "" });
                         setCardMore({ ...cardMore, visible: false, cardId: "" });

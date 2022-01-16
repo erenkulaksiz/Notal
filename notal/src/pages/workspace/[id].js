@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { useDragLayer } from 'react-dnd';
 
 import styles from '../../../styles/App.module.scss';
 import useAuth from '../../hooks/auth';
@@ -17,6 +18,7 @@ import Button from '../../components/button';
 import Alert from '../../components/alert';
 import WorkspaceNav from '../../components/workspaceNav';
 import Field from '../../components/field';
+import Card from '../../components/card';
 
 import { server } from '../../config';
 import { CheckToken } from '../../utils';
@@ -43,15 +45,44 @@ const Workspace = (props) => {
         (async () => {
             const token = await auth.users.getIdToken();
             const res = await CheckToken({ token, props });
-            if (props.validate?.error == "no-token" || res || props.validate?.error == "validation-error" || props.valite?.error == "auth/id-token-expired") {
+            if (props.validate?.error == "no-token" || res || props.validate?.error == "validation-error" || props.validate?.error == "auth/id-token-expired") {
                 router.replace(router.asPath);
             }
         })();
-    }, []);
+    }, [props]);
 
     useEffect(() => {
         if (props.workspace?.success == true) setLoadingWorkspace(false);
     }, [props.workspace]);
+
+    const DragLayer = () => {
+        const { isDragging, currentOffset, item } = useDragLayer(
+            (monitor) => {
+                return {
+                    isDragging: monitor.isDragging(),
+                    currentOffset: monitor.getSourceClientOffset(),
+                    item: monitor.getItem()
+                };
+            }
+        );
+        return isDragging && currentOffset
+            ? <Card
+                card={item}
+                isOwner={isOwner}
+                cardMore={cardMore}
+                style={{
+                    transform: `translate(${currentOffset.x - 320}px, ${currentOffset.y - 20}px)`,
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    pointerEvents: 'none',
+                    zIndex: 999,
+
+                    width: 340,
+                }}
+            />
+            : null;
+    }
 
     const handle = {
         finishEditing: async ({ title, desc }) => {
@@ -236,6 +267,7 @@ const Workspace = (props) => {
                                     }}
                                 />
                             })}
+                        <DragLayer />
                     </div>
                 </div>
             </> : <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", width: "100%", height: "100%" }}>

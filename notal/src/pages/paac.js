@@ -17,6 +17,7 @@ import CheckIcon from '../../public/icons/check.svg';
 import LogoutIcon from '../../public/icons/logout.svg';
 
 import useTheme from '../hooks/theme';
+import { CheckToken } from '../utils';
 
 const Paac = (props) => {
     const router = useRouter();
@@ -26,6 +27,17 @@ const Paac = (props) => {
     const [paac, setPaac] = useState("");
 
     const [error, setError] = useState(false);
+
+    useEffect(() => {
+        (async () => {
+            const token = await auth.users.getIdToken();
+            const res = await CheckToken({ token, props });
+
+            if (props.validate?.error == "no-token" || res || props.validate?.error == "validation-error" || props.validate?.error == "auth/id-token-expired") {
+                router.replace(router.asPath);
+            }
+        })();
+    }, []);
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -96,4 +108,38 @@ const Paac = (props) => {
     )
 }
 
-export default withAuth(Paac); 
+export default withAuth(Paac);
+
+export async function getServerSideProps(ctx) {
+    const { req, res, query } = ctx;
+    let validate = {};
+    if (req) {
+        const authCookie = req.cookies.auth;
+        if (authCookie) {
+            const dataValidate = await fetch(`${server}/api/validate`, {
+                'Content-Type': 'application/json',
+                method: "POST",
+                body: JSON.stringify({ token: authCookie }),
+            }).then(response => response.json()).catch(error => {
+                return { success: false, error: { code: "validation-error", errorMessage: error } }
+            });
+
+            if (dataValidate.success) {
+                validate = { ...dataValidate };
+                if (dataValidate.data?.paac) {
+                    return {
+                        redirect: {
+                            destination: '/',
+                            permanent: false,
+                        },
+                    }
+                }
+            } else {
+                validate = { error: dataValidate?.error?.code }
+            }
+        } else {
+            validate = { error: "no-token" }
+        }
+    }
+    return { props: { validate } }
+}

@@ -39,7 +39,7 @@ const About = (props) => {
         (async () => {
             const token = await auth.users.getIdToken();
             const res = await CheckToken({ token, props });
-            if (props.validate?.error == "no-token" || res || props.validate?.error == "validation-error" || props.valite?.error == "auth/id-token-expired") {
+            if (props.validate?.error == "no-token" || res || props.validate?.error == "validation-error" || props.validate?.error == "auth/id-token-expired") {
                 router.replace(router.asPath);
             }
         })();
