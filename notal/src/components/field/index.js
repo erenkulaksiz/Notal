@@ -14,7 +14,7 @@ import Card from '../../components/card';
 import AddCard from '../../components/addCard';
 import Button from '../button';
 
-const Field = ({ isOwner, field, onEditCard, onDeleteField, onEditField, onDeleteCard, onAddCardToField }) => {
+const Field = ({ isOwner, field, onEditCard, onDeleteField, onEditField, onDeleteCard, onAddCardToField, onMore, cardMore, setCardMore }) => {
 
     const [addingCard, setAddingCard] = useState({ fieldId: "", adding: false });
 
@@ -22,38 +22,12 @@ const Field = ({ isOwner, field, onEditCard, onDeleteField, onEditField, onDelet
     const [editingField, setEditingField] = useState({ editing: false, fieldId: "" });
     const [deleteField, setDeleteField] = useState({ fieldId: "", deleting: false });
 
-    const [cardMore, setCardMore] = useState({ visible: false, cardId: "" });
     const [cardEditing, setCardEditing] = useState({ editing: false, id: "", title: "", desc: "", color: "red" });
 
     const editField = () => {
         onEditField({ id: field.id, title: editedField.title });
         setEditingField({ editing: false, fieldId: "" });
     }
-
-    /*
-    <div style={{
-                // functional
-                transform: `translate(${currentOffset.x}px, ${currentOffset.y}px)`,
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                pointerEvents: 'none',
-                zIndex: 999,
-
-                // design only
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '150px',
-                height: '50px',
-                border: '1px solid red',
-                color: 'red'
-            }}>
-                Dragging {JSON.stringify(item)}
-            </div>
-    */
-
-
 
     return (<div className={styles.field}>
         <div className={styles.header}>
@@ -113,7 +87,7 @@ const Field = ({ isOwner, field, onEditCard, onDeleteField, onEditField, onDelet
                     card={card}
                     isOwner={isOwner}
                     cardMore={cardMore}
-                    onMoreClick={() => setCardMore({ ...cardMore, visible: (cardMore.cardId == card.id ? !cardMore.visible : true), cardId: card.id })}
+                    onMoreClick={() => onMore({ cardId: card.id, fieldId: field.id })}
                     onDeleteClick={() => {
                         setCardMore({ ...cardMore, visible: false, cardId: "" });
                         onDeleteCard({ id: card.id, fieldId: field.id });

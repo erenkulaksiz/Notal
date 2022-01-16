@@ -20,7 +20,7 @@ const WorkspaceNav = ({ workspace, isOwner, onAddField, onFinishEditing, onDelet
     const [addField, setAddField] = useState({ title: "" });
 
     const [editingWorkspace, setEditingWorkspace] = useState(false);
-    const [editedWorkspace, setEditedWorkspace] = useState({ title: workspace.data.title, desc: workspace.data.desc });
+    const [editedWorkspace, setEditedWorkspace] = useState({ title: workspace.title, desc: workspace.desc });
 
     return (<div className={styles.nav}>
         <div className={styles.meta}>
@@ -64,10 +64,10 @@ const WorkspaceNav = ({ workspace, isOwner, onAddField, onFinishEditing, onDelet
                             onFinishEditing({ title: editedWorkspace.title, desc: editedWorkspace.desc });
                         }
                     }}
-                    defaultValue={workspace?.data?.title}
+                    defaultValue={workspace?.title}
                     onChange={e => setEditedWorkspace({ ...editedWorkspace, title: e.target.value })}
                     placeholder={"Workspace Title"}
-                /> : <h1>{workspace?.data?.title}</h1>}
+                /> : <h1>{workspace?.title}</h1>}
 
                 {editingWorkspace ? <input type="text"
                     onKeyDown={e => {
@@ -76,10 +76,10 @@ const WorkspaceNav = ({ workspace, isOwner, onAddField, onFinishEditing, onDelet
                             onFinishEditing({ title: editedWorkspace.title, desc: editedWorkspace.desc });
                         }
                     }}
-                    defaultValue={workspace?.data?.desc}
+                    defaultValue={workspace?.desc}
                     onChange={e => setEditedWorkspace({ ...editedWorkspace, desc: e.target.value })}
                     placeholder={"Workspace Description"}
-                /> : <span>{workspace?.data?.desc}</span>}
+                /> : <span>{workspace?.desc}</span>}
             </div>}
             {(isOwner && !addingField) && (editingWorkspace ? <div className={styles.editBtn}>
                 <button onClick={() => setEditingWorkspace(false)} style={{ marginRight: 8 }}>
@@ -98,19 +98,19 @@ const WorkspaceNav = ({ workspace, isOwner, onAddField, onFinishEditing, onDelet
             </div>)}
         </div>
         {!isOwner && <div className={styles.workspaceOwnerWrapper}>
-            <Link href="/profile/[username]" as={`/profile/${workspace?.data?.profile?.username}`} passHref>
+            <Link href="/profile/[username]" as={`/profile/${workspace?.profile?.username}`} passHref>
                 <a>
                     <div className={styles.avatar}>
                         <img
-                            src={workspace?.data?.profile?.avatar}
+                            src={workspace?.profile?.avatar}
                             alt="Avatar"
                             width={33}
                             height={33}
                         />
                     </div>
                     <div className={styles.data}>
-                        <h1>{workspace?.data?.profile?.fullname}</h1>
-                        <h2>@{workspace?.data?.profile?.username}</h2>
+                        <h1>{workspace?.profile?.fullname}</h1>
+                        <h2>@{workspace?.profile?.username}</h2>
                     </div>
                 </a>
             </Link>
@@ -118,7 +118,7 @@ const WorkspaceNav = ({ workspace, isOwner, onAddField, onFinishEditing, onDelet
         {!editingWorkspace && !addingField && isOwner && <div className={styles.buttons}>
             <div className={styles.workspaceBtn}>
                 <button onClick={() => onStarPress()} >
-                    {workspace?.data?.starred ? <StarFilledIcon height={24} width={24} style={{ fill: "#dbb700" }} /> : <StarOutlineIcon height={24} width={24} />}
+                    {workspace?.starred ? <StarFilledIcon height={24} width={24} style={{ fill: "#dbb700" }} /> : <StarOutlineIcon height={24} width={24} />}
                 </button>
             </div>
             <div className={styles.workspaceBtn}>

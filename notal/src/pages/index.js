@@ -55,6 +55,8 @@ const Home = (props) => {
 
   const [loadingWorkspaces, setLoadingWorkspaces] = useState(true);
 
+  const [_workspaces, _setWorkspaces] = useState([]);
+
   useEffect(() => {
     if (viewing == "favorites") {
       setFilter("favorites");
@@ -89,7 +91,10 @@ const Home = (props) => {
   }, []);
 
   useEffect(() => {
-    if (props.workspaces?.success == true) setLoadingWorkspaces(false);
+    if (props.workspaces?.success == true) {
+      _setWorkspaces(props.workspaces.data);
+      setLoadingWorkspaces(false);
+    }
   }, [props.workspaces]);
 
   const registerUser = async (e) => {
@@ -162,16 +167,10 @@ const Home = (props) => {
         router.replace(router.asPath);
       }
     },
-    star: async ({ id }) => {
-      // recieve workspace id and star it
-
-      const data = await auth.workspace.starWorkspace({ id });
-
-      if (data.success) {
-        router.replace(router.asPath);
-      } else {
-        console.log("star error: ", data?.error);
-      }
+    star: ({ id }) => {
+      const data = auth.workspace.starWorkspace({ id });
+      if (data?.error) console.error("error on star workspace: ", data.error);
+      //#TODO: make this work immideatly
     },
     closeModal: () => {
       setNewWorkspaceVisible(false);
@@ -308,7 +307,7 @@ const Home = (props) => {
                 <SyncIcon height={24} width={24} className={styles.loadingIconAuth} style={{ marginTop: 24 }} />
                 <span>Loading Workspaces...</span>
               </div>
-            </div> : (workspace.getWorkspacesWithFilter(props.workspaces?.data).length > 0 ? workspace.getWorkspacesWithFilter(props.workspaces?.data).map((element, index) => <div className={styles.workspace} key={index}>
+            </div> : (workspace.getWorkspacesWithFilter(_workspaces).length > 0 ? workspace.getWorkspacesWithFilter(_workspaces).map((element, index) => <div className={styles.workspace} key={index}>
               <Link href="/workspace/[pid]" as={`/workspace/${element.id}`}>
                 <a style={{ position: "absolute", width: "100%", height: "100%", zIndex: 1 }}></a>
               </Link>

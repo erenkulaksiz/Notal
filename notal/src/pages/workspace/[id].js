@@ -35,10 +35,10 @@ const Workspace = (props) => {
     const [deleteWorkspaceModal, setDeleteWorkspaceModal] = useState(false);
 
     const [loadingWorkspace, setLoadingWorkspace] = useState(true);
-
-    // card state
     const [cardMore, setCardMore] = useState({ visible: false, cardId: "" });
     const [cardEditing, setCardEditing] = useState({ editing: false, id: "", title: "", desc: "", color: "red" });
+
+    const [_workspace, _setWorkspace] = useState({});
 
     useEffect(() => {
         console.log("props: ", props);
@@ -52,7 +52,10 @@ const Workspace = (props) => {
     }, [props]);
 
     useEffect(() => {
-        if (props.workspace?.success == true) setLoadingWorkspace(false);
+        if (props.workspace?.success == true) {
+            setLoadingWorkspace(false);
+            _setWorkspace(props.workspace?.data);
+        }
     }, [props.workspace]);
 
     const DragLayer = () => {
@@ -85,30 +88,22 @@ const Workspace = (props) => {
     }
 
     const handle = {
-        finishEditing: async ({ title, desc }) => {
-            if (props.workspace.data.title != title || props.workspace.data.desc != desc) {
-                const res = await auth.workspace.editWorkspace({ id: props.workspace.data.id, title, desc });
-
-                console.log("res ->>", res);
-
-                if (res.success) {
-                    router.replace(router.asPath);
-                } else {
-                    console.log("error on edit: ", res.error);
-                }
+        finishEditing: ({ title, desc }) => {
+            if (_workspace.title != title || _workspace.desc != desc) {
+                const data = auth.workspace.editWorkspace({ id: _workspace.id, title, desc });
+                if (data?.error) console.error("error on edit workspace: ", data?.error);
+                const newWorkspace = { ..._workspace, title, desc };
+                _setWorkspace(newWorkspace);
             }
         },
-        starWorkspace: async () => {
-            const data = await auth.workspace.starWorkspace({ id: props.workspace.data.id });
-
-            if (data.success) {
-                router.replace(router.asPath);
-            } else {
-                console.log("star error: ", data?.error);
-            }
+        starWorkspace: () => {
+            const data = auth.workspace.starWorkspace({ id: _workspace.id });
+            if (data?.error) console.error("error on star workspace: ", data.error);
+            const newWorkspace = { ..._workspace, starred: !_workspace.starred };
+            _setWorkspace(newWorkspace);
         },
         addField: async ({ title }) => {
-            const data = await auth.workspace.field.addField({ title: title, id: props.workspace.data.id });
+            const data = await auth.workspace.field.addField({ title: title, id: _workspace.id });
 
             if (data.success) {
                 router.replace(router.asPath);
@@ -116,40 +111,35 @@ const Workspace = (props) => {
                 console.log("addfield error: ", data?.error);
             }
         },
-        editField: async ({ id, title }) => {
-            const data = await auth.workspace.field.editField({ id, title, workspaceId: props.workspace.data.id });
-
-            if (data.success) {
-                router.replace(router.asPath);
-            } else {
-                console.log("edit field error: ", data?.error);
-            }
+        editField: ({ id, title }) => {
+            const data = auth.workspace.field.editField({ id, title, workspaceId: _workspace.id });
+            if (data?.error) console.error("error on edit field: ", data.error);
+            const index = _workspace.fields.findIndex(el => el.id == id);
+            const newField = { ..._workspace.fields[index], title };
+            const newFields = _workspace.fields;
+            newFields[index] = newField;
+            const newWorkspace = { ..._workspace, fields: newFields };
+            _setWorkspace(newWorkspace);
         },
-        deleteField: async ({ id }) => {
-            const data = await auth.workspace.field.removeField({ id, workspaceId: props.workspace.data.id });
-
-            if (data.success) {
-                router.replace(router.asPath);
-            } else {
-                console.log("delete field error: ", data?.error);
-            }
+        deleteField: ({ id }) => {
+            const data = auth.workspace.field.removeField({ id, workspaceId: _workspace.id });
+            if (data?.error) console.error("error on delete field: ", data.error);
+            const newFields = _workspace.fields.filter(el => el.id != id);
+            const newWorkspace = { ..._workspace, fields: [...newFields] }
+            _setWorkspace(newWorkspace);
         },
-        deleteWorkspace: async () => {
-            const data = await auth.workspace.deleteWorkspace({ id: props.workspace.data.id });
-
-            if (data.success) {
-                router.replace("/");
-            } else {
-                console.log("delete workspace error: ", data?.error);
-            }
+        deleteWorkspace: () => {
+            const data = auth.workspace.deleteWorkspace({ id: _workspace.id });
+            if (data?.error) console.error("error on delete workspace: ", data.error);
+            router.replace("/");
         },
         addCardToField: async ({ fieldId, title, desc, color }) => {
             const data = await auth.workspace.field.addCard({
                 id: fieldId,
-                workspaceId: props.workspace.data.id,
-                title: title,
-                desc: desc,
-                color: color,
+                workspaceId: _workspace.id,
+                title,
+                desc,
+                color
             });
 
             if (data.success) {
@@ -158,24 +148,26 @@ const Workspace = (props) => {
                 console.log("add card error: ", data?.error);
             }
         },
-        deleteCard: async ({ id, fieldId }) => {
-            const data = await auth.workspace.field.removeCard({
+        deleteCard: ({ id, fieldId }) => {
+            const data = auth.workspace.field.removeCard({
                 id,
                 fieldId,
-                workspaceId: props.workspace.data.id,
+                workspaceId: _workspace.id,
             });
+            if (data?.error) console.error("error on delete card: ", data.error);
 
-            if (data.success) {
-                router.replace(router.asPath);
-            } else {
-                console.log("rem card error: ", data?.error);
-            }
+            const newWorkspace = _workspace;
+            const _fieldIndex = newWorkspace.fields.findIndex(el => el.id == fieldId);
+            const _cardIndex = newWorkspace.fields[_fieldIndex].cards.findIndex(el => el.id == id);
+            const _fieldCards = newWorkspace.fields[_fieldIndex].cards;
+            _fieldCards.splice(_cardIndex, 1);
+            _setWorkspace(newWorkspace);
         },
         editCard: async ({ title, desc, color, id, fieldId }) => {
             const data = await auth.workspace.field.editCard({
                 id: id,
                 fieldId,
-                workspaceId: props.workspace.data.id,
+                workspaceId: _workspace.id,
                 title,
                 desc,
                 color,
@@ -191,7 +183,7 @@ const Workspace = (props) => {
         }
     }
 
-    const isOwner = (props.workspace?.success == true ? props.workspace.data.owner == auth.authUser?.uid : false);
+    const isOwner = (props.workspace?.success == true ? _workspace.owner == auth.authUser?.uid : false);
 
     if (loadingWorkspace) {
         return <div className={styles.container} data-theme={theme.UITheme}>
@@ -204,7 +196,7 @@ const Workspace = (props) => {
 
     return (<div className={styles.container} data-theme={theme.UITheme}>
         <Head>
-            <title>{props.workspace?.success == true ? props.workspace.data.title : "404"}</title>
+            <title>{props.workspace?.success == true ? _workspace.title : "404"}</title>
             <meta name="description" content="Notal" />
             <link rel="icon" href="/favicon.ico" />
         </Head>
@@ -236,7 +228,7 @@ const Workspace = (props) => {
             {props.workspace.success == true ? <>
                 <WorkspaceNav
                     isOwner={isOwner}
-                    workspace={props.workspace}
+                    workspace={_workspace}
                     onAddField={({ title }) => handle.addField({ title })}
                     onFinishEditing={({ title, desc }) => handle.finishEditing({ title, desc })}
                     onDeletePress={() => setDeleteWorkspaceModal(true)}
@@ -244,8 +236,8 @@ const Workspace = (props) => {
                 />
                 <div className={styles.wrapper}>
                     <div className={styles.fields}>
-                        {props.workspace?.data?.fields.length == 0 ? <div>no fields to list. press + icon on top nav bar</div> :
-                            props.workspace?.data?.fields.map(el => {
+                        {_workspace.fields.length == 0 ? <div>no fields to list. press + icon on top nav bar</div> :
+                            _workspace.fields.map(el => {
                                 return <Field
                                     isOwner={isOwner}
                                     key={el.id}
@@ -264,6 +256,11 @@ const Workspace = (props) => {
                                     }}
                                     onEditCard={({ title, desc, color, cardId, fieldId }) => {
                                         handle.editCard({ title, desc, color, id: cardId, fieldId });
+                                    }}
+                                    cardMore={cardMore}
+                                    setCardMore={setCardMore}
+                                    onMore={({ cardId, fieldId }) => {
+                                        setCardMore({ ...cardMore, visible: (cardMore.cardId == cardId ? !cardMore.visible : true), cardId })
                                     }}
                                 />
                             })}
@@ -349,7 +346,10 @@ export async function getServerSideProps(ctx) {
                 if (el.cards) {
                     const cards = Object.keys(el.cards).map((elx, index) => {
                         return { ...el.cards[elx], id: Object.keys(el.cards)[index] }
+                    }).sort((a, b) => {
+                        return b.index - a.index
                     });
+
                     fields[index].cards = cards;
                 }
             })
