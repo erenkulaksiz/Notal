@@ -13,6 +13,12 @@ export function withCheckUser(Component) {
 
         if (props.validate.success == true && !props.validate.data.paac) {
             router.replace("/paac");
+            return <div className={styles.container} data-theme={theme.UITheme}>
+                <div className={styles.loadingContainer}>
+                    <SyncIcon height={24} width={24} className={styles.loadingIconAuth} style={{ marginTop: 24 }} />
+                    <span>Loading</span>
+                </div>
+            </div>
         } else {
             if (props.validate?.success == true && !props.validate?.data.username) {
                 router.replace("/");

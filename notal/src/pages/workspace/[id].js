@@ -347,7 +347,7 @@ export async function getServerSideProps(ctx) {
                     const cards = Object.keys(el.cards).map((elx, index) => {
                         return { ...el.cards[elx], id: Object.keys(el.cards)[index] }
                     }).sort((a, b) => {
-                        return b.index - a.index
+                        return a.index - b.index
                     });
 
                     fields[index].cards = cards;

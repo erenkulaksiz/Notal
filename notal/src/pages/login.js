@@ -188,7 +188,7 @@ const Login = (props) => {
                                     placeholder="Password"
                                     onChange={e => setPassword(e.target.value)}
                                     value={password}
-                                    icon={<PasswordIcon height={24} width={24} fill={"#19181e"} />}
+                                    icon={<PasswordIcon height={24} width={24} />}
                                     visible={passwordVisible}
                                     onVisibilityPress={() => setPasswordVisible(!passwordVisible)}
                                     visibleButton
