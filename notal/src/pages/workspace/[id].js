@@ -70,7 +70,7 @@ const Workspace = (props) => {
         );
         return isDragging && currentOffset
             ? <Card
-                card={item}
+                card={item.card}
                 isOwner={isOwner}
                 cardMore={cardMore}
                 style={{
@@ -103,7 +103,7 @@ const Workspace = (props) => {
             _setWorkspace(newWorkspace);
         },
         addField: async ({ title }) => {
-            const data = await auth.workspace.field.addField({ title: title, id: _workspace.id });
+            const data = await auth.workspace.field.addField({ title: title, id: _workspace.id, filterBy: "index" });
 
             if (data.success) {
                 router.replace(router.asPath);
@@ -179,6 +179,51 @@ const Workspace = (props) => {
                 router.replace(router.asPath);
             } else {
                 console.log("edit card error: ", data?.error);
+            }
+        },
+        cardSwap: async ({ cardId, fieldId, swapType, toFieldId, toCardId }) => {
+            if (swapType == "up" || swapType == "down" || swapType == "dnd") {
+                const fieldIndex = _workspace.fields.findIndex(el => el.id == fieldId);
+                const newFields = _workspace.fields;
+                const field = newFields[fieldIndex];
+                const cardIndexArr = field.cards.findIndex(el => el.id == cardId)
+                const card = field.cards[cardIndexArr];
+                const cardIndex = field.cards.findIndex(el => el.index == card.index);
+
+                if (swapType == "up") {
+                    if (cardIndex != 0) {
+                        // send data if you can go up
+                        const swapCard = field.cards[cardIndex - 1].index
+                        field.cards[cardIndex - 1].index = card.index;
+                        field.cards[cardIndex].index = swapCard;
+                        const newWorkspace = { ..._workspace, fields: newFields };
+                        _setWorkspace(newWorkspace);
+                        const data = await auth.workspace.field.cardSwap({ cardId, fieldId, swapType, workspaceId: _workspace.id });
+                        if (data?.error) console.error("error on swap card: ", data.error);
+                    }
+                } else if (swapType == "down") {
+                    if (cardIndex < (field.cards.length - 1)) {
+                        // send data if you can go down
+                        const swapCard = field.cards[cardIndex + 1].index
+                        field.cards[cardIndex + 1].index = card.index;
+                        field.cards[cardIndex].index = swapCard;
+                        const newWorkspace = { ..._workspace, fields: newFields };
+                        _setWorkspace(newWorkspace);
+                        const data = await auth.workspace.field.cardSwap({ cardId, fieldId, swapType, workspaceId: _workspace.id });
+                        if (data?.error) console.error("error on swap card: ", data.error);
+                    }
+                } else if (swapType == "dnd") {
+                    // drag drop
+                    const data = await auth.workspace.field.cardSwap({ cardId, fieldId, swapType, workspaceId: _workspace.id, toFieldId, toCardId });
+                    if (data?.error) console.error("error on swap card: ", data.error);
+                    //console.log("dnd res: ", data);
+                    if (data.success) {
+                        router.replace(router.asPath);
+                    }
+                }
+
+            } else {
+                alert("error with cardswap, no swaptype");
             }
         }
     }
@@ -261,6 +306,16 @@ const Workspace = (props) => {
                                     setCardMore={setCardMore}
                                     onMore={({ cardId, fieldId }) => {
                                         setCardMore({ ...cardMore, visible: (cardMore.cardId == cardId ? !cardMore.visible : true), cardId })
+                                    }}
+                                    onCardUp={({ cardId, fieldId }) => {
+                                        handle.cardSwap({ cardId, fieldId, swapType: "up" });
+                                    }}
+                                    onCardDown={({ cardId, fieldId }) => {
+                                        handle.cardSwap({ cardId, fieldId, swapType: "down" });
+                                    }}
+                                    onCardDrop={({ cardId, toCardId, fieldId, toFieldId }) => {
+                                        console.log("cardId: ", cardId, " toCardId: ", toCardId, " fieldId:", fieldId, " toFieldId:", toFieldId);
+                                        handle.cardSwap({ cardId, toCardId, fieldId, toFieldId, swapType: "dnd" })
                                     }}
                                 />
                             })}
@@ -346,9 +401,7 @@ export async function getServerSideProps(ctx) {
                 if (el.cards) {
                     const cards = Object.keys(el.cards).map((elx, index) => {
                         return { ...el.cards[elx], id: Object.keys(el.cards)[index] }
-                    }).sort((a, b) => {
-                        return a.index - b.index
-                    });
+                    })
 
                     fields[index].cards = cards;
                 }

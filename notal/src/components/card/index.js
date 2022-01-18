@@ -12,14 +12,17 @@ import EditIcon from '../../../public/icons/edit.svg';
 import DeleteIcon from '../../../public/icons/delete.svg';
 import CrossIcon from '../../../public/icons/cross.svg';
 import CheckIcon from '../../../public/icons/check.svg';
-import { useDrag } from 'react-dnd';
+import UpIcon from '../../../public/icons/up.svg';
+import DownIcon from '../../../public/icons/down.svg';
+
+import { useDrag, useDrop } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 
-const Card = ({ card, isOwner, onMoreClick, cardMore, onDeleteClick, onEditClick, editing, onEditCancel, onEditSubmit, style }) => {
+const Card = ({ card, isOwner, onMoreClick, cardMore, onDeleteClick, onEditClick, editing, onEditCancel, onEditSubmit, style, onCardUp, onCardDown, onCardDrop, fieldId }) => {
 
     const [{ isDragging }, drag, dragPreview] = useDrag(() => ({
         type: 'CARD',
-        item: card,
+        item: { card, fieldId },
         collect: (monitor) => {
             const isDragging = !!monitor.isDragging();
             const item = monitor.getItem();
@@ -28,6 +31,16 @@ const Card = ({ card, isOwner, onMoreClick, cardMore, onDeleteClick, onEditClick
                 isDragging,
             };
         }
+    }));
+
+    const [{ isOver }, drop] = useDrop(() => ({
+        accept: 'CARD',
+        drop: (item) => {
+            onCardDrop({ toCardId: card.id, cardId: item.card.id, fieldId: item.fieldId, toFieldId: fieldId });
+        },
+        collect: (monitor) => ({
+            isOver: !!monitor.isOver(),
+        })
     }))
 
     useEffect(() => {
@@ -36,7 +49,7 @@ const Card = ({ card, isOwner, onMoreClick, cardMore, onDeleteClick, onEditClick
 
     const [editCard, setEditCard] = useState({ title: card.title, desc: card.desc, color: card.color })
 
-    return (<div className={styles.todo} style={{ visibility: isDragging ? 'hidden' : 'inherit', ...style }}>
+    return (<div className={styles.todo} style={{ visibility: isDragging ? 'hidden' : 'inherit', ...style, outlineColor: "green", outlineStyle: "dashed", outlineWidth: isOver ? 2 : 0, outlineOffset: 2 }} ref={drop}>
         {editing != true ? <><div className={styles.content}>
             <div className={styles.title}>
                 <div>
@@ -52,17 +65,23 @@ const Card = ({ card, isOwner, onMoreClick, cardMore, onDeleteClick, onEditClick
                 <div className={styles.color} style={{ backgroundColor: card.color }} />
                 {isOwner && <button className={styles.control}
                     onClick={() => onMoreClick()}>
-                    <MoreIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 2, marginRight: 2, }} />
+                    <MoreIcon height={24} width={24} style={{ marginLeft: 2, marginRight: 2, }} />
                 </button>}
                 {isOwner && <button className={styles.control} ref={drag}>
-                    <DragIcon height={24} width={24} fill={"#19181e"} style={{ marginLeft: 2, marginRight: 2, }} />
+                    <DragIcon height={24} width={24} style={{ marginLeft: 2, marginRight: 2, }} />
                 </button>}
                 {(cardMore.visible && cardMore.cardId == card.id) && <div className={styles.more}>
+                    <button onClick={() => onCardUp({ cardId: card.id })}>
+                        <UpIcon height={24} width={24} />
+                    </button>
+                    <button onClick={() => onCardDown({ cardId: card.id })}>
+                        <DownIcon height={24} width={24} />
+                    </button>
                     <button onClick={() => onEditClick()}>
-                        <EditIcon height={24} width={24} fill={"#19181e"} />
+                        <EditIcon height={24} width={24} />
                     </button>
                     <button onClick={() => onDeleteClick()}>
-                        <DeleteIcon height={24} width={24} fill={"#19181e"} />
+                        <DeleteIcon height={24} width={24} />
                     </button>
                 </div>}
             </div></> : <div className={styles.editingCard}>

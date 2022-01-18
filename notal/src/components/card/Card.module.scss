@@ -71,11 +71,15 @@
     align-items: center;
     position: relative;
     flex: 20;
+    p {
+      color: var(--text-color);
+    }
     .more {
       display: flex;
       flex-direction: row;
       position: absolute;
       bottom: calc(100% + 12px);
+      right: 0;
       background-color: var(--background-color);
       border: 2px solid var(--elevation-color);
       padding: 8px;

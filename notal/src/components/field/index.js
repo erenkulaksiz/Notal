@@ -14,7 +14,7 @@ import Card from '../../components/card';
 import AddCard from '../../components/addCard';
 import Button from '../button';
 
-const Field = ({ isOwner, field, onEditCard, onDeleteField, onEditField, onDeleteCard, onAddCardToField, onMore, cardMore, setCardMore }) => {
+const Field = ({ isOwner, field, onEditCard, onDeleteField, onEditField, onDeleteCard, onAddCardToField, onMore, cardMore, setCardMore, onCardUp, onCardDown, onCardDrop }) => {
 
     const [addingCard, setAddingCard] = useState({ fieldId: "", adding: false });
 
@@ -28,6 +28,18 @@ const Field = ({ isOwner, field, onEditCard, onDeleteField, onEditField, onDelet
         onEditField({ id: field.id, title: editedField.title });
         setEditingField({ editing: false, fieldId: "" });
     }
+
+    const getCardsWithFilter = () => {
+        // filter: field.filterBy
+        if (field.filterBy) {
+            if (field.filterBy == "index") {
+                const cards = field.cards.sort((a, b) => a.index - b.index);
+                return cards
+            }
+        } else {
+            return field.cards
+        }
+    };
 
     return (<div className={styles.field}>
         <div className={styles.header}>
@@ -81,10 +93,11 @@ const Field = ({ isOwner, field, onEditCard, onDeleteField, onEditField, onDelet
             </div>}
         </div>
         <div className={styles.cardContainer}>
-            {field.cards && field.cards.map((card, index) => {
+            {field.cards && getCardsWithFilter()?.map((card, index) => {
                 return <Card
                     key={card.id}
                     card={card}
+                    fieldId={field.id}
                     isOwner={isOwner}
                     cardMore={cardMore}
                     onMoreClick={() => onMore({ cardId: card.id, fieldId: field.id })}
@@ -102,6 +115,15 @@ const Field = ({ isOwner, field, onEditCard, onDeleteField, onEditField, onDelet
                         setCardEditing({ ...cardEditing, editing: false, id: "" });
                         setCardMore({ ...cardMore, visible: false, cardId: "" });
                         onEditCard({ title, desc, color, cardId: card.id, fieldId: field.id });
+                    }}
+                    onCardUp={({ cardId }) => {
+                        onCardUp({ cardId, fieldId: field.id });
+                    }}
+                    onCardDown={({ cardId }) => {
+                        onCardDown({ cardId, fieldId: field.id });
+                    }}
+                    onCardDrop={({ cardId, toCardId, fieldId, toFieldId }) => {
+                        onCardDrop({ cardId, toCardId, fieldId, toFieldId });
                     }}
                 />
             })}

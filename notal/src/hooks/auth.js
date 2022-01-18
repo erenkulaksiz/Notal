@@ -108,30 +108,28 @@ export function AuthProvider(props) {
             return res;
         },
         field: {
-            addField: async ({ id, title }) => {
-                const res = AuthService.addField({ id, title });
-                return res;
+            addField: async ({ id, title, filterBy }) => {
+                // id: workspaceId
+                return await AuthService.addField({ id, title, filterBy });
             },
             removeField: async ({ id, workspaceId }) => {
-                const res = AuthService.removeField({ id, workspaceId });
-                return res;
+                return await AuthService.removeField({ id, workspaceId });
             },
             editField: async ({ id, workspaceId, title }) => {
-                const res = AuthService.editField({ id, title, workspaceId });
-                return res;
+                return await AuthService.editField({ id, title, workspaceId });
             },
             editCard: async ({ id, workspaceId, fieldId, title, desc, color }) => {
-                const res = AuthService.editCard({ id, workspaceId, fieldId, title, desc, color });
-                return res;
+                return await AuthService.editCard({ id, workspaceId, fieldId, title, desc, color });
             },
             addCard: async ({ id, workspaceId, title, desc, color }) => {
                 // id as field id
-                const res = AuthService.addCard({ id, workspaceId, title, desc, color });
-                return res;
+                return await AuthService.addCard({ id, workspaceId, title, desc, color });
             },
             removeCard: async ({ id, workspaceId, fieldId }) => {
-                const res = AuthService.removeCard({ id, workspaceId, fieldId });
-                return res;
+                return await AuthService.removeCard({ id, workspaceId, fieldId });
+            },
+            cardSwap: async ({ cardId, fieldId, swapType, workspaceId, toFieldId, toCardId }) => {
+                return await AuthService.cardSwap({ cardId, fieldId, swapType, workspaceId, toFieldId, toCardId });
             }
         }
     }
