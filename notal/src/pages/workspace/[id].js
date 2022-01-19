@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useDragLayer } from 'react-dnd';
+import { DragDropContext } from 'react-beautiful-dnd';
 
 import styles from '../../../styles/App.module.scss';
 import useAuth from '../../hooks/auth';
@@ -57,35 +57,6 @@ const Workspace = (props) => {
             _setWorkspace(props.workspace?.data);
         }
     }, [props.workspace]);
-
-    const DragLayer = () => {
-        const { isDragging, currentOffset, item } = useDragLayer(
-            (monitor) => {
-                return {
-                    isDragging: monitor.isDragging(),
-                    currentOffset: monitor.getSourceClientOffset(),
-                    item: monitor.getItem()
-                };
-            }
-        );
-        return isDragging && currentOffset
-            ? <Card
-                card={item.card}
-                isOwner={isOwner}
-                cardMore={cardMore}
-                style={{
-                    transform: `translate(${currentOffset.x - 320}px, ${currentOffset.y - 20}px)`,
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    pointerEvents: 'none',
-                    zIndex: 999,
-
-                    width: 340,
-                }}
-            />
-            : null;
-    }
 
     const handle = {
         finishEditing: ({ title, desc }) => {
@@ -226,14 +197,14 @@ const Workspace = (props) => {
                     if (toFieldId != fieldId) { // #TODO: rewrite here
 
 
-                        const _toCard = toCard;
+                        //const _toCard = toCard;
 
-                        newFields[fieldIndex].cards[cardIndexArr] = { ..._toCard, index: card.index };
-                        newFields[toFieldIndex].cards[toCardIndex] = { ...card, index: _toCard.index };;
+                        //newFields[fieldIndex].cards[cardIndexArr] = { ..._toCard, index: card.index };
+                        //newFields[toFieldIndex].cards[toCardIndex] = { ...card, index: _toCard.index };;
 
 
-                        const newWorkspace = { ..._workspace, fields: newFields };
-                        _setWorkspace(newWorkspace);
+                        //const newWorkspace = { ..._workspace, fields: newFields };
+                        //_setWorkspace(newWorkspace);
 
                         //console.log("newWorkspace: ", newWorkspace);
                     } else {
@@ -252,6 +223,10 @@ const Workspace = (props) => {
     }
 
     const isOwner = (props.workspace?.success == true ? _workspace.owner == auth.authUser?.uid : false);
+
+    const onDragEnd = result => {
+        console.log("onDragEnd: ", result);
+    }
 
     if (loadingWorkspace) {
         return <div className={styles.container} data-theme={theme.UITheme}>
@@ -304,45 +279,50 @@ const Workspace = (props) => {
                 />
                 <div className={styles.wrapper}>
                     <div className={styles.fields}>
-                        {_workspace.fields.length == 0 ? <div>no fields to list. press + icon on top nav bar</div> :
-                            _workspace.fields.map(el => {
-                                return <Field
-                                    isOwner={isOwner}
-                                    key={el.id}
-                                    field={el}
-                                    onEditField={({ id, title }) => {
-                                        handle.editField({ id, title });
-                                    }}
-                                    onDeleteField={({ id }) => {
-                                        handle.deleteField({ id });
-                                    }}
-                                    onAddCardToField={({ fieldId, title, desc, color }) => {
-                                        handle.addCardToField({ fieldId, title, desc, color });
-                                    }}
-                                    onDeleteCard={({ id, fieldId }) => {
-                                        handle.deleteCard({ id, fieldId });
-                                    }}
-                                    onEditCard={({ title, desc, color, cardId, fieldId }) => {
-                                        handle.editCard({ title, desc, color, id: cardId, fieldId });
-                                    }}
-                                    cardMore={cardMore}
-                                    setCardMore={setCardMore}
-                                    onMore={({ cardId, fieldId }) => {
-                                        setCardMore({ ...cardMore, visible: (cardMore.cardId == cardId ? !cardMore.visible : true), cardId })
-                                    }}
-                                    onCardUp={({ cardId, fieldId }) => {
-                                        handle.cardSwap({ cardId, fieldId, swapType: "up" });
-                                    }}
-                                    onCardDown={({ cardId, fieldId }) => {
-                                        handle.cardSwap({ cardId, fieldId, swapType: "down" });
-                                    }}
-                                    onCardDrop={({ cardId, toCardId, fieldId, toFieldId }) => {
-                                        console.log("cardId: ", cardId, " toCardId: ", toCardId, " fieldId:", fieldId, " toFieldId:", toFieldId);
-                                        handle.cardSwap({ cardId, toCardId, fieldId, toFieldId, swapType: "dnd" })
-                                    }}
-                                />
-                            })}
-                        <DragLayer />
+                        <DragDropContext onDragEnd={onDragEnd}>
+                            {_workspace.fields.length == 0 ? <div>no fields to list. press + icon on top nav bar</div> :
+                                _workspace.fields.map(el => {
+                                    return <Field
+                                        style={{ overflow: "hidden" }}
+                                        isOwner={isOwner}
+                                        key={el.id}
+                                        field={el}
+                                        cardEditing={cardEditing}
+                                        setCardEditing={setCardEditing}
+                                        onEditField={({ id, title }) => {
+                                            handle.editField({ id, title });
+                                        }}
+                                        onDeleteField={({ id }) => {
+                                            handle.deleteField({ id });
+                                        }}
+                                        onAddCardToField={({ fieldId, title, desc, color }) => {
+                                            handle.addCardToField({ fieldId, title, desc, color });
+                                        }}
+                                        onDeleteCard={({ id, fieldId }) => {
+                                            handle.deleteCard({ id, fieldId });
+                                        }}
+                                        onEditCard={({ title, desc, color, cardId, fieldId }) => {
+                                            handle.editCard({ title, desc, color, id: cardId, fieldId });
+                                        }}
+                                        cardMore={cardMore}
+                                        setCardMore={setCardMore}
+                                        onMore={({ cardId, fieldId }) => {
+                                            setCardMore({ ...cardMore, visible: (cardMore.cardId == cardId ? !cardMore.visible : true), cardId })
+                                        }}
+                                        onCardUp={({ cardId, fieldId }) => {
+                                            handle.cardSwap({ cardId, fieldId, swapType: "up" });
+                                        }}
+                                        onCardDown={({ cardId, fieldId }) => {
+                                            handle.cardSwap({ cardId, fieldId, swapType: "down" });
+                                        }}
+                                        onCardDrop={({ cardId, toCardId, fieldId, toFieldId }) => {
+                                            console.log("cardId: ", cardId, " toCardId: ", toCardId, " fieldId:", fieldId, " toFieldId:", toFieldId);
+                                            handle.cardSwap({ cardId, toCardId, fieldId, toFieldId, swapType: "dnd" })
+                                        }}
+                                    />
+                                })}
+                        </DragDropContext>
+
                     </div>
                 </div>
             </> : <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", width: "100%", height: "100%" }}>

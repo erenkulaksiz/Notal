@@ -1,6 +1,8 @@
+import { useState } from 'react';
+import { Droppable } from 'react-beautiful-dnd';
+
 import styles from './Field.module.scss';
 
-import { useState } from 'react';
 
 import CheckIcon from '../../../public/icons/check.svg';
 import EditIcon from '../../../public/icons/edit.svg';
@@ -13,29 +15,14 @@ import Input from '../../components/input';
 import Card from '../../components/card';
 import AddCard from '../../components/addCard';
 import Button from '../button';
-import { useDrop } from 'react-dnd';
 
-const Field = ({ isOwner, field, onEditCard, onDeleteField, onEditField, onDeleteCard, onAddCardToField, onMore, cardMore, setCardMore, onCardUp, onCardDown, onCardDrop }) => {
-
-    /*const [{ isOver }, drop] = useDrop(() => ({
-        accept: 'CARD',
-        drop: (item) => {
-            console.log("dragged to field, item: ", item);
-            //onCardDrop({ toCardId: card.id, cardId: item.card.id, fieldId: item.fieldId, toFieldId: fieldId });
-        },
-        collect: (monitor) => ({
-            isOver: !!monitor.isOver(),
-        })
-    }))
-    */
+const Field = ({ isOwner, field, onEditCard, onDeleteField, onEditField, onDeleteCard, setCardEditing, cardEditing, onAddCardToField, onMore, cardMore, setCardMore, onCardUp, onCardDown, onCardDrop, style }) => {
 
     const [addingCard, setAddingCard] = useState({ fieldId: "", adding: false });
 
     const [editedField, setEditedField] = useState({ title: "" });
     const [editingField, setEditingField] = useState({ editing: false, fieldId: "" });
     const [deleteField, setDeleteField] = useState({ fieldId: "", deleting: false });
-
-    const [cardEditing, setCardEditing] = useState({ editing: false, id: "", title: "", desc: "", color: "red" });
 
     const editField = () => {
         onEditField({ id: field.id, title: editedField.title });
@@ -54,7 +41,7 @@ const Field = ({ isOwner, field, onEditCard, onDeleteField, onEditField, onDelet
         }
     };
 
-    return (<div className={styles.field} /*style={{ outlineColor: "green", outlineStyle: "dashed", outlineWidth: isOver ? 2 : 0, outlineOffset: 2 }} ref={drop}*/>
+    return (<div className={styles.field} style={{ ...style }} /*style={{ outlineColor: "green", outlineStyle: "dashed", outlineWidth: isOver ? 2 : 0, outlineOffset: 2 }} ref={drop}*/>
         <div className={styles.header}>
             {(editingField.editing && editingField.fieldId == field.id) ? <div>
                 <Input
@@ -106,40 +93,48 @@ const Field = ({ isOwner, field, onEditCard, onDeleteField, onEditField, onDelet
             </div>}
         </div>
         <div className={styles.cardContainer}>
-            {field.cards && getCardsWithFilter()?.map((card, index) => {
-                return <Card
-                    key={card.id}
-                    card={card}
-                    fieldId={field.id}
-                    isOwner={isOwner}
-                    cardMore={cardMore}
-                    onMoreClick={() => onMore({ cardId: card.id, fieldId: field.id })}
-                    onDeleteClick={() => {
-                        setCardMore({ ...cardMore, visible: false, cardId: "" });
-                        onDeleteCard({ id: card.id, fieldId: field.id });
-                    }}
-                    onEditClick={() => setCardEditing({ ...cardEditing, editing: true, id: card.id })}
-                    editing={cardEditing.editing && (cardEditing.id == card.id)}
-                    onEditCancel={() => {
-                        setCardEditing({ ...cardEditing, editing: false, id: "" });
-                        setCardMore({ ...cardMore, visible: false, cardId: "" });
-                    }}
-                    onEditSubmit={({ title, desc, color }) => {
-                        setCardEditing({ ...cardEditing, editing: false, id: "" });
-                        setCardMore({ ...cardMore, visible: false, cardId: "" });
-                        onEditCard({ title, desc, color, cardId: card.id, fieldId: field.id });
-                    }}
-                    onCardUp={({ cardId }) => {
-                        onCardUp({ cardId, fieldId: field.id });
-                    }}
-                    onCardDown={({ cardId }) => {
-                        onCardDown({ cardId, fieldId: field.id });
-                    }}
-                    onCardDrop={({ cardId, toCardId, fieldId, toFieldId }) => {
-                        onCardDrop({ cardId, toCardId, fieldId, toFieldId });
-                    }}
-                />
-            })}
+            <Droppable droppableId={field.id}>
+                {(provided) => (<>
+                    {getCardsWithFilter().map((card, index) => <div
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                        key={card.id}>
+                        <Card
+                            card={card}
+                            fieldId={field.id}
+                            isOwner={isOwner}
+                            cardMore={cardMore}
+                            onMoreClick={() => onMore({ cardId: card.id, fieldId: field.id })}
+                            onDeleteClick={() => {
+                                setCardMore({ ...cardMore, visible: false, cardId: "" });
+                                onDeleteCard({ id: card.id, fieldId: field.id });
+                            }}
+                            onEditClick={() => setCardEditing({ ...cardEditing, editing: true, id: card.id })}
+                            editing={cardEditing.editing && (cardEditing.id == card.id)}
+                            onEditCancel={() => {
+                                setCardEditing({ ...cardEditing, editing: false, id: "" });
+                                setCardMore({ ...cardMore, visible: false, cardId: "" });
+                            }}
+                            onEditSubmit={({ title, desc, color }) => {
+                                setCardEditing({ ...cardEditing, editing: false, id: "" });
+                                setCardMore({ ...cardMore, visible: false, cardId: "" });
+                                onEditCard({ title, desc, color, cardId: card.id, fieldId: field.id });
+                            }}
+                            onCardUp={({ cardId }) => {
+                                onCardUp({ cardId, fieldId: field.id });
+                            }}
+                            onCardDown={({ cardId }) => {
+                                onCardDown({ cardId, fieldId: field.id });
+                            }}
+                            onCardDrop={({ cardId, toCardId, fieldId, toFieldId }) => {
+                                onCardDrop({ cardId, toCardId, fieldId, toFieldId });
+                            }}
+                            index={index}
+                        />
+                    </div>)}
+                    {provided.placeholder}
+                </>)}
+            </Droppable>
         </div>
         <div className={styles.addCardBtn}>
             {(isOwner && addingCard.fieldId != field.id) && <Button
