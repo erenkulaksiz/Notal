@@ -13,8 +13,21 @@ import Input from '../../components/input';
 import Card from '../../components/card';
 import AddCard from '../../components/addCard';
 import Button from '../button';
+import { useDrop } from 'react-dnd';
 
 const Field = ({ isOwner, field, onEditCard, onDeleteField, onEditField, onDeleteCard, onAddCardToField, onMore, cardMore, setCardMore, onCardUp, onCardDown, onCardDrop }) => {
+
+    /*const [{ isOver }, drop] = useDrop(() => ({
+        accept: 'CARD',
+        drop: (item) => {
+            console.log("dragged to field, item: ", item);
+            //onCardDrop({ toCardId: card.id, cardId: item.card.id, fieldId: item.fieldId, toFieldId: fieldId });
+        },
+        collect: (monitor) => ({
+            isOver: !!monitor.isOver(),
+        })
+    }))
+    */
 
     const [addingCard, setAddingCard] = useState({ fieldId: "", adding: false });
 
@@ -41,7 +54,7 @@ const Field = ({ isOwner, field, onEditCard, onDeleteField, onEditField, onDelet
         }
     };
 
-    return (<div className={styles.field}>
+    return (<div className={styles.field} /*style={{ outlineColor: "green", outlineStyle: "dashed", outlineWidth: isOver ? 2 : 0, outlineOffset: 2 }} ref={drop}*/>
         <div className={styles.header}>
             {(editingField.editing && editingField.fieldId == field.id) ? <div>
                 <Input

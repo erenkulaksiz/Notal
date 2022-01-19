@@ -168,6 +168,7 @@ const Profile = (props) => {
                     onClick={() => router.back()}
                     style={{ height: 44, borderRadius: 8, width: "45%" }}
                     icon={<BackIcon height={24} width={24} />}
+                    reversed
                 />
                 <Button
                     text="Home"

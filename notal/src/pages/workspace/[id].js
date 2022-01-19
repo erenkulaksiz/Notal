@@ -190,6 +190,11 @@ const Workspace = (props) => {
                 const card = field.cards[cardIndexArr];
                 const cardIndex = field.cards.findIndex(el => el.index == card.index);
 
+                const toFieldIndex = newFields.findIndex(el => el.id == toFieldId);
+                const toField = newFields[toFieldIndex];
+                const toCardIndex = toField.cards.findIndex(el => el.id == toCardId);
+                const toCard = toField.cards[toCardIndex];
+
                 if (swapType == "up") {
                     if (cardIndex != 0) {
                         // send data if you can go up
@@ -214,12 +219,30 @@ const Workspace = (props) => {
                     }
                 } else if (swapType == "dnd") {
                     // drag drop
-                    const data = await auth.workspace.field.cardSwap({ cardId, fieldId, swapType, workspaceId: _workspace.id, toFieldId, toCardId });
-                    if (data?.error) console.error("error on swap card: ", data.error);
+                    //const data = await auth.workspace.field.cardSwap({ cardId, fieldId, swapType, workspaceId: _workspace.id, toFieldId, toCardId });
+                    // if (data?.error) console.error("error on swap card: ", data.error);
                     //console.log("dnd res: ", data);
-                    if (data.success) {
-                        router.replace(router.asPath);
+
+                    if (toFieldId != fieldId) { // #TODO: rewrite here
+
+
+                        const _toCard = toCard;
+
+                        newFields[fieldIndex].cards[cardIndexArr] = { ..._toCard, index: card.index };
+                        newFields[toFieldIndex].cards[toCardIndex] = { ...card, index: _toCard.index };;
+
+
+                        const newWorkspace = { ..._workspace, fields: newFields };
+                        _setWorkspace(newWorkspace);
+
+                        //console.log("newWorkspace: ", newWorkspace);
+                    } else {
+                        alert("cant drag to same");
                     }
+
+                    /* if (data.success) {
+                         //router.replace(router.asPath);
+                     }*/
                 }
 
             } else {

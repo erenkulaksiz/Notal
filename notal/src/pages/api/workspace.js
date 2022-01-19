@@ -251,6 +251,7 @@ export default async function handler(req, res) {
         cardswap: async () => {
             if (!cardId || !uid || !workspaceId || !fieldId || !swapType) {
                 res.status(400).send({ success: false, error: "invalid-params" });
+                res.end();
                 return;
             }
 
@@ -273,19 +274,24 @@ export default async function handler(req, res) {
                                         await admin.database().ref(`/workspaces/${workspaceId}/fields/${fieldId}/cards/${cardId}`).update({ index: swapToCard.index }, async () => {
                                             console.log("finish!");
                                             res.status(200).send({ success: true });
+                                            res.end();
                                         }).catch(error => {
                                             res.status(400).send({ success: false, error });
+                                            res.end();
                                         });
                                     }).catch(error => {
                                         res.status(400).send({ success: false, error });
+                                        res.end();
                                     });
                                 } else {
                                     console.log("adam ol en üsttekini arttırmaya çalışma");
                                     res.status(200).send({ success: true });
+                                    res.end();
                                 }
                             } else {
                                 console.log("first swap bulamadım");
                                 res.status(200).send({ success: true });
+                                res.end();
                             }
                         });
                     } else if (swapType == "down") {
@@ -298,25 +304,31 @@ export default async function handler(req, res) {
                                         await admin.database().ref(`/workspaces/${workspaceId}/fields/${fieldId}/cards/${cardId}`).update({ index: swapToCard.index }, async () => {
                                             console.log("finish!");
                                             res.status(200).send({ success: true });
+                                            res.end();
                                         }).catch(error => {
                                             res.status(400).send({ success: false, error });
+                                            res.end();
                                         });
                                     }).catch(error => {
                                         res.status(400).send({ success: false, error });
+                                        res.end();
                                     });
                                 } else {
                                     console.log("adam ol aşağı daha inemiyom");
                                     res.status(200).send({ success: true });
+                                    res.end();
                                 }
                             } else {
                                 console.log("first swap bulamadım");
                                 res.status(200).send({ success: true });
+                                res.end();
                             }
                         });
                     } else if (swapType == "dnd") {
 
                         if (!fieldId || !toFieldId || !cardId || !toCardId) {
                             res.status(400).send({ success: false, error: "invalid-params" });
+                            res.end();
                             return;
                         }
 
@@ -338,6 +350,7 @@ export default async function handler(req, res) {
                                                 await admin.database().ref(`/workspaces/${workspaceId}/fields/${fieldId}/cards/${cardId}`).update({ index: _toCard.index }, async () => {
                                                     console.log("done :D!!! ");
                                                     res.status(200).send({ success: true });
+                                                    res.end();
                                                 })
                                             })
                                         }
@@ -357,6 +370,7 @@ export default async function handler(req, res) {
                                                 await admin.database().ref(`/workspaces/${workspaceId}/fields/${fieldId}/cards/${cardId}`).update(toCard, async () => {
                                                     console.log("done :D ");
                                                     res.status(200).send({ success: true });
+                                                    res.end();
                                                 });
                                             });
 
@@ -373,6 +387,8 @@ export default async function handler(req, res) {
                     }
 
                 } else {
+
+                    console.log(fieldId, toFieldId, cardId, toCardId);
                     res.status(400).send({ success: false, error: "cant-find-card-id" });
                 }
             }).catch(error => {
