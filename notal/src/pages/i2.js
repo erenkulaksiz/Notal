@@ -2,15 +2,11 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Button, Spacer, Container, Text, Grid, Card, Link as ALink, Switch, useTheme, Tooltip, Input, Avatar } from '@nextui-org/react';
+import { Button, Spacer, Container, Text, Grid, Card, Link as ALink, useTheme, Loading, Row } from '@nextui-org/react';
 import cookie from 'js-cookie';
-import { useTheme as useNextTheme } from 'next-themes';
-import styled from 'styled-components'
 
-import styles from '../../styles/App.module.scss';
 import { server } from '../config';
 
-import UserIcon from '../../public/icons/user.svg';
 import DashboardIcon from '../../public/icons/dashboard.svg';
 import StarOutlineIcon from '../../public/icons/star_outline.svg';
 import StarFilledIcon from '../../public/icons/star_filled.svg';
@@ -24,123 +20,287 @@ import DarkIcon from '../../public/icons/dark.svg';
 import LightIcon from '../../public/icons/light.svg';
 import LogoutIcon from '../../public/icons/logout.svg';
 
+import AddWorkspaceModal from '../components/addWorkspaceModal';
+import DeleteWorkspaceModal from '../components/deleteWorkspaceModal';
+import Navbar from '../components/navbar';
+
 import { withAuth, withCheckUser } from '../hooks/route';
 import useAuth from '../hooks/auth';
 import { CheckToken } from '../utils';
 
-const Details = styled.details`
-  position: relative;
-  display: inline-block;
-  background-color: transparent;
-  &[open] > summary:before {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 1;
-    display: block;
-    cursor: default;
-    content: " ";
-    background: transparent;
-  }
-`
-
 const Home = (props) => {
-  const auth = useAuth();
-  const router = useRouter();
-  const { setTheme } = useNextTheme();
-  const { isDark } = useTheme();
+    const auth = useAuth();
+    const router = useRouter();
+    const { isDark } = useTheme();
 
-  return (<Container xl>
-    <Head>
-      <title>Home · Notal</title>
-      <meta name="description" content="Notal. The next generation taking notes and sharing todo snippets platform." />
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
-    <div style={{ borderRadius: 0, padding: 12, paddingTop: 18 }}>
-      <Grid.Container justify="center">
-        <Grid xs={4} alignItems='center'></Grid>
-        <Grid xs={4} justify='center' alignItems='center'>
-          <img
-            src={isDark ? "./icon_white.png" : "./icon_galactic.png"}
-            alt="Michael Scott"
-            style={{ maxHeight: "100%", width: 160, }}
-          />
-        </Grid>
-        <Grid xs={4} justify='flex-end' alignItems='center'>
-          <Switch
-            color="primary"
-            initialChecked={isDark}
-            onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
-            iconOn={<LightIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-            iconOff={<DarkIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-            css={{ mr: 12 }}
-          />
-          <Details style={{
-            position: "relative",
-            display: "inline-block",
-            backgroundColor: "transparent"
-          }}>
-            <summary style={{
-              userSelect: "none",
-              "&::-webkit-details-market": {
-                display: "none",
-              }
-            }}>
-              <Avatar size="md" src="https://firebasestorage.googleapis.com/v0/b/notal-1df19.appspot.com/o/avatars%2FHLzWAqIj7MMqbOoUV7uFShWdmvN2?alt=media&token=26527a55-5d8f-4b8a-9808-f56ad2dc37ff" />
-            </summary>
-            <Card css={{ zIndex: 2, position: "absolute", right: 0, top: "100%", width: "auto" }}>
-              <Text h4>Eren Kulaksiz</Text>
-              <Text span>erenkulaksz@gmail.com</Text>
-              <Button
-                icon={<UserIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-                onClick={() => { }}
-                css={{ mt: 12 }}
-                size="md"
-                color="gradient"
-              >
-                Profile
-              </Button>
-              <Button
-                icon={<LogoutIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-                onClick={() => { }}
-                css={{ mt: 8, }}
-                size="md"
-                color="gradient"
-              >
-                Sign Out
-              </Button>
-            </Card>
-          </Details>
-        </Grid>
-      </Grid.Container>
-    </div>
-    <Grid.Container gap={2} justify="center">
-      <Grid xs={12} sm={2} md={2} css={{ fd: "column" }}>
-        <Button
-          icon={<DashboardIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-          onClick={() => { }}
-          css={{ minWidth: "100%" }}
-        >
-          Workspaces
-        </Button>
-        <Spacer y={1} />
-        <Button
-          icon={<StarFilledIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-          onClick={() => { }}
-          css={{ minWidth: "100%" }}
-          light
-        >
-          Favorites
-        </Button>
-      </Grid>
-      <Grid xs={12} sm={10} md={10}>
-        <Text h1>Asdas</Text>
-      </Grid>
-    </Grid.Container>
-  </Container>
-  )
+    // View/Filter
+    const [viewing, setViewing] = useState("workspaces");
+    const [filter, setFilter] = useState(null);
+
+    // Delete Modal
+    const [deleteModal, setDeleteModal] = useState({ workspace: -1, visible: false });
+
+    // Add Workspace Modal
+    const [newWorkspaceVisible, setNewWorkspaceVisible] = useState(false);
+
+    const [_workspaces, _setWorkspaces] = useState([]);
+    const [loadingWorkspaces, setLoadingWorkspaces] = useState(true);
+
+    useEffect(() => {
+        if (viewing == "favorites") {
+            setFilter("favorites");
+        } else {
+            setFilter(null);
+        }
+    }, [viewing]);
+
+    useEffect(() => {
+        if (viewing == "favorites") {
+            setFilter("favorites");
+        } else {
+            setFilter(null);
+        }
+    }, [viewing]);
+
+    useEffect(() => {
+        console.log("props indexjs: ", props);
+
+        (async () => {
+            const token = await auth.users.getIdToken();
+            const res = await CheckToken({ token, props });
+
+            if (props.validate?.error == "no-token" || res || props.validate?.error == "validation-error" || props.validate?.error == "auth/id-token-expired") {
+                router.replace(router.asPath);
+            }
+
+            if (props.validate.success && !props.validate?.data?.paac) {
+                router.replace("/paac");
+                return;
+            }
+
+            if (props.validate.success && !props.validate.data?.username) { // if theres no username is present
+                setRegisterAlertVisible(true);
+                console.warn("register alert open!!!");
+            } else {
+                console.warn("register alert close");
+            }
+        })();
+    }, []);
+
+    useEffect(() => {
+        if (props.workspaces?.success == true) {
+            _setWorkspaces(props.workspaces.data);
+            setLoadingWorkspaces(false);
+        }
+    }, [props.workspaces]);
+
+    const workspace = {
+        create: async ({ title, desc, starred }) => {
+
+            const data = await auth.workspace.createWorkspace({ title, desc, starred });
+
+            console.log("data: ", data);
+
+            if (data?.success) {
+                router.replace(router.asPath);
+            }
+        },
+        delete: async ({ id }) => {
+            setDeleteModal({ visible: false, workspace: -1 }); // set visiblity to false and id to -1
+
+            const data = await auth.workspace.deleteWorkspace({ id });
+
+            if (data.success) {
+                router.replace(router.asPath);
+            }
+        },
+        star: ({ id }) => {
+            const data = auth.workspace.starWorkspace({ id });
+            if (data?.error) console.error("error on star workspace: ", data.error);
+            //#TODO: make this work immideatly
+        },
+        closeModal: () => {
+            setNewWorkspaceVisible(false);
+            setNewWorkspaceErr({ ...newWorkspace, desc: false, title: false });
+            setNewWorkspace({ ...newWorkspace, title: "", desc: "", starred: "" });
+        },
+        getWorkspacesWithFilter: (workspaces) => {
+            if (filter == "favorites") {
+                if (workspaces) return workspaces.filter(el => el.starred == true);
+                else return []
+            } else {
+                // no filter
+                if (workspaces) return workspaces;
+                else return []
+            }
+        }
+    }
+
+    return (<Container xl css={{ position: "relative" }}>
+        <Head>
+            <title>Home · Notal</title>
+            <meta name="description" content="Notal. The next generation taking notes and sharing todo snippets platform." />
+            <link rel="icon" href="/favicon.ico" />
+        </Head>
+
+        <Navbar
+            isDark={isDark}
+            user={props.validate?.data}
+        />
+
+        <Grid.Container gap={2} justify="center">
+            <Grid xs={12} sm={3} md={3} css={{ fd: "column" }}>
+                <Button
+                    icon={<DashboardIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+                    onClick={() => setViewing("workspaces")}
+                    css={{ minWidth: "100%" }}
+                    bordered={viewing != "workspaces"}
+                >
+                    Workspaces
+                </Button>
+                <Spacer y={1} />
+                <Button
+                    icon={<StarFilledIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+                    onClick={() => setViewing("favorites")}
+                    css={{ minWidth: "100%" }}
+                    bordered={viewing != "favorites"}
+                >
+                    Favorites
+                </Button>
+            </Grid>
+            <Grid xs={12} sm={9} md={9}>
+                <Card css={{ jc: "center", minHeight: 80 }}>
+                    {/*<Grid.Container>
+                        <Grid xs alignItems='center' css={{ fd: "row" }}>
+                        <UserIcon height={24} width={24} style={{ fill: "currentColor", }} />
+                        <Text span>Your Workspaces</Text>
+                        </Grid>
+                    </Grid.Container>*/}
+                    <Grid.Container gap={1}>
+                        {/*<Grid xs={12} sm={6} md={3}>
+                                <Button auto css={{ width: "100%" }} onClick={() => setNewWorkspaceVisible(true)}>
+                                    <AddIcon height={24} width={24} style={{ fill: "currentColor" }} />
+                                    Add Workspace
+                                </Button>
+                                </Grid>
+                                <Grid xs={12} sm={6} md={3}>
+                                    <Button auto css={{ width: "100%" }} onClick={() => setDeleteModal({ ...deleteModal, visible: false })}>
+                                        <QuestionIcon height={24} width={24} style={{ fill: "currentColor" }} />
+                                        About
+                                    </Button>
+                        </Grid>*/}
+                    </Grid.Container>
+                </Card>
+            </Grid>
+            <Grid xs={12}>
+                <Card css={{ jc: "center" }}>
+                    {loadingWorkspaces ? <Card css={{ p: 12, dflex: "center" }}>
+                        <Loading />
+                        <Text h3 css={{ mt: 24 }}>Loading Workspaces...</Text>
+                    </Card> : <Grid.Container gap={1}>
+                        {workspace.getWorkspacesWithFilter(_workspaces).length > 0 ? workspace.getWorkspacesWithFilter(_workspaces).map((element, index) =>
+                            <Grid xs={12} sm={3} lg={2} key={index}>
+                                <Card color={'gradient'} css={{ height: 140, justifyContent: "flex-end" }}>
+                                    <Grid.Container>
+                                        <Grid xs={6} css={{ fd: "column" }} justify='flex-end'>
+                                            <Text h3 color={"white"}>{element.title}</Text>
+                                            <Text h6 color={"white"}>{element.desc}</Text>
+                                        </Grid>
+                                        <Grid xs={6} justify='flex-end' alignItems='flex-end' css={{ fd: "column" }}>
+                                            <Button
+                                                icon={
+                                                    element.starred == true ?
+                                                        <StarFilledIcon height={24} width={24} style={{ fill: "white" }} /> :
+                                                        <StarOutlineIcon height={24} width={24} style={{ fill: "white" }} />
+                                                }
+                                                onClick={() => workspace.star({ id: element.id })}
+                                                css={{ minWidth: "100%", justifyContent: "flex-end" }}
+                                                light
+                                            />
+                                            <Button
+                                                icon={<DeleteIcon height={24} width={24} style={{ fill: "white" }} />}
+                                                onClick={() => setDeleteModal({ ...deleteModal, visible: true, workspace: element.id })}
+                                                css={{ minWidth: "100%", justifyContent: "flex-end" }}
+                                                light
+                                            />
+                                        </Grid>
+                                    </Grid.Container>
+                                </Card>
+                            </Grid>) : <Text>empty</Text>}
+
+                        <Grid xs={12} sm={3} lg={2}>
+                            <Card bordered
+                                css={{ borderColor: "$primary", dflex: "center", color: "$primary", height: 140 }}
+                                clickable
+                                onClick={() => setNewWorkspaceVisible(true)}
+                            >
+                                <AddIcon height={24} width={24} style={{ fill: "currentColor" }} />
+                                Add Workspace
+                            </Card>
+                        </Grid>
+
+                    </Grid.Container>}
+                </Card>
+            </Grid>
+        </Grid.Container>
+        <DeleteWorkspaceModal
+            visible={deleteModal.visible}
+            setDeleteModal={setDeleteModal}
+            deleteModal={deleteModal}
+            onDelete={() => workspace.delete({ id: deleteModal.workspace })}
+        />
+        <AddWorkspaceModal
+            setNewWorkspaceVisible={setNewWorkspaceVisible}
+            newWorkspaceVisible={newWorkspaceVisible}
+            onAdd={({ title, desc, starred }) => workspace.create({ title, desc, starred })}
+        />
+    </Container>
+    )
 }
 
 export default withCheckUser(withAuth(Home));
+
+export async function getServerSideProps(ctx) {
+    const { req, res, query } = ctx;
+    let validate = {};
+    let workspaces = {};
+
+    if (req) {
+        const authCookie = req.cookies.auth;
+        //const emailCookie = req.cookies.email;
+
+        if (authCookie) {
+            const dataValidate = await fetch(`${server}/api/validate`, {
+                'Content-Type': 'application/json',
+                method: "POST",
+                body: JSON.stringify({ token: authCookie }),
+            }).then(response => response.json()).catch(error => {
+                return { success: false, error: { code: "validation-error", errorMessage: error } }
+            });
+
+            if (dataValidate.success) {
+                validate = { ...dataValidate };
+
+                const dataWorkspaces = await fetch(`${server}/api/workspace`, {
+                    'Content-Type': 'application/json',
+                    method: "POST",
+                    body: JSON.stringify({ uid: dataValidate.uid, action: "GET_WORKSPACES" }),
+                }).then(response => response.json());
+
+                if (dataWorkspaces.success) {
+                    if (dataWorkspaces?.data) {
+                        const getWorkspaces = Object.keys(dataWorkspaces.data).map((el, index) => { return { ...dataWorkspaces.data[el], id: Object.keys(dataWorkspaces.data)[index] } });
+                        workspaces = { data: getWorkspaces, success: true };
+                    } else {
+                        workspaces = { success: true }
+                    }
+                }
+            } else {
+                validate = { error: dataValidate?.error?.code }
+            }
+        } else {
+            validate = { error: "no-token" }
+        }
+    }
+    return { props: { validate, workspaces } }
+}

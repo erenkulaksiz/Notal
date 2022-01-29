@@ -29,9 +29,9 @@ const AuthService = {
                 get(child(dbRef, `users/${user.uid}`)).then((snapshot) => {
                     if (!snapshot.exists()) {
                         set(ref(db, `users/${user.uid}`), {
-                            fullname: user?.displayName,
+                            fullname: user?.displayName || "",
                             avatar: user?.photoURL,
-                            username: null,
+                            username: user?.uid,
                             email: user?.email,
                             createdAt: Date.now(),
                             updatedAt: Date.now(),
@@ -53,7 +53,9 @@ const AuthService = {
         const auth = getAuth();
         const provider = new GithubAuthProvider();
 
-        return signInWithRedirect(auth, provider)
+        console.log("login with github")
+
+        return signInWithPopup(auth, provider)
             .then((result) => {
                 const credential = GithubAuthProvider.credentialFromResult(result);
                 const token = credential.accessToken;
@@ -64,9 +66,9 @@ const AuthService = {
                 get(child(dbRef, `users/${user.uid}`)).then((snapshot) => {
                     if (!snapshot.exists()) {
                         set(ref(db, `users/${user.uid}`), {
-                            fullname: user?.displayName,
+                            fullname: user?.displayName || "",
                             avatar: user?.photoURL,
-                            username: null,
+                            username: user?.uid,
                             email: user?.email,
                             createdAt: Date.now(),
                             updatedAt: Date.now(),
@@ -80,6 +82,8 @@ const AuthService = {
                 const errorMessage = error.message;
                 const email = error.email;
                 const credential = GithubAuthProvider.credentialFromError(error);
+
+                console.log("github login error");
 
                 return { error: { errorMessage, errorCode } }
             });

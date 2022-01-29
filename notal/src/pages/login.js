@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 //import styles from '../../styles/App.module.scss';
 import { useRouter } from 'next/router';
-import { Button, Spacer, Container, Text, Grid, Card, Link as ALink, Switch, useTheme, Tooltip, Input } from '@nextui-org/react';
+import { Button, Spacer, Container, Text, Grid, Card, Link as ALink, Switch, useTheme, Tooltip, Input, Row } from '@nextui-org/react';
 import { useTheme as useNextTheme } from 'next-themes';
 
 import useAuth from '../hooks/auth';
@@ -20,7 +20,7 @@ import BackIcon from '../../public/icons/back.svg';
 import GoogleIcon from '../../public/icons/google.svg';
 import GithubIcon from '../../public/icons/github.svg';
 import RefreshIcon from '../../public/icons/refresh.svg';
-import CheckIcon from '../../public/icons/check.svg';
+//import CheckIcon from '../../public/icons/check.svg';
 import QuestionIcon from '../../public/icons/question.svg';
 import DarkIcon from '../../public/icons/dark.svg';
 import LightIcon from '../../public/icons/light.svg';
@@ -61,7 +61,7 @@ const Login = (props) => {
         console.log("github login errors: ", login?.authError);
 
         if (login?.authError?.errorCode == "auth/account-exists-with-different-credential") {
-            setOauthError("This account exist with different credential. Please try another method.");
+            setOauthError(`This account exist with different credential. Please try another method.`);
         }
     }
 
@@ -220,6 +220,9 @@ const Login = (props) => {
                 </Button>
             </Tooltip>
         </Grid>
+        <Row>
+            {oauthError != false && <Text color={"$error"}>{oauthError}</Text>}
+        </Row>
         <Switch
             color="primary"
             initialChecked={isDark}
@@ -235,6 +238,11 @@ const Login = (props) => {
             <meta name="description" content="Login to Notal, the greatest note app" />
             <link rel="icon" href="/favicon.ico" />
         </Head>
+        <Card css={{ dflex: "center" }}>
+            <Text h2>Warning!</Text>
+            <Text h4 css={{ textAlign: "center" }}>This project is in private alpha. Please do not try to login with Google or GitHub if you are not authorized.</Text>
+        </Card>
+        <Spacer y={1} />
         <Card css={{ minWidth: 300 }}>
             <Grid.Container gap={2} justify="center">
                 <Grid xs={12} sm={6} alignItems="center" justify="center">

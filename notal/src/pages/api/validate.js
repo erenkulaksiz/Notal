@@ -26,9 +26,10 @@ export default async function handler(req, res) {
                 if (decodedToken.firebase.sign_in_provider != "password") {
                     console.log("trying to create user (not password login)");
                     return await admin.database().ref(`/users/${decodedToken.uid}`).update({
-                        fullname: data.name || "",
-                        avatar: data.picture || "https://imgyukle.com/f/2022/01/03/oxgaeS.jpg",
-                        email: data.email,
+                        fullname: decodedToken.name || "",
+                        avatar: decodedToken.picture || "https://imgyukle.com/f/2022/01/03/oxgaeS.jpg",
+                        email: decodedToken.email,
+                        username: decodedToken.uid,
                         createdAt: Date.now(),
                         updatedAt: Date.now(),
                     }, async () => {
