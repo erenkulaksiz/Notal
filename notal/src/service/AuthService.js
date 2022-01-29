@@ -1,4 +1,4 @@
-import { getAuth, signInWithPopup, signInWithEmailAndPassword, GoogleAuthProvider, sendPasswordResetEmail, createUserWithEmailAndPassword, GithubAuthProvider } from "firebase/auth";
+import { getAuth, signInWithPopup, signInWithEmailAndPassword, GoogleAuthProvider, sendPasswordResetEmail, createUserWithEmailAndPassword, GithubAuthProvider, signInWithRedirect } from "firebase/auth";
 import { get, getDatabase, ref, set, child, orderByChild, query, limitToFirst, equalTo, orderByKey, startAt, update, push } from "firebase/database";
 import { getStorage, ref as stRef, uploadBytes, getDownloadURL } from "firebase/storage";
 
@@ -20,7 +20,7 @@ const AuthService = {
         const provider = new GoogleAuthProvider();
         const dbRef = ref(getDatabase());
         const db = getDatabase();
-        return signInWithPopup(auth, provider)
+        return signInWithRedirect(auth, provider)
             .then(async (result) => {
                 const credential = GoogleAuthProvider.credentialFromResult(result);
                 const token = credential.accessToken;
@@ -53,7 +53,7 @@ const AuthService = {
         const auth = getAuth();
         const provider = new GithubAuthProvider();
 
-        return signInWithPopup(auth, provider)
+        return signInWithRedirect(auth, provider)
             .then((result) => {
                 const credential = GithubAuthProvider.credentialFromResult(result);
                 const token = credential.accessToken;

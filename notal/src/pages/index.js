@@ -26,12 +26,10 @@ import Alert from '../components/alert';
 import { withAuth, withCheckUser } from '../hooks/route';
 import useAuth from '../hooks/auth';
 import { CheckToken } from '../utils';
-import useTheme from '../hooks/theme';
 
 const Home = (props) => {
   const auth = useAuth();
   const router = useRouter();
-  const theme = useTheme();
 
   const [menuToggle, setMenuToggle] = useState(false);
 
@@ -189,7 +187,7 @@ const Home = (props) => {
     }
   }
 
-  if (registerAlertVisible) return <div className={styles.registerAlertContainer} data-theme={theme.UITheme}>
+  if (registerAlertVisible) return <div className={styles.registerAlertContainer}>
     <Head>
       <title>Complete Register · Notal</title>
       <meta name="description" content="Login to Notal, the greatest note app" />
@@ -253,7 +251,7 @@ const Home = (props) => {
     <span className={styles.overlay} />
   </div>
 
-  return (<div className={styles.container} data-theme={theme.UITheme}>
+  return (<div className={styles.container} >
     <Head>
       <title>Home · Notal</title>
       <meta name="description" content="Notal. The next generation taking notes and sharing todo snippets platform." />
@@ -269,8 +267,8 @@ const Home = (props) => {
       onProfile={() => router.push(`/profile/${props?.validate?.data?.username}`)}
       onHeaderHome={() => router.replace('/')}
       loggedIn={props.validate?.success == true}
-      currTheme={theme.UITheme}
-      onThemeChange={() => theme.toggleTheme()}
+      currTheme={"light"}
+      onThemeChange={() => { }}
       leftContainer={<p>{"build id: " + (process.env.NEXT_PUBLIC_VERCEL_GIT_REPO_ID || "not found")}</p>}
     />
     {/* ------------------------------------------------------------------------------------------------------------ */}
@@ -302,7 +300,7 @@ const Home = (props) => {
                 Your {filter == "favorites" ? "Favorites" : "Workspaces"}
               </div>
             </div>
-            {loadingWorkspaces ? <div className={styles.container} data-theme={theme.UITheme}>
+            {loadingWorkspaces ? <div className={styles.container}>
               <div className={styles.loadingContainer}>
                 <SyncIcon height={24} width={24} className={styles.loadingIconAuth} style={{ marginTop: 24 }} />
                 <span>Loading Workspaces...</span>

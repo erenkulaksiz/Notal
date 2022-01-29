@@ -1,30 +1,24 @@
 import Head from 'next/head';
 import Link from 'next/link';
-import Image from 'next/image';
+//import Image from 'next/image';
 import { useState, useEffect } from 'react';
-import styles from '../../styles/App.module.scss';
-import { useRouter } from 'next/router';
+//import styles from '../../styles/App.module.scss';
+//import { useRouter } from 'next/router';
+import { Button, Spacer, Container, Text, Grid, Card, Link as ALink, useTheme, Input } from '@nextui-org/react';
 
-import Logo from '/public/icon_white.png';
 import EmailIcon from '../../public/icons/email.svg';
 import PasswordIcon from '../../public/icons/password.svg';
-import LoginIcon from '../../public/icons/login.svg';
-import CrossIcon from '../../public/icons/cross.svg';
 import UserIcon from '../../public/icons/user.svg';
 import CheckIcon from '../../public/icons/check.svg';
 
-import Button from '../components/button';
-import Input from '../components/input';
 import Alert from '../components/alert';
 
 import useAuth from '../hooks/auth';
 import { withPublic } from '../hooks/route';
-import useTheme from '../hooks/theme';
 
 const Signup = (props) => {
-    const router = useRouter();
-    const theme = useTheme();
-
+    //const router = useRouter();
+    const { isDark } = useTheme();
     const auth = useAuth();
 
     const [fullname, setFullname] = useState("");
@@ -35,11 +29,6 @@ const Signup = (props) => {
     const [PAAC, setPAAC] = useState("");
 
     const [error, setError] = useState({ fullname: false, email: false, password: false, username: false, paac: false });
-
-    const [passwordVisible, setPasswordVisible] = useState(false);
-    const [confirmVisible, setConfirmVisible] = useState(false);
-
-    const [successAlert, setSuccessAlert] = useState(false);
 
     const onRegister = async (e) => {
         e.preventDefault();
@@ -94,153 +83,114 @@ const Signup = (props) => {
             setError({ email: false, password: "Weak password.", fullname: false, paac: false, username: false });
             return;
         } else if (register?.authError?.errorCode == "paac/invalid-code") {
-            setError({ email: false, password: false, fullname: false, username: false, paac: "This Prealpha access code is invalid.", })
+            setError({ email: false, password: false, fullname: false, username: false, paac: "This access code is invalid.", })
             return;
         } else {
             setError({ email: false, password: false, fullname: false, username: false });
         }
     }
 
-    return (
-        <div className={styles.container} data-theme={theme.UITheme}>
-            <Head>
-                <title>Signup · Notal</title>
-                <meta name="description" content="Signup to Notal, the greatest note app" />
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
-            <div className={styles.content_signup}>
-                <div className={styles.signup}>
-                    <form id="signup" onSubmit={e => onRegister(e)}>
-                        <Image
-                            src={Logo}
-                            alt="Logo of Notal"
-                            priority={true}
-                            width={210}
-                            height={60}
-                            layout="fixed"
-                            quality={100}
-                        />
-                        <h1>Sign up</h1>
-
-                        <div style={{ display: "flex", flexDirection: "row", marginTop: 18, justifyContent: "space-between" }}>
-                            <div style={{ width: "48%" }}>
-                                <Input
-                                    type="text"
-                                    placeholder="Username"
-                                    onChange={e => setUsername(e.target.value.replace(/[^\w\s]/gi, "").replace(/\s/g, '').toLowerCase())}
-                                    value={username}
-                                    icon={<UserIcon height={24} width={24} fill={"#19181e"} />}
-                                    error={error.username != false}
-                                    required
-                                    style={{ width: "100%" }}
-                                    maxLength={16}
-                                />
-                                {error.username != false && <p className={styles.errorMsg}>{error.username}</p>}
-                            </div>
-                            <div style={{ width: "48%" }}>
-                                <Input
-                                    type="text"
-                                    placeholder="Fullname"
-                                    onChange={e => setFullname(e.target.value)}
-                                    value={fullname}
-                                    icon={<UserIcon height={24} width={24} fill={"#19181e"} />}
-                                    error={error.fullname != false}
-                                    required
-                                    maxLength={64}
-                                    style={{ width: "100%" }}
-                                />
-                                {error.fullname != false && <p className={styles.errorMsg}>{error.fullname}</p>}
-                            </div>
-                        </div>
-
-                        <Input
-                            type="email"
-                            placeholder="E-mail"
-                            onChange={e => setEmail(e.target.value)}
-                            value={email}
-                            icon={<EmailIcon height={24} width={24} fill={"#19181e"} />}
-                            error={error.email != false}
-                            required
-                            style={{ marginTop: 18 }}
-                        />
-                        {error.email != false && <p className={styles.errorMsg}>{error.email}</p>}
-                        <Input
-                            type="password"
-                            placeholder="Password"
-                            onChange={e => setPassword(e.target.value)}
-                            value={password}
-                            icon={<PasswordIcon height={24} width={24} fill={"#19181e"} />}
-                            error={error.password != false}
-                            visible={passwordVisible}
-                            onVisibilityPress={() => setPasswordVisible(!passwordVisible)}
-                            visibleButton
-                            required
-                            style={{ marginTop: 18 }}
-                        />
-                        {error.password != false && <p className={styles.errorMsg}>{error.password}</p>}
-                        <Input
-                            type="password"
-                            placeholder="Confirm Password"
-                            onChange={e => setPasswordConfirm(e.target.value)}
-                            value={passwordConfirm}
-                            icon={<PasswordIcon height={24} width={24} fill={"#19181e"} />}
-                            error={error.password != false}
-                            visible={confirmVisible}
-                            onVisibilityPress={() => setConfirmVisible(!confirmVisible)}
-                            visibleButton
-                            required
-                            style={{ marginTop: 18 }}
-                        />
-                        <Input
-                            type="text"
-                            placeholder="PAAC (Pre-alpha Access Code)"
-                            onChange={e => setPAAC(e.target.value)}
-                            value={PAAC}
-                            icon={<PasswordIcon height={24} width={24} fill={"#19181e"} />}
-                            error={error.paac != false}
-                            required
-                            style={{ marginTop: 18 }}
-                        />
-                        {error.paac != false && <p className={styles.errorMsg}>{error.paac}</p>}
-                        <Button
-                            text="Sign Up"
-                            type="submit"
-                            icon={<CheckIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
-                            style={{ marginTop: 24, border: "none" }}
-                            reversed
-                        />
-                    </form>
-                </div>
-                <div className={styles.login}>
-                    <Link href="/login" passHref>
-                        <span>You already have an account? <a>Sign in here!</a></span>
-                    </Link>
-                </div>
-            </div>
-            <Alert
-                visible={successAlert}
-                icon={<CheckIcon height={24} width={24} fill={"#27a614"} style={{ marginRight: 8 }} />}
-                title="Success!"
-                textColor="#27a614"
-                text="Welcome to Notal! You have been registered succesfully. See you on the other side! :)"
-                buttons={[
-                    <Button
-                        text="Close"
-                        onClick={() => setSuccessAlert(false)}
-                        icon={<CrossIcon height={24} width={24} fill={"#19181e"} style={{ marginRight: 8 }} />}
-                        key={0}
-                    />,
-                    <Link href="/login" key={1} passHref>
-                        <Button
-                            text="Login"
-                            icon={<LoginIcon height={24} width={24} style={{ marginRight: 8 }} />}
-                            style={{ borderStyle: "none" }}
-                            reversed
-                        />
-                    </Link>]}
-            />
-        </div>
-    )
+    return (<Container xs css={{ dflex: "center", ac: "center", ai: "center" }}>
+        <Head>
+            <title>Signup · Notal</title>
+            <meta name="description" content="Signup to Notal, the greatest note app" />
+            <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <Card css={{ minWidth: 300 }}>
+            <Grid.Container gap={2} justify="center">
+                <Grid xs={12} sm={12} alignItems="center" justify="center">
+                    <img
+                        src={isDark ? "./icon_white.png" : "./icon_galactic.png"}
+                        alt="Logo of Notal"
+                        width={210}
+                        style={{ maxHeight: "100%", maxWidth: "100%" }}
+                        height={60}
+                    />
+                </Grid>
+                <Spacer y={1} />
+                <Grid xs={12}>
+                    <Text h3>Sign up</Text>
+                </Grid>
+                <Grid xs={6} css={{ fd: "column" }}>
+                    <Input
+                        color="primary"
+                        labelLeft={<UserIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+                        placeholder='Username'
+                        bordered
+                        fullWidth
+                        type="text"
+                        onChange={e => setUsername(e.target.value)}
+                    />
+                    {error.username != false && <Text color={"$error"}>{error.username}</Text>}
+                </Grid>
+                <Grid xs={6} css={{ fd: "column" }}>
+                    <Input
+                        color="primary"
+                        labelLeft={<UserIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+                        placeholder='Fullname'
+                        bordered
+                        fullWidth
+                        type="text"
+                        onChange={e => setFullname(e.target.value)}
+                    />
+                    {error.fullname != false && <Text color={"$error"}>{error.fullname}</Text>}
+                </Grid>
+                <Grid xs={12} css={{ fd: "column" }}>
+                    <Input
+                        color="primary"
+                        labelLeft={<EmailIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+                        placeholder='E-Mail'
+                        bordered
+                        fullWidth
+                        type="email"
+                        onChange={e => setEmail(e.target.value)}
+                    />
+                    {error.email != false && <Text color={"$error"}>{error.email}</Text>}
+                </Grid>
+                <Grid xs css={{ fd: "column" }}>
+                    <Input.Password
+                        color="primary"
+                        labelLeft={<PasswordIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+                        placeholder='Password'
+                        bordered
+                        fullWidth
+                        onChange={e => setPassword(e.target.value)}
+                    />
+                    {error.password != false && <Text color={"$error"}>{error.password}</Text>}
+                </Grid>
+                <Grid xs css={{ fd: "column" }}>
+                    <Input.Password
+                        color="primary"
+                        labelLeft={<PasswordIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+                        placeholder='Confirm Password'
+                        bordered
+                        fullWidth
+                        onChange={e => setPasswordConfirm(e.target.value)}
+                    />
+                </Grid>
+                <Grid xs={12} css={{ fd: "column" }}>
+                    <Input.Password
+                        color="primary"
+                        labelLeft={<PasswordIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+                        placeholder='PAAC'
+                        bordered
+                        fullWidth
+                        onChange={e => setPAAC(e.target.value)}
+                    />
+                    {error.paac != false && <Text color={"$error"}>{error.paac}</Text>}
+                </Grid>
+                <Grid>
+                    <Button onClick={onRegister} color="gradient" size="xl" icon={<CheckIcon height={24} width={24} style={{ fill: "currentColor" }} />} fullWidth>Sign Up</Button>
+                </Grid>
+            </Grid.Container>
+        </Card>
+        <Spacer y={1} />
+        <Card>
+            <Text span css={{ fontWeight: 400, ta: "center", fs: 18 }} justify="center">
+                You already have an account? <Link href="/login" passHref><ALink>Sign in here!</ALink></Link>
+            </Text>
+        </Card>
+    </Container>)
 }
 
 export default withPublic(Signup);

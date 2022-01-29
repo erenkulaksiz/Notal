@@ -2,15 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { onAuthStateChanged, getAuth } from "firebase/auth";
 import useAuth from '../hooks/auth';
 import cookie from 'js-cookie';
+import { Loading, Container, Text } from '@nextui-org/react';
 
 import SyncIcon from '../../public/icons/sync.svg';
 
 import styles from '../../styles/App.module.scss';
-import useTheme from '../hooks/theme';
 
 export default function AuthStateChanged({ children }) {
     const { setUser } = useAuth();
-    const theme = useTheme();
     const [loading, setLoading] = useState(true);
 
     const auth = getAuth();
@@ -30,12 +29,10 @@ export default function AuthStateChanged({ children }) {
     }, []);
 
     if (loading) {
-        return <div className={styles.container} data-theme={theme.UITheme}>
-            <div className={styles.loadingContainer}>
-                <SyncIcon height={24} width={24} className={styles.loadingIconAuth} style={{ marginTop: 24 }} />
-                <span>Loading...</span>
-            </div>
-        </div>
+        return <Container css={{ dflex: "center", ac: "center", ai: "center", fd: "column" }}>
+            <Loading type="gradient" />
+            <Text css={{ mt: 16, fs: "1.2em" }}>Loading...</Text>
+        </Container>
     }
 
     return children;
