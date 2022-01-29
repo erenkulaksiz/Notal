@@ -12,13 +12,9 @@ if (!admin.apps.length) {
 
 export default async function handler(req, res) {
     const data = JSON.parse(req.body);
-    if (req.method !== 'POST' || !data.uid || !data.fullname || !data.username) {
+    if (req.method !== 'POST' || !data.uid || !data.username) {
         res.status(400).send({ success: false });
     }
-
-    // UNNECCESARY CHECK HERE, FIX IT LATEER
-
-    console.log("visibility: ", data.profileVisible);
 
     await admin.database().ref(`/users`).orderByChild("username").equalTo(data.username).limitToFirst(1).once("value", async (snapshot) => {
         if (snapshot.exists()) {
@@ -27,7 +23,7 @@ export default async function handler(req, res) {
                     fullname: data.fullname,
                     bio: data.bio || "",
                     updatedAt: Date.now(),
-                    profileVisible: data.profileVisible,
+                    profileVisible: data.profileVisible ?? true,
                 }, () => {
                     res.status(200).json({ success: true, data: { username: data.username, fullname: data.fullname, uid: data.uid } });
                 }).catch(err => {
@@ -42,7 +38,7 @@ export default async function handler(req, res) {
                 username: data.username,
                 bio: data.bio || "",
                 updatedAt: Date.now(),
-                profileVisible: data.profileVisible,
+                profileVisible: data.profileVisible ?? true,
             }, () => {
                 res.status(200).json({ success: true, data: { username: data.username, fullname: data.fullname, uid: data.uid } });
             }).catch(err => {

@@ -2,11 +2,13 @@ import { Button, Text, Grid, Card, Link as ALink, Switch, Avatar, } from '@nextu
 import styled from 'styled-components'
 import { useTheme as useNextTheme } from 'next-themes';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 import UserIcon from '../../../public/icons/user.svg';
 import DarkIcon from '../../../public/icons/dark.svg';
 import LightIcon from '../../../public/icons/light.svg';
 import LogoutIcon from '../../../public/icons/logout.svg';
+import LoginIcon from '../../../public/icons/login.svg';
 
 import useAuth from '../../hooks/auth';
 
@@ -46,15 +48,17 @@ const Navbar = ({ isDark, user }) => {
 
     return (<Header isDark={isDark}>
         <Grid.Container justify="center" >
-            <Grid xs={4} alignItems='center'></Grid>
-            <Grid xs={4} justify='center' alignItems='center'>
-                <img
-                    src={isDark ? "./icon_white.png" : "./icon_galactic.png"}
-                    alt="Logo of Notal"
-                    style={{ maxHeight: "100%", width: 160, }}
-                />
+            <Grid xs={0} sm={4} alignItems='center'></Grid>
+            <Grid xs={6} sm={4} justify='center' alignItems='center'>
+                <ALink onClick={() => router.push("/")}>
+                    <img
+                        src={isDark ? "/icon_white.png" : "/icon_galactic.png"}
+                        alt="Logo of Notal"
+                        style={{ maxHeight: "100%", width: 160, }}
+                    />
+                </ALink>
             </Grid>
-            <Grid xs={4} justify='flex-end' alignItems='center'>
+            <Grid xs={6} sm={4} justify='flex-end' alignItems='center'>
                 <Switch
                     color="primary"
                     initialChecked={isDark}
@@ -63,7 +67,7 @@ const Navbar = ({ isDark, user }) => {
                     iconOff={<DarkIcon height={24} width={24} style={{ fill: "currentColor" }} />}
                     css={{ mr: 12 }}
                 />
-                <Details style={{
+                {auth.authUser ? <Details style={{
                     position: "relative",
                     display: "inline-block",
                     backgroundColor: "transparent"
@@ -74,14 +78,14 @@ const Navbar = ({ isDark, user }) => {
                             display: "none",
                         }
                     }}>
-                        <Avatar size="md" color="gradient" bordered src={user.avatar} />
+                        <Avatar size="md" color="gradient" bordered src={user?.avatar} icon={<UserIcon height={24} width={24} style={{ fill: "white" }} />} pointer />
                     </summary>
                     <Card css={{ zIndex: 2, position: "absolute", right: 0, top: "100%", width: "auto" }}>
-                        <Text h4>{user.fullname || user.username}</Text>
-                        <Text span>{user.email}</Text>
+                        <Text h4>{user?.fullname || "@" + user?.username}</Text>
+                        <Text span>{user?.email}</Text>
                         <Button
                             icon={<UserIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-                            onClick={() => router.push(`/profile/${user.username}`)}
+                            onClick={() => router.push(`/profile/${user?.username}`)}
                             css={{ mt: 12 }}
                             size="md"
                             color="gradient"
@@ -90,7 +94,10 @@ const Navbar = ({ isDark, user }) => {
                         </Button>
                         <Button
                             icon={<LogoutIcon height={24} width={24} style={{ fill: "currentColor", }} />}
-                            onClick={() => auth.users.logout()}
+                            onClick={() => {
+                                auth.users.logout();
+                                router.replace(router.asPath);
+                            }}
                             css={{ mt: 8 }}
                             size="md"
                             color="gradient"
@@ -98,10 +105,19 @@ const Navbar = ({ isDark, user }) => {
                             Sign Out
                         </Button>
                     </Card>
-                </Details>
+                </Details> : <>
+                    <Button
+                        icon={<LoginIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+                        onClick={() => router.push(`/login`)}
+                        size="sm"
+                        color="gradient"
+                    >
+                        Sign In
+                    </Button>
+                </>}
             </Grid>
         </Grid.Container>
-    </Header>)
+    </Header >)
 }
 
 export default Navbar;

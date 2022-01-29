@@ -20,7 +20,15 @@ export default async function handler(req, res) {
         if (snapshot.exists()) {
             console.log("find username : ", snapshot.val());
             const data = snapshot.val()[Object.keys(snapshot.val())[0]];
-            res.status(400).json({ success: true, data, uid: Object.keys(snapshot.val())[0] });
+            const newData = {
+                avatar: data.avatar,
+                bio: data.bio,
+                email: data.email,
+                username: data.username,
+                profileVisible: data.profileVisible,
+                fullname: data.fullname,
+            }
+            res.status(400).json({ success: true, data: newData, uid: Object.keys(snapshot.val())[0] });
         } else {
             res.status(400).json({ success: false, error: "cant-find-user" });
         }

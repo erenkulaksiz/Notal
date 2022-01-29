@@ -1,0 +1,52 @@
+import { Button, Text, Grid, Switch, Tooltip, Row, useTheme } from '@nextui-org/react';
+import { useTheme as useNextTheme } from 'next-themes';
+
+import EmailIcon from '../../../public/icons/email.svg';
+import GoogleIcon from '../../../public/icons/google.svg';
+import GithubIcon from '../../../public/icons/github.svg';
+import DarkIcon from '../../../public/icons/dark.svg';
+import LightIcon from '../../../public/icons/light.svg';
+
+const LoginSelector = ({ onLogin, onLoginWithGithub, onLoginWithGoogle, oauthError }) => {
+    const { isDark } = useTheme();
+    const { setTheme } = useNextTheme();
+
+    return (<>
+        <Grid xs={12} alignItems="center" justify="center">
+            <Text h3>Sign in using...</Text>
+        </Grid>
+        <Grid xs={12} justify="center" css={{ ai: "center", py: 6 }}>
+            <Tooltip content={'Sign in using GitHub'}>
+                <Button onClick={onLoginWithGithub} color="gradient" size="xl" icon={<GithubIcon height={24} width={24} style={{ fill: "currentColor" }} />} >
+                    GitHub
+                </Button>
+            </Tooltip>
+        </Grid>
+        <Grid xs={12} justify="center" css={{ ai: "center", py: 6 }}>
+            <Tooltip content={'Sign in using Google'}>
+                <Button onClick={onLoginWithGoogle} color="gradient" size="xl" icon={<GoogleIcon height={28} width={28} style={{ fill: "currentColor", }} />}>
+                    Google
+                </Button>
+            </Tooltip>
+        </Grid>
+        <Grid xs={12} justify="center" css={{ ai: "center", py: 6, pb: 12 }}>
+            <Tooltip content={'Sign in using Email'}>
+                <Button onClick={onLogin} color="gradient" size="xl" icon={<EmailIcon height={22} width={22} style={{ fill: "currentColor" }} />} >
+                    Email
+                </Button>
+            </Tooltip>
+        </Grid>
+        <Row>
+            {oauthError != false && <Text color={"$error"}>{oauthError}</Text>}
+        </Row>
+        <Switch
+            color="primary"
+            initialChecked={isDark}
+            onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
+            iconOn={<LightIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+            iconOff={<DarkIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+        />
+    </>)
+}
+
+export default LoginSelector;
