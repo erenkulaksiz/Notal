@@ -1,4 +1,4 @@
-import { Button, Text, Grid, Card, Link as ALink, Switch, Avatar, } from '@nextui-org/react';
+import { Button, Text, Grid, Card, Link as ALink, Switch, Avatar, useTheme } from '@nextui-org/react';
 import styled from 'styled-components'
 import { useTheme as useNextTheme } from 'next-themes';
 import { useRouter } from 'next/router';
@@ -41,22 +41,25 @@ const Header = styled.div`
     z-index: 999;
 `;
 
-const Navbar = ({ isDark, user }) => {
+const Navbar = ({ user }) => {
     const { setTheme } = useNextTheme();
+    const { isDark } = useTheme();
     const router = useRouter();
     const auth = useAuth();
 
     return (<Header isDark={isDark}>
         <Grid.Container justify="center" >
-            <Grid xs={0} sm={4} alignItems='center'></Grid>
-            <Grid xs={6} sm={4} justify='center' alignItems='center'>
-                <ALink onClick={() => router.push("/")}>
+            <Grid xs={6} sm={4} alignItems='center'>
+                <ALink onClick={() => router.push("/home")}>
                     <img
                         src={isDark ? "/icon_white.png" : "/icon_galactic.png"}
                         alt="Logo of Notal"
                         style={{ maxHeight: "100%", width: 160, }}
                     />
                 </ALink>
+            </Grid>
+            <Grid xs={0} sm={4} justify='center' alignItems='center'>
+
             </Grid>
             <Grid xs={6} sm={4} justify='flex-end' alignItems='center'>
                 <Switch

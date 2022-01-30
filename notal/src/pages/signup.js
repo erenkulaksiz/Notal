@@ -11,8 +11,6 @@ import PasswordIcon from '../../public/icons/password.svg';
 import UserIcon from '../../public/icons/user.svg';
 import CheckIcon from '../../public/icons/check.svg';
 
-import Alert from '../components/alert';
-
 import useAuth from '../hooks/auth';
 import { withPublic } from '../hooks/route';
 

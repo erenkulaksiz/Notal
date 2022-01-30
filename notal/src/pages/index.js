@@ -1,70 +1,28 @@
 import Head from 'next/head';
-import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Button, Spacer, Container, Text, Grid, Card, Link as ALink, useTheme, Loading, Row } from '@nextui-org/react';
-import cookie from 'js-cookie';
+import { Button, Spacer, Container, Text, Grid, Card, Link as ALink, useTheme, Loading, Row, Avatar } from '@nextui-org/react';
 
 import { server } from '../config';
 
 import DashboardIcon from '../../public/icons/dashboard.svg';
-import StarOutlineIcon from '../../public/icons/star_outline.svg';
-import StarFilledIcon from '../../public/icons/star_filled.svg';
-import AddIcon from '../../public/icons/add.svg';
-import CrossIcon from '../../public/icons/cross.svg';
-import CheckIcon from '../../public/icons/check.svg';
-import DeleteIcon from '../../public/icons/delete.svg';
-import QuestionIcon from '../../public/icons/question.svg';
-import SyncIcon from '../../public/icons/sync.svg';
-import DarkIcon from '../../public/icons/dark.svg';
-import LightIcon from '../../public/icons/light.svg';
-import LogoutIcon from '../../public/icons/logout.svg';
+import EditIcon from '../../public/icons/edit.svg';
+import UserIcon from '../../public/icons/user.svg';
+import ShareIcon from '../../public/icons/share.svg';
+import PeopleIcon from '../../public/icons/people.svg';
+import LandingImg_shape_1 from '../../public/landing_img_right_1.svg';
 
-import AddWorkspaceModal from '../components/addWorkspaceModal';
-import DeleteWorkspaceModal from '../components/deleteWorkspaceModal';
 import Navbar from '../components/navbar';
 
-import { withAuth, withCheckUser } from '../hooks/route';
 import useAuth from '../hooks/auth';
 import { CheckToken } from '../utils';
 
-const Home = (props) => {
+const Landing = (props) => {
     const auth = useAuth();
     const router = useRouter();
     const { isDark } = useTheme();
 
-    // View/Filter
-    const [viewing, setViewing] = useState("workspaces");
-    const [filter, setFilter] = useState(null);
-
-    // Delete Modal
-    const [deleteModal, setDeleteModal] = useState({ workspace: -1, visible: false });
-
-    // Add Workspace Modal
-    const [newWorkspaceVisible, setNewWorkspaceVisible] = useState(false);
-
-    const [_workspaces, _setWorkspaces] = useState([]);
-    const [loadingWorkspaces, setLoadingWorkspaces] = useState(true);
-
     useEffect(() => {
-        if (viewing == "favorites") {
-            setFilter("favorites");
-        } else {
-            setFilter(null);
-        }
-    }, [viewing]);
-
-    useEffect(() => {
-        if (viewing == "favorites") {
-            setFilter("favorites");
-        } else {
-            setFilter(null);
-        }
-    }, [viewing]);
-
-    useEffect(() => {
-        console.log("props indexjs: ", props);
-
         (async () => {
             const token = await auth.users.getIdToken();
             const res = await CheckToken({ token, props });
@@ -77,230 +35,163 @@ const Home = (props) => {
                 router.replace("/paac");
                 return;
             }
-
-            if (props.validate.success && !props.validate.data?.username) { // if theres no username is present
-                setRegisterAlertVisible(true);
-                console.warn("register alert open!!!");
-            } else {
-                console.warn("register alert close");
-            }
         })();
     }, []);
 
-    useEffect(() => {
-        if (props.workspaces?.success == true) {
-            _setWorkspaces(props.workspaces.data);
-            setLoadingWorkspaces(false);
-        }
-    }, [props.workspaces]);
-
-    const workspace = {
-        create: async ({ title, desc, starred }) => {
-
-            const data = await auth.workspace.createWorkspace({ title, desc, starred });
-
-            console.log("data: ", data);
-
-            if (data?.success) {
-                router.replace(router.asPath);
-            }
-        },
-        delete: async ({ id }) => {
-            setDeleteModal({ visible: false, workspace: -1 }); // set visiblity to false and id to -1
-
-            const data = await auth.workspace.deleteWorkspace({ id });
-
-            if (data.success) {
-                router.replace(router.asPath);
-            }
-        },
-        star: ({ id }) => {
-            const data = auth.workspace.starWorkspace({ id });
-            if (data?.error) console.error("error on star workspace: ", data.error);
-            //#TODO: make this work immideatly
-        },
-        closeModal: () => {
-            setNewWorkspaceVisible(false);
-            setNewWorkspaceErr({ ...newWorkspace, desc: false, title: false });
-            setNewWorkspace({ ...newWorkspace, title: "", desc: "", starred: "" });
-        },
-        getWorkspacesWithFilter: (workspaces) => {
-            if (filter == "favorites") {
-                if (workspaces) return workspaces.filter(el => el.starred == true);
-                else return []
-            } else {
-                // no filter
-                if (workspaces) return workspaces;
-                else return []
-            }
-        }
-    }
-
-    return (<Container xl css={{ position: "relative" }}>
+    return (<Container xl css={{ position: "relative", padding: 0 }}>
         <Head>
             <title>Home · Notal</title>
             <meta name="description" content="Notal. The next generation taking notes and sharing todo snippets platform." />
             <link rel="icon" href="/favicon.ico" />
         </Head>
+        <Navbar user={props.validate?.data} />
+        <div style={{ width: "100%", height: 500, position: "absolute", opacity: isDark ? 0.4 : 1 }}>
+            <img src="./landing_bg_1.png" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        </div>
+        <Container md css={{ position: "relative" }}>
+            <Spacer y={6} />
+            <Card css={{ width: "50%" }}>
+                <Text h5>ALPHA!</Text>
+                <Text b css={{ color: "$warningDark" }}>This project is in currently private alpha and not for public access.</Text>
+            </Card>
+            <Grid.Container>
+                <Grid xs={12} sm={10} css={{ fd: "column" }} >
+                    <Row>
+                        <Text h1 css={{
+                            color: "$white",
+                            "@xs": {
+                                fs: "2em",
+                            },
+                            "@md": {
+                                fs: "4em"
+                            }
+                        }}>Take notes to <Text span css={{ color: "$primary" }}>next</Text> level with Notal.</Text>
+                    </Row>
+                    <Row>
+                        <Text b css={{ fs: "1.2em", color: "$gray500" }}>Keep focus on your project, not on your planning with Notal.</Text>
+                    </Row>
+                    <Spacer y={1} />
+                    <Row>
+                        <Button css={{ width: "20%" }} onClick={() => alert("Soon!")}>
+                            Discover More
+                        </Button>
+                    </Row>
+                </Grid>
+                <Grid xs={0} sm={2}>
 
-        <Navbar
-            isDark={isDark}
-            user={props.validate?.data}
-        />
+                </Grid>
+            </Grid.Container>
+            <Spacer y={10} />
+            <Grid.Container gap={2}>
+                <Grid xs={6} sm={3}>
+                    <Card>
+                        <Row style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                            <Avatar
+                                squared
+                                icon={<EditIcon size={20} fill="currentColor" />}
+                            />
+                            <Text h4 css={{ ml: 8 }}>
+                                Take notes
+                            </Text>
+                        </Row>
+                        <Spacer y={0.5} />
+                        <Row>
+                            <Text>
+                                Add workspaces, add notes into them. You can also create fields, which you can fill in them with cards you like.
+                            </Text>
+                        </Row>
+                    </Card>
+                </Grid>
+                <Grid xs={6} sm={3}>
+                    <Card css={{ backdropFilter: "" }}>
+                        <Row style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                            <Avatar
+                                squared
+                                icon={<UserIcon size={20} fill="currentColor" />}
+                            />
+                            <Text h4 css={{ ml: 8 }}>
+                                Personalize your profile
+                            </Text>
+                        </Row>
+                        <Spacer y={0.5} />
+                        <Row>
+                            <Text>
+                                You can add a bio, change your avatar and do more on your profile.
+                            </Text>
+                        </Row>
+                    </Card>
+                </Grid>
+                <Grid xs={6} sm={3}>
+                    <Card css={{ backdropFilter: "" }}>
+                        <Row style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                            <Avatar
+                                squared
+                                icon={<ShareIcon size={20} fill="currentColor" />}
+                            />
+                            <Text h4 css={{ ml: 8, fs: "1.2em" }}>
+                                Share Notes & Workspaces
+                            </Text>
+                        </Row>
+                        <Spacer y={0.5} />
+                        <Row>
+                            <Text>
+                                You can share your notes and workspaces, you can also set their visibility to private.
+                            </Text>
+                        </Row>
+                    </Card>
+                </Grid>
+                <Grid xs={6} sm={3}>
+                    <Card css={{ backdropFilter: "" }}>
+                        <Row style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                            <Avatar
+                                squared
+                                icon={<PeopleIcon size={20} fill="currentColor" />}
+                            />
+                            <Text h4 css={{ ml: 8 }}>
+                                Create Teams
+                            </Text>
+                        </Row>
+                        <Spacer y={0.5} />
+                        <Row>
+                            <Text>
+                                You can invite whoever you want to your team. You can create notes & workspaces inside teams and work together.
+                            </Text>
+                        </Row>
+                    </Card>
+                </Grid>
+            </Grid.Container>
+        </Container>
 
-        <Grid.Container gap={2} justify="center">
-            <Grid xs={12} sm={3} md={3} css={{ fd: "column" }}>
-                <Button
-                    icon={<DashboardIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-                    onClick={() => setViewing("workspaces")}
-                    css={{ minWidth: "100%" }}
-                    bordered={viewing != "workspaces"}
-                >
-                    Workspaces
-                </Button>
-                <Spacer y={1} />
-                <Button
-                    icon={<StarFilledIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-                    onClick={() => setViewing("favorites")}
-                    css={{ minWidth: "100%" }}
-                    bordered={viewing != "favorites"}
-                >
-                    Favorites
-                </Button>
-            </Grid>
-            <Grid xs={12} sm={9} md={9}>
-                <Card css={{ jc: "center", minHeight: 80 }}>
-                    {/*<Grid.Container>
-                        <Grid xs alignItems='center' css={{ fd: "row" }}>
-                        <UserIcon height={24} width={24} style={{ fill: "currentColor", }} />
-                        <Text span>Your Workspaces</Text>
-                        </Grid>
-                    </Grid.Container>*/}
-                    <Grid.Container gap={1}>
-                        {/*<Grid xs={12} sm={6} md={3}>
-                                <Button auto css={{ width: "100%" }} onClick={() => setNewWorkspaceVisible(true)}>
-                                    <AddIcon height={24} width={24} style={{ fill: "currentColor" }} />
-                                    Add Workspace
-                                </Button>
-                                </Grid>
-                                <Grid xs={12} sm={6} md={3}>
-                                    <Button auto css={{ width: "100%" }} onClick={() => setDeleteModal({ ...deleteModal, visible: false })}>
-                                        <QuestionIcon height={24} width={24} style={{ fill: "currentColor" }} />
-                                        About
-                                    </Button>
-                        </Grid>*/}
-                    </Grid.Container>
-                </Card>
-            </Grid>
-            <Grid xs={12}>
-                <Card css={{ jc: "center" }}>
-                    {loadingWorkspaces ? <Card css={{ p: 12, dflex: "center" }}>
-                        <Loading />
-                        <Text css={{ mt: 24, fs: "1.4em" }}>Loading Workspaces...</Text>
-                    </Card> : <Grid.Container gap={1}>
-                        {workspace.getWorkspacesWithFilter(_workspaces).length > 0 ? workspace.getWorkspacesWithFilter(_workspaces).map((element, index) =>
-                            <Grid xs={12} sm={3} lg={2} key={index}>
-                                <Card color={'gradient'} css={{ height: 140, justifyContent: "flex-end" }}>
-                                    <Grid.Container>
-                                        <Grid xs={6} css={{ fd: "column" }} justify='flex-end'>
-                                            <Text h3 color={"white"}>{element.title}</Text>
-                                            <Text h6 color={"white"}>{element.desc}</Text>
-                                        </Grid>
-                                        <Grid xs={6} justify='flex-end' alignItems='flex-end' css={{ fd: "column" }}>
-                                            <Button
-                                                icon={
-                                                    element.starred == true ?
-                                                        <StarFilledIcon height={24} width={24} style={{ fill: "white" }} /> :
-                                                        <StarOutlineIcon height={24} width={24} style={{ fill: "white" }} />
-                                                }
-                                                onClick={() => workspace.star({ id: element.id })}
-                                                css={{ minWidth: "100%", justifyContent: "flex-end" }}
-                                                light
-                                            />
-                                            <Button
-                                                icon={<DeleteIcon height={24} width={24} style={{ fill: "white" }} />}
-                                                onClick={() => setDeleteModal({ ...deleteModal, visible: true, workspace: element.id })}
-                                                css={{ minWidth: "100%", justifyContent: "flex-end" }}
-                                                light
-                                            />
-                                        </Grid>
-                                    </Grid.Container>
-                                </Card>
-                            </Grid>) : null}
-
-                        <Grid xs={12} sm={3} lg={2}>
-                            <Card bordered
-                                css={{ borderColor: "$primary", dflex: "center", color: "$primary", height: 140 }}
-                                clickable
-                                onClick={() => setNewWorkspaceVisible(true)}
-                            >
-                                <AddIcon height={24} width={24} style={{ fill: "currentColor" }} />
-                                Add Workspace
-                            </Card>
-                        </Grid>
-
-                    </Grid.Container>}
-                </Card>
-            </Grid>
-        </Grid.Container>
-        <DeleteWorkspaceModal
-            visible={deleteModal.visible}
-            setDeleteModal={setDeleteModal}
-            deleteModal={deleteModal}
-            onDelete={() => workspace.delete({ id: deleteModal.workspace })}
-        />
-        <AddWorkspaceModal
-            setNewWorkspaceVisible={setNewWorkspaceVisible}
-            newWorkspaceVisible={newWorkspaceVisible}
-            onAdd={({ title, desc, starred }) => workspace.create({ title, desc, starred })}
-        />
     </Container>
     )
 }
 
-export default withCheckUser(withAuth(Home));
+export default Landing;
 
 export async function getServerSideProps(ctx) {
     const { req, res, query } = ctx;
     let validate = {};
-    let workspaces = {};
 
     if (req) {
         const authCookie = req.cookies.auth;
         //const emailCookie = req.cookies.email;
 
         if (authCookie) {
-            const dataValidate = await fetch(`${server}/api/validate`, {
+            const data = await fetch(`${server}/api/validate`, {
                 'Content-Type': 'application/json',
                 method: "POST",
                 body: JSON.stringify({ token: authCookie }),
-            }).then(response => response.json()).catch(error => {
-                return { success: false, error: { code: "validation-error", errorMessage: error } }
-            });
+            }).then(response => response.json());
 
-            if (dataValidate.success) {
-                validate = { ...dataValidate };
-
-                const dataWorkspaces = await fetch(`${server}/api/workspace`, {
-                    'Content-Type': 'application/json',
-                    method: "POST",
-                    body: JSON.stringify({ uid: dataValidate.uid, action: "GET_WORKSPACES" }),
-                }).then(response => response.json());
-
-                if (dataWorkspaces.success) {
-                    if (dataWorkspaces?.data) {
-                        const getWorkspaces = Object.keys(dataWorkspaces.data).map((el, index) => { return { ...dataWorkspaces.data[el], id: Object.keys(dataWorkspaces.data)[index] } });
-                        workspaces = { data: getWorkspaces, success: true };
-                    } else {
-                        workspaces = { success: true }
-                    }
-                }
+            console.log("data (index.js): ", data);
+            if (data.success) {
+                validate = { ...data };
             } else {
-                validate = { error: dataValidate?.error?.code }
+                validate = { error: data.error?.code }
             }
         } else {
             validate = { error: "no-token" }
         }
     }
-    return { props: { validate, workspaces } }
+    return { props: { validate } }
 }

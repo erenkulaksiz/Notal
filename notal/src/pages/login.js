@@ -77,7 +77,7 @@ const Login = (props) => {
         <Spacer y={1} />
         <Card css={{ minWidth: 300 }}>
             <Grid.Container gap={2} justify="center">
-                <Grid xs={12} sm={6} alignItems="center" justify="center">
+                <Grid xs={12} sm={12} alignItems="center" justify="center">
                     <img
                         src={isDark ? "./icon_white.png" : "./icon_galactic.png"}
                         alt="Logo of Notal"
@@ -86,13 +86,13 @@ const Login = (props) => {
                         height={60}
                     />
                 </Grid>
-                <Grid xs={12} sm={6} alignItems="center" justify="center">
+                {/*<Grid xs={12} sm={6} alignItems="center" justify="center">
                     <Tooltip content={'Learn more about Notal'}>
                         <Button onClick={() => router.push("/about")} size="lg" icon={<QuestionIcon height={24} width={24} style={{ fill: "currentColor" }} />}>
                             About
                         </Button>
                     </Tooltip>
-                </Grid>
+                </Grid>*/}
                 {!view && <LoginSelector
                     onLogin={() => setView("email")} // Login with email
                     onLoginWithGithub={onLoginWithGithub}

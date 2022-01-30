@@ -20,7 +20,7 @@ const Page404 = () => {
             <Text h2 css={{ textAlign: "center" }}>We couldnt find the page you were looking for.</Text>
             <Button
                 icon={<HomeFilledIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-                onClick={() => router.replace("/")}
+                onClick={() => router.replace("/home")}
                 css={{ mt: 18 }}
                 size="xl"
                 color="gradient"

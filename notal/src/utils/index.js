@@ -1,11 +1,11 @@
 import cookie from "js-cookie";
-import { server } from '../config';
+//import { server } from '../config';
 
 export const CheckToken = async ({ token, props }) => {
-    console.log("jwtyi kontrol edicem bi canım");
-
+    //console.log("jwtyi kontrol edicem bi canım");
     if (props.validate?.error == "auth/id-token-expired" || props.validate?.error == "auth/argument-error") {
         try {
+            /*
             console.log("Checktoken !!! ", token.res);
             const dataValidate = await fetch(`${server}/api/validate`, {
                 'Content-Type': 'application/json',
@@ -15,6 +15,7 @@ export const CheckToken = async ({ token, props }) => {
                 return { success: false, ...error }
             });
             console.log("data validate: ", dataValidate);
+            */
             await cookie.set("auth", token.res, { expires: 1 });
             return true
         } catch (err) {
@@ -23,7 +24,6 @@ export const CheckToken = async ({ token, props }) => {
             return false
         }
     } else {
-        console.log("kontrol ettim sorun yok kralsın");
         return false;
     }
 };

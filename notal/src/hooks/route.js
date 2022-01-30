@@ -20,7 +20,7 @@ export function withCheckUser(Component) {
             </Container>
         } else {
             if (props.validate?.success == true && !props.validate?.data.username) {
-                router.replace("/");
+                router.replace("/home");
             }
         }
 
@@ -39,7 +39,7 @@ export function withPublic(Component) {
         const router = useRouter();
 
         if (auth.authUser) {
-            router.replace("/");
+            router.replace("/home");
             return <Container css={{ dflex: "center", ac: "center", ai: "center", fd: "column" }}>
                 <Loading type="gradient" />
                 <Text css={{ mt: 16, fs: "1.2em" }}>Loading...</Text>

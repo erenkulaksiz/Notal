@@ -39,7 +39,7 @@ const Profile = (props) => {
     const [editAvatarLoading, setEditAvatarLoading] = useState(false);
 
     useEffect(() => {
-        console.log("props: ", props);
+        //console.log("props: ", props);
         (async () => {
             const token = await auth.users.getIdToken();
             const res = await CheckToken({ token, props });
@@ -121,10 +121,7 @@ const Profile = (props) => {
             <meta name="description" content="Notal" />
             <link rel="icon" href="/favicon.ico" />
         </Head>
-        <Navbar
-            isDark={isDark}
-            user={props.validate?.data}
-        />
+        <Navbar user={props.validate?.data} />
         <Spacer y={2} />
         {loadingProfile ? <Card css={{ p: 12, dflex: "center" }}>
             <Loading />
@@ -140,7 +137,7 @@ const Profile = (props) => {
                 <Text h3 css={{ textAlign: "center" }}>We couldnt find this user.</Text>
                 <Button
                     icon={<HomeFilledIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-                    onClick={() => router.replace("/")}
+                    onClick={() => router.replace("/home")}
                     css={{ mt: 18 }}
                     size="xl"
                     color="gradient"
