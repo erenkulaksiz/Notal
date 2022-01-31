@@ -187,14 +187,14 @@ const Home = (props) => {
                                 squared
                                 icon={<UserIcon size={20} fill="currentColor" />}
                             />
-                            <Spacer x={1} />
+                            <Spacer x={0.5} />
                             <Text h3>Your Workspaces</Text>
                         </Grid>
                         {workspace.getWorkspacesWithFilter(_workspaces).length > 0 ? workspace.getWorkspacesWithFilter(_workspaces).map((element, index) =>
                             <Grid xs={12} sm={3} lg={2} key={index}>
                                 <Card color={'gradient'} css={{ height: 140, justifyContent: "flex-end" }}>
                                     <Grid.Container>
-                                        <Grid xs={6} css={{ fd: "column" }} justify='flex-end'>
+                                        <Grid xs={10} css={{ fd: "column" }} justify='flex-end'>
                                             <Link href="/workspace/[pid]" as={`/workspace/${element.id}`}>
                                                 <ALink>
                                                     <Text h3 color={"white"}>{element.title}</Text>
@@ -206,7 +206,7 @@ const Home = (props) => {
                                                 </ALink>
                                             </Link>
                                         </Grid>
-                                        <Grid xs={6} justify='flex-end' alignItems='flex-end' css={{ fd: "column" }}>
+                                        <Grid xs={2} justify='flex-end' alignItems='flex-end' css={{ fd: "column" }}>
                                             <Button
                                                 icon={
                                                     element.starred == true ?
@@ -214,13 +214,13 @@ const Home = (props) => {
                                                         <StarOutlineIcon height={24} width={24} style={{ fill: "white" }} />
                                                 }
                                                 onClick={() => workspace.star({ id: element.id })}
-                                                css={{ minWidth: "100%", justifyContent: "flex-end" }}
+                                                css={{ minWidth: 20, justifyContent: "flex-end" }}
                                                 light
                                             />
                                             <Button
                                                 icon={<DeleteIcon height={24} width={24} style={{ fill: "white" }} />}
                                                 onClick={() => setDeleteModal({ ...deleteModal, visible: true, workspace: element.id })}
-                                                css={{ minWidth: "100%", justifyContent: "flex-end" }}
+                                                css={{ minWidth: 20, justifyContent: "flex-end" }}
                                                 light
                                             />
                                         </Grid>

@@ -1,4 +1,4 @@
-import { Button, Text, Grid, Card, Link as ALink, Switch, Avatar, useTheme } from '@nextui-org/react';
+import { Button, Text, Grid, Card, Link as ALink, Switch, Avatar, useTheme, Row } from '@nextui-org/react';
 import styled from 'styled-components'
 import { useTheme as useNextTheme } from 'next-themes';
 import { useRouter } from 'next/router';
@@ -62,14 +62,14 @@ const Navbar = ({ user }) => {
 
             </Grid>
             <Grid xs={6} sm={4} justify='flex-end' alignItems='center'>
-                <Switch
+                {!auth?.authUser && <Switch
                     color="primary"
                     initialChecked={isDark}
                     onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
                     iconOn={<LightIcon height={24} width={24} style={{ fill: "currentColor" }} />}
                     iconOff={<DarkIcon height={24} width={24} style={{ fill: "currentColor" }} />}
                     css={{ mr: 12 }}
-                />
+                />}
                 {auth?.authUser ? <Details style={{
                     position: "relative",
                     display: "inline-block",
@@ -107,6 +107,15 @@ const Navbar = ({ user }) => {
                         >
                             Sign Out
                         </Button>
+                        <Row css={{ mt: 8, justifyContent: "center" }}>
+                            {auth?.authUser && <Switch
+                                color="primary"
+                                initialChecked={isDark}
+                                onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
+                                iconOn={<LightIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+                                iconOff={<DarkIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+                            />}
+                        </Row>
                     </Card>
                 </Details> : <>
                     <Button

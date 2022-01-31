@@ -19,7 +19,7 @@ const Page404 = () => {
                 style={{ maxHeight: "100%", maxWidth: "100%", width: 200 }}
             />
             <Text h1>[404]</Text>
-            <Text h2 css={{ textAlign: "center" }}>We couldnt find the page you were looking for.</Text>
+            <Text h2 css={{ textAlign: "center", fs: "1.2em", "@sm": { fs: "1.8em" } }}>We couldnt find the page you were looking for.</Text>
             <Button
                 icon={<HomeFilledIcon height={24} width={24} style={{ fill: "currentColor" }} />}
                 onClick={() => router.replace(auth.authUser ? "/home" : "/")}

@@ -142,14 +142,14 @@ const Login = (props) => {
                 </>}
             </Grid.Container>
         </Card>
-        <Spacer y={1} />
+        {/*<Spacer y={1} />
         <Card css={{ boxShadow: "$xl" }} bordered>
             <Text span css={{ fontWeight: 400, ta: "center", fs: 18 }} justify="center">
                 You dont have an account? <Link href="/signup" passHref>
                     <ALink>Sign up here</ALink>
                 </Link>
             </Text>
-        </Card>
+        </Card>*/}
     </Container>)
 }
 

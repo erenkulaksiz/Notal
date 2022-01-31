@@ -74,7 +74,12 @@ const Profile = (props) => {
         }
 
         if (editProfile.fullname.length != 0 && !editProfile.fullname.replace(/\s/g, '').length) {
-            setEditErrors({ ...editErrors, fullname: "You cant just use blank fullname. Theres remove icon on the right." });
+            setEditErrors({ ...editErrors, fullname: "You cant just use whitespace fullname. Theres remove icon on the right." });
+            return;
+        }
+
+        if (editProfile.fullname.length != 0 && editProfile.fullname.length < 3) {
+            setEditErrors({ ...editErrors, fullname: "Fullname must be minimum 3 characters." });
             return;
         }
 

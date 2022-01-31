@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 //import { DragDropContext } from 'react-beautiful-dnd';
-import { Button, Spacer, Container, Text, Grid, Card, Link as ALink, useTheme, Loading, Row, Modal } from '@nextui-org/react';
+import { Button, Spacer, Container, Text, Grid, Card, Link as ALink, useTheme, Loading, Row, Tooltip } from '@nextui-org/react';
 
 import { server } from '../../config';
 import useAuth from '../../hooks/auth';
@@ -20,6 +20,7 @@ import StarFilledIcon from '../../../public/icons/star_filled.svg';
 import StarOutlineIcon from '../../../public/icons/star_outline.svg';
 import VisibleIcon from '../../../public/icons/visible.svg';
 import AddIcon from '../../../public/icons/add.svg';
+import MoreIcon from '../../../public/icons/more.svg';
 
 import { CheckToken } from '../../utils';
 import { withCheckUser } from '../../hooks/route';
@@ -55,13 +56,13 @@ const Workspace = (props) => {
                             </Text>
                         </Row>
                     </Grid>
-                    <Grid xs={3} sm={1} md={0.8} css={{ minHeight: 60 }}>
-                        <Button css={{ bg: "$gradient" }} style={{ minWidth: 20, width: "100%", height: "100%" }}>
+                    <Grid xs={3} sm={1} md={0.8} css={{ minHeight: 60, }}>
+                        <Button css={{ bg: "$gradient", minWidth: 20, height: "100%", width: "100%" }} size="sm">
                             {props.workspace?.data?.starred ? <StarFilledIcon style={{ fill: "#dbb700" }} /> : <StarOutlineIcon fill={"currentColor"} />}
                         </Button>
                     </Grid>
                     <Grid xs={3} sm={1} md={0.8}>
-                        <Button css={{ bg: "$gradient" }} style={{ minWidth: 20, width: "100%", height: "100%" }}>
+                        <Button css={{ bg: "$gradient" }} style={{ minWidth: 20, height: "100%", width: "100%" }}>
                             <VisibleIcon height={20} width={20} fill={"currentColor"} />
                         </Button>
                     </Grid>
@@ -78,9 +79,67 @@ const Workspace = (props) => {
                 </Grid.Container>
             </Card>
             <Spacer y={1} />
-            <Card css={{ height: "100%" }}>
-                sdfsd
-            </Card>
+            <Grid.Container gap={1} css={{ paddingLeft: 0, paddingRight: 0 }}>
+                <Grid xs={6} md={4}>
+                    {/* FIELD */}
+                    <Card>
+                        <Grid.Container>
+                            <Grid xs={12}>
+                                <Card css={{ bg: isDark ? "$gray800" : "$gray200" }}>
+                                    <Grid.Container>
+                                        <Grid xs={12} sm={6}>
+                                            <Text h4>
+                                                Titleasdaf
+                                            </Text>
+                                        </Grid>
+                                        <Grid xs={12} sm={6} css={{ justifyContent: "space-around" }}>
+                                            <Button size="sm" css={{ minWidth: 44 }}>
+                                                <EditIcon size={24} fill={"currentColor"} />
+                                            </Button>
+                                            <Button size="sm" css={{ minWidth: 44 }}>
+                                                <DeleteIcon size={24} fill={"currentColor"} />
+                                            </Button>
+                                            <Button size="sm" css={{ minWidth: 44 }}>
+                                                <MoreIcon size={24} fill={"currentColor"} />
+                                            </Button>
+                                        </Grid>
+
+                                    </Grid.Container>
+                                </Card>
+                            </Grid>
+                        </Grid.Container>
+                    </Card>
+                </Grid>
+                <Grid xs={6} md={4}>
+                    <Card>
+                        <Grid.Container>
+                            <Grid xs={12}>
+                                <Card css={{ bg: isDark ? "$gray800" : "$gray200" }}>
+                                    <Grid.Container>
+                                        <Grid xs={12} sm={6}>
+                                            <Text h4>
+                                                Titleasdaf
+                                            </Text>
+                                        </Grid>
+                                        <Grid xs={12} sm={6} css={{ justifyContent: "space-around" }}>
+                                            <Button size="sm" css={{ minWidth: 44 }}>
+                                                <EditIcon size={24} fill={"currentColor"} />
+                                            </Button>
+                                            <Button size="sm" css={{ minWidth: 44 }}>
+                                                <DeleteIcon size={24} fill={"currentColor"} />
+                                            </Button>
+                                            <Button size="sm" css={{ minWidth: 44 }}>
+                                                <MoreIcon size={24} fill={"currentColor"} />
+                                            </Button>
+                                        </Grid>
+
+                                    </Grid.Container>
+                                </Card>
+                            </Grid>
+                        </Grid.Container>
+                    </Card>
+                </Grid>
+            </Grid.Container>
         </Container>
 
     </Container>)

@@ -197,7 +197,6 @@ const Landing = (props) => {
                     </Card>
                 </Grid>
                 <Grid xs={1} md={4}></Grid>
-
                 <Spacer y={2} />
                 <Grid xs={12} justify="center">
                     <PoweredByVercel utmSource="notal" />
