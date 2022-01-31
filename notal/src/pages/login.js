@@ -149,7 +149,7 @@ const Login = (props) => {
         <Card >
             <Text span css={{ fontWeight: 400, ta: "center", fs: 18 }} justify="center">
                 You dont have an account? <Link href="/signup" passHref>
-                    <ALink css={{ bg: "$gradient", backgroundClip: "text", color: "transparent", fontWeight: "bold" }}>Sign up here</ALink>
+                    <ALink>Sign up here</ALink>
                 </Link>
             </Text>
         </Card>

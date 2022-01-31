@@ -2,7 +2,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Button, Spacer, Container, Text, Grid, Card, Link as ALink, Loading } from '@nextui-org/react';
+import { Button, Spacer, Container, Text, Grid, Card, Link as ALink, Loading, Avatar } from '@nextui-org/react';
 //import Confetti from 'react-confetti'; // :)
 
 import { server } from '../config';
@@ -12,6 +12,7 @@ import StarOutlineIcon from '../../public/icons/star_outline.svg';
 import StarFilledIcon from '../../public/icons/star_filled.svg';
 import AddIcon from '../../public/icons/add.svg';
 import DeleteIcon from '../../public/icons/delete.svg';
+import UserIcon from '../../public/icons/user.svg';
 
 import AddWorkspaceModal from '../components/addWorkspaceModal';
 import DeleteWorkspaceModal from '../components/deleteWorkspaceModal';
@@ -181,6 +182,14 @@ const Home = (props) => {
                         <Loading />
                         <Text css={{ mt: 24, fs: "1.4em" }}>Loading Workspaces...</Text>
                     </Card> : <Grid.Container gap={1}>
+                        <Grid xs={12}>
+                            <Avatar
+                                squared
+                                icon={<UserIcon size={20} fill="currentColor" />}
+                            />
+                            <Spacer x={1} />
+                            <Text h3>Your Workspaces</Text>
+                        </Grid>
                         {workspace.getWorkspacesWithFilter(_workspaces).length > 0 ? workspace.getWorkspacesWithFilter(_workspaces).map((element, index) =>
                             <Grid xs={12} sm={3} lg={2} key={index}>
                                 <Card color={'gradient'} css={{ height: 140, justifyContent: "flex-end" }}>

@@ -49,7 +49,7 @@ const Landing = (props) => {
         })();
     }, []);
 
-    return (<Container xl css={{ position: "relative", padding: 0 }}>
+    return (<Container xl css={{ position: "relative", padding: 0, width: "100%", height: "100%" }}>
         <Head>
             <title>Home · Notal</title>
             <meta name="description" content="Notal. The next generation taking notes and sharing todo snippets platform." />
@@ -63,7 +63,7 @@ const Landing = (props) => {
             <Spacer y={6} />
             <Grid.Container gap={2}>
                 <Grid xs={12}>
-                    <Card css={{ width: "50%", fill: "$warning" }}>
+                    <Card css={{ fill: "$warning", width: "50%", "@mdMax": { width: "100%" } }}>
                         <Row>
                             <WarningIcon size={20} style={{ transform: "scale(0.8)" }} />
                             <Text h5 css={{ color: "$warningDark", ml: 4 }}>Alpha Warning</Text>
@@ -85,15 +85,15 @@ const Landing = (props) => {
                         }}>Take notes to <Text span css={{ color: "$primary" }}>next</Text> level with Notal.</Text>
                     </Row>
                     <Row>
-                        <Text b css={{ fs: "1.2em", color: "$gray500" }}>Keep focus on your project, not on your planning with Notal.</Text>
+                        <Text b css={{ fs: "1.2em", color: isDark ? "$gray500" : "$gray200" }}>Keep focus on your project, not on your planning with Notal.</Text>
                     </Row>
                     <Spacer y={1} />
                     <Row>
-                        <Button onClick={() => router.push("/login")} rounded>
+                        <Button css={{ minWidth: 100 }} onClick={() => router.push("/login")} rounded>
                             Discover More
                         </Button>
                         <Spacer x={1} />
-                        <Button ghost onClick={() => { }} rounded>
+                        <Button css={{ minWidth: 100 }} ghost onClick={() => { }} rounded>
                             Changelog & Info
                         </Button>
                     </Row>
@@ -182,8 +182,8 @@ const Landing = (props) => {
             </Grid.Container>
             <Spacer y={12} />
             <Grid.Container>
-                <Grid xs={2} md={4}></Grid>
-                <Grid xs={8} md={4}>
+                <Grid xs={1} md={4}></Grid>
+                <Grid xs={10} md={4}>
                     <Card>
                         <Row css={{ alignItems: "center", justifyContent: "center" }}>
                             <CodeIcon size={20} fill="currentColor" style={{ marginRight: 4, transform: "scale(0.8)" }} />
@@ -196,7 +196,7 @@ const Landing = (props) => {
                         </Row>
                     </Card>
                 </Grid>
-                <Grid xs={2} md={4}></Grid>
+                <Grid xs={1} md={4}></Grid>
 
                 <Spacer y={2} />
                 <Grid xs={12} justify="center">

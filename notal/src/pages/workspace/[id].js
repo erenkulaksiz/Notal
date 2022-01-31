@@ -55,22 +55,22 @@ const Workspace = (props) => {
                             </Text>
                         </Row>
                     </Grid>
-                    <Grid xs={3} sm={2} md={0.8}>
+                    <Grid xs={3} sm={1} md={0.8} css={{ minHeight: 60 }}>
                         <Button css={{ bg: "$gradient" }} style={{ minWidth: 20, width: "100%", height: "100%" }}>
                             {props.workspace?.data?.starred ? <StarFilledIcon style={{ fill: "#dbb700" }} /> : <StarOutlineIcon fill={"currentColor"} />}
                         </Button>
                     </Grid>
-                    <Grid xs={3} sm={2} md={0.8}>
+                    <Grid xs={3} sm={1} md={0.8}>
                         <Button css={{ bg: "$gradient" }} style={{ minWidth: 20, width: "100%", height: "100%" }}>
                             <VisibleIcon height={20} width={20} fill={"currentColor"} />
                         </Button>
                     </Grid>
-                    <Grid xs={3} sm={2} md={0.8}>
+                    <Grid xs={3} sm={1} md={0.8}>
                         <Button css={{ bg: "$gradient" }} style={{ minWidth: 20, width: "100%", height: "100%" }}>
                             <DeleteIcon fill={"currentColor"} />
                         </Button>
                     </Grid>
-                    <Grid xs={3} sm={2} md={0.8}>
+                    <Grid xs={3} sm={1} md={0.8}>
                         <Button css={{ bg: "$gradient" }} style={{ minWidth: 20, width: "100%", height: "100%" }}>
                             <AddIcon fill={"currentColor"} />
                         </Button>

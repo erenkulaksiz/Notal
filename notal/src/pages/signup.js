@@ -122,7 +122,7 @@ const Signup = (props) => {
                 <Grid xs={12}>
                     <Text h3>Sign up</Text>
                 </Grid>
-                <Grid xs={6} css={{ fd: "column" }}>
+                <Grid xs={12} sm={6} css={{ fd: "column" }}>
                     <Input
                         color="primary"
                         labelLeft={<UserIcon height={24} width={24} style={{ fill: "currentColor" }} />}
@@ -137,7 +137,7 @@ const Signup = (props) => {
                     />
                     {error.username != false && <Text color={"$error"}>{error.username}</Text>}
                 </Grid>
-                <Grid xs={6} css={{ fd: "column" }}>
+                <Grid xs={12} sm={6} css={{ fd: "column" }}>
                     <Input
                         color="primary"
                         labelLeft={<UserIcon height={24} width={24} style={{ fill: "currentColor" }} />}
@@ -165,7 +165,7 @@ const Signup = (props) => {
                     />
                     {error.email != false && <Text color={"$error"}>{error.email}</Text>}
                 </Grid>
-                <Grid xs css={{ fd: "column" }}>
+                <Grid xs={12} sm={6} css={{ fd: "column" }}>
                     <Input.Password
                         color="primary"
                         labelLeft={<PasswordIcon height={24} width={24} style={{ fill: "currentColor" }} />}
@@ -178,7 +178,7 @@ const Signup = (props) => {
                     />
                     {error.password != false && <Text color={"$error"}>{error.password}</Text>}
                 </Grid>
-                <Grid xs css={{ fd: "column" }}>
+                <Grid xs={12} sm={6} css={{ fd: "column" }}>
                     <Input.Password
                         color="primary"
                         labelLeft={<PasswordIcon height={24} width={24} style={{ fill: "currentColor" }} />}
@@ -212,7 +212,7 @@ const Signup = (props) => {
         <Card>
             <Text span css={{ fontWeight: 400, ta: "center", fs: 18 }} justify="center">
                 You already have an account? <Link href="/login" passHref>
-                    <ALink css={{ bg: "$gradient", backgroundClip: "text", color: "transparent", fontWeight: "bold" }}>Sign in here</ALink>
+                    <ALink>Sign in here</ALink>
                 </Link>
             </Text>
         </Card>

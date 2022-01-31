@@ -60,7 +60,7 @@ const EmailLogin = ({ onLogin, onBack, setError, error, onForgot }) => {
             {error.password != false && <Text color={"$error"}>{error.password}</Text>}
         </Grid>
         <Grid xs={12} css={{ fd: "column" }}>
-            <ALink href={"#"} onClick={onForgot} css={{ bg: "$gradient", backgroundClip: "text", color: "transparent", fontWeight: "bold" }}>
+            <ALink href={"#"} onClick={onForgot}>
                 Forgot Password?
             </ALink>
         </Grid>
