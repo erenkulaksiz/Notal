@@ -14,7 +14,10 @@ const lightTheme = createTheme({
       gradient: 'linear-gradient(112deg, rgba(209,0,255,1) -20%, rgba(0,159,220,1) 100%)',
     },
     space: {},
-    fonts: {}
+    fonts: {},
+    shadows: {
+      xl: 'rgba(0, 0, 0, 0.20) 0px 22px 70px 4px'
+    }
   }
 })
 
@@ -25,9 +28,14 @@ const darkTheme = createTheme({
       primaryLight: '$green200',
       primaryDark: '$green600',
       gradient: 'linear-gradient(112deg, $purple400 -25%, $pink500 -10%, $purple500 80%)',
+      border: '$accents2',
+
     },
     space: {},
-    fonts: {}
+    fonts: {},
+    shadows: {
+      xl: 'rgba(0, 0, 0, 0.20) 0px 22px 70px 4px'
+    }
   }
 })
 

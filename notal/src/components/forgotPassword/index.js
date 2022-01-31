@@ -43,15 +43,15 @@ const ForgotPassword = ({ onForgotPassword, onBack, forgotError, setForgotError 
                 labelLeft={<EmailIcon height={24} width={24} style={{ fill: "currentColor" }} />}
                 placeholder='E-mail'
                 bordered
-                fullWidth
                 onChange={e => setForgotEmail(e.target.value)}
                 value={forgotEmail}
                 animated={false}
+                fullWidth
             />
         </Grid>
         {forgotError != false && <Text color={"$error"}>{forgotError}</Text>}
         <Grid xs={12} justify='center'>
-            <Button onClick={onSubmit} css={{ width: "50%", minWidth: 350 }} color="gradient" size="xl" icon={<RefreshIcon height={22} width={22} style={{ fill: "currentColor" }} />}>
+            <Button onClick={onSubmit} css={{ width: "100%", fs: "0.9em", "@xs": { fs: "1.2em" }, "@sm": { fs: "1.2em" } }} color="gradient" size="xl" icon={<RefreshIcon height={22} width={22} style={{ fill: "currentColor" }} />}>
                 Send Password Reset Link
             </Button>
         </Grid>

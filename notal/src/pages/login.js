@@ -75,20 +75,17 @@ const Login = (props) => {
             <meta name="description" content="Login to Notal, the greatest note app" />
             <link rel="icon" href="/favicon.ico" />
         </Head>
-        <Spacer y={1} />
-        <Card css={{ minWidth: 300 }}>
+        <ALink onClick={() => router.push("/")}>
+            <img
+                src={isDark ? "./icon_white.png" : "./icon_galactic.png"}
+                alt="Logo of Notal"
+                width={210}
+                style={{ maxHeight: "100%", maxWidth: "100%" }}
+                height={60}
+            />
+        </ALink>
+        <Card css={{ minWidth: 300, mt: 64, boxShadow: "$xl" }} bordered>
             <Grid.Container gap={2} justify="center">
-                <Grid xs={12} sm={12} alignItems="center" justify="center">
-                    <ALink onClick={() => router.push("/")}>
-                        <img
-                            src={isDark ? "./icon_white.png" : "./icon_galactic.png"}
-                            alt="Logo of Notal"
-                            width={210}
-                            style={{ maxHeight: "100%", maxWidth: "100%" }}
-                            height={60}
-                        />
-                    </ALink>
-                </Grid>
                 {/*<Grid xs={12} sm={6} alignItems="center" justify="center">
                     <Tooltip content={'Learn more about Notal'}>
                         <Button onClick={() => router.push("/about")} size="lg" icon={<QuestionIcon height={24} width={24} style={{ fill: "currentColor" }} />}>
@@ -146,7 +143,7 @@ const Login = (props) => {
             </Grid.Container>
         </Card>
         <Spacer y={1} />
-        <Card >
+        <Card css={{ boxShadow: "$xl" }} bordered>
             <Text span css={{ fontWeight: 400, ta: "center", fs: 18 }} justify="center">
                 You dont have an account? <Link href="/signup" passHref>
                     <ALink>Sign up here</ALink>

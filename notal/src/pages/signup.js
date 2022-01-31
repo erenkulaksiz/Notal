@@ -105,19 +105,17 @@ const Signup = (props) => {
             <meta name="description" content="Signup to Notal, the greatest note app" />
             <link rel="icon" href="/favicon.ico" />
         </Head>
-        <Card css={{ minWidth: 300 }}>
+        <ALink onClick={() => router.push("/")}>
+            <img
+                src={isDark ? "./icon_white.png" : "./icon_galactic.png"}
+                alt="Logo of Notal"
+                width={210}
+                style={{ maxHeight: "100%", maxWidth: "100%" }}
+                height={60}
+            />
+        </ALink>
+        <Card css={{ minWidth: 300, mt: 64, boxShadow: "$xl" }} bordered>
             <Grid.Container gap={2} justify="center">
-                <Grid xs={12} sm={12} alignItems="center" justify="center">
-                    <ALink onClick={() => router.push("/")}>
-                        <img
-                            src={isDark ? "./icon_white.png" : "./icon_galactic.png"}
-                            alt="Logo of Notal"
-                            width={210}
-                            style={{ maxHeight: "100%", maxWidth: "100%" }}
-                            height={60}
-                        />
-                    </ALink>
-                </Grid>
                 <Spacer y={1} />
                 <Grid xs={12}>
                     <Text h3>Sign up</Text>
@@ -209,7 +207,7 @@ const Signup = (props) => {
             </Grid.Container>
         </Card>
         <Spacer y={1} />
-        <Card>
+        <Card css={{ boxShadow: "$xl" }} bordered>
             <Text span css={{ fontWeight: 400, ta: "center", fs: 18 }} justify="center">
                 You already have an account? <Link href="/login" passHref>
                     <ALink>Sign in here</ALink>
