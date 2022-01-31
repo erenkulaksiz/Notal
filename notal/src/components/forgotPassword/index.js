@@ -46,6 +46,7 @@ const ForgotPassword = ({ onForgotPassword, onBack, forgotError, setForgotError 
                 fullWidth
                 onChange={e => setForgotEmail(e.target.value)}
                 value={forgotEmail}
+                animated={false}
             />
         </Grid>
         {forgotError != false && <Text color={"$error"}>{forgotError}</Text>}

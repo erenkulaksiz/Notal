@@ -9,7 +9,8 @@ import { useTheme as useNextTheme } from 'next-themes';
 import useAuth from '../hooks/auth';
 import { withPublic } from '../hooks/route';
 
-import QuestionIcon from '../../public/icons/question.svg';
+import CheckOutlineIcon from '../../public/icons/check_outline.svg';
+import BackIcon from '../../public/icons/back.svg';
 
 import AuthService from '../service/AuthService';
 
@@ -78,13 +79,15 @@ const Login = (props) => {
         <Card css={{ minWidth: 300 }}>
             <Grid.Container gap={2} justify="center">
                 <Grid xs={12} sm={12} alignItems="center" justify="center">
-                    <img
-                        src={isDark ? "./icon_white.png" : "./icon_galactic.png"}
-                        alt="Logo of Notal"
-                        width={210}
-                        style={{ maxHeight: "100%", maxWidth: "100%" }}
-                        height={60}
-                    />
+                    <ALink onClick={() => router.push("/")}>
+                        <img
+                            src={isDark ? "./icon_white.png" : "./icon_galactic.png"}
+                            alt="Logo of Notal"
+                            width={210}
+                            style={{ maxHeight: "100%", maxWidth: "100%" }}
+                            height={60}
+                        />
+                    </ALink>
                 </Grid>
                 {/*<Grid xs={12} sm={6} alignItems="center" justify="center">
                     <Tooltip content={'Learn more about Notal'}>
@@ -97,6 +100,7 @@ const Login = (props) => {
                     onLogin={() => setView("email")} // Login with email
                     onLoginWithGithub={onLoginWithGithub}
                     onLoginWithGoogle={onLoginWithGoogle}
+                    oauthError={oauthError}
                 />}
                 {view == "email" && <EmailLogin
                     onBack={() => {
@@ -120,13 +124,32 @@ const Login = (props) => {
                     setForgotError={setForgotError}
                     forgotError={forgotError}
                 />}
+                {view == "sentEmail" && <>
+                    <Row css={{ mt: 6 }}>
+                        <Button onClick={() => setView(null)}
+                            icon={<BackIcon height={24} width={24} style={{ fill: "currentColor" }} />}>
+                            Back
+                        </Button>
+                    </Row>
+                    <Spacer y={1} />
+                    <Card css={{ bg: "$gradient" }}>
+                        <Grid.Container gap={2}>
+                            <Grid xs={12} justify='center'>
+                                <CheckOutlineIcon height={24} width={24} style={{ fill: "white", transform: "scale(2)" }} />
+                            </Grid>
+                            <Grid xs={12} justify='center'>
+                                <Text h3>An email has been sent to reset your password.</Text>
+                            </Grid>
+                        </Grid.Container>
+                    </Card>
+                </>}
             </Grid.Container>
         </Card>
         <Spacer y={1} />
         <Card >
             <Text span css={{ fontWeight: 400, ta: "center", fs: 18 }} justify="center">
                 You dont have an account? <Link href="/signup" passHref>
-                    <ALink>Sign up here!</ALink>
+                    <ALink css={{ bg: "$gradient", backgroundClip: "text", color: "transparent", fontWeight: "bold" }}>Sign up here</ALink>
                 </Link>
             </Text>
         </Card>

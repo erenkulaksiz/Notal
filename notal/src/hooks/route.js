@@ -18,11 +18,11 @@ export function withCheckUser(Component) {
                 <Loading type="gradient" />
                 <Text css={{ mt: 16, fs: "1.2em" }}>Loading...</Text>
             </Container>
-        } else {
+        }/* else {
             if (props.validate?.success == true && !props.validate?.data.username) {
                 router.replace("/home");
             }
-        }
+        }*/
 
         return <Component {...props} />
     }

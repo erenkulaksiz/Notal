@@ -28,8 +28,7 @@ const EmailLogin = ({ onLogin, onBack, setError, error, onForgot }) => {
 
     return (<>
         <Grid xs={12}>
-            <Button onClick={onBack}
-                icon={<BackIcon height={24} width={24} style={{ fill: "currentColor" }} />}>
+            <Button onClick={onBack} icon={<BackIcon height={24} width={24} style={{ fill: "currentColor" }} />}>
                 Back
             </Button>
         </Grid>
@@ -44,6 +43,7 @@ const EmailLogin = ({ onLogin, onBack, setError, error, onForgot }) => {
                 bordered
                 fullWidth
                 onChange={e => setEmail(e.target.value)}
+                animated={false}
             />
             {error.email != false && <Text color={"$error"}>{error.email}</Text>}
         </Grid>
@@ -55,11 +55,12 @@ const EmailLogin = ({ onLogin, onBack, setError, error, onForgot }) => {
                 bordered
                 fullWidth
                 onChange={e => setPassword(e.target.value)}
+                animated={false}
             />
             {error.password != false && <Text color={"$error"}>{error.password}</Text>}
         </Grid>
         <Grid xs={12} css={{ fd: "column" }}>
-            <ALink href={"#"} onClick={onForgot}>
+            <ALink href={"#"} onClick={onForgot} css={{ bg: "$gradient", backgroundClip: "text", color: "transparent", fontWeight: "bold" }}>
                 Forgot Password?
             </ALink>
         </Grid>

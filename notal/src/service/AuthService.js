@@ -129,6 +129,15 @@ const AuthService = {
 
         //await push(ref(db, "paacodes"), { valid: true, createDate: Date.now(), expireDate: Date.now() })
 
+        if (username.length > 20) {
+            return { error: { errorCode: "auth/username-too-long" } }
+        } else if (username.length < 3) {
+            return { error: { errorCode: "auth/username-too-short" } }
+        } else if ((/\s/).test(username)) {
+            // check for spaces in username
+            return { error: { errorCode: "auth/username-contains-space" } }
+        }
+
         return await get(query(ref(db, "paacodes"), orderByChild("code"), equalTo(paac), limitToFirst(1))).then(async (snapshot) => {
             if (snapshot.exists()) {
                 const data = snapshot.val()[Object.keys(snapshot.val())[0]];
@@ -146,7 +155,6 @@ const AuthService = {
                                     const user = userCredential.user;
                                     await set(ref(db, `users/${user.uid}`), {
                                         fullname,
-                                        avatar: "https://imgyukle.com/f/2022/01/03/oxgaeS.jpg", // default avatar #TODO: make normal avatar
                                         username,
                                         email,
                                         createdAt: Date.now(),

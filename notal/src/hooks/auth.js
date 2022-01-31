@@ -12,7 +12,6 @@ export default function useAuth() {
 export function AuthProvider(props) {
     const [user, setUser] = useState(null);
     const [error, setError] = useState(null);
-    const [theme, setTheme] = useState(null);
 
     const login = {
         google: async () => {
@@ -134,7 +133,7 @@ export function AuthProvider(props) {
         }
     }
 
-    const value = { authUser: user, authError: error, setUser, login, users, workspace, theme, setTheme };
+    const value = { authUser: user, authError: error, setUser, login, users, workspace, };
 
     return <authContext.Provider value={value} {...props} />
 }

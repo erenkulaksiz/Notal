@@ -1,7 +1,9 @@
 import Head from 'next/head';
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Button, Spacer, Container, Text, Grid, Card, Link as ALink, useTheme, Loading, Row } from '@nextui-org/react';
+import { Button, Spacer, Container, Text, Grid, Card, Link as ALink, Loading } from '@nextui-org/react';
+//import Confetti from 'react-confetti'; // :)
 
 import { server } from '../config';
 
@@ -53,16 +55,14 @@ const Home = (props) => {
     }, [viewing]);
 
     useEffect(() => {
-        //console.log("props indexjs: ", props);
+        console.log("props home: ", props);
 
         (async () => {
             const token = await auth.users.getIdToken();
             const res = await CheckToken({ token, props });
-
-            if (props.validate?.error == "no-token" || res || props.validate?.error == "validation-error" || props.validate?.error == "auth/id-token-expired") {
+            if (!res) {
                 router.replace(router.asPath);
             }
-
             if (props.validate.success && !props.validate?.data?.paac) {
                 router.replace("/paac");
                 return;
@@ -122,7 +122,7 @@ const Home = (props) => {
         }
     }
 
-    return (<Container xl css={{ position: "relative" }}>
+    return (<Container xl css={{ position: "relative", padding: 0 }}>
         <Head>
             <title>Home · Notal</title>
             <meta name="description" content="Notal. The next generation taking notes and sharing todo snippets platform." />
@@ -186,8 +186,16 @@ const Home = (props) => {
                                 <Card color={'gradient'} css={{ height: 140, justifyContent: "flex-end" }}>
                                     <Grid.Container>
                                         <Grid xs={6} css={{ fd: "column" }} justify='flex-end'>
-                                            <Text h3 color={"white"}>{element.title}</Text>
-                                            <Text h6 color={"white"}>{element.desc}</Text>
+                                            <Link href="/workspace/[pid]" as={`/workspace/${element.id}`}>
+                                                <ALink>
+                                                    <Text h3 color={"white"}>{element.title}</Text>
+                                                </ALink>
+                                            </Link>
+                                            <Link href="/workspace/[pid]" as={`/workspace/${element.id}`}>
+                                                <ALink>
+                                                    <Text h6 color={"white"}>{element.desc}</Text>
+                                                </ALink>
+                                            </Link>
                                         </Grid>
                                         <Grid xs={6} justify='flex-end' alignItems='flex-end' css={{ fd: "column" }}>
                                             <Button
@@ -210,10 +218,10 @@ const Home = (props) => {
                                     </Grid.Container>
                                 </Card>
                             </Grid>) : null}
-
                         <Grid xs={12} sm={3} lg={2}>
-                            <Card bordered
-                                css={{ borderColor: "$primary", dflex: "center", color: "$primary", height: 140 }}
+                            <Card
+                                bordered
+                                css={{ borderColor: "$primary", dflex: "center", color: "$primary", height: 140, }}
                                 clickable
                                 onClick={() => setNewWorkspaceVisible(true)}
                             >

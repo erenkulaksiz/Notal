@@ -1,12 +1,15 @@
 import cookie from "js-cookie";
-//import { server } from '../config';
+import { server } from '../config';
 
 export const CheckToken = async ({ token, props }) => {
     //console.log("jwtyi kontrol edicem bi canım");
-    if (props.validate?.error == "auth/id-token-expired" || props.validate?.error == "auth/argument-error") {
+    //console.log("prsss", props.validate?.error);
+    if (props.validate?.error == "auth/id-token-expired"
+        || props.validate?.error == "auth/argument-error"
+        || props.validate?.error == "validation-error") {
         try {
+            //console.log("Checktoken !!! ", token.res);
             /*
-            console.log("Checktoken !!! ", token.res);
             const dataValidate = await fetch(`${server}/api/validate`, {
                 'Content-Type': 'application/json',
                 method: "POST",
@@ -14,16 +17,19 @@ export const CheckToken = async ({ token, props }) => {
             }).then(response => response.json()).catch(error => {
                 return { success: false, ...error }
             });
-            console.log("data validate: ", dataValidate);
             */
+            //console.log("data validate: ", dataValidate);
             await cookie.set("auth", token.res, { expires: 1 });
-            return true
+            return false
         } catch (err) {
             console.error(err);
             auth.users.logout();
-            return false
+            return true
         }
     } else {
+        if (!props.validate?.error) {
+            return true;
+        }
         return false;
     }
 };

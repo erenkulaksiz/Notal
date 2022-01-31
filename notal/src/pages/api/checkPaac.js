@@ -11,9 +11,16 @@ if (!admin.apps.length) {
 }
 
 export default async function handler(req, res) {
-    const data = JSON.parse(req.body);
-    if (req.method !== 'POST' || !data.uid || !data.paac) {
+    if (req.method !== 'POST') {
         res.status(400).send({ success: false });
+        return;
+    }
+
+    const data = JSON.parse(req.body);
+
+    if (!data.uid || !data.paac) {
+        res.status(400).send({ success: false });
+        return;
     }
 
     // UNNECCESARY CHECK HERE, FIX IT LATEER

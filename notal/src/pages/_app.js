@@ -10,7 +10,8 @@ const lightTheme = createTheme({
   theme: {
     colors: {
       primaryLight: '$green200',
-      primaryDark: '$green600'
+      primaryDark: '$green600',
+      gradient: 'linear-gradient(112deg, rgba(209,0,255,1) -20%, rgba(0,159,220,1) 100%)',
     },
     space: {},
     fonts: {}
@@ -22,7 +23,8 @@ const darkTheme = createTheme({
   theme: {
     colors: {
       primaryLight: '$green200',
-      primaryDark: '$green600'
+      primaryDark: '$green600',
+      gradient: 'linear-gradient(112deg, $purple400 -25%, $pink500 -10%, $purple500 80%)',
     },
     space: {},
     fonts: {}

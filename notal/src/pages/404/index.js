@@ -5,9 +5,11 @@ import { Button, Container, Text, Grid, Card, Input } from '@nextui-org/react';
 
 import BackIcon from '../../../public/icons/back.svg';
 import HomeFilledIcon from '../../../public/icons/home_filled.svg';
+import useAuth from '../../hooks/auth';
 
 const Page404 = () => {
     const router = useRouter();
+    const auth = useAuth();
 
     return (<Container xs css={{ dflex: "center", ac: "center", ai: "center", fd: "column" }}>
         <Card css={{ textAlign: "center", dflex: "center", py: 32 }}>
@@ -20,7 +22,7 @@ const Page404 = () => {
             <Text h2 css={{ textAlign: "center" }}>We couldnt find the page you were looking for.</Text>
             <Button
                 icon={<HomeFilledIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-                onClick={() => router.replace("/home")}
+                onClick={() => router.replace(auth.authUser ? "/home" : "/")}
                 css={{ mt: 18 }}
                 size="xl"
                 color="gradient"

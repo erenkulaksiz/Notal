@@ -12,12 +12,17 @@ if (!admin.apps.length) {
 
 export default async function handler(req, res) {
 
+    if (req.method !== 'POST') {
+        res.status(400).send({ success: false });
+        return;
+    }
+
     const { uid, title, desc, action, starred, id, workspaceId, color, fieldId, filterBy, swapType, cardId, toFieldId, toCardId } = JSON.parse(req.body);
 
     const workspaceAction = {
         create: async () => {
             if (!uid || !action) {
-                res.status(400).send({ success: false, error: "invalid-params" })
+                res.status(400).send({ success: false, error: "invalid-params" });
                 return;
             }
 
@@ -55,9 +60,19 @@ export default async function handler(req, res) {
 
                     await admin.database().ref(`/users/${workspace.owner}`).once("value", async (snapshot) => {
                         if (snapshot.exists()) {
-                            res.status(200).send({ success: true, data: { ...workspace, profile: snapshot.val() } });
+                            const data = await snapshot.val();
+                            const newData = {
+                                avatar: data.avatar,
+                                bio: data.bio,
+                                email: data.email,
+                                username: data.username,
+                                profileVisible: data.profileVisible,
+                                fullname: data.fullname,
+                            }
+                            res.status(200).send({ success: true, data: { ...workspace, profile: newData } });
+                            return;
                         } else {
-                            res.status(400).send({ success: false });
+                            res.status(400).send({ success: true, data: { ...workspace, profile: false } });
                         }
                     }).catch(error => {
                         res.status(400).send({ success: false, error });

@@ -13,8 +13,11 @@ if (!admin.apps.length) {
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         res.status(400).send({ success: false });
+        return;
     }
     const { username } = req.query;
+
+    console.log("search for username:", username);
 
     await admin.database().ref(`/users`).orderByChild("username").equalTo(username).limitToFirst(1).once("value", async (snapshot) => {
         if (snapshot.exists()) {
@@ -23,13 +26,14 @@ export default async function handler(req, res) {
             const newData = {
                 avatar: data.avatar,
                 bio: data.bio,
-                email: data.email,
+                //email: data.email,
                 username: data.username,
                 profileVisible: data.profileVisible,
                 fullname: data.fullname,
-            }
+            };
             res.status(400).json({ success: true, data: newData, uid: Object.keys(snapshot.val())[0] });
         } else {
+            console.log("cant find user");
             res.status(400).json({ success: false, error: "cant-find-user" });
         }
     });

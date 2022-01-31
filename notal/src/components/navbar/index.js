@@ -2,7 +2,7 @@ import { Button, Text, Grid, Card, Link as ALink, Switch, Avatar, useTheme } fro
 import styled from 'styled-components'
 import { useTheme as useNextTheme } from 'next-themes';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { Link } from 'next/link';
 
 import UserIcon from '../../../public/icons/user.svg';
 import DarkIcon from '../../../public/icons/dark.svg';
@@ -26,13 +26,13 @@ const Details = styled.details`
         display: block;
         cursor: default;
         content: " ";
-        background: transparent;
     }
 `;
 
 const Header = styled.div`
     //backdrop-filter: saturate(180%) blur(10px);
     background-color: ${props => props.isDark ? "black" : "white"};
+    overflow: visible;
     border-radius: 0;
     padding: 12px;
     paddingTop: 18px;
@@ -44,13 +44,13 @@ const Header = styled.div`
 const Navbar = ({ user }) => {
     const { setTheme } = useNextTheme();
     const { isDark } = useTheme();
-    const router = useRouter();
     const auth = useAuth();
+    const router = useRouter();
 
     return (<Header isDark={isDark}>
-        <Grid.Container justify="center" >
+        <Grid.Container justify="center">
             <Grid xs={6} sm={4} alignItems='center'>
-                <ALink onClick={() => router.push("/home")}>
+                <ALink onClick={() => router.push(auth?.authUser ? "/home" : "/login")}>
                     <img
                         src={isDark ? "/icon_white.png" : "/icon_galactic.png"}
                         alt="Logo of Notal"
@@ -70,7 +70,7 @@ const Navbar = ({ user }) => {
                     iconOff={<DarkIcon height={24} width={24} style={{ fill: "currentColor" }} />}
                     css={{ mr: 12 }}
                 />
-                {auth.authUser ? <Details style={{
+                {auth?.authUser ? <Details style={{
                     position: "relative",
                     display: "inline-block",
                     backgroundColor: "transparent"

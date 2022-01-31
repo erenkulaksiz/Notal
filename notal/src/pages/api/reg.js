@@ -12,10 +12,28 @@ if (!admin.apps.length) {
 
 export default async function handler(req, res) {
 
+    if (req.method !== 'POST') {
+        res.status(400).send({ success: false });
+        return;
+    }
+
     const data = JSON.parse(req.body);
 
-    if (req.method !== 'POST' || !data.uid || !data.username || !data.fullname) {
+    if (!data.uid || !data.username) {
         res.status(400).send({ success: false });
+        return;
+    }
+
+    if (data.username.length > 20) {
+        res.status(400).json({ success: false, error: "auth/username-too-long" });
+        return;
+    } else if (data.username.length < 3) {
+        res.status(400).json({ success: false, error: "auth/username-too-short" });
+        return;
+    } else if ((/\s/).test(data.username)) {
+        // check for spaces in username
+        res.status(400).json({ success: false, error: "auth/username-contains-space" });
+        return;
     }
 
     await admin.database().ref(`/users`).orderByChild("username").equalTo(data.username).limitToFirst(1).once("value", async (snapshot) => {

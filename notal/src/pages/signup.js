@@ -3,7 +3,7 @@ import Link from 'next/link';
 //import Image from 'next/image';
 import { useState, useEffect } from 'react';
 //import styles from '../../styles/App.module.scss';
-//import { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { Button, Spacer, Container, Text, Grid, Card, Link as ALink, useTheme, Input } from '@nextui-org/react';
 
 import EmailIcon from '../../public/icons/email.svg';
@@ -15,7 +15,7 @@ import useAuth from '../hooks/auth';
 import { withPublic } from '../hooks/route';
 
 const Signup = (props) => {
-    //const router = useRouter();
+    const router = useRouter();
     const { isDark } = useTheme();
     const auth = useAuth();
 
@@ -36,12 +36,14 @@ const Signup = (props) => {
         } else {
             setError({ ...error, email: false });
         }
+        /*
         if (fullname.length < 3 || fullname == '') {
             setError({ ...error, fullname: "Please enter a valid fullname." });
             return;
         } else {
             setError({ ...error, fullname: false });
         }
+        */
         if (!(password == passwordConfirm)) {
             setError({ ...error, password: "These passwords does not match." });
             return;
@@ -81,7 +83,16 @@ const Signup = (props) => {
             setError({ email: false, password: "Weak password.", fullname: false, paac: false, username: false });
             return;
         } else if (register?.authError?.errorCode == "paac/invalid-code") {
-            setError({ email: false, password: false, fullname: false, username: false, paac: "This access code is invalid.", })
+            setError({ email: false, password: false, fullname: false, username: false, paac: "This access code is invalid." })
+            return;
+        } else if (register?.authError?.errorCode == "auth/username-too-long") {
+            setError({ email: false, password: false, fullname: false, username: "This username is too long.", paac: false })
+            return;
+        } else if (register?.authError?.errorCode == "auth/username-too-short") {
+            setError({ email: false, password: false, fullname: false, username: "This username is too short.", paac: false })
+            return;
+        } else if (register?.authError?.errorCode == "auth/username-contains-space") {
+            setError({ email: false, password: false, fullname: false, username: "Username cannot contain spaces.", paac: false })
             return;
         } else {
             setError({ email: false, password: false, fullname: false, username: false });
@@ -97,13 +108,15 @@ const Signup = (props) => {
         <Card css={{ minWidth: 300 }}>
             <Grid.Container gap={2} justify="center">
                 <Grid xs={12} sm={12} alignItems="center" justify="center">
-                    <img
-                        src={isDark ? "./icon_white.png" : "./icon_galactic.png"}
-                        alt="Logo of Notal"
-                        width={210}
-                        style={{ maxHeight: "100%", maxWidth: "100%" }}
-                        height={60}
-                    />
+                    <ALink onClick={() => router.push("/")}>
+                        <img
+                            src={isDark ? "./icon_white.png" : "./icon_galactic.png"}
+                            alt="Logo of Notal"
+                            width={210}
+                            style={{ maxHeight: "100%", maxWidth: "100%" }}
+                            height={60}
+                        />
+                    </ALink>
                 </Grid>
                 <Spacer y={1} />
                 <Grid xs={12}>
@@ -115,9 +128,12 @@ const Signup = (props) => {
                         labelLeft={<UserIcon height={24} width={24} style={{ fill: "currentColor" }} />}
                         placeholder='Username'
                         bordered
+                        animated={false}
                         fullWidth
                         type="text"
-                        onChange={e => setUsername(e.target.value)}
+                        value={username}
+                        onChange={e => setUsername(e.target.value.replace(/[^\w\s]/gi, '').replace(/\s/g, '').toLowerCase())}
+                        maxLength={20}
                     />
                     {error.username != false && <Text color={"$error"}>{error.username}</Text>}
                 </Grid>
@@ -125,10 +141,12 @@ const Signup = (props) => {
                     <Input
                         color="primary"
                         labelLeft={<UserIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-                        placeholder='Fullname'
+                        placeholder='Fullname (optional)'
                         bordered
+                        animated={false}
                         fullWidth
                         type="text"
+                        value={fullname}
                         onChange={e => setFullname(e.target.value)}
                     />
                     {error.fullname != false && <Text color={"$error"}>{error.fullname}</Text>}
@@ -139,8 +157,10 @@ const Signup = (props) => {
                         labelLeft={<EmailIcon height={24} width={24} style={{ fill: "currentColor" }} />}
                         placeholder='E-Mail'
                         bordered
+                        animated={false}
                         fullWidth
                         type="email"
+                        value={email}
                         onChange={e => setEmail(e.target.value)}
                     />
                     {error.email != false && <Text color={"$error"}>{error.email}</Text>}
@@ -151,7 +171,9 @@ const Signup = (props) => {
                         labelLeft={<PasswordIcon height={24} width={24} style={{ fill: "currentColor" }} />}
                         placeholder='Password'
                         bordered
+                        animated={false}
                         fullWidth
+                        value={password}
                         onChange={e => setPassword(e.target.value)}
                     />
                     {error.password != false && <Text color={"$error"}>{error.password}</Text>}
@@ -162,7 +184,9 @@ const Signup = (props) => {
                         labelLeft={<PasswordIcon height={24} width={24} style={{ fill: "currentColor" }} />}
                         placeholder='Confirm Password'
                         bordered
+                        animated={false}
                         fullWidth
+                        value={passwordConfirm}
                         onChange={e => setPasswordConfirm(e.target.value)}
                     />
                 </Grid>
@@ -172,7 +196,9 @@ const Signup = (props) => {
                         labelLeft={<PasswordIcon height={24} width={24} style={{ fill: "currentColor" }} />}
                         placeholder='PAAC'
                         bordered
+                        animated={false}
                         fullWidth
+                        value={PAAC}
                         onChange={e => setPAAC(e.target.value)}
                     />
                     {error.paac != false && <Text color={"$error"}>{error.paac}</Text>}
@@ -185,7 +211,9 @@ const Signup = (props) => {
         <Spacer y={1} />
         <Card>
             <Text span css={{ fontWeight: 400, ta: "center", fs: 18 }} justify="center">
-                You already have an account? <Link href="/login" passHref><ALink>Sign in here!</ALink></Link>
+                You already have an account? <Link href="/login" passHref>
+                    <ALink css={{ bg: "$gradient", backgroundClip: "text", color: "transparent", fontWeight: "bold" }}>Sign in here</ALink>
+                </Link>
             </Text>
         </Card>
     </Container>)

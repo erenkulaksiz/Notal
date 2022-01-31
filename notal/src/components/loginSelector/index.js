@@ -24,7 +24,7 @@ const LoginSelector = ({ onLogin, onLoginWithGithub, onLoginWithGoogle, oauthErr
         </Grid>
         <Grid xs={12} justify="center" css={{ ai: "center", py: 6 }}>
             <Tooltip content={'Sign in using Google'}>
-                <Button onClick={onLoginWithGoogle} color="gradient" size="xl" icon={<GoogleIcon height={28} width={28} style={{ fill: "currentColor", }} />}>
+                <Button onClick={onLoginWithGoogle} color="gradient" size="xl" icon={<GoogleIcon height={24} width={24} style={{ fill: "currentColor", }} />}>
                     Google
                 </Button>
             </Tooltip>
@@ -36,7 +36,7 @@ const LoginSelector = ({ onLogin, onLoginWithGithub, onLoginWithGoogle, oauthErr
                 </Button>
             </Tooltip>
         </Grid>
-        <Row>
+        <Row style={{ justifyContent: "center" }}>
             {oauthError != false && <Text color={"$error"}>{oauthError}</Text>}
         </Row>
         <Switch

@@ -1,21 +1,34 @@
 import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Button, Spacer, Container, Text, Grid, Card, Link as ALink, useTheme, Loading, Row, Avatar } from '@nextui-org/react';
+import { Button, Spacer, Container, Text, Grid, Card, useTheme, Row, Avatar, Link as ALink } from '@nextui-org/react';
+import PoweredByVercel from 'powered-by-vercel'
 
 import { server } from '../config';
 
-import DashboardIcon from '../../public/icons/dashboard.svg';
+//import DashboardIcon from '../../public/icons/dashboard.svg';
 import EditIcon from '../../public/icons/edit.svg';
 import UserIcon from '../../public/icons/user.svg';
 import ShareIcon from '../../public/icons/share.svg';
 import PeopleIcon from '../../public/icons/people.svg';
-import LandingImg_shape_1 from '../../public/landing_img_right_1.svg';
+import CodeIcon from '../../public/icons/code.svg';
+import HeartIcon from '../../public/icons/heart.svg';
+import WarningIcon from '../../public/icons/warning.svg';
+//import LandingImg_shape_1 from '../../public/landing_img_right_1.svg';
 
 import Navbar from '../components/navbar';
 
 import useAuth from '../hooks/auth';
 import { CheckToken } from '../utils';
+import Link from 'next/link';
+import styled from 'styled-components';
+
+const ImageContainer = styled.div`
+    width: 100%;
+    height: 500px;
+    position: absolute;
+    opacity: ${props => props.isDark ? 0.4 : 1};
+`;
 
 const Landing = (props) => {
     const auth = useAuth();
@@ -26,11 +39,9 @@ const Landing = (props) => {
         (async () => {
             const token = await auth.users.getIdToken();
             const res = await CheckToken({ token, props });
-
-            if (props.validate?.error == "no-token" || res || props.validate?.error == "validation-error" || props.validate?.error == "auth/id-token-expired") {
+            if (!res) {
                 router.replace(router.asPath);
             }
-
             if (props.validate.success && !props.validate?.data?.paac) {
                 router.replace("/paac");
                 return;
@@ -45,20 +56,26 @@ const Landing = (props) => {
             <link rel="icon" href="/favicon.ico" />
         </Head>
         <Navbar user={props.validate?.data} />
-        <div style={{ width: "100%", height: 500, position: "absolute", opacity: isDark ? 0.4 : 1 }}>
+        <ImageContainer isDark={isDark}>
             <img src="./landing_bg_1.png" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-        </div>
+        </ImageContainer>
         <Container md css={{ position: "relative" }}>
             <Spacer y={6} />
-            <Card css={{ width: "50%" }}>
-                <Text h5>ALPHA!</Text>
-                <Text b css={{ color: "$warningDark" }}>This project is in currently private alpha and not for public access.</Text>
-            </Card>
-            <Grid.Container>
+            <Grid.Container gap={2}>
+                <Grid xs={12}>
+                    <Card css={{ width: "50%", fill: "$warning" }}>
+                        <Row>
+                            <WarningIcon size={20} style={{ transform: "scale(0.8)" }} />
+                            <Text h5 css={{ color: "$warningDark", ml: 4 }}>Alpha Warning</Text>
+                        </Row>
+                        <Text b>This project is currently in private alpha and not for public access.</Text>
+                    </Card>
+                </Grid>
                 <Grid xs={12} sm={10} css={{ fd: "column" }} >
                     <Row>
                         <Text h1 css={{
                             color: "$white",
+                            fs: "1.5em",
                             "@xs": {
                                 fs: "2em",
                             },
@@ -72,8 +89,12 @@ const Landing = (props) => {
                     </Row>
                     <Spacer y={1} />
                     <Row>
-                        <Button css={{ width: "20%" }} onClick={() => alert("Soon!")}>
+                        <Button onClick={() => router.push("/login")} rounded>
                             Discover More
+                        </Button>
+                        <Spacer x={1} />
+                        <Button ghost onClick={() => { }} rounded>
+                            Changelog & Info
                         </Button>
                     </Row>
                 </Grid>
@@ -81,10 +102,9 @@ const Landing = (props) => {
 
                 </Grid>
             </Grid.Container>
-            <Spacer y={10} />
             <Grid.Container gap={2}>
-                <Grid xs={6} sm={3}>
-                    <Card>
+                <Grid xs={12} sm={6} md={3}>
+                    <Card css={{ bf: "saturate(180%) blur(10px)", bg: isDark ? "#ffffff20" : "#ffffffa9" }}>
                         <Row style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                             <Avatar
                                 squared
@@ -102,8 +122,8 @@ const Landing = (props) => {
                         </Row>
                     </Card>
                 </Grid>
-                <Grid xs={6} sm={3}>
-                    <Card css={{ backdropFilter: "" }}>
+                <Grid xs={12} sm={6} md={3}>
+                    <Card css={{ bf: "saturate(180%) blur(10px)", bg: isDark ? "#ffffff20" : "#ffffffa9" }}>
                         <Row style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                             <Avatar
                                 squared
@@ -121,8 +141,8 @@ const Landing = (props) => {
                         </Row>
                     </Card>
                 </Grid>
-                <Grid xs={6} sm={3}>
-                    <Card css={{ backdropFilter: "" }}>
+                <Grid xs={12} sm={6} md={3}>
+                    <Card css={{ bf: "saturate(180%) blur(10px)", bg: isDark ? "#ffffff20" : "#ffffffa9" }}>
                         <Row style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                             <Avatar
                                 squared
@@ -140,8 +160,8 @@ const Landing = (props) => {
                         </Row>
                     </Card>
                 </Grid>
-                <Grid xs={6} sm={3}>
-                    <Card css={{ backdropFilter: "" }}>
+                <Grid xs={12} sm={6} md={3}>
+                    <Card css={{ bf: "saturate(180%) blur(10px)", bg: isDark ? "#ffffff20" : "#ffffffa9" }}>
                         <Row style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                             <Avatar
                                 squared
@@ -160,8 +180,31 @@ const Landing = (props) => {
                     </Card>
                 </Grid>
             </Grid.Container>
-        </Container>
+            <Spacer y={12} />
+            <Grid.Container>
+                <Grid xs={2} md={4}></Grid>
+                <Grid xs={8} md={4}>
+                    <Card>
+                        <Row css={{ alignItems: "center", justifyContent: "center" }}>
+                            <CodeIcon size={20} fill="currentColor" style={{ marginRight: 4, transform: "scale(0.8)" }} />
+                            <Text>with</Text>
+                            <HeartIcon size={20} fill="red" style={{ marginLeft: 4, marginRight: 4, transform: "scale(0.8)" }} />
+                            <Text css={{ mr: 8 }}>by</Text>
+                            <Link href="https://github.com/erenkulaksiz" passHref>
+                                <ALink color>@Eren Kulaksiz</ALink>
+                            </Link>
+                        </Row>
+                    </Card>
+                </Grid>
+                <Grid xs={2} md={4}></Grid>
 
+                <Spacer y={2} />
+                <Grid xs={12} justify="center">
+                    <PoweredByVercel utmSource="notal" />
+                </Grid>
+            </Grid.Container>
+            <Spacer y={2} />
+        </Container>
     </Container>
     )
 }

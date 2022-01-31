@@ -75,6 +75,7 @@ const Paac = (props) => {
                         fullWidth
                         onChange={e => setPaac(e.target.value)}
                         value={paac}
+                        maxLength={30}
                     />
                     {error != false && <Text color={"$error"}>{error}</Text>}
                 </Grid>

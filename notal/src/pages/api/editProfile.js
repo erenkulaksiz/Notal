@@ -11,9 +11,24 @@ if (!admin.apps.length) {
 }
 
 export default async function handler(req, res) {
-    const data = JSON.parse(req.body);
-    if (req.method !== 'POST' || !data.uid || !data.username) {
+    if (req.method !== 'POST') {
         res.status(400).send({ success: false });
+        return;
+    }
+
+    const data = JSON.parse(req.body);
+
+    if (!data.uid || !data.username) {
+        res.status(400).send({ success: false });
+        return;
+    }
+
+    if (data.username.length > 20) {
+        res.status(400).json({ success: false, error: "auth/username-too-long" });
+        return;
+    } else if (data.username.length < 3) {
+        res.status(400).json({ success: false, error: "auth/username-too-short" });
+        return;
     }
 
     await admin.database().ref(`/users`).orderByChild("username").equalTo(data.username).limitToFirst(1).once("value", async (snapshot) => {

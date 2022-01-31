@@ -39,12 +39,16 @@ const Profile = (props) => {
     const [editAvatarLoading, setEditAvatarLoading] = useState(false);
 
     useEffect(() => {
-        //console.log("props: ", props);
+        console.log("props on profile: ", props);
         (async () => {
             const token = await auth.users.getIdToken();
             const res = await CheckToken({ token, props });
-            if (props.validate?.error == "no-token" || res || props.validate?.error == "validation-error" || props.validate?.error == "auth/id-token-expired") {
+            if (!res) {
                 router.replace(router.asPath);
+            }
+            if (props.validate.success && !props.validate?.data?.paac) {
+                router.replace("/paac");
+                return;
             }
         })();
     }, []);
@@ -69,6 +73,11 @@ const Profile = (props) => {
             setEditErrors({ ...editErrors, username: false });
         }
 
+        if (editProfile.fullname.length != 0 && !editProfile.fullname.replace(/\s/g, '').length) {
+            setEditErrors({ ...editErrors, fullname: "You cant just use blank fullname. Theres remove icon on the right." });
+            return;
+        }
+
         if (editProfile.fullname != props.validate?.data?.fullname || editProfile.username != props.validate?.data?.username || editProfile.bio != props.validate?.data?.bio || editProfile.visibility != props.validate?.data?.profileVisible) {
             const data = await auth.users.editUser({
                 uid: auth.authUser?.uid,
@@ -80,12 +89,32 @@ const Profile = (props) => {
             if (data.success) {
                 router.replace(`/profile/${editProfile.username}`);
                 setEditingProfile(false);
-            } else if (data.success == false && data.error.error == 'auth/username-already-in-use') {
+                setEditErrors({ ...editErrors, fullname: false, username: false, bio: false });
+                setEditProfile({
+                    fullname: props.validate?.data?.fullname,
+                    username: props.validate?.data?.username,
+                    bio: props.validate?.data?.bio,
+                    visibility: props.validate?.data?.profileVisible
+                });
+            } else if (data.success == false && data.error.error == "auth/username-already-in-use") {
                 setEditErrors({ fullname: false, username: "This username is already in use.", bio: false });
+                return;
+            } else if (data.success == false && data.error.error == "auth/username-too-long") {
+                setEditErrors({ fullname: false, username: "I see what you are doing. You cant have a long username, sorry.", bio: false });
+                return;
+            } else if (data.success == false && data.error.error == "auth/username-too-short") {
+                setEditErrors({ fullname: false, username: "Im really sorry. You cant get the username 'a' or 'b', please enter a username that has min 3 length.", bio: false });
                 return;
             }
         } else {
             setEditingProfile(false);
+            setEditErrors({ ...editErrors, fullname: false, username: false, bio: false });
+            setEditProfile({
+                fullname: props.validate?.data?.fullname,
+                username: props.validate?.data?.username,
+                bio: props.validate?.data?.bio,
+                visibility: props.validate?.data?.profileVisible
+            });
         }
     }
 
@@ -115,9 +144,9 @@ const Profile = (props) => {
         }
     }
 
-    return (<Container xl css={{ position: "relative" }}>
+    return (<Container xl css={{ position: "relative", padding: 0 }}>
         <Head>
-            <title>{props.profile?.success == true ? "Viewing " + props.profile?.data?.username + "'s profile" : "Not Found"}</title>
+            <title>{props.profile?.success == true ? props.profile?.data?.username + "'s profile" : "Not Found"}</title>
             <meta name="description" content="Notal" />
             <link rel="icon" href="/favicon.ico" />
         </Head>
@@ -156,9 +185,9 @@ const Profile = (props) => {
             </Card>
         </Container> : <Container sm>
             <Card>
-                <Grid.Container gap={1} css={{ alignItems: "flex-start" }}>
-                    <Grid xs={4} sm={2} justify="center" css={{ fd: "column" }}>
-                        <Avatar bordered color="gradient" src={props.profile?.data?.avatar} size="xl" css={{ size: "128px", minWidth: 124 }} />
+                <Grid.Container gap={1}>
+                    <Grid xs={12} sm={12} md={2} lg={2} xl={2} justify="center" css={{ fd: "column", alignItems: "center", }}>
+                        <Avatar bordered color="gradient" src={props.profile?.data?.avatar ?? ""} icon={<UserIcon size={12} style={{ fill: "white", transform: "scale(3)" }} />} size="xl" css={{ size: "128px", minWidth: 124 }} />
                         {editingProfile && <Button size={"xs"} type={"file"}
                             clickable={!editAvatarLoading}
                             onClick={() => {
@@ -167,7 +196,7 @@ const Profile = (props) => {
                             {editAvatarLoading ? <Loading color="white" size="xs" /> : <>Change Avatar<input type="file" ref={avatarInputRef} style={{ display: "none" }} onChange={onAvatarEditChange} /></>}
                         </Button>}
                     </Grid>
-                    <Grid xs={8} md={10} css={{ fd: "column", }}>
+                    <Grid xs={12} sm={12} md={10} lg={10} xl={10} css={{ fd: "column", "@mdMax": { alignItems: "center" } }}>
                         {editingProfile ? <Input
                             color="primary"
                             labelLeft={<UserIcon height={24} width={24} style={{ fill: "currentColor" }} />}
@@ -184,6 +213,8 @@ const Profile = (props) => {
                             </Text>
                             {props.profile.data?.profileVisible || <LockIcon height={24} width={24} style={{ fill: "currentColor", marginLeft: 8 }} />}
                         </div>}
+
+                        {editErrors.fullname != false && <Text color={"$error"}>{editErrors.fullname}</Text>}
 
                         {editingProfile ? <Input
                             color="primary"
@@ -208,80 +239,76 @@ const Profile = (props) => {
                         >
                             Edit Profile
                         </Button>}
-
-                        {((auth?.authUser?.uid == props.profile?.uid) && editingProfile) && <Grid.Container css={{ mt: 12 }}>
-                            <Grid xs={12} sm={6}>
-                                <Button
-                                    size={"lg"}
-                                    icon={<CrossIcon height={24} width={24} fill={"currentColor"} />}
-                                    css={{ width: "100%" }}
-                                    onClick={() => {
-                                        setEditingProfile(false);
-                                        setEditErrors({ ...editErrors, fullname: false, username: false, bio: false });
-                                        setEditProfile({
-                                            fullname: props.validate?.data?.fullname,
-                                            username: props.validate?.data?.username,
-                                            bio: props.validate?.data?.bio,
-                                            visibility: props.validate?.data?.profileVisible
-                                        });
-                                    }}
-                                    ghost
-                                >
-                                    Cancel
-                                </Button>
-                            </Grid>
-                            <Grid xs={12} sm={6} >
-                                <Button
-                                    size={"lg"}
-                                    icon={<CheckIcon height={24} width={24} fill={"currentColor"} />}
-                                    css={{ width: "100%" }}
-                                    onClick={onFinishEditing}
-                                >
-                                    Edit
-                                </Button>
-                            </Grid>
-                        </Grid.Container>}
                     </Grid>
                     {(props.profile?.data?.bio || editingProfile) && <Grid xs={12}>
                         <Row css={{ mt: 12 }}>
-                            <Card css={{ backgroundColor: "$primary" }}>
+                            <Card css={{ bg: "$gradient" }}>
                                 <Grid.Container gap={editingProfile ? 1 : 0}>
                                     <Grid xs={12} md={editingProfile ? 6 : 12} css={{ whiteSpace: "pre-line", maxH: 200, fd: "column" }}>
                                         <Text h4 css={{ color: "$white" }}>Biography</Text>
+                                        <Spacer y={0.5} />
                                         {editingProfile ?
                                             <Textarea
-                                                css={{ minWidth: "100%" }}
+                                                css={{ minWidth: "100%", }}
                                                 placeholder="Enter your biography. You can also leave this empty."
                                                 onChange={e => setEditProfile({ ...editProfile, bio: e.target.value })}
                                                 value={editProfile.bio}
                                                 maxLength={200}
                                                 maxRows={4}
+                                                animated={false}
                                             /> :
                                             <Text css={{ color: "$white", overflowWrap: "anywhere" }}>{props.profile?.data?.bio}</Text>}
                                     </Grid>
                                     <Grid xs={editingProfile ? 12 : 0} md={editingProfile ? 6 : 0} css={{ fd: "column" }}>
                                         <Text h4 css={{ color: "$white" }}>Profile Visibility</Text>
+                                        <Spacer y={0.5} />
                                         <Card css={{ backgroundColor: isDark ? "$gray900" : "$background", justifyContent: "center", height: "100%" }}>
-                                            <Grid.Container>
-                                                <Grid xs>
-                                                    <Switch
-                                                        checked={editProfile.visibility}
-                                                        onChange={e => setEditProfile({ ...editProfile, visibility: e.target.checked })}
-                                                        size="xl"
-                                                        iconOn={<VisibleIcon height={24} width={24} fill={"currentColor"} />}
-                                                        iconOff={<VisibleOffIcon height={24} width={24} fill={"currentColor"} />}
-                                                    />
-                                                </Grid>
-                                                <Grid xs={10}>
-                                                    <Text css={{ fs: "1.2em", fontWeight: "500" }}>
-                                                        {editProfile.visibility ? "Your profile is visible." : "Your profile is private."}
-                                                    </Text>
-                                                </Grid>
-                                            </Grid.Container>
+                                            <Row>
+                                                <Switch
+                                                    checked={editProfile.visibility}
+                                                    onChange={e => setEditProfile({ ...editProfile, visibility: e.target.checked })}
+                                                    size="lg"
+                                                    iconOn={<VisibleIcon height={24} width={24} fill={"currentColor"} />}
+                                                    iconOff={<VisibleOffIcon height={24} width={24} fill={"currentColor"} />}
+                                                />
+                                                <Text css={{ fs: "1.2em", fontWeight: "500", ml: 8 }}>
+                                                    {editProfile.visibility ? "Your profile is public." : "Your profile is private."}
+                                                </Text>
+                                            </Row>
                                         </Card>
                                     </Grid>
                                 </Grid.Container>
                             </Card>
+                        </Row>
+                    </Grid>}
+                    {((auth?.authUser?.uid == props.profile?.uid) && editingProfile) && <Grid xs={12}>
+                        <Row css={{ mt: 12, justifyContent: "space-between" }}>
+                            <Button
+                                size={"lg"}
+                                icon={<CrossIcon height={24} width={24} fill={"currentColor"} />}
+                                css={{ width: "49%", minWidth: 100 }}
+                                onClick={() => {
+                                    setEditingProfile(false);
+                                    setEditErrors({ ...editErrors, fullname: false, username: false, bio: false });
+                                    setEditProfile({
+                                        fullname: props.validate?.data?.fullname,
+                                        username: props.validate?.data?.username,
+                                        bio: props.validate?.data?.bio,
+                                        visibility: props.validate?.data?.profileVisible
+                                    });
+                                }}
+                                ghost
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                size={"lg"}
+                                icon={<CheckIcon height={24} width={24} fill={"currentColor"} />}
+                                css={{ width: "49%", minWidth: 100 }}
+                                onClick={onFinishEditing}
+                            >
+                                Edit
+                            </Button>
                         </Row>
                     </Grid>}
                 </Grid.Container>
@@ -291,7 +318,7 @@ const Profile = (props) => {
                 <Text>asdksaj</Text>
             </Card>*/}
         </Container>}
-    </Container>)
+    </Container >)
 }
 
 export default withCheckUser(Profile)
@@ -307,7 +334,7 @@ export async function getServerSideProps(ctx) {
         const authCookie = req.cookies.auth;
         //const emailCookie = req.cookies.email;
 
-        const profileData = await fetch(`${server}/api/profile/${queryUsername.toLowerCase()}`, {
+        const profileData = await fetch(`${server}/api/profile/${queryUsername}`, {
             'Content-Type': 'application/json',
             method: "POST",
         }).then(response => response.json());
