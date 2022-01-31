@@ -28,6 +28,7 @@ const ImageContainer = styled.div`
     height: 500px;
     position: absolute;
     opacity: ${props => props.isDark ? 0.4 : 1};
+    background-color: black;
 `;
 
 const Landing = (props) => {
@@ -57,7 +58,7 @@ const Landing = (props) => {
         </Head>
         <Navbar user={props.validate?.data} />
         <ImageContainer isDark={isDark}>
-            <img src="./landing_bg_1.png" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            <img src="./landing_bg_1.png" style={{ width: "100%", height: "100%", objectFit: "cover", "-webkit-filter": "blur(4px)", }} />
         </ImageContainer>
         <Container md css={{ position: "relative" }}>
             <Spacer y={6} />
@@ -82,7 +83,7 @@ const Landing = (props) => {
                             "@md": {
                                 fs: "4em"
                             }
-                        }}>Take notes to <Text span css={{ color: "$primary" }}>next</Text> level with Notal.</Text>
+                        }}>Take notes to <Text span css={{ bg: "$gradient", backgroundImage: "$gradient", WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>next</Text> level with Notal.</Text>
                     </Row>
                     <Row>
                         <Text b css={{ fs: "1.2em", color: isDark ? "$gray500" : "$gray200" }}>Keep focus on your project, not on your planning with Notal.</Text>

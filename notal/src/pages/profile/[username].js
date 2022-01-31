@@ -193,12 +193,12 @@ const Profile = (props) => {
                 <Grid.Container gap={1}>
                     <Grid xs={12} sm={12} md={2} lg={2} xl={2} justify="center" css={{ fd: "column", alignItems: "center", }}>
                         <Avatar bordered color="gradient" src={props.profile?.data?.avatar ?? ""} icon={<UserIcon size={12} style={{ fill: "white", transform: "scale(3)" }} />} size="xl" css={{ size: "128px", minWidth: 124 }} />
-                        {editingProfile && <Button size={"xs"} type={"file"}
+                        {editingProfile && <Button size="xs"
                             clickable={!editAvatarLoading}
                             onClick={() => {
                                 if (!editAvatarLoading) avatarInputRef.current.click();
                             }}>
-                            {editAvatarLoading ? <Loading color="white" size="xs" /> : <>Change Avatar<input type="file" ref={avatarInputRef} style={{ display: "none" }} onChange={onAvatarEditChange} /></>}
+                            {editAvatarLoading ? <Loading color="white" size="xs" /> : <>Change Avatar<input type="file" ref={avatarInputRef} style={{ display: "none" }} onChange={onAvatarEditChange} accept="image/png, image/jpeg" /></>}
                         </Button>}
                     </Grid>
                     <Grid xs={12} sm={12} md={10} lg={10} xl={10} css={{ fd: "column", "@mdMax": { alignItems: "center" } }}>

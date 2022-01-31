@@ -15,8 +15,6 @@ export default function Document() {
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta property="twitter:domain" content="https://github.com/erenkulaksiz" />
 
-                <meta name="theme-color" content="#19181e" />
-
                 <meta name="x" content="why are you reading this?" />
             </Head>
             <body>
