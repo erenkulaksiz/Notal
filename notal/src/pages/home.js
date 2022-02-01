@@ -18,7 +18,7 @@ import AddWorkspaceModal from '../components/addWorkspaceModal';
 import DeleteWorkspaceModal from '../components/deleteWorkspaceModal';
 import Navbar from '../components/navbar';
 
-import { withAuth, withCheckUser } from '../hooks/route';
+import { withAuth } from '../hooks/route';
 import useAuth from '../hooks/auth';
 import { CheckToken } from '../utils';
 
@@ -63,10 +63,6 @@ const Home = (props) => {
             const res = await CheckToken({ token, props });
             if (!res) {
                 router.replace(router.asPath);
-            }
-            if (props.validate.success && !props.validate?.data?.paac) {
-                router.replace("/paac");
-                return;
             }
         })();
     }, []);
@@ -258,7 +254,7 @@ const Home = (props) => {
     )
 }
 
-export default withCheckUser(withAuth(Home));
+export default withAuth(Home);
 
 export async function getServerSideProps(ctx) {
     const { req, res, query } = ctx;
@@ -278,14 +274,18 @@ export async function getServerSideProps(ctx) {
                 return { success: false, error: { code: "validation-error", errorMessage: error } }
             });
 
+            console.log("data-validate: ", dataValidate);
+
             if (dataValidate.success) {
                 validate = { ...dataValidate };
 
                 const dataWorkspaces = await fetch(`${server}/api/workspace`, {
                     'Content-Type': 'application/json',
                     method: "POST",
-                    body: JSON.stringify({ uid: dataValidate.uid, action: "GET_WORKSPACES" }),
+                    body: JSON.stringify({ uid: dataValidate.data.uid, action: "GET_WORKSPACES" }),
                 }).then(response => response.json());
+
+                console.log("data workspaces: ", dataWorkspaces);
 
                 if (dataWorkspaces?.success) {
                     if (dataWorkspaces?.data) {

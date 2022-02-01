@@ -19,8 +19,6 @@ import VisibleOffIcon from '../../../public/icons/visible_off.svg';
 
 import { CheckToken } from '../../utils';
 
-import { withCheckUser } from '../../hooks/route';
-
 import Navbar from '../../components/navbar';
 
 const Profile = (props) => {
@@ -45,10 +43,6 @@ const Profile = (props) => {
             const res = await CheckToken({ token, props });
             if (!res) {
                 router.replace(router.asPath);
-            }
-            if (props.validate.success && !props.validate?.data?.paac) {
-                router.replace("/paac");
-                return;
             }
         })();
     }, []);
@@ -192,7 +186,7 @@ const Profile = (props) => {
             <Card>
                 <Grid.Container gap={1}>
                     <Grid xs={12} sm={12} md={2} lg={2} xl={2} justify="center" css={{ fd: "column", alignItems: "center", }}>
-                        <Avatar bordered color="gradient" src={props.profile?.data?.avatar ?? ""} icon={<UserIcon size={12} style={{ fill: "white", transform: "scale(3)" }} />} size="xl" css={{ size: "128px", minWidth: 124 }} />
+                        <Avatar bordered color="gradient" src={props.profile?.data?.avatar ?? ""} referrerPolicy='no-refferer' icon={<UserIcon size={12} style={{ fill: "white", transform: "scale(3)" }} />} size="xl" css={{ size: "128px", minWidth: 124 }} />
                         {editingProfile && <Button size="xs"
                             clickable={!editAvatarLoading}
                             onClick={() => {
@@ -326,7 +320,7 @@ const Profile = (props) => {
     </Container >)
 }
 
-export default withCheckUser(Profile)
+export default Profile;
 
 export async function getServerSideProps(ctx) {
     const { req, res, query } = ctx;

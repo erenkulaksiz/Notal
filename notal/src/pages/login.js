@@ -1,10 +1,9 @@
 import Head from 'next/head';
-import Link from 'next/link';
+//import Link from 'next/link';
 import { useEffect, useState } from 'react';
 //import styles from '../../styles/App.module.scss';
 import { useRouter } from 'next/router';
-import { Button, Spacer, Container, Text, Grid, Card, Link as ALink, Switch, useTheme, Tooltip, Input, Row, Divider } from '@nextui-org/react';
-import { useTheme as useNextTheme } from 'next-themes';
+import { Button, Spacer, Container, Text, Grid, Card, Link as ALink, useTheme, Row } from '@nextui-org/react';
 
 import useAuth from '../hooks/auth';
 import { withPublic } from '../hooks/route';

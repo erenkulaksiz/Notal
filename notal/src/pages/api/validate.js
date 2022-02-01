@@ -28,6 +28,7 @@ export default async function handler(req, res) {
         const usersCollection = db.collection("users");
 
         await admin.auth().verifyIdToken(token).then(async (decodedToken) => {
+            console.log("decodedToken: ", decodedToken);
             const user = await usersCollection.findOne({ uid: decodedToken.uid });
             if (!user) {
                 const newUser = {
@@ -36,9 +37,9 @@ export default async function handler(req, res) {
                     createdAt: Date.now(),
                     updatedAt: Date.now(),
                     username: decodedToken?.uid,
-                    fullname: "",
+                    fullname: decodedToken?.name ?? "",
                     bio: "",
-                    avatar: decodedToken?.photoURL || "",
+                    avatar: decodedToken?.picture,
                     profileVisible: false,
                 }
                 await usersCollection.insertOne({ ...newUser });

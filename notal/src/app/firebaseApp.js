@@ -8,7 +8,6 @@ if (!getApps.length) {
     if (typeof windows != "undefined") {
         if ("measurementId" in firebaseConfig) {
             const analytics = getAnalytics(app);
-            const database = getDatabase(app);
             const storage = getStorage(app);
         }
     }

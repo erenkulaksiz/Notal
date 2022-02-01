@@ -24,7 +24,6 @@ import AddIcon from '../../../public/icons/add.svg';
 import MoreIcon from '../../../public/icons/more.svg';
 
 import { CheckToken } from '../../utils';
-import { withCheckUser } from '../../hooks/route';
 
 const CardColor = styled.div`
     position: absolute;
@@ -43,6 +42,8 @@ const Workspace = (props) => {
     const [newFieldTitle, setNewFieldTitle] = useState("");
     const [newFieldModalVisible, setNewFieldModalVisible] = useState(false);
 
+    const [deleteWorkspaceModalVisible, setDeleteWorkspaceModalVisible] = useState(false);
+
     const [loadingWorkspace, setLoadingWorkspace] = useState(true);
     const [_workspace, _setWorkspace] = useState(null);
 
@@ -60,97 +61,58 @@ const Workspace = (props) => {
     const handle = {
         finishEditing: ({ title, desc }) => {
             if (_workspace.title != title || _workspace.desc != desc) {
-                const data = auth.workspace.editWorkspace({ id: _workspace.id, title, desc });
+                const data = auth.workspace.editWorkspace({ id: _workspace._id, title, desc });
                 if (data?.error) console.error("error on edit workspace: ", data?.error);
                 const newWorkspace = { ..._workspace, title, desc };
                 _setWorkspace(newWorkspace);
             }
         },
-        starWorkspace: () => {
-            const data = auth.workspace.starWorkspace({ id: _workspace.id });
-            if (data?.error) console.error("error on star workspace: ", data.error);
-            const newWorkspace = { ..._workspace, starred: !_workspace.starred };
-            _setWorkspace(newWorkspace);
-        },
-        addField: async ({ title }) => {
-            const data = await auth.workspace.field.addField({ title: title, id: _workspace.id, filterBy: "index" });
+        starWorkspace: async () => {
+            const data = await auth.workspace.starWorkspace({ id: _workspace._id });
 
             if (data.success) {
+                router.replace(router.asPath);
+            } else if (data?.error) {
+                console.error("error on star workspace: ", data.error);
+            }
+        },
+        addField: async ({ title }) => {
+            const data = await auth.workspace.field.addField({ title: title, id: _workspace._id, filterBy: "index" });
+
+            if (data.success) {
+                setNewFieldModalVisible(false);
                 router.replace(router.asPath);
             } else {
                 console.log("addfield error: ", data?.error);
             }
         },
-        editField: ({ id, title }) => {
-            const data = auth.workspace.field.editField({ id, title, workspaceId: _workspace.id });
-            if (data?.error) console.error("error on edit field: ", data.error);
-            const index = _workspace.fields.findIndex(el => el.id == id);
-            const newField = { ..._workspace.fields[index], title };
-            const newFields = _workspace.fields;
-            newFields[index] = newField;
-            const newWorkspace = { ..._workspace, fields: newFields };
-            _setWorkspace(newWorkspace);
-        },
-        deleteField: ({ id }) => {
-            const data = auth.workspace.field.removeField({ id, workspaceId: _workspace.id });
-            if (data?.error) console.error("error on delete field: ", data.error);
-            const newFields = _workspace.fields.filter(el => el.id != id);
-            const newWorkspace = { ..._workspace, fields: [...newFields] }
-            _setWorkspace(newWorkspace);
-        },
-        deleteWorkspace: () => {
-            const data = auth.workspace.deleteWorkspace({ id: _workspace.id });
-            if (data?.error) console.error("error on delete workspace: ", data.error);
-            router.replace("/");
-        },
-        addCardToField: async ({ fieldId, title, desc, color }) => {
-            const data = await auth.workspace.field.addCard({
-                id: fieldId,
-                workspaceId: _workspace.id,
-                title,
-                desc,
-                color
-            });
+        editField: async ({ id, title }) => {
+            const data = await auth.workspace.field.editField({ id, title, workspaceId: _workspace._id });
 
             if (data.success) {
                 router.replace(router.asPath);
-            } else {
-                console.log("add card error: ", data?.error);
+            } else if (data?.error) {
+                console.error("error on edit field: ", data.error);
             }
         },
-        deleteCard: ({ id, fieldId }) => {
-            const data = auth.workspace.field.removeCard({
-                id,
-                fieldId,
-                workspaceId: _workspace.id,
-            });
-            if (data?.error) console.error("error on delete card: ", data.error);
-
-            const newWorkspace = _workspace;
-            const _fieldIndex = newWorkspace.fields.findIndex(el => el.id == fieldId);
-            const _cardIndex = newWorkspace.fields[_fieldIndex].cards.findIndex(el => el.id == id);
-            const _fieldCards = newWorkspace.fields[_fieldIndex].cards;
-            _fieldCards.splice(_cardIndex, 1);
-            _setWorkspace(newWorkspace);
-        },
-        editCard: async ({ title, desc, color, id, fieldId }) => {
-            const data = await auth.workspace.field.editCard({
-                id: id,
-                fieldId,
-                workspaceId: _workspace.id,
-                title,
-                desc,
-                color,
-            });
+        deleteField: async ({ id }) => {
+            const data = await auth.workspace.field.removeField({ id, workspaceId: _workspace._id });
 
             if (data.success) {
-                setCardEditing({ ...cardEditing, editing: false, id: "" });
-                setCardMore({ ...cardMore, visible: false, cardId: "" });
                 router.replace(router.asPath);
-            } else {
-                console.log("edit card error: ", data?.error);
+            } else if (data?.error) {
+                console.error("error on delete field: ", data.error);
             }
         },
+        deleteWorkspace: async () => {
+            const data = await auth.workspace.deleteWorkspace({ id: _workspace._id });
+
+            if (data.success) {
+                router.replace(router.asPath);
+            } else if (data?.error) {
+                console.error("error on delete workspace: ", data.error);
+            }
+        }
     }
 
 
@@ -225,7 +187,7 @@ const Workspace = (props) => {
                                                 <Button size="sm" css={{ minWidth: 44, mr: 8 }}>
                                                     <EditIcon size={24} fill={"currentColor"} />
                                                 </Button>
-                                                <Button size="sm" css={{ minWidth: 44, mr: 8 }}>
+                                                <Button size="sm" css={{ minWidth: 44, mr: 8 }} onClick={() => handle.deleteField({ id: field._id })}>
                                                     <DeleteIcon size={24} fill={"currentColor"} />
                                                 </Button>
                                                 <Button size="sm" css={{ minWidth: 44 }}>
@@ -297,6 +259,8 @@ const Workspace = (props) => {
                     fullWidth
                     color="primary"
                     placeholder="Field Title"
+                    value={newFieldTitle}
+                    onChange={(e) => setNewFieldTitle(e.target.value)}
                 />
             </Modal.Body>
             <Modal.Footer>
@@ -333,25 +297,8 @@ export async function getServerSideProps(ctx) {
             body: JSON.stringify({ id: queryId, action: "GET_WORKSPACE" }),
         }).then(response => response.json());
 
-        let fields = [];
-
-        if (dataWorkspace.data?.fields) {
-            fields = Object.keys(dataWorkspace.data.fields).map((el, index) => {
-                return { ...dataWorkspace.data?.fields[el], id: Object.keys(dataWorkspace.data.fields)[index] }
-            });
-            fields.map((el, index) => {
-                if (el.cards) {
-                    const cards = Object.keys(el.cards).map((elx, index) => {
-                        return { ...el.cards[elx], id: Object.keys(el.cards)[index] }
-                    })
-
-                    fields[index].cards = cards;
-                }
-            })
-        }
-
         if (dataWorkspace.success) {
-            workspace = { ...dataWorkspace, data: { ...dataWorkspace.data, id: queryId, fields: [...fields] } };
+            workspace = { ...dataWorkspace, data: dataWorkspace.data };
         } else {
             workspace = { success: false }
         }

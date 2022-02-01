@@ -21,6 +21,7 @@ export default async function handler(req, res) {
     const { db } = await connectToDatabase();
     //const usersCollection = db.collection("users");
     const workspacesCollection = db.collection("workspaces");
+    //const fieldsCollection = db.collection("fields");
 
     const { uid, title, desc, action, starred, id, workspaceId, color, fieldId, filterBy, swapType, cardId, toFieldId, toCardId } = JSON.parse(req.body);
 
@@ -141,15 +142,22 @@ export default async function handler(req, res) {
                 res.status(400).send({ success: false, error: "invalid-params" });
                 return;
             }
-
-            const ref = await admin.database().ref(`/workspaces/${id}/fields`).push();
-            await ref.set({
-                title, createdAt: Date.now(), updatedAt: Date.now(), filterBy
-            }, () => {
+            try {
+                await workspacesCollection.updateOne({ "_id": ObjectId(id) }, {
+                    $push: {
+                        fields: {
+                            title,
+                            createdAt: Date.now(),
+                            updatedAt: Date.now(),
+                            filterBy,
+                            _id: ObjectId(),
+                        }
+                    }
+                });
                 res.status(200).send({ success: true });
-            }).catch((error) => {
-                res.status(400).send({ success: false, error });
-            });
+            } catch (error) {
+                res.status(400).send({ success: false, error: new Error(error).message });
+            }
         },
         removefield: async () => {
             if (!id || !uid || !workspaceId) {
@@ -159,11 +167,18 @@ export default async function handler(req, res) {
 
             console.log("Workspace id: ", workspaceId, " id of field: ", id);
 
-            await admin.database().ref(`/workspaces/${workspaceId}/fields/${id}`).remove(() => {
+            try {
+                await workspacesCollection.updateOne({ "_id": ObjectId(workspaceId) }, {
+                    $pull: {
+                        fields: {
+                            "_id": ObjectId(id),
+                        }
+                    }
+                });
                 res.status(200).send({ success: true });
-            }).catch((error) => {
-                res.status(400).send({ success: false, error });
-            });
+            } catch (error) {
+                res.status(400).send({ success: false, error: new Error(error).message });
+            }
         },
         addcard: async () => {
 

@@ -43,10 +43,6 @@ const Landing = (props) => {
             if (!res) {
                 router.replace(router.asPath);
             }
-            if (props.validate.success && !props.validate?.data?.paac) {
-                router.replace("/paac");
-                return;
-            }
         })();
     }, []);
 

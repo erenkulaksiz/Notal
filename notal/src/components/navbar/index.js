@@ -81,7 +81,7 @@ const Navbar = ({ user }) => {
                             display: "none",
                         }
                     }}>
-                        <Avatar size="md" color="gradient" bordered src={user?.avatar} icon={<UserIcon height={24} width={24} style={{ fill: "white" }} />} pointer />
+                        <Avatar size="md" color="gradient" bordered src={user?.avatar} referrerPolicy='no-refferer' icon={<UserIcon height={24} width={24} style={{ fill: "white" }} />} pointer />
                     </summary>
                     <Card css={{ zIndex: 2, position: "absolute", right: 0, top: "100%", width: "auto" }}>
                         <Text h4>{user?.fullname || "@" + user?.username}</Text>
