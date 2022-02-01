@@ -1,5 +1,7 @@
 const admin = require("firebase-admin");
 const { firebaseConfig } = require('../../config/firebaseApp.config');
+const { connectToDatabase } = require('../../../lib/mongodb');
+const ObjectId = require('mongodb').ObjectId;
 
 const googleService = JSON.parse(process.env.NEXT_PUBLIC_GOOGLE_SERVICE);
 
@@ -16,21 +18,33 @@ export default async function handler(req, res) {
         res.status(400).send({ success: false });
         return;
     }
+    const { db } = await connectToDatabase();
+    //const usersCollection = db.collection("users");
+    const workspacesCollection = db.collection("workspaces");
 
     const { uid, title, desc, action, starred, id, workspaceId, color, fieldId, filterBy, swapType, cardId, toFieldId, toCardId } = JSON.parse(req.body);
 
     const workspaceAction = {
         create: async () => {
-            if (!uid || !action) {
+            if (!uid) {
                 res.status(400).send({ success: false, error: "invalid-params" });
                 return;
             }
 
-            const ref = await admin.database().ref(`/workspaces`).push();
-            await ref.set({
-                title, desc, starred, createdAt: Date.now(), updatedAt: Date.now(), owner: uid
-            });
-            res.status(200).send({ success: true });
+            try {
+                await workspacesCollection.insertOne({
+                    title,
+                    desc,
+                    starred,
+                    createdAt: Date.now(),
+                    updatedAt: Date.now(),
+                    owner: uid,
+                }).then(() => {
+                    res.status(200).send({ success: true });
+                });
+            } catch (error) {
+                res.status(400).send({ success: false, error: new Error(error).message });
+            }
         },
         get_workspaces: async () => {
             const { uid } = JSON.parse(req.body);
@@ -40,67 +54,46 @@ export default async function handler(req, res) {
                 return;
             }
 
-            await admin.database().ref(`/workspaces`).orderByChild("owner").equalTo(uid).once("value", async (snapshot) => {
-                if (snapshot.exists()) {
-                    res.status(200).send({ success: true, data: snapshot.val() });
+            try {
+                const workspaces = await workspacesCollection.find({ owner: uid }).toArray();
+                if (workspaces) {
+                    res.status(200).send({ success: true, data: workspaces });
                 } else {
-                    res.status(200).send({ success: true });
+                    res.status(400).send({ success: false, error: "user-not-found" });
                 }
-            });
+            } catch (error) {
+                res.status(200).send({ success: false, error: new Error(error).message });
+            }
         },
         get_workspace: async () => {
             if (!id) {
                 res.status(400).send({ success: false, error: "invalid-params" });
                 return;
             }
-
-            await admin.database().ref(`/workspaces/${id}`).once("value", async (snapshot) => {
-                if (snapshot.exists()) {
-                    const workspace = snapshot.val();
-
-                    await admin.database().ref(`/users/${workspace.owner}`).once("value", async (snapshot) => {
-                        if (snapshot.exists()) {
-                            const data = await snapshot.val();
-                            const newData = {
-                                avatar: data.avatar,
-                                bio: data.bio,
-                                email: data.email,
-                                username: data.username,
-                                profileVisible: data.profileVisible,
-                                fullname: data.fullname,
-                            }
-                            res.status(200).send({ success: true, data: { ...workspace, profile: newData } });
-                            return;
-                        } else {
-                            res.status(400).send({ success: true, data: { ...workspace, profile: false } });
-                        }
-                    }).catch(error => {
-                        res.status(400).send({ success: false, error });
-                    });
-                } else {
+            try {
+                const workspace = await workspacesCollection.findOne({ "_id": ObjectId(id) });
+                if (!workspace) {
                     res.status(400).send({ success: false });
+                } else {
+                    res.status(200).send({ success: true, data: workspace });
                 }
-            }).catch(error => {
-                res.status(400).send({ success: false, error });
-            });
+            } catch (error) {
+                res.status(400).send({ success: false, error: new Error(error).message });
+            }
         },
         delete: async () => {
-            if (!uid) {
+            if (!uid || !id) { // id: workspace
                 res.status(400).send({ success: false, error: "invalid-params" });
                 return;
             }
-
-            await admin.database().ref(`/workspaces/${id}`).once("value", async (snapshot) => {
-                if (snapshot.exists()) {
-                    await admin.database().ref(`/workspaces/${id}`).remove(() => {
+            try {
+                await workspacesCollection.deleteOne({ "_id": ObjectId(id) })
+                    .then(() => {
                         res.status(200).send({ success: true });
-                    }).catch(error => {
-                        res.status(400).send({ success: false, error });
                     });
-                } else {
-                    res.status(400).send({ success: false });
-                }
-            });
+            } catch (error) {
+                res.status(400).send({ success: false, error: new Error(error).message });
+            }
         },
         star: async () => {
             if (!uid || !id) {
@@ -108,28 +101,15 @@ export default async function handler(req, res) {
                 return;
             }
 
-            await admin.database().ref(`/workspaces`).orderByKey().equalTo(id).once("value", async (snapshot) => {
-                if (snapshot.exists()) {
-                    const data = snapshot.val()[Object.keys(snapshot.val())[0]];
-
-                    const starred = !data.starred;
-
-                    if (data.owner == uid) {
-
-                        await admin.database().ref(`/workspaces/${id}`).update({ starred, updatedAt: Date.now() }, () => {
-                            res.status(200).send({ success: true });
-                        }).catch(error => {
-                            res.status(400).send({ success: false, error });
-                        });
-                    } else {
-                        res.status(400).send({ success: false, error: "unauthorized" });
-                    }
-                } else {
-                    res.status(400).send({ success: false });
-                }
-            }).catch(error => {
-                res.status(400).send({ success: false, error });
-            });
+            try {
+                const workspace = await workspacesCollection.findOne({ "_id": ObjectId(id) })
+                await workspacesCollection.updateOne({ "_id": ObjectId(id) }, { $set: { starred: !workspace.starred } })
+                    .then(() => {
+                        res.status(200).send({ success: true });
+                    });
+            } catch (error) {
+                res.status(400).send({ success: false, error: new Error(error).message });
+            }
         },
         edit: async () => {
             if (!id || !uid) {

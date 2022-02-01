@@ -195,12 +195,12 @@ const Home = (props) => {
                                 <Card color={'gradient'} css={{ height: 140, justifyContent: "flex-end" }}>
                                     <Grid.Container>
                                         <Grid xs={10} css={{ fd: "column" }} justify='flex-end'>
-                                            <Link href="/workspace/[pid]" as={`/workspace/${element.id}`}>
+                                            <Link href="/workspace/[pid]" as={`/workspace/${element._id}`}>
                                                 <ALink>
                                                     <Text h3 color={"white"}>{element.title}</Text>
                                                 </ALink>
                                             </Link>
-                                            <Link href="/workspace/[pid]" as={`/workspace/${element.id}`}>
+                                            <Link href="/workspace/[pid]" as={`/workspace/${element._id}`}>
                                                 <ALink>
                                                     <Text h6 color={"white"}>{element.desc}</Text>
                                                 </ALink>
@@ -213,13 +213,13 @@ const Home = (props) => {
                                                         <StarFilledIcon height={24} width={24} style={{ fill: "white" }} /> :
                                                         <StarOutlineIcon height={24} width={24} style={{ fill: "white" }} />
                                                 }
-                                                onClick={() => workspace.star({ id: element.id })}
+                                                onClick={() => workspace.star({ id: element._id })}
                                                 css={{ minWidth: 20, justifyContent: "flex-end" }}
                                                 light
                                             />
                                             <Button
                                                 icon={<DeleteIcon height={24} width={24} style={{ fill: "white" }} />}
-                                                onClick={() => setDeleteModal({ ...deleteModal, visible: true, workspace: element.id })}
+                                                onClick={() => setDeleteModal({ ...deleteModal, visible: true, workspace: element._id })}
                                                 css={{ minWidth: 20, justifyContent: "flex-end" }}
                                                 light
                                             />
@@ -287,10 +287,9 @@ export async function getServerSideProps(ctx) {
                     body: JSON.stringify({ uid: dataValidate.uid, action: "GET_WORKSPACES" }),
                 }).then(response => response.json());
 
-                if (dataWorkspaces.success) {
+                if (dataWorkspaces?.success) {
                     if (dataWorkspaces?.data) {
-                        const getWorkspaces = Object.keys(dataWorkspaces.data).map((el, index) => { return { ...dataWorkspaces.data[el], id: Object.keys(dataWorkspaces.data)[index] } });
-                        workspaces = { data: getWorkspaces, success: true };
+                        workspaces = { data: dataWorkspaces?.data, success: true };
                     } else {
                         workspaces = { success: true }
                     }

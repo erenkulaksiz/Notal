@@ -235,7 +235,7 @@ const Profile = (props) => {
 
                         {editErrors.username != false && <Text color={"$error"}>{editErrors.username}</Text>}
 
-                        {((auth?.authUser?.uid == props.profile?.uid) && !editingProfile) && <Button
+                        {((auth?.authUser?.uid == props.profile?.data?.uid) && !editingProfile) && <Button
                             size={"lg"}
                             css={{ width: "50%", mt: 16, mw: 300 }}
                             icon={<EditIcon height={24} width={24} fill={"currentColor"} />}
@@ -286,7 +286,7 @@ const Profile = (props) => {
                             </Card>
                         </Row>
                     </Grid>}
-                    {((auth?.authUser?.uid == props.profile?.uid) && editingProfile) && <Grid xs={12}>
+                    {((auth?.authUser?.uid == props.profile?.data?.uid) && editingProfile) && <Grid xs={12}>
                         <Row css={{ mt: 12, justifyContent: "space-between" }}>
                             <Button
                                 size={"lg"}
@@ -337,8 +337,6 @@ export async function getServerSideProps(ctx) {
 
     if (req) {
         const authCookie = req.cookies.auth;
-        //const emailCookie = req.cookies.email;
-
         const profileData = await fetch(`${server}/api/profile/${queryUsername}`, {
             'Content-Type': 'application/json',
             method: "POST",
@@ -353,8 +351,6 @@ export async function getServerSideProps(ctx) {
                 method: "POST",
                 body: JSON.stringify({ token: authCookie }),
             }).then(response => response.json());
-
-            console.log("data (index.js): ", data);
             if (data.success) {
                 validate = { ...data };
             } else {

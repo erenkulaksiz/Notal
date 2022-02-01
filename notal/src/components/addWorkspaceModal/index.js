@@ -75,7 +75,7 @@ const AddWorkspaceModal = ({ newWorkspaceVisible, setNewWorkspaceVisible, onAdd 
                 <Grid xs={6} justify='center'>
                     <Button auto css={{ width: "100%" }} onClick={submit}>
                         <CheckIcon height={24} width={24} style={{ fill: "currentColor" }} />
-                        Delete
+                        Add Workspace
                     </Button>
                 </Grid>
             </Grid.Container>

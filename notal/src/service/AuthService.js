@@ -18,26 +18,11 @@ const AuthService = {
     loginWithGoogle: async () => {
         const auth = getAuth();
         const provider = new GoogleAuthProvider();
-        const dbRef = ref(getDatabase());
-        const db = getDatabase();
-        return signInWithRedirect(auth, provider)
+        return signInWithPopup(auth, provider)
             .then(async (result) => {
                 const credential = GoogleAuthProvider.credentialFromResult(result);
                 const token = credential.accessToken;
                 const { user } = result;
-
-                get(child(dbRef, `users/${user.uid}`)).then((snapshot) => {
-                    if (!snapshot.exists()) {
-                        set(ref(db, `users/${user.uid}`), {
-                            fullname: user?.displayName || "",
-                            avatar: user?.photoURL,
-                            username: user?.uid,
-                            email: user?.email,
-                            createdAt: Date.now(),
-                            updatedAt: Date.now(),
-                        });
-                    }
-                }).catch(err => console.log("error with get in signinwithpopup: ", err));
 
                 return { user, token }
             }).catch((error) => {
@@ -52,29 +37,11 @@ const AuthService = {
     loginWithGithub: async () => {
         const auth = getAuth();
         const provider = new GithubAuthProvider();
-
-        console.log("login with github")
-
         return signInWithPopup(auth, provider)
-            .then((result) => {
+            .then(async (result) => {
                 const credential = GithubAuthProvider.credentialFromResult(result);
                 const token = credential.accessToken;
                 const user = result.user;
-
-                console.log("github user: ", user);
-
-                get(child(dbRef, `users/${user.uid}`)).then((snapshot) => {
-                    if (!snapshot.exists()) {
-                        set(ref(db, `users/${user.uid}`), {
-                            fullname: user?.displayName || "",
-                            avatar: user?.photoURL,
-                            username: user?.uid,
-                            email: user?.email,
-                            createdAt: Date.now(),
-                            updatedAt: Date.now(),
-                        });
-                    }
-                }).catch(err => console.log("error with get in signinwithpopup github: ", err));
 
                 return { user, token }
             }).catch((error) => {
@@ -94,16 +61,6 @@ const AuthService = {
             .then(async (userCredential) => {
                 // Signed in 
                 const user = userCredential.user;
-
-                /*
-                let fullname = "";
-
-                await get(child(dbRef, `users/${user.uid}`)).then((snapshot) => {
-                    if (snapshot.exists()) {
-                        fullname = snapshot.val().fullname;
-                    }
-                });
-                */
 
                 return { user }
             })
@@ -181,7 +138,7 @@ const AuthService = {
     uploadAvatar: async ({ avatar, uid }) => {
         const storage = getStorage();
         const storageRef = stRef(storage, `avatars/${uid}`);
-        const db = getDatabase();
+        const auth = getAuth();
 
         return await uploadBytes(storageRef, avatar).then((snapshot) => {
             console.log(snapshot);
@@ -189,9 +146,12 @@ const AuthService = {
             return getDownloadURL(snapshot.ref).then(async (downloadURL) => {
                 console.log('File available at', downloadURL);
 
-                await update(ref(db, `users/${uid}`), {
-                    avatar: downloadURL,
-                });
+                const avatarRes = await fetch(`${server}/api/editProfile`, {
+                    'Content-Type': 'application/json',
+                    method: "POST",
+                    body: JSON.stringify({ avatar: downloadURL, type: "avatar", uid: auth?.currentUser?.uid }),
+                }).then(response => response.json());
+                console.log("avatar res: ", avatarRes);
 
                 return { success: true, url: downloadURL }
             });

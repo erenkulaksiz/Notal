@@ -1,64 +1,67 @@
-const admin = require("firebase-admin");
-const { firebaseConfig } = require('../../config/firebaseApp.config');
 
-const googleService = JSON.parse(process.env.NEXT_PUBLIC_GOOGLE_SERVICE);
-
-if (!admin.apps.length) {
-    admin.initializeApp({
-        credential: admin.credential.cert(googleService),
-        databaseURL: firebaseConfig.databaseURL
-    });
-}
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         res.status(400).send({ success: false });
         return;
     }
-
     const data = JSON.parse(req.body);
-
-    if (!data.uid || !data.username) {
+    if ((!data?.uid || !data?.username) && data?.type != "avatar") {
         res.status(400).send({ success: false });
         return;
     }
-
-    if (data.username.length > 20) {
+    if ((data.username?.length > 28) && data?.type != "avatar") {
         res.status(400).json({ success: false, error: "auth/username-too-long" });
         return;
-    } else if (data.username.length < 3) {
+    } else if ((data.username?.length < 3) && data?.type != "avatar") {
         res.status(400).json({ success: false, error: "auth/username-too-short" });
         return;
     }
+    const { connectToDatabase } = require('../../../lib/mongodb');
+    const { db } = await connectToDatabase();
+    const usersCollection = db.collection("users");
 
-    await admin.database().ref(`/users`).orderByChild("username").equalTo(data.username).limitToFirst(1).once("value", async (snapshot) => {
-        if (snapshot.exists()) {
-            if (Object.keys(snapshot.val())[0] == data.uid) {
-                await admin.database().ref(`/users/${data.uid}`).update({
-                    fullname: data.fullname,
-                    bio: data.bio || "",
-                    updatedAt: Date.now(),
-                    profileVisible: data.profileVisible ?? true,
-                }, () => {
-                    res.status(200).json({ success: true, data: { username: data.username, fullname: data.fullname, uid: data.uid } });
-                }).catch(err => {
-                    res.status(400).json({ success: false, error: err });
-                });
+    console.log("avatar: ", data.avatar);
+
+    if (data?.type == "avatar") {
+        if (!data.avatar) {
+            res.status(400).send({ success: false });
+            return;
+        }
+        await usersCollection.updateOne({ uid: data.uid }, {
+            $set: {
+                avatar: data.avatar ?? "",
+            }
+        })
+        res.status(200).send({ success: true });
+    } else {
+        const currUser = await usersCollection.findOne({ uid: data.uid });
+        if (currUser.username != data.username) {
+            const userWithUsername = await usersCollection.findOne({ username: data.username });
+            if (!userWithUsername) {
+                await usersCollection.updateOne({ uid: data.uid }, {
+                    $set: {
+                        fullname: data.fullname ?? "",
+                        bio: data.bio ?? "",
+                        updatedAt: Date.now(),
+                        profileVisible: data.profileVisible ?? false,
+                        username: data?.username,
+                    }
+                })
+                res.status(200).send({ success: true });
             } else {
-                res.status(400).json({ success: false, error: "auth/username-already-in-use" });
+                res.status(400).send({ success: false, error: "auth/username-already-in-use" });
             }
         } else {
-            await admin.database().ref(`/users/${data.uid}`).update({
-                fullname: data.fullname,
-                username: data.username,
-                bio: data.bio || "",
-                updatedAt: Date.now(),
-                profileVisible: data.profileVisible ?? true,
-            }, () => {
-                res.status(200).json({ success: true, data: { username: data.username, fullname: data.fullname, uid: data.uid } });
-            }).catch(err => {
-                res.status(400).json({ success: false, error: err });
+            await usersCollection.updateOne({ uid: data.uid }, {
+                $set: {
+                    fullname: data.fullname ?? "",
+                    bio: data.bio ?? "",
+                    updatedAt: Date.now(),
+                    profileVisible: data.profileVisible ?? false,
+                }
             });
+            res.status(200).send({ success: true });
         }
-    });
+    }
 }
