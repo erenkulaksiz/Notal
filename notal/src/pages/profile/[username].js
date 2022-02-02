@@ -322,7 +322,7 @@ const Profile = (props) => {
                             icon={<DashboardIcon size={20} fill="currentColor" />}
                         />
                         <Spacer x={0.5} />
-                        <Text h3>{props.profile.data?.fullname ? props.profile.data?.fullname : "@" + props.profile.data?.username}'s Workspaces</Text>
+                        <Text h3>{props.profile.data?.fullname ? props.profile.data?.fullname + "'s Workspaces" : "@" + props.profile.data?.username + "'s Workspaces"}</Text>
                     </Grid>
                     <Grid xs={12}>
                         <div style={{ width: "100%", height: "100%" }}>
@@ -353,7 +353,7 @@ const Profile = (props) => {
                 </Grid.Container>
             </Card> : <Card css={{ padding: 24 }}>
                 <Text css={{ fs: "1.6em" }}>
-                    {props.profile.data?.fullname ? props.profile.data?.fullname : "@" + props.profile.data?.username}'s profile is set to private.
+                    {props.profile.data?.fullname ? props.profile.data?.fullname + "'s profile is set to private." : "@" + props.profile.data?.username + "'s profile is set to private."}
                 </Text>
             </Card>}
         </Container>}

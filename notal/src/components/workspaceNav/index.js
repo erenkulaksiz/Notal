@@ -13,7 +13,7 @@ const WorkspaceNav = ({ title, desc, starred, onFavClick, onDeleteClick, onEditW
     return (<Card>
         <Grid.Container>
             <Grid xs={5} sm={8} css={{ flexDirection: "column" }}>
-                <Tooltip content="Edit Title" css={{ pl: 8, pr: 8 }} content={<div style={{ display: "flex", flexDirection: "row" }}>
+                <Tooltip css={{ pl: 8, pr: 8 }} content={<div style={{ display: "flex", flexDirection: "row" }}>
                     <Button size="sm" css={{ minWidth: 44 }} onClick={onEditWorkspace}>
                         <EditIcon size={24} fill={"currentColor"} />
                     </Button>
@@ -24,7 +24,7 @@ const WorkspaceNav = ({ title, desc, starred, onFavClick, onDeleteClick, onEditW
                         </Text>
                     </Row>
                 </Tooltip>
-                <Tooltip content="Edit Title" css={{ pl: 8, pr: 8 }} content={<div style={{ display: "flex", flexDirection: "row" }}>
+                <Tooltip css={{ pl: 8, pr: 8 }} content={<div style={{ display: "flex", flexDirection: "row" }}>
                     <Button size="sm" css={{ minWidth: 44 }} onClick={onEditWorkspace}>
                         <EditIcon size={24} fill={"currentColor"} />
                     </Button>

@@ -182,7 +182,7 @@ const Workspace = (props) => {
                 <Grid.Container gap={1} css={{ flexWrap: "nowrap", alignItems: "flex-start", justifyContent: "flex-start", overflowX: "auto", }}>
                     {/* FIELD */}
                     {props.workspace.data?.fields && props.workspace.data.fields.map((field, index) => {
-                        return (<Grid key={field._id} css={{ minWidth: 380, maxWidth: 400 }} key={field._id}>
+                        return (<Grid css={{ minWidth: 380, maxWidth: 400 }} key={field._id}>
                             <Card css={{ display: "flex", maxHeight: "78vh", }}>
                                 <div style={{ display: "flex", }}>
                                     <Grid.Container>
@@ -288,7 +288,7 @@ const Workspace = (props) => {
             onClose={() => setEditWorkspace(false)}
             title={props.workspace?.data?.title}
             desc={props.workspace?.data?.desc}
-            onEdit={({ title, desc, }) => {
+            onEdit={({ title, desc }) => {
                 setEditWorkspace(false);
                 handle.editWorkspace({ title, desc });
             }}
