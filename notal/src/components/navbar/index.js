@@ -2,7 +2,7 @@ import { Button, Text, Grid, Card, Link as ALink, Switch, Avatar, useTheme, Row 
 import styled from 'styled-components'
 import { useTheme as useNextTheme } from 'next-themes';
 import { useRouter } from 'next/router';
-import { Link } from 'next/link';
+//import { Link } from 'next/link';
 
 import UserIcon from '../../../public/icons/user.svg';
 import DarkIcon from '../../../public/icons/dark.svg';
@@ -69,6 +69,7 @@ const Navbar = ({ user }) => {
                     iconOn={<LightIcon height={24} width={24} style={{ fill: "currentColor" }} />}
                     iconOff={<DarkIcon height={24} width={24} style={{ fill: "currentColor" }} />}
                     css={{ mr: 12 }}
+                    size="sm"
                 />}
                 {auth?.authUser ? <Details style={{
                     position: "relative",
@@ -84,6 +85,16 @@ const Navbar = ({ user }) => {
                         <Avatar size="md" color="gradient" bordered src={user?.avatar} referrerPolicy='no-refferer' icon={<UserIcon height={24} width={24} style={{ fill: "white" }} />} pointer />
                     </summary>
                     <Card css={{ zIndex: 2, position: "absolute", right: 0, top: "100%", width: "auto" }}>
+                        <Row css={{ mt: 0, justifyContent: "flex-end" }}>
+                            {auth?.authUser && <Switch
+                                color="primary"
+                                initialChecked={isDark}
+                                onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
+                                iconOn={<LightIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+                                iconOff={<DarkIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+                                size="sm"
+                            />}
+                        </Row>
                         <Text h4>{user?.fullname || "@" + user?.username}</Text>
                         <Text span>{user?.email}</Text>
                         <Button
@@ -107,29 +118,20 @@ const Navbar = ({ user }) => {
                         >
                             Sign Out
                         </Button>
-                        <Row css={{ mt: 8, justifyContent: "center" }}>
-                            {auth?.authUser && <Switch
-                                color="primary"
-                                initialChecked={isDark}
-                                onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
-                                iconOn={<LightIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-                                iconOff={<DarkIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-                            />}
-                        </Row>
                     </Card>
                 </Details> : <>
                     <Button
-                        icon={<LoginIcon height={24} width={24} style={{ fill: "currentColor" }} />}
                         onClick={() => router.push(`/login`)}
-                        size="sm"
+                        css={{ minWidth: 20, "@sm": { minWidth: 100 }, height: "80%" }}
                         color="gradient"
                     >
-                        Sign In
+                        <LoginIcon height={24} width={24} style={{ fill: "currentColor", transform: "scale(0.8)", marginRight: 4 }} />
+                        <Text css={{ display: "none", "@sm": { display: "flex" }, fontWeight: "600", color: "$white", fs: "1em" }}>Sign In</Text>
                     </Button>
                 </>}
             </Grid>
         </Grid.Container>
-    </Header >)
+    </Header>)
 }
 
 export default Navbar;

@@ -116,26 +116,16 @@ export default async function handler(req, res) {
             if (!id || !uid) {
                 res.status(400).send({ success: false, error: "invalid-params" });
                 return;
+            } // uid: owner, id: workspace
+
+            try {
+                await workspacesCollection.updateOne({ "_id": ObjectId(id) }, { $set: { title, desc } })
+                    .then(() => {
+                        res.status(200).send({ success: true });
+                    });
+            } catch (error) {
+                res.status(400).send({ success: false, error: new Error(error).message });
             }
-
-            await admin.database().ref(`/workspaces/${id}`).once("value", async (snapshot) => {
-                if (snapshot.exists()) {
-                    if (snapshot.val().owner == uid) {
-
-                        await admin.database().ref(`/workspaces/${id}`).update({ title, desc, updatedAt: Date.now() }, () => {
-                            res.status(200).send({ success: true });
-                        }).catch(error => {
-                            res.status(400).send({ success: false, error });
-                        });
-                    } else {
-                        res.status(400).send({ success: false, error: "unauthorized" });
-                    }
-                } else {
-                    res.status(400).send({ success: false });
-                }
-            }).catch(error => {
-                res.status(400).send({ success: false, error });
-            });
         },
         addfield: async () => {
             if (!id || !uid || !filterBy) {
@@ -184,43 +174,28 @@ export default async function handler(req, res) {
 
             // id: field id
 
-            //console.log(color, title, desc, workspaceId, uid, id);
+            console.log(color, title, desc, workspaceId, uid, id);
             if (!id || !uid || !workspaceId || !title || !desc || !color) {
                 res.status(400).send({ success: false, error: "invalid-params" });
                 return;
             }
 
-            // first, calculate card index.
-
-            await admin.database().ref(`/workspaces/${workspaceId}/fields/${id}/cards`).orderByChild("index").limitToLast(1).once("value", async (snapshot) => {
-                if (snapshot.exists()) {
-                    const card = snapshot.val()[Object.keys(snapshot.val())];
-                    const newIndex = card.index + 1;
-
-                    const ref = await admin.database().ref(`/workspaces/${workspaceId}/fields/${id}/cards`).push();
-
-                    await ref.set({
-                        title, createdAt: Date.now(), updatedAt: Date.now(), title, desc, color, index: newIndex
-                    }, () => {
-                        res.status(200).send({ success: true });
-                    }).catch((error) => {
-                        res.status(400).send({ success: false, error });
-                    });
-                } else {
-
-                    const ref = await admin.database().ref(`/workspaces/${workspaceId}/fields/${id}/cards`).push();
-
-                    await ref.set({
-                        title, createdAt: Date.now(), updatedAt: Date.now(), title, desc, color, index: 0 // set to first element of field
-                    }, () => {
-                        res.status(200).send({ success: true });
-                    }).catch((error) => {
-                        res.status(400).send({ success: false, error });
-                    });
-                }
-            }).catch(error => {
-                res.status(400).send({ success: false, error });
-            });
+            try {
+                await workspacesCollection.updateOne({ "_id": ObjectId(workspaceId), "fields._id": ObjectId(id) }, {
+                    $push: {
+                        "fields.$.cards": {
+                            title,
+                            desc,
+                            color,
+                            createdAt: Date.now(),
+                            _id: ObjectId(),
+                        }
+                    }
+                });
+                res.status(200).send({ success: true });
+            } catch (error) {
+                res.status(400).send({ success: false, error: new Error(error).message });
+            }
         },
         removecard: async () => {
             if (!id || !uid || !workspaceId || !fieldId) {
@@ -228,11 +203,26 @@ export default async function handler(req, res) {
                 return;
             }
 
+            /*
             await admin.database().ref(`/workspaces/${workspaceId}/fields/${fieldId}/cards/${id}`).remove(() => {
                 res.status(200).send({ success: true });
             }).catch((error) => {
                 res.status(400).send({ success: false, error });
             });
+            */
+
+            try {
+                await workspacesCollection.updateOne({ "_id": ObjectId(workspaceId), "fields._id": ObjectId(fieldId) }, {
+                    $pull: {
+                        "fields.$.cards": {
+                            _id: ObjectId(id),
+                        }
+                    }
+                });
+                res.status(200).send({ success: true });
+            } catch (error) {
+                res.status(400).send({ success: false, error: new Error(error).message });
+            }
         },
         editfield: async () => {
             if (!id || !uid || !workspaceId || !title) {

@@ -54,7 +54,7 @@ const Landing = (props) => {
         </Head>
         <Navbar user={props.validate?.data} />
         <ImageContainer isDark={isDark}>
-            <img src="./landing_bg_1.png" style={{ width: "100%", height: "100%", objectFit: "cover", "-webkit-filter": "blur(4px)", }} />
+            <img src="./landing_bg_1.png" style={{ width: "100%", height: "100%", objectFit: "cover", }} />
         </ImageContainer>
         <Container md css={{ position: "relative" }}>
             <Spacer y={6} />
@@ -79,27 +79,27 @@ const Landing = (props) => {
                             "@md": {
                                 fs: "4em"
                             }
-                        }}>Take notes to <Text span css={{ bg: "$gradient", backgroundImage: "$gradient", WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>next</Text> level with Notal.</Text>
+                        }}>Take notes to <Text span css={{ bg: "$gradient", backgroundImage: "$gradient", "-webkit-background-clip": 'text', "-webkit-text-fill-color": 'transparent' }}>next</Text> level with Notal 🚀</Text>
                     </Row>
                     <Row>
-                        <Text b css={{ fs: "1.2em", color: isDark ? "$gray500" : "$gray200" }}>Keep focus on your project, not on your planning with Notal.</Text>
+                        <Text b css={{ fs: "1.2em", color: isDark ? "$gray500" : "$gray200" }}>Keep focus on your project, not on your planning.</Text>
                     </Row>
                     <Spacer y={1} />
                     <Row>
-                        <Button css={{ minWidth: 100 }} onClick={() => router.push("/login")} rounded>
+                        <Button css={{ minWidth: 140 }} onClick={() => router.push("/login")} rounded>
                             Discover More
                         </Button>
                         <Spacer x={1} />
-                        <Button css={{ minWidth: 100 }} ghost onClick={() => { }} rounded>
+                        {/*<Button css={{ minWidth: 140 }} ghost onClick={() => { }} rounded>
                             Changelog & Info
-                        </Button>
+                        </Button>*/}
                     </Row>
                 </Grid>
                 <Grid xs={0} sm={2}>
 
                 </Grid>
             </Grid.Container>
-            <Grid.Container gap={2}>
+            <Grid.Container gap={2} css={{ zIndex: "$1", position: "relative" }}>
                 <Grid xs={12} sm={6} md={3}>
                     <Card css={{ bf: "saturate(180%) blur(10px)", bg: isDark ? "#ffffff20" : "#ffffffa9" }}>
                         <Row style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
@@ -178,6 +178,27 @@ const Landing = (props) => {
                 </Grid>
             </Grid.Container>
             <Spacer y={12} />
+            <Text h1 css={{
+                color: isDark ? "$white" : "$black",
+                fs: "1.5em",
+                "@xs": {
+                    fs: "2em",
+                },
+                "@md": {
+                    fs: "4em"
+                },
+                position: "relative",
+                zIndex: "$1"
+            }}>Focus on your
+                <Text span css={{ color: "$primary" }}> projects.</Text>
+            </Text>
+            <Text b css={{ fs: "1.2em", color: "$gray500" }}>Keep focus on your project, not on your planning.</Text>
+            <div style={{ width: "100%" }}>
+                <img src="./landing_bg_2.png" style={{ maxWidth: "100%", maxHeight: "100%", position: "absolute", zIndex: 1, left: -200, top: 50, opacity: 0.5 }} />
+                <img src="./landing_bg_3.png" style={{ maxWidth: "100%", maxHeight: "100%", position: "absolute", zIndex: 1, right: -300, top: 100, opacity: 0.2 }} />
+                {/*<img src="./landing_bg_4.png" style={{ maxWidth: "100%", maxHeight: "100%", position: "absolute", transform: "scale(0.5)", zIndex: 1, bottom: -150, right: -200, opacity: 1 }} />*/}
+            </div>
+            <Spacer y={12} />
             <Grid.Container>
                 <Grid xs={1} md={4}></Grid>
                 <Grid xs={10} md={4}>
@@ -201,7 +222,7 @@ const Landing = (props) => {
             </Grid.Container>
             <Spacer y={2} />
         </Container>
-    </Container>
+    </Container >
     )
 }
 

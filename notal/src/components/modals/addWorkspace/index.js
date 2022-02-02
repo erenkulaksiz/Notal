@@ -1,9 +1,9 @@
 import { Button, Text, Grid, Input, Modal, Row, Checkbox } from '@nextui-org/react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
-import AddIcon from '../../../public/icons/add.svg';
-import CrossIcon from '../../../public/icons/cross.svg';
-import CheckIcon from '../../../public/icons/check.svg';
+import AddIcon from '../../../../public/icons/add.svg';
+import CrossIcon from '../../../../public/icons/cross.svg';
+import CheckIcon from '../../../../public/icons/check.svg';
 
 const AddWorkspaceModal = ({ newWorkspaceVisible, setNewWorkspaceVisible, onAdd }) => {
 
@@ -64,21 +64,15 @@ const AddWorkspaceModal = ({ newWorkspaceVisible, setNewWorkspaceVisible, onAdd 
                 </Checkbox>
             </Row>
         </Modal.Body>
-        <Modal.Footer>
-            <Grid.Container gap={2}>
-                <Grid xs={6} justify='center'>
-                    <Button auto css={{ width: "100%" }} flat color="error" onClick={closeModal}>
-                        <CrossIcon height={24} width={24} style={{ fill: "currentColor" }} />
-                        Cancel
-                    </Button>
-                </Grid>
-                <Grid xs={6} justify='center'>
-                    <Button auto css={{ width: "100%" }} onClick={submit}>
-                        <CheckIcon height={24} width={24} style={{ fill: "currentColor" }} />
-                        Add Workspace
-                    </Button>
-                </Grid>
-            </Grid.Container>
+        <Modal.Footer css={{ justifyContent: "space-between" }}>
+            <Button auto css={{ width: "46%" }} flat color="error" onClick={closeModal}>
+                <CrossIcon height={24} width={24} style={{ fill: "currentColor" }} />
+                Cancel
+            </Button>
+            <Button auto css={{ width: "46%" }} onClick={submit}>
+                <CheckIcon height={24} width={24} style={{ fill: "currentColor" }} />
+                Add Workspace
+            </Button>
         </Modal.Footer>
     </Modal>)
 }

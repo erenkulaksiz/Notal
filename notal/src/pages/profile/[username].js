@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Head from 'next/head';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Button, Spacer, Container, Text, Grid, Card, Switch, useTheme, Input, Row, Avatar, Textarea, Loading } from '@nextui-org/react';
+import { Button, Spacer, Container, Text, Grid, Card, Switch, useTheme, Input, Row, Avatar, Textarea, Loading, Link as ALink } from '@nextui-org/react';
 
 import useAuth from '../../hooks/auth';
 import { server } from '../../config';
@@ -16,6 +17,7 @@ import AtIcon from '../../../public/icons/at.svg';
 import LockIcon from '../../../public/icons/lock_outline.svg';
 import VisibleIcon from '../../../public/icons/visible.svg';
 import VisibleOffIcon from '../../../public/icons/visible_off.svg';
+import DashboardIcon from '../../../public/icons/dashboard.svg';
 
 import { CheckToken } from '../../utils';
 
@@ -183,139 +185,177 @@ const Profile = (props) => {
                 </Button>
             </Card>
         </Container> : <Container sm>
-            <Card>
-                <Grid.Container gap={1}>
-                    <Grid xs={12} sm={12} md={2} lg={2} xl={2} justify="center" css={{ fd: "column", alignItems: "center", }}>
-                        <Avatar bordered color="gradient" src={props.profile?.data?.avatar ?? ""} referrerPolicy='no-refferer' icon={<UserIcon size={12} style={{ fill: "white", transform: "scale(3)" }} />} size="xl" css={{ size: "128px", minWidth: 124 }} />
-                        {editingProfile && <Button size="xs"
-                            clickable={!editAvatarLoading}
-                            onClick={() => {
-                                if (!editAvatarLoading) avatarInputRef.current.click();
-                            }}>
-                            {editAvatarLoading ? <Loading color="white" size="xs" /> : <>Change Avatar<input type="file" ref={avatarInputRef} style={{ display: "none" }} onChange={onAvatarEditChange} accept="image/png, image/jpeg" /></>}
-                        </Button>}
-                    </Grid>
-                    <Grid xs={12} sm={12} md={10} lg={10} xl={10} css={{ fd: "column", "@mdMax": { alignItems: "center" } }}>
-                        {editingProfile ? <Input
-                            color="primary"
-                            labelLeft={<UserIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-                            placeholder='Fullname'
-                            value={editProfile.fullname}
-                            bordered
-                            fullWidth
-                            onChange={e => setEditProfile({ ...editProfile, fullname: e.target.value })}
-                            maxLength={32}
-                            clearable
-                        /> : <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                            <Text h3 style={{ alignItems: "center" }} >
-                                {props.profile.data?.fullname ? props.profile.data?.fullname : "@" + props.profile.data?.username}
-                            </Text>
-                            {props.profile.data?.profileVisible || <LockIcon height={24} width={24} style={{ fill: "currentColor", marginLeft: 8 }} />}
-                        </div>}
+            <Grid.Container gap={1}>
+                <Grid xs={12} sm={12} md={2} lg={2} xl={2} justify="center" css={{ fd: "column", alignItems: "center", }}>
+                    <Avatar bordered color="gradient" src={props.profile?.data?.avatar ?? ""} referrerPolicy="no-refferer" icon={<UserIcon size={12} style={{ fill: "white", transform: "scale(3)" }} />} size="xl" css={{ size: "128px", minWidth: 124 }} />
+                    {editingProfile && <Button size="xs"
+                        clickable={!editAvatarLoading}
+                        css={{ mt: 6 }}
+                        onClick={() => {
+                            if (!editAvatarLoading) avatarInputRef.current.click();
+                        }}>
+                        {editAvatarLoading ? <Loading color="white" size="xs" /> : <>Change Avatar<input type="file" ref={avatarInputRef} style={{ display: "none" }} onChange={onAvatarEditChange} accept="image/png, image/jpeg" /></>}
+                    </Button>}
+                </Grid>
+                <Grid xs={12} sm={12} md={10} lg={10} xl={10} css={{ fd: "column", "@mdMax": { alignItems: "center" } }}>
+                    {editingProfile ? <Input
+                        color="primary"
+                        labelLeft={<UserIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+                        placeholder='Fullname'
+                        value={editProfile.fullname}
+                        bordered
+                        fullWidth
+                        onChange={e => setEditProfile({ ...editProfile, fullname: e.target.value })}
+                        maxLength={32}
+                        clearable
+                    /> : <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                        <Text h3 style={{ alignItems: "center" }} >
+                            {props.profile.data?.fullname ? props.profile.data?.fullname : "@" + props.profile.data?.username}
+                        </Text>
+                        {props.profile.data?.profileVisible || <LockIcon height={24} width={24} style={{ fill: "currentColor", marginLeft: 8 }} />}
+                    </div>}
 
-                        {editErrors.fullname != false && <Text color={"$error"}>{editErrors.fullname}</Text>}
+                    {editErrors.fullname != false && <Text color={"$error"}>{editErrors.fullname}</Text>}
 
-                        {editingProfile ? <Input
-                            color="primary"
-                            labelLeft={<AtIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-                            placeholder='Username'
-                            value={editProfile.username}
-                            bordered
-                            css={{ mt: 16 }}
-                            fullWidth
-                            onChange={e => setEditProfile({ ...editProfile, username: e.target.value.replace(/[^\w\s]/gi, "").replace(/\s/g, '').toLowerCase() })}
-                            maxLength={20}
-                        /> : props.profile.data.fullname && <Text css={{ fs: "1.2em", fontWeight: "600" }}>@{props.profile.data.username}</Text>}
+                    {editingProfile ? <Input
+                        color="primary"
+                        labelLeft={<AtIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+                        placeholder='Username'
+                        value={editProfile.username}
+                        bordered
+                        css={{ mt: 16 }}
+                        fullWidth
+                        onChange={e => setEditProfile({ ...editProfile, username: e.target.value.replace(/[^\w\s]/gi, "").replace(/\s/g, '').toLowerCase() })}
+                        maxLength={20}
+                    /> : props.profile.data.fullname && <Text css={{ fs: "1.2em", fontWeight: "600" }}>@{props.profile.data.username}</Text>}
 
-                        {editErrors.username != false && <Text color={"$error"}>{editErrors.username}</Text>}
+                    {editErrors.username != false && <Text color={"$error"}>{editErrors.username}</Text>}
 
-                        {((auth?.authUser?.uid == props.profile?.data?.uid) && !editingProfile) && <Button
+                    {((auth?.authUser?.uid == props.profile?.data?.uid) && !editingProfile) && <Button
+                        size={"lg"}
+                        css={{ width: "50%", mt: 16, mw: 300 }}
+                        icon={<EditIcon height={24} width={24} fill={"currentColor"} />}
+                        onClick={() => setEditingProfile(true)}
+                        ghost
+                    >
+                        Edit Profile
+                    </Button>}
+                </Grid>
+                {(props.profile?.data?.bio || editingProfile) && <Grid xs={12} css={{ mt: 18, p: 0 }}>
+                    <Card css={{ bg: "$gradient" }}>
+                        <Grid.Container gap={editingProfile ? 1 : 0}>
+                            <Grid xs={12} md={editingProfile ? 6 : 12} css={{ whiteSpace: "pre-line", maxH: 200, fd: "column" }}>
+                                <Text h4 css={{ color: "$white" }}>Biography</Text>
+                                <Spacer y={0.5} />
+                                {editingProfile ?
+                                    <Textarea
+                                        css={{ minWidth: "100%", }}
+                                        placeholder="Enter your biography. You can also leave this empty."
+                                        onChange={e => setEditProfile({ ...editProfile, bio: e.target.value })}
+                                        value={editProfile.bio}
+                                        maxLength={200}
+                                        maxRows={4}
+                                        animated={false}
+                                    /> :
+                                    <Text css={{ color: "$white", overflowWrap: "anywhere" }}>{props.profile?.data?.bio}</Text>}
+                            </Grid>
+                            <Grid xs={editingProfile ? 12 : 0} md={editingProfile ? 6 : 0} css={{ fd: "column" }}>
+                                <Text h4 css={{ color: "$white" }}>Profile Visibility</Text>
+                                <Spacer y={0.5} />
+                                <Card css={{ backgroundColor: isDark ? "$gray900" : "$background", justifyContent: "center", height: "100%" }}>
+                                    <Row>
+                                        <Switch
+                                            checked={editProfile.visibility}
+                                            onChange={e => setEditProfile({ ...editProfile, visibility: e.target.checked })}
+                                            size="lg"
+                                            iconOn={<VisibleIcon height={24} width={24} fill={"currentColor"} />}
+                                            iconOff={<VisibleOffIcon height={24} width={24} fill={"currentColor"} />}
+                                        />
+                                        <Text css={{ fs: "1.2em", fontWeight: "500", ml: 8 }}>
+                                            {editProfile.visibility ? "Your profile is public." : "Your profile is private."}
+                                        </Text>
+                                    </Row>
+                                </Card>
+                            </Grid>
+                        </Grid.Container>
+                    </Card>
+                </Grid>}
+
+                {((auth?.authUser?.uid == props.profile?.data?.uid) && editingProfile) && <Grid xs={12} css={{ pl: 0, pr: 0 }}>
+                    <Row css={{ mt: 12, justifyContent: "space-between" }}>
+                        <Button
                             size={"lg"}
-                            css={{ width: "50%", mt: 16, mw: 300 }}
-                            icon={<EditIcon height={24} width={24} fill={"currentColor"} />}
-                            onClick={() => setEditingProfile(true)}
+                            icon={<CrossIcon height={24} width={24} fill={"currentColor"} />}
+                            css={{ width: "49%", minWidth: 100 }}
+                            onClick={() => {
+                                setEditingProfile(false);
+                                setEditErrors({ ...editErrors, fullname: false, username: false, bio: false });
+                                setEditProfile({
+                                    fullname: props.validate?.data?.fullname,
+                                    username: props.validate?.data?.username,
+                                    bio: props.validate?.data?.bio,
+                                    visibility: props.validate?.data?.profileVisible
+                                });
+                            }}
                             ghost
                         >
-                            Edit Profile
-                        </Button>}
-                    </Grid>
-                    {(props.profile?.data?.bio || editingProfile) && <Grid xs={12}>
-                        <Row css={{ mt: 12 }}>
-                            <Card css={{ bg: "$gradient" }}>
-                                <Grid.Container gap={editingProfile ? 1 : 0}>
-                                    <Grid xs={12} md={editingProfile ? 6 : 12} css={{ whiteSpace: "pre-line", maxH: 200, fd: "column" }}>
-                                        <Text h4 css={{ color: "$white" }}>Biography</Text>
-                                        <Spacer y={0.5} />
-                                        {editingProfile ?
-                                            <Textarea
-                                                css={{ minWidth: "100%", }}
-                                                placeholder="Enter your biography. You can also leave this empty."
-                                                onChange={e => setEditProfile({ ...editProfile, bio: e.target.value })}
-                                                value={editProfile.bio}
-                                                maxLength={200}
-                                                maxRows={4}
-                                                animated={false}
-                                            /> :
-                                            <Text css={{ color: "$white", overflowWrap: "anywhere" }}>{props.profile?.data?.bio}</Text>}
-                                    </Grid>
-                                    <Grid xs={editingProfile ? 12 : 0} md={editingProfile ? 6 : 0} css={{ fd: "column" }}>
-                                        <Text h4 css={{ color: "$white" }}>Profile Visibility</Text>
-                                        <Spacer y={0.5} />
-                                        <Card css={{ backgroundColor: isDark ? "$gray900" : "$background", justifyContent: "center", height: "100%" }}>
-                                            <Row>
-                                                <Switch
-                                                    checked={editProfile.visibility}
-                                                    onChange={e => setEditProfile({ ...editProfile, visibility: e.target.checked })}
-                                                    size="lg"
-                                                    iconOn={<VisibleIcon height={24} width={24} fill={"currentColor"} />}
-                                                    iconOff={<VisibleOffIcon height={24} width={24} fill={"currentColor"} />}
-                                                />
-                                                <Text css={{ fs: "1.2em", fontWeight: "500", ml: 8 }}>
-                                                    {editProfile.visibility ? "Your profile is public." : "Your profile is private."}
-                                                </Text>
-                                            </Row>
-                                        </Card>
-                                    </Grid>
-                                </Grid.Container>
-                            </Card>
-                        </Row>
-                    </Grid>}
-                    {((auth?.authUser?.uid == props.profile?.data?.uid) && editingProfile) && <Grid xs={12}>
-                        <Row css={{ mt: 12, justifyContent: "space-between" }}>
-                            <Button
-                                size={"lg"}
-                                icon={<CrossIcon height={24} width={24} fill={"currentColor"} />}
-                                css={{ width: "49%", minWidth: 100 }}
-                                onClick={() => {
-                                    setEditingProfile(false);
-                                    setEditErrors({ ...editErrors, fullname: false, username: false, bio: false });
-                                    setEditProfile({
-                                        fullname: props.validate?.data?.fullname,
-                                        username: props.validate?.data?.username,
-                                        bio: props.validate?.data?.bio,
-                                        visibility: props.validate?.data?.profileVisible
-                                    });
-                                }}
-                                ghost
-                            >
-                                Cancel
-                            </Button>
-                            <Button
-                                size={"lg"}
-                                icon={<CheckIcon height={24} width={24} fill={"currentColor"} />}
-                                css={{ width: "49%", minWidth: 100 }}
-                                onClick={onFinishEditing}
-                            >
-                                Edit
-                            </Button>
-                        </Row>
-                    </Grid>}
-                </Grid.Container>
-            </Card>
+                            Cancel
+                        </Button>
+                        <Button
+                            size={"lg"}
+                            icon={<CheckIcon height={24} width={24} fill={"currentColor"} />}
+                            css={{ width: "49%", minWidth: 100 }}
+                            onClick={onFinishEditing}
+                        >
+                            Edit
+                        </Button>
+                    </Row>
+                </Grid>}
+            </Grid.Container>
             <Spacer y={1} />
-            {/*<Card>
-                <Text>asdksaj</Text>
-            </Card>*/}
+
+            {props.profile?.data?.workspaces != "user-profile-private" ? editingProfile ? null : props.profile?.data?.workspaces.length > 0 && <Card bordered>
+                <Grid.Container gap={1}>
+                    <Grid xs={12}>
+                        <Avatar
+                            squared
+                            icon={<DashboardIcon size={20} fill="currentColor" />}
+                        />
+                        <Spacer x={0.5} />
+                        <Text h3>{props.profile.data?.fullname ? props.profile.data?.fullname : "@" + props.profile.data?.username}'s Workspaces</Text>
+                    </Grid>
+                    <Grid xs={12}>
+                        <div style={{ width: "100%", height: "100%" }}>
+                            <Grid.Container gap={1} css={{ padding: 0 }}>
+                                {props.profile?.data?.workspaces && props.profile?.data?.workspaces != "user-profile-private" ? props.profile.data.workspaces.map((workspace, index) => {
+                                    return (<Grid xs={12} sm={4} lg={3} key={workspace._id}>
+                                        <Card color={'gradient'} css={{ height: 140, justifyContent: "flex-end", }}>
+                                            <Grid.Container>
+                                                <Grid xs={10} css={{ fd: "column" }} justify='flex-end'>
+                                                    <Link href="/workspace/[pid]" as={`/workspace/${workspace._id}`} passHref>
+                                                        <ALink>
+                                                            <Text h3 color={"white"}>{workspace.title}</Text>
+                                                        </ALink>
+                                                    </Link>
+                                                    <Link href="/workspace/[pid]" as={`/workspace/${workspace._id}`} passHref>
+                                                        <ALink>
+                                                            <Text h6 color={"white"}>{workspace.desc}</Text>
+                                                        </ALink>
+                                                    </Link>
+                                                </Grid>
+                                            </Grid.Container>
+                                        </Card>
+                                    </Grid>)
+                                }) : <Text>This user has no workspaces</Text>}
+                            </Grid.Container>
+                        </div>
+                    </Grid>
+                </Grid.Container>
+            </Card> : <Card css={{ padding: 24 }}>
+                <Text css={{ fs: "1.6em" }}>
+                    {props.profile.data?.fullname ? props.profile.data?.fullname : "@" + props.profile.data?.username}'s profile is set to private.
+                </Text>
+            </Card>}
         </Container>}
     </Container >)
 }
@@ -331,13 +371,15 @@ export async function getServerSideProps(ctx) {
 
     if (req) {
         const authCookie = req.cookies.auth;
-        const profileData = await fetch(`${server}/api/profile/${queryUsername}`, {
-            'Content-Type': 'application/json',
-            method: "POST",
-        }).then(response => response.json());
-        console.log("profile: ", profileData);
 
-        profile = { ...profileData };
+        const fetchProfile = async ({ auth }) => {
+            const profileData = await fetch(`${server}/api/profile/${queryUsername}`, {
+                'Content-Type': 'application/json',
+                method: "POST",
+                body: JSON.stringify({ auth: auth ?? false }),
+            }).then(response => response.json());
+            profile = { ...profileData };
+        }
 
         if (authCookie) {
             const data = await fetch(`${server}/api/validate`, {
@@ -347,11 +389,14 @@ export async function getServerSideProps(ctx) {
             }).then(response => response.json());
             if (data.success) {
                 validate = { ...data };
+                await fetchProfile({ auth: data.data });
             } else {
                 validate = { error: data.error?.code }
+                await fetchProfile({ auth: false });
             }
         } else {
             validate = { error: "no-token" }
+            await fetchProfile({ auth: false });
         }
     }
     return { props: { validate, profile } }

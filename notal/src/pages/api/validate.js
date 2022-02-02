@@ -28,7 +28,6 @@ export default async function handler(req, res) {
         const usersCollection = db.collection("users");
 
         await admin.auth().verifyIdToken(token).then(async (decodedToken) => {
-            console.log("decodedToken: ", decodedToken);
             const user = await usersCollection.findOne({ uid: decodedToken.uid });
             if (!user) {
                 const newUser = {
@@ -48,8 +47,7 @@ export default async function handler(req, res) {
                 res.status(200).send({ success: true, data: user, uid: user.uid });
             }
         }).catch(error => {
-            console.log("error with jwt validate: ", error);
-            res.status(200).json({ success: false, error });
+            res.status(400).json({ success: false, error: error });
             return; // dont run code below
         });
     } catch (error) {

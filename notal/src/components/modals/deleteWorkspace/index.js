@@ -1,15 +1,16 @@
 import { Button, Text, Grid, Modal, } from '@nextui-org/react';
 
-import DeleteIcon from '../../../public/icons/delete.svg';
-import CrossIcon from '../../../public/icons/cross.svg';
-import CheckIcon from '../../../public/icons/check.svg';
+import DeleteIcon from '../../../../public/icons/delete.svg';
+import CrossIcon from '../../../../public/icons/cross.svg';
+import CheckIcon from '../../../../public/icons/check.svg';
 
-const DeleteWorkspaceModal = ({ visible, setDeleteModal, deleteModal, onDelete }) => {
+const DeleteWorkspaceModal = ({ visible, onClose, onDelete }) => {
+
     return (<Modal
         closeButton
         aria-labelledby="delete-workspace"
         open={visible}
-        onClose={() => setDeleteModal({ ...deleteModal, visible: false })}
+        onClose={onClose}
     >
         <Modal.Header>
             <DeleteIcon height={24} width={24} style={{ fill: "currentColor" }} />
@@ -23,16 +24,13 @@ const DeleteWorkspaceModal = ({ visible, setDeleteModal, deleteModal, onDelete }
         <Modal.Footer>
             <Grid.Container gap={2}>
                 <Grid xs={6} justify='center'>
-                    <Button auto css={{ width: "100%" }} flat color="error" onClick={() => setDeleteModal({ ...deleteModal, visible: false })}>
+                    <Button auto css={{ width: "100%" }} flat color="error" onClick={onClose}>
                         <CrossIcon height={24} width={24} style={{ fill: "currentColor" }} />
                         Cancel
                     </Button>
                 </Grid>
                 <Grid xs={6} justify='center'>
-                    <Button auto css={{ width: "100%" }} onClick={() => {
-                        onDelete();
-                        setDeleteModal({ ...deleteModal, visible: false });
-                    }}>
+                    <Button auto css={{ width: "100%" }} onClick={onDelete}>
                         <CheckIcon height={24} width={24} style={{ fill: "currentColor" }} />
                         Delete
                     </Button>

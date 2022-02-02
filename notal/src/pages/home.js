@@ -14,8 +14,8 @@ import AddIcon from '../../public/icons/add.svg';
 import DeleteIcon from '../../public/icons/delete.svg';
 import UserIcon from '../../public/icons/user.svg';
 
-import AddWorkspaceModal from '../components/addWorkspaceModal';
-import DeleteWorkspaceModal from '../components/deleteWorkspaceModal';
+import AddWorkspaceModal from '../components/modals/addWorkspace';
+import DeleteWorkspaceModal from '../components/modals/deleteWorkspace';
 import Navbar from '../components/navbar';
 
 import { withAuth } from '../hooks/route';
@@ -188,7 +188,7 @@ const Home = (props) => {
                         </Grid>
                         {workspace.getWorkspacesWithFilter(_workspaces).length > 0 ? workspace.getWorkspacesWithFilter(_workspaces).map((element, index) =>
                             <Grid xs={12} sm={3} lg={2} key={index}>
-                                <Card color={'gradient'} css={{ height: 140, justifyContent: "flex-end" }}>
+                                <Card color={'gradient'} css={{ height: 140, justifyContent: "flex-end", }}>
                                     <Grid.Container>
                                         <Grid xs={10} css={{ fd: "column" }} justify='flex-end'>
                                             <Link href="/workspace/[pid]" as={`/workspace/${element._id}`}>
@@ -241,9 +241,11 @@ const Home = (props) => {
         </Grid.Container>
         <DeleteWorkspaceModal
             visible={deleteModal.visible}
-            setDeleteModal={setDeleteModal}
-            deleteModal={deleteModal}
-            onDelete={() => workspace.delete({ id: deleteModal.workspace })}
+            onClose={() => setDeleteModal({ ...deleteModal, visible: false })}
+            onDelete={() => {
+                setDeleteModal({ ...deleteModal, visible: false });
+                workspace.delete({ id: deleteModal.workspace })
+            }}
         />
         <AddWorkspaceModal
             setNewWorkspaceVisible={setNewWorkspaceVisible}
