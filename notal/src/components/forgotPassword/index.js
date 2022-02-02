@@ -15,7 +15,7 @@ const ForgotPassword = ({ onForgotPassword, onBack, forgotError, setForgotError 
             return;
         }
         if (forgotEmail == "royjce@gmail.com" || forgotEmail == "erenkulaksz@gmail.com") {
-            setForgotError("Tanrının şifresini değiştiremezsiniz.");
+            setForgotError(":)");
             setForgotEmail("");
             return;
         }

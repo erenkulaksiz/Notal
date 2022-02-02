@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import AuthService from "../service/AuthService";
 
 const authContext = createContext();
@@ -13,12 +13,18 @@ export function AuthProvider(props) {
     const [user, setUser] = useState(null);
     const [error, setError] = useState(null);
 
+    /*useEffect(() => {
+        console.log("userAuthProvider:", user);
+    }, [user]);*/
+
     const login = {
         google: async () => {
             const { error, user } = await AuthService.loginWithGoogle();
-            console.log("user (loginwithgoogle auth.js)", user);
+            //console.log("user (loginwithgoogle auth.js)", user);
             setUser(user ?? null);
             setError(error?.code ?? "");
+
+            return { authError: error ?? null, authUser: user ?? null }
         },
         password: async ({ email, password }) => {
             const { error, user } = await AuthService.loginWithPassword({ email, password });
@@ -28,8 +34,8 @@ export function AuthProvider(props) {
         },
         github: async () => {
             const { error, user } = await AuthService.loginWithGithub();
-            console.log("loginWithGithub User: ", user);
-            console.log("loginWithGithub Error: ", error);
+            //console.log("loginWithGithub User: ", user);
+            //console.log("loginWithGithub Error: ", error);
             setUser(user ?? null);
             setError(error?.code ?? null);
             return { authError: error ?? null, authUser: user ?? null }

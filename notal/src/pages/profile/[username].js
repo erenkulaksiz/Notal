@@ -395,7 +395,7 @@ export async function getServerSideProps(ctx) {
                 await fetchProfile({ auth: false });
             }
         } else {
-            validate = { error: "no-token" }
+            validate = {}
             await fetchProfile({ auth: false });
         }
     }

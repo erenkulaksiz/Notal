@@ -194,8 +194,8 @@ const Landing = (props) => {
             </Text>
             <Text b css={{ fs: "1.2em", color: "$gray500" }}>Keep focus on your project, not on your planning.</Text>
             <div style={{ width: "100%" }}>
-                <img src="./landing_bg_2.png" style={{ maxWidth: "100%", maxHeight: "100%", position: "absolute", zIndex: 1, left: -200, top: 50, opacity: 0.5 }} />
-                <img src="./landing_bg_3.png" style={{ maxWidth: "100%", maxHeight: "100%", position: "absolute", zIndex: 1, right: -300, top: 100, opacity: 0.2 }} />
+                <img src="./landing_bg_2.png" style={{ maxWidth: "100%", maxHeight: "100%", position: "absolute", zIndex: 1, left: -200, top: -20, opacity: isDark ? 0.3 : 0.7 }} />
+                <img src="./landing_bg_3.png" style={{ maxWidth: "100%", maxHeight: "100%", position: "absolute", zIndex: 1, right: -300, top: -20, opacity: 0.2 }} />
                 {/*<img src="./landing_bg_4.png" style={{ maxWidth: "100%", maxHeight: "100%", position: "absolute", transform: "scale(0.5)", zIndex: 1, bottom: -150, right: -200, opacity: 1 }} />*/}
             </div>
             <Spacer y={12} />

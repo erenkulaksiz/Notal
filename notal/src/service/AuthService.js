@@ -1,5 +1,4 @@
 import { getAuth, signInWithPopup, signInWithEmailAndPassword, GoogleAuthProvider, sendPasswordResetEmail, createUserWithEmailAndPassword, GithubAuthProvider, signInWithRedirect } from "firebase/auth";
-import { get, getDatabase, ref, set, child, orderByChild, query, limitToFirst, equalTo, orderByKey, startAt, update, push } from "firebase/database";
 import { getStorage, ref as stRef, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import { server } from "../config";
@@ -24,6 +23,8 @@ const AuthService = {
                 const token = credential.accessToken;
                 const { user } = result;
 
+                window.gtag('event', "login", { login: "type:google/" + user.email });
+
                 return { user, token }
             }).catch((error) => {
                 const errorCode = error.code;
@@ -43,6 +44,8 @@ const AuthService = {
                 const token = credential.accessToken;
                 const user = result.user;
 
+                window.gtag('event', "login", { login: "type:github/" + user.email });
+
                 return { user, token }
             }).catch((error) => {
                 const errorCode = error.code;
@@ -61,6 +64,8 @@ const AuthService = {
             .then(async (userCredential) => {
                 // Signed in 
                 const user = userCredential.user;
+
+                window.gtag('event', "login", { login: "type:password/" + user.email });
 
                 return { user }
             })
@@ -82,7 +87,7 @@ const AuthService = {
     },
     createUser: async ({ email, password, fullname, username, paac }) => {
         const auth = getAuth();
-        const db = getDatabase();
+        //const db = getDatabase();
 
         //await push(ref(db, "paacodes"), { valid: true, createDate: Date.now(), expireDate: Date.now() })
 
@@ -95,6 +100,7 @@ const AuthService = {
             return { error: { errorCode: "auth/username-contains-space" } }
         }
 
+        /*
         return await get(query(ref(db, "paacodes"), orderByChild("code"), equalTo(paac), limitToFirst(1))).then(async (snapshot) => {
             if (snapshot.exists()) {
                 const data = snapshot.val()[Object.keys(snapshot.val())[0]];
@@ -133,7 +139,8 @@ const AuthService = {
             } else {
                 return { error: { errorCode: "paac/invalid-code" } }
             }
-        })
+        })*/
+        return null
     },
     uploadAvatar: async ({ avatar, uid }) => {
         const storage = getStorage();

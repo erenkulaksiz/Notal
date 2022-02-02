@@ -23,8 +23,9 @@ import useAuth from '../hooks/auth';
 import { CheckToken } from '../utils';
 
 const Home = (props) => {
-    const auth = useAuth();
+    //const auth = useAuth();
     const router = useRouter();
+    const { auth } = props;
 
     // View/Filter
     const [viewing, setViewing] = useState("workspaces");

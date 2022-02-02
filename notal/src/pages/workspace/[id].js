@@ -74,6 +74,7 @@ const Workspace = (props) => {
                 const data = await auth.workspace.editWorkspace({ id: _workspace._id, title, desc });
 
                 if (data.success) {
+                    //window.gtag('event', "editWorkspace", { login: "type:google/" + user.email });
                     router.replace(router.asPath);
                 } else if (data?.error) {
                     console.error("error on star workspace: ", data.error);

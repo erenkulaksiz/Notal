@@ -79,7 +79,8 @@ export default async function handler(req, res) {
                     res.status(200).send({ success: true, data: workspace });
                 }
             } catch (error) {
-                res.status(400).send({ success: false, error: new Error(error).message });
+                console.log("error with workspace fetch: ", new Error(error).message);
+                res.status(400).send({ success: false, error: "not-found" });
             }
         },
         delete: async () => {

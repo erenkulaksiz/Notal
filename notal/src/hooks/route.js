@@ -41,6 +41,7 @@ export function withAuth(Component) {
                 <Text css={{ mt: 16, fs: "1.2em" }}>Loading...</Text>
             </Container>
         }
+
         return <Component auth={auth} {...props} />
     }
 }
