@@ -46,7 +46,7 @@ const Landing = (props) => {
         })();
     }, []);
 
-    return (<Container xl css={{ position: "relative", padding: 0, width: "100%", height: "100%" }}>
+    return (<Container xl css={{ position: "relative", padding: 0, width: "100%", height: "100%", overflowX: "hidden" }}>
         <Head>
             <title>Home · Notal</title>
             <meta name="description" content="Notal. The next generation taking notes and sharing todo snippets platform." />
@@ -58,7 +58,7 @@ const Landing = (props) => {
         </ImageContainer>
         <Container md css={{ position: "relative" }}>
             <Spacer y={6} />
-            <Grid.Container gap={2}>
+            <Grid.Container gap={2} css={{ zIndex: "$1", position: "relative" }}>
                 <Grid xs={12}>
                     <Card css={{ fill: "$warning", width: "50%", "@mdMax": { width: "100%" } }}>
                         <Row>
@@ -72,7 +72,7 @@ const Landing = (props) => {
                     <Row>
                         <Text h1 css={{
                             color: "$white",
-                            fs: "1.5em",
+                            fs: "2em",
                             "@xs": {
                                 fs: "2em",
                             },
@@ -180,7 +180,7 @@ const Landing = (props) => {
             <Spacer y={12} />
             <Text h1 css={{
                 color: isDark ? "$white" : "$black",
-                fs: "1.5em",
+                fs: "2em",
                 "@xs": {
                     fs: "2em",
                 },
