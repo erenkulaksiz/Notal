@@ -18,6 +18,8 @@ import DeleteIcon from '../../../public/icons/delete.svg';
 import EditIcon from '../../../public/icons/edit.svg';
 import AddIcon from '../../../public/icons/add.svg';
 import MoreIcon from '../../../public/icons/more.svg';
+import HomeFilledIcon from '../../../public/icons/home_filled.svg';
+import BackIcon from '../../../public/icons/back.svg';
 
 import { CheckToken } from '../../utils';
 import EditWorkspaceModal from '../../components/modals/editWorkspace';
@@ -165,7 +167,35 @@ const Workspace = (props) => {
 
         <Navbar user={props.validate?.data} />
 
-        <div style={{ display: "flex", flexDirection: "column", }}>
+        {!props.workspace?.success ? <Container sm css={{ dflex: "center", ac: "center", ai: "center", fd: "column" }}>
+            <Card css={{ textAlign: "center", dflex: "center", py: 32, mt: 48 }}>
+                <img
+                    src="https://i.pinimg.com/originals/ee/d0/d0/eed0d023bdf444d37050e27d46364f0b.png"
+                    alt="Michael Scott"
+                    style={{ maxHeight: "100%", maxWidth: "100%", width: 200 }}
+                />
+                <Text h1>[404]</Text>
+                <Text h3 css={{ textAlign: "center" }}>We couldnt find this workspace.</Text>
+                <Button
+                    icon={<HomeFilledIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+                    onClick={() => router.replace("/home")}
+                    css={{ mt: 18 }}
+                    size="xl"
+                    color="gradient"
+                >
+                    Home
+                </Button>
+                <Button
+                    icon={<BackIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+                    onClick={() => router.back()}
+                    css={{ mt: 18 }}
+                    size="xl"
+                    color="gradient"
+                >
+                    Back
+                </Button>
+            </Card>
+        </Container> : <div style={{ display: "flex", flexDirection: "column", }}>
 
             <div style={{ paddingLeft: 6, paddingRight: 6 }}>
                 <WorkspaceNav
@@ -282,7 +312,7 @@ const Workspace = (props) => {
                     </Grid>
                 </Grid.Container>
             </div>
-        </div>
+        </div>}
         <EditWorkspaceModal
             visible={editWorkspace}
             onClose={() => setEditWorkspace(false)}
