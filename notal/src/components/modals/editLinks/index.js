@@ -87,6 +87,7 @@ const EditLinksModal = ({ visible, onClose, onEdit, links }) => {
                     placeholder="Website"
                     value={website}
                     onChange={(e) => setWebsite(e.target.value)}
+                    maxLength={25}
                 />
                 {websiteError != false && <Text color={"$error"}>{websiteError}</Text>}
             </Row>
@@ -100,7 +101,7 @@ const EditLinksModal = ({ visible, onClose, onEdit, links }) => {
                     placeholder="GitHub username"
                     value={github}
                     onChange={(e) => setGithub(e.target.value.replace(/[^\w\s]/gi, '').replace(/\s/g, '').toLowerCase())}
-                    fullWidth={39}
+                    maxLength={39}
                 />
             </Row>
             <Row>

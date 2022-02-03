@@ -1,6 +1,7 @@
 {
   "name": "notal",
   "private": true,
+  "version": "1.0.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -16,6 +17,7 @@
     "moment": "^2.29.1",
     "mongodb": "^4.3.1",
     "next": "12.0.7",
+    "next-pwa": "^5.4.4",
     "next-themes": "^0.0.15",
     "powered-by-vercel": "^1.1.0",
     "react": "17.0.2",
@@ -25,7 +27,8 @@
     "react-firebase-hooks": "^4.0.1",
     "sass": "^1.45.2",
     "styled-components": "^5.3.3",
-    "url-parse": "^1.5.4"
+    "url-parse": "^1.5.4",
+    "workbox-window": "^6.4.2"
   },
   "devDependencies": {
     "@svgr/webpack": "^6.1.2",
