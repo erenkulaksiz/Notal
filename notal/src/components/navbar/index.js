@@ -29,7 +29,7 @@ const Details = styled.details`
     }
 `;
 
-const Header = styled.div`
+const Header = styled.nav`
     //backdrop-filter: saturate(180%) blur(10px);
     background-color: ${props => props.isDark ? "black" : "white"};
     overflow: visible;

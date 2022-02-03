@@ -267,27 +267,29 @@ const Landing = (props) => {
                 {/*<img src="./landing_bg_4.png" style={{ maxWidth: "100%", maxHeight: "100%", position: "absolute", transform: "scale(0.5)", zIndex: 1, bottom: -150, right: -200, opacity: 1 }} />*/}
             </div>
             <Spacer y={12} />
-            <Grid.Container>
-                <Grid xs={1} md={4}></Grid>
-                <Grid xs={10} md={4}>
-                    <Card>
-                        <Row css={{ alignItems: "center", justifyContent: "center" }}>
-                            <CodeIcon size={20} fill="currentColor" style={{ marginRight: 4, transform: "scale(0.8)" }} />
-                            <Text>with</Text>
-                            <HeartIcon size={20} fill="red" style={{ marginLeft: 4, marginRight: 4, transform: "scale(0.8)" }} />
-                            <Text css={{ mr: 8 }}>by</Text>
-                            <Link href="https://github.com/erenkulaksiz" passHref>
-                                <ALink color>@Eren Kulaksiz</ALink>
-                            </Link>
-                        </Row>
-                    </Card>
-                </Grid>
-                <Grid xs={1} md={4}></Grid>
-                <Spacer y={2} />
-                <Grid xs={12} justify="center">
-                    <PoweredByVercel utmSource="notal" />
-                </Grid>
-            </Grid.Container>
+            <footer>
+                <Grid.Container>
+                    <Grid xs={1} md={4}></Grid>
+                    <Grid xs={10} md={4}>
+                        <Card>
+                            <Row css={{ alignItems: "center", justifyContent: "center" }}>
+                                <CodeIcon size={20} fill="currentColor" style={{ marginRight: 4, transform: "scale(0.8)" }} />
+                                <Text>with</Text>
+                                <HeartIcon size={20} fill="red" style={{ marginLeft: 4, marginRight: 4, transform: "scale(0.8)" }} />
+                                <Text css={{ mr: 8 }}>by</Text>
+                                <Link href="https://github.com/erenkulaksiz" passHref>
+                                    <ALink color>@Eren Kulaksiz</ALink>
+                                </Link>
+                            </Row>
+                        </Card>
+                    </Grid>
+                    <Grid xs={1} md={4}></Grid>
+                    <Spacer y={2} />
+                    <Grid xs={12} justify="center">
+                        <PoweredByVercel utmSource="notal" />
+                    </Grid>
+                </Grid.Container>
+            </footer>
             <Spacer y={2} />
         </Container>
     </Container >

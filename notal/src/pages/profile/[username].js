@@ -258,6 +258,7 @@ const Profile = (props) => {
                         placeholder='Username'
                         value={editProfile.username}
                         bordered
+                        fullWidth
                         css={{ mt: 16 }}
                         onChange={e => setEditProfile({ ...editProfile, username: e.target.value.replace(/[^\w\s]/gi, "").replace(/\s/g, '').toLowerCase() })}
                         maxLength={20}
@@ -324,7 +325,7 @@ const Profile = (props) => {
                                 </Row>}
                             <Row css={{ justifyContent: "flex-end", pt: 8, pb: 0, fill: "$gray500", "@mdMax": { justifyContent: "center", pt: 12, pb: 12, }, alignItems: "flex-start" }}>
                                 <CakeIcon height={24} width={24} style={{ transform: "scale(0.8)" }} />
-                                <Text css={{ ml: 4, fs: "1em", color: "$gray500", fontWeight: "600" }}>{`Joined at ${moment(props.profile?.data?.createdAt).format('MMM DD, YYYY')}`}</Text>
+                                <Text css={{ ml: 4, fs: "1em", color: "$gray500", fontWeight: "600" }}>{`Joined ${moment(props.profile?.data?.createdAt).format('MMM DD, YYYY')}`}</Text>
                             </Row>
                         </Grid>
                     </Grid.Container>
