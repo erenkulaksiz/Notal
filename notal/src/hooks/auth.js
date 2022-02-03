@@ -63,11 +63,11 @@ export function AuthProvider(props) {
                 return { error: data }
             }
         },
-        editUser: async ({ uid, fullname, username, bio, profileVisible }) => {
+        editUser: async ({ uid, fullname, username, bio, profileVisible, links }) => {
             const data = await fetch(`${server}/api/editProfile`, {
                 'Content-Type': 'application/json',
                 method: "POST",
-                body: JSON.stringify({ uid, fullname, username, bio, profileVisible }),
+                body: JSON.stringify({ uid, fullname, username, bio, profileVisible, links }),
             }).then(response => response.json());
 
             if (data.success) {

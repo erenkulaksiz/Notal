@@ -45,9 +45,6 @@ export default async function handler(req, res) {
                 res.status(200).send({ success: true, data: { ...newUser } });
 
             } else {
-                const url = `https://qckm.io?m=login&v=${user.email}&k=${process.env.NEXT_PUBLIC_QUICK_METRICS_API_KEY}`;
-                fetch(url, { method: "POST", keepalive: true });
-
                 res.status(200).send({
                     success: true,
                     data: {

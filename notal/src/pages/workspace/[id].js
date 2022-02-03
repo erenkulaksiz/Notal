@@ -385,7 +385,6 @@ export async function getServerSideProps(ctx) {
             }).then(response => response.json());
             console.log("validate: ", dataValidate);
 
-
             if (dataValidate.success) {
                 validate = { ...dataValidate };
             } else {

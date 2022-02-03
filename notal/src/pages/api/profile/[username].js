@@ -39,7 +39,21 @@ export default async function handler(req, res) {
                 }
             }
 
-            res.status(200).send({ success: true, data: { ...user, workspaces } });
+            res.status(200).send({
+                success: true,
+                data: {
+                    uid: user.uid,
+                    _id: user._id,
+                    username: user.username,
+                    fullname: user.fullname,
+                    bio: user.bio,
+                    avatar: user.avatar,
+                    profileVisible: user.profileVisible,
+                    createdAt: user.createdAt,
+                    workspaces,
+                    links: user.links,
+                }
+            });
         } else {
             res.status(400).send({ success: false, error: "cant-find-user" });
         }

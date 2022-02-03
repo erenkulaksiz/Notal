@@ -21,7 +21,7 @@ export default async function handler(req, res) {
     const { db } = await connectToDatabase();
     const usersCollection = db.collection("users");
 
-    console.log("avatar: ", data.avatar);
+    console.log("links: ", data.links);
 
     if (data?.type == "avatar") {
         if (!data.avatar) {
@@ -46,6 +46,12 @@ export default async function handler(req, res) {
                         updatedAt: Date.now(),
                         profileVisible: data.profileVisible ?? false,
                         username: data?.username,
+                        /*links: {
+                            website: data.links.website ?? "",
+                            instagram: data.links.instagram ?? "",
+                            twitter: data.links.twitter ?? "",
+                            github: data.links.github ?? "",
+                        }*/
                     }
                 })
                 res.status(200).send({ success: true });
@@ -59,6 +65,12 @@ export default async function handler(req, res) {
                     bio: data.bio ?? "",
                     updatedAt: Date.now(),
                     profileVisible: data.profileVisible ?? false,
+                    links: {
+                        website: data.links?.website ?? "",
+                        instagram: data.links?.instagram ?? "",
+                        twitter: data.links?.twitter ?? "",
+                        github: data.links?.github ?? "",
+                    }
                 }
             });
             res.status(200).send({ success: true });

@@ -23,7 +23,7 @@ export const CheckToken = async ({ token, props }) => {
             return false
         } catch (err) {
             console.error(err);
-            auth.users.logout();
+            //auth.users.logout();
             return true
         }
     } else {

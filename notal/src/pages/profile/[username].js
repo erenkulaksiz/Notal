@@ -2,7 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Button, Spacer, Container, Text, Grid, Card, Switch, useTheme, Input, Row, Avatar, Textarea, Loading, Link as ALink } from '@nextui-org/react';
+import { Button, Spacer, Container, Text, Grid, Card, Switch, useTheme, Input, Row, Avatar, Textarea, Loading, Link as ALink, Tooltip, Modal } from '@nextui-org/react';
+import moment from 'moment';
 
 import useAuth from '../../hooks/auth';
 import { server } from '../../config';
@@ -18,10 +19,17 @@ import LockIcon from '../../../public/icons/lock_outline.svg';
 import VisibleIcon from '../../../public/icons/visible.svg';
 import VisibleOffIcon from '../../../public/icons/visible_off.svg';
 import DashboardIcon from '../../../public/icons/dashboard.svg';
+import GithubIcon from '../../../public/icons/github_2.svg';
+import WebsiteIcon from '../../../public/icons/website.svg';
+import TwitterIcon from '../../../public/icons/twitter.svg';
+import InstagramIcon from '../../../public/icons/instagram.svg';
+import CakeIcon from '../../../public/icons/cake.svg';
+import LinkIcon from '../../../public/icons/link.svg';
 
 import { CheckToken } from '../../utils';
 
 import Navbar from '../../components/navbar';
+import EditLinksModal from '../../components/modals/editLinks';
 
 const Profile = (props) => {
     const auth = useAuth();
@@ -37,6 +45,7 @@ const Profile = (props) => {
     const [editProfile, setEditProfile] = useState(null);
     const [editErrors, setEditErrors] = useState({ fullname: false, username: false, bio: false });
     const [editAvatarLoading, setEditAvatarLoading] = useState(false);
+    const [editingLinks, setEditingLinks] = useState(false);
 
     useEffect(() => {
         console.log("props on profile: ", props);
@@ -50,18 +59,24 @@ const Profile = (props) => {
     }, []);
 
     useEffect(() => {
+        if (!auth.authUser) {
+            setEditingProfile(false);
+        }
+    }, [auth.authUser]);
+
+    useEffect(() => {
         if ((props.profile?.success == true) || (props.profile?.success == false && props.profile?.error == "cant-find-user")) {
             setLoadingProfile(false);
             setEditProfile({
                 fullname: props.validate?.data?.fullname,
                 username: props.validate?.data?.username,
                 bio: props.validate?.data?.bio,
-                visibility: props.validate?.data?.profileVisible
+                visibility: props.validate?.data?.profileVisible,
             });
         }
     }, [props.profile]);
 
-    const onFinishEditing = async (e) => {
+    const onFinishEditing = async ({ links }) => {
         if (editProfile.username.length < 3) {
             setEditErrors({ ...editErrors, username: "Please enter a valid username." });
             return;
@@ -79,13 +94,33 @@ const Profile = (props) => {
             return;
         }
 
-        if (editProfile.fullname != props.validate?.data?.fullname || editProfile.username != props.validate?.data?.username || editProfile.bio != props.validate?.data?.bio || editProfile.visibility != props.validate?.data?.profileVisible) {
+        /*console.log("website: ", links?.website != props.profile?.data?.links?.website);
+        console.log("instagram: ", links?.instagram != props.profile?.data?.links?.instagram);
+        console.log("github: ", links?.github != props.profile?.data?.links?.github);
+        console.log("twitter: ", links?.twitter != props.profile?.data?.links?.twitter);
+        console.log("twitter: ", links?.twitter, " propTwitter:", props.profile?.data?.links?.twitter);*/
+
+        if (editProfile.fullname != props.validate?.data?.fullname
+            || editProfile.username != props.validate?.data?.username
+            || editProfile.bio != props.validate?.data?.bio
+            || editProfile.visibility != props.validate?.data?.profileVisible
+            || links?.website != props.profile?.data?.links?.website
+            || links?.instagram != props.profile?.data?.links?.instagram
+            || links?.github != props.profile?.data?.links?.github
+            || links?.twitter != props.profile?.data?.links?.twitter
+        ) {
             const data = await auth.users.editUser({
                 uid: auth.authUser?.uid,
                 fullname: editProfile.fullname,
                 username: editProfile.username,
                 bio: editProfile.bio,
                 profileVisible: editProfile.visibility,
+                links: {
+                    website: links?.website,
+                    instagram: links?.instagram,
+                    github: links?.github,
+                    twitter: links?.twitter
+                }
             });
             if (data.success) {
                 router.replace(`/profile/${editProfile.username}`);
@@ -95,7 +130,7 @@ const Profile = (props) => {
                     fullname: props.validate?.data?.fullname,
                     username: props.validate?.data?.username,
                     bio: props.validate?.data?.bio,
-                    visibility: props.validate?.data?.profileVisible
+                    visibility: props.validate?.data?.profileVisible,
                 });
             } else if (data.success == false && data.error.error == "auth/username-already-in-use") {
                 setEditErrors({ fullname: false, username: "This username is already in use.", bio: false });
@@ -197,7 +232,7 @@ const Profile = (props) => {
                         {editAvatarLoading ? <Loading color="white" size="xs" /> : <>Change Avatar<input type="file" ref={avatarInputRef} style={{ display: "none" }} onChange={onAvatarEditChange} accept="image/png, image/jpeg" /></>}
                     </Button>}
                 </Grid>
-                <Grid xs={12} sm={12} md={10} lg={10} xl={10} css={{ fd: "column", "@mdMax": { alignItems: "center" } }}>
+                <Grid xs={12} sm={12} md={4} lg={4} xl={4} css={{ fd: "column", "@mdMax": { alignItems: "center" }, }}>
                     {editingProfile ? <Input
                         color="primary"
                         labelLeft={<UserIcon height={24} width={24} style={{ fill: "currentColor" }} />}
@@ -224,7 +259,6 @@ const Profile = (props) => {
                         value={editProfile.username}
                         bordered
                         css={{ mt: 16 }}
-                        fullWidth
                         onChange={e => setEditProfile({ ...editProfile, username: e.target.value.replace(/[^\w\s]/gi, "").replace(/\s/g, '').toLowerCase() })}
                         maxLength={20}
                     /> : props.profile.data.fullname && <Text css={{ fs: "1.2em", fontWeight: "600" }}>@{props.profile.data.username}</Text>}
@@ -233,14 +267,69 @@ const Profile = (props) => {
 
                     {((auth?.authUser?.uid == props.profile?.data?.uid) && !editingProfile) && <Button
                         size={"lg"}
-                        css={{ width: "50%", mt: 16, mw: 300 }}
+                        css={{ mt: 16, mw: 300 }}
                         icon={<EditIcon height={24} width={24} fill={"currentColor"} />}
                         onClick={() => setEditingProfile(true)}
                         ghost
                     >
                         Edit Profile
                     </Button>}
+
+                    {editingProfile && <Button
+                        size={"lg"}
+                        css={{ mt: 16, }}
+                        icon={<LinkIcon height={24} width={24} fill={"currentColor"} />}
+                        onClick={() => setEditingLinks(true)}
+                        ghost
+                    >
+                        Edit Social Links
+                    </Button>}
                 </Grid>
+
+                <Grid xs={12} sm={12} md={6} lg={6} xl={6} css={{ p: 0, }}>
+                    <Grid.Container>
+                        <Grid xs={12} css={{ fd: "column", }}>
+                            {props.profile?.data?.links && (props.profile?.data?.links?.twitter.length != 0
+                                || props.profile?.data?.links?.github.length != 0
+                                || props.profile?.data?.links?.instagram.length != 0
+                                || props.profile?.data?.links?.website.length != 0) && <Row css={{ justifyContent: "flex-end", pt: 0, pb: 0, "@mdMax": { justifyContent: "center", pt: 20, pb: 12, }, alignItems: "flex-start" }}>
+                                    {props.profile?.data?.links?.twitter.length != 0 && <Tooltip content="Twitter">
+                                        <Link href={"https://twitter.com/" + props.profile?.data?.links?.twitter ?? ""} passHref>
+                                            <ALink css={{ color: "currentColor" }}>
+                                                <TwitterIcon height={24} width={24} fill={"currentColor"} style={{ marginRight: 8 }} />
+                                            </ALink>
+                                        </Link>
+                                    </Tooltip>}
+                                    {props.profile?.data?.links?.github.length != 0 && <Tooltip content="GitHub">
+                                        <Link href={"https://github.com/" + props.profile?.data?.links?.github ?? ""} passHref>
+                                            <ALink css={{ color: "currentColor" }}>
+                                                <GithubIcon height={24} width={24} fill={"currentColor"} style={{ marginRight: 8 }} />
+                                            </ALink>
+                                        </Link>
+                                    </Tooltip>}
+                                    {props.profile?.data?.links?.instagram.length != 0 && <Tooltip content="Instagram">
+                                        <Link href={"https://instagram.com/" + props.profile?.data?.links?.instagram ?? ""} passHref>
+                                            <ALink css={{ color: "currentColor" }}>
+                                                <InstagramIcon height={24} width={24} fill={"currentColor"} style={{ marginRight: 8 }} />
+                                            </ALink>
+                                        </Link>
+                                    </Tooltip>}
+                                    {props.profile?.data?.links?.website.length != 0 && <Tooltip content={props.profile?.data?.links?.website}>
+                                        <Link href={"https://" + props.profile?.data?.links?.website + "?utm_source=notalapp"} passHref>
+                                            <ALink css={{ color: "currentColor" }}>
+                                                <WebsiteIcon height={24} width={24} fill={"currentColor"} />
+                                            </ALink>
+                                        </Link>
+                                    </Tooltip>}
+                                </Row>}
+                            <Row css={{ justifyContent: "flex-end", pt: 8, pb: 0, fill: "$gray500", "@mdMax": { justifyContent: "center", pt: 12, pb: 12, }, alignItems: "flex-start" }}>
+                                <CakeIcon height={24} width={24} style={{ transform: "scale(0.8)" }} />
+                                <Text css={{ ml: 4, fs: "1em", color: "$gray500", fontWeight: "600" }}>{`Joined at ${moment(props.profile?.data?.createdAt).format('MMM DD, YYYY')}`}</Text>
+                            </Row>
+                        </Grid>
+                    </Grid.Container>
+                </Grid>
+
                 {(props.profile?.data?.bio || editingProfile) && <Grid xs={12} css={{ mt: 18, p: 0 }}>
                     <Card css={{ bg: "$gradient" }}>
                         <Grid.Container gap={editingProfile ? 1 : 0}>
@@ -272,7 +361,7 @@ const Profile = (props) => {
                                             iconOff={<VisibleOffIcon height={24} width={24} fill={"currentColor"} />}
                                         />
                                         <Text css={{ fs: "1.2em", fontWeight: "500", ml: 8 }}>
-                                            {editProfile.visibility ? "Your profile is public." : "Your profile is private."}
+                                            {editProfile.visibility ? "Your profile is visible to public." : "Your profile is private."}
                                         </Text>
                                     </Row>
                                 </Card>
@@ -305,7 +394,14 @@ const Profile = (props) => {
                             size={"lg"}
                             icon={<CheckIcon height={24} width={24} fill={"currentColor"} />}
                             css={{ width: "49%", minWidth: 100 }}
-                            onClick={onFinishEditing}
+                            onClick={() => onFinishEditing({
+                                links: {
+                                    website: props.profile?.data?.links?.website ?? "",
+                                    instagram: props.profile?.data?.links?.instagram ?? "",
+                                    twitter: props.profile?.data?.links?.twitter ?? "",
+                                    github: props.profile?.data?.links?.github ?? ""
+                                }
+                            })}
                         >
                             Edit
                         </Button>
@@ -357,6 +453,20 @@ const Profile = (props) => {
                 </Text>
             </Card>}
         </Container>}
+        <EditLinksModal
+            visible={editingLinks}
+            onClose={() => setEditingLinks(false)}
+            links={{
+                website: props.profile?.data?.links?.website ?? "",
+                instagram: props.profile?.data?.links?.instagram ?? "",
+                twitter: props.profile?.data?.links?.twitter ?? "",
+                github: props.profile?.data?.links?.github ?? "",
+            }}
+            onEdit={({ website, instagram, twitter, github }) => {
+                setEditingLinks(false);
+                onFinishEditing({ links: { website, instagram, github, twitter } });
+            }}
+        />
     </Container >)
 }
 
