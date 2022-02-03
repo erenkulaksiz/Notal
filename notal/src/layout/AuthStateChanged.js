@@ -4,10 +4,6 @@ import useAuth from '../hooks/auth';
 import cookie from 'js-cookie';
 import { Loading, Container, Text } from '@nextui-org/react';
 
-import SyncIcon from '../../public/icons/sync.svg';
-
-import styles from '../../styles/App.module.scss';
-
 export default function AuthStateChanged({ children }) {
     const { setUser } = useAuth();
     const [loading, setLoading] = useState(true);

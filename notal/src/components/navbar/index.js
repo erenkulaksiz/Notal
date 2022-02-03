@@ -85,7 +85,7 @@ const Navbar = ({ user }) => {
                         <Avatar size="md" color="gradient" bordered src={user?.avatar} referrerPolicy='no-refferer' icon={<UserIcon height={24} width={24} style={{ fill: "white" }} />} pointer />
                     </summary>
                     <Card css={{ zIndex: 2, position: "absolute", right: 0, top: "100%", width: "auto" }}>
-                        <Row css={{ mt: 0, justifyContent: "flex-end" }}>
+                        <Row css={{ mt: 0, justifyContent: "flex-end", }}>
                             {auth?.authUser && <Switch
                                 color="primary"
                                 initialChecked={isDark}
@@ -93,6 +93,7 @@ const Navbar = ({ user }) => {
                                 iconOn={<LightIcon height={24} width={24} style={{ fill: "currentColor" }} />}
                                 iconOff={<DarkIcon height={24} width={24} style={{ fill: "currentColor" }} />}
                                 size="sm"
+                                css={{ position: "absolute", right: 0, top: 0, }}
                             />}
                         </Row>
                         <Text h4>{user?.fullname || "@" + user?.username}</Text>
