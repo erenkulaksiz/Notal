@@ -1,16 +1,23 @@
-const admin = require("firebase-admin");
-const { firebaseConfig } = require('../../config/firebaseApp.config');
+//const admin = require("firebase-admin");
+//const { firebaseConfig } = require('../../config/firebaseApp.config');
 const { connectToDatabase } = require('../../../lib/mongodb');
 const ObjectId = require('mongodb').ObjectId;
 
-const googleService = JSON.parse(process.env.NEXT_PUBLIC_GOOGLE_SERVICE);
+//const googleService = JSON.parse(process.env.NEXT_PUBLIC_GOOGLE_SERVICE);
 
+/*
 if (!admin.apps.length) {
     admin.initializeApp({
         credential: admin.credential.cert(googleService),
         databaseURL: firebaseConfig.databaseURL
     });
 }
+*/
+
+const { db } = await connectToDatabase();
+const workspacesCollection = db.collection("workspaces");
+//const usersCollection = db.collection("users");
+//const fieldsCollection = db.collection("fields");
 
 export default async function handler(req, res) {
 
@@ -18,10 +25,6 @@ export default async function handler(req, res) {
         res.status(400).send({ success: false });
         return;
     }
-    const { db } = await connectToDatabase();
-    //const usersCollection = db.collection("users");
-    const workspacesCollection = db.collection("workspaces");
-    //const fieldsCollection = db.collection("fields");
 
     const { uid, title, desc, action, starred, id, workspaceId, color, fieldId, filterBy, swapType, cardId, toFieldId, toCardId } = JSON.parse(req.body);
 
@@ -231,170 +234,19 @@ export default async function handler(req, res) {
                 return;
             }
 
+            /*
             await admin.database().ref(`/workspaces/${workspaceId}/fields/${id}`).update({ title, updatedAt: Date.now() }, () => {
                 res.status(200).send({ success: true });
             }).catch(error => {
                 res.status(400).send({ success: false, error });
             });
+            */
         },
         editcard: async () => {
             if (!id || !uid || !workspaceId || !title || !desc || !color || !fieldId) {
                 res.status(400).send({ success: false, error: "invalid-params" });
                 return;
             }
-
-            await admin.database().ref(`/workspaces/${workspaceId}/fields/${fieldId}/cards/${id}`).update({ title, desc, color, updatedAt: Date.now() }, () => {
-                res.status(200).send({ success: true });
-            }).catch(error => {
-                res.status(400).send({ success: false, error });
-            });
-        },
-        cardswap: async () => {
-            if (!cardId || !uid || !workspaceId || !fieldId || !swapType) {
-                res.status(400).send({ success: false, error: "invalid-params" });
-                res.end();
-                return;
-            }
-
-            console.log("Swaptype: ", swapType);
-
-            await admin.database().ref(`/workspaces/${workspaceId}/fields/${fieldId}/cards/${cardId}`).once("value", async (snapshot) => {
-                if (snapshot.exists()) {
-                    const card = snapshot.val();
-                    const firstSwapIndex = card.index;
-
-                    if (swapType == "up") {
-
-                        await admin.database().ref(`/workspaces/${workspaceId}/fields/${fieldId}/cards`).orderByChild("index").endAt(firstSwapIndex).limitToLast(2).once("value", async (snapshot) => {
-                            if (snapshot.exists()) {
-                                if (Object.keys(snapshot.val()).length > 1) {
-                                    const swapToCard = Object.keys(snapshot.val()).map(el => { return { ...snapshot.val()[el], id: el } }).filter(el => el.id != cardId)[0];
-                                    console.log("swap with card: ", swapToCard);
-
-                                    await admin.database().ref(`/workspaces/${workspaceId}/fields/${fieldId}/cards/${swapToCard.id}`).update({ index: firstSwapIndex }, async () => {
-                                        await admin.database().ref(`/workspaces/${workspaceId}/fields/${fieldId}/cards/${cardId}`).update({ index: swapToCard.index }, async () => {
-                                            console.log("finish!");
-                                            res.status(200).send({ success: true });
-                                            res.end();
-                                        }).catch(error => {
-                                            res.status(400).send({ success: false, error });
-                                            res.end();
-                                        });
-                                    }).catch(error => {
-                                        res.status(400).send({ success: false, error });
-                                        res.end();
-                                    });
-                                } else {
-                                    console.log("adam ol en üsttekini arttırmaya çalışma");
-                                    res.status(200).send({ success: true });
-                                    res.end();
-                                }
-                            } else {
-                                console.log("first swap bulamadım");
-                                res.status(200).send({ success: true });
-                                res.end();
-                            }
-                        });
-                    } else if (swapType == "down") {
-                        await admin.database().ref(`/workspaces/${workspaceId}/fields/${fieldId}/cards`).orderByChild("index").startAt(firstSwapIndex).limitToFirst(2).once("value", async (snapshot) => {
-                            if (snapshot.exists()) {
-                                if (Object.keys(snapshot.val()).length > 1) {
-                                    const swapToCard = Object.keys(snapshot.val()).map(el => { return { ...snapshot.val()[el], id: el } }).filter(el => el.id != cardId)[0];
-                                    console.log("swap with card: ", swapToCard);
-                                    await admin.database().ref(`/workspaces/${workspaceId}/fields/${fieldId}/cards/${swapToCard.id}`).update({ index: firstSwapIndex }, async () => {
-                                        await admin.database().ref(`/workspaces/${workspaceId}/fields/${fieldId}/cards/${cardId}`).update({ index: swapToCard.index }, async () => {
-                                            console.log("finish!");
-                                            res.status(200).send({ success: true });
-                                            res.end();
-                                        }).catch(error => {
-                                            res.status(400).send({ success: false, error });
-                                            res.end();
-                                        });
-                                    }).catch(error => {
-                                        res.status(400).send({ success: false, error });
-                                        res.end();
-                                    });
-                                } else {
-                                    console.log("adam ol aşağı daha inemiyom");
-                                    res.status(200).send({ success: true });
-                                    res.end();
-                                }
-                            } else {
-                                console.log("first swap bulamadım");
-                                res.status(200).send({ success: true });
-                                res.end();
-                            }
-                        });
-                    } else if (swapType == "dnd") {
-
-                        if (!fieldId || !toFieldId || !cardId || !toCardId) {
-                            res.status(400).send({ success: false, error: "invalid-params" });
-                            res.end();
-                            return;
-                        }
-
-                        // fieldId, toFieldId, cardId, toCardId,
-
-                        const currCard = await admin.database().ref(`/workspaces/${workspaceId}/fields/${fieldId}/cards/${cardId}`);
-                        const toCard = await admin.database().ref(`/workspaces/${workspaceId}/fields/${toFieldId}/cards/${toCardId}`);
-
-                        if (fieldId == toFieldId) {
-                            await admin.database().ref(`/workspaces/${workspaceId}/fields/${fieldId}/cards/${cardId}`).once("value", async (snapshot) => {
-                                if (snapshot.exists()) {
-                                    const _card = snapshot.val();
-                                    console.log("changing card: ", snapshot.val());
-                                    await admin.database().ref(`/workspaces/${workspaceId}/fields/${fieldId}/cards/${toCardId}`).once("value", async (snapshot) => {
-                                        if (snapshot.exists()) {
-                                            console.log("toCard: ", snapshot.val());
-                                            const _toCard = snapshot.val();
-                                            await admin.database().ref(`/workspaces/${workspaceId}/fields/${fieldId}/cards/${toCardId}`).update({ index: _card.index }, async () => {
-                                                await admin.database().ref(`/workspaces/${workspaceId}/fields/${fieldId}/cards/${cardId}`).update({ index: _toCard.index }, async () => {
-                                                    console.log("done :D!!! ");
-                                                    res.status(200).send({ success: true });
-                                                    res.end();
-                                                })
-                                            })
-                                        }
-                                    });
-                                }
-                            });
-                        } else {
-                            currCard.once("value", async (snapshot) => {
-                                if (snapshot.exists()) {
-                                    const card = snapshot.val();
-                                    toCard.once("value", async (snapshot) => {
-                                        if (snapshot.exists()) {
-                                            const toCard = { ...snapshot.val(), index: card.index };
-                                            const _card = { ...card, index: snapshot.val().index };
-
-                                            await admin.database().ref(`/workspaces/${workspaceId}/fields/${toFieldId}/cards/${toCardId}`).update(_card, async () => {
-                                                await admin.database().ref(`/workspaces/${workspaceId}/fields/${fieldId}/cards/${cardId}`).update(toCard, async () => {
-                                                    console.log("done :D ");
-                                                    res.status(200).send({ success: true });
-                                                    res.end();
-                                                });
-                                            });
-
-                                        } else {
-                                            console.log("swap: second card doesnt exists");
-                                        }
-                                    });
-                                } else {
-                                    console.log("swap: first card doesnt exists");
-                                }
-                            });
-                        }
-
-                    }
-
-                } else {
-
-                    console.log(fieldId, toFieldId, cardId, toCardId);
-                    res.status(400).send({ success: false, error: "cant-find-card-id" });
-                }
-            }).catch(error => {
-                res.status(400).send({ success: false, error });
-            });
 
             /*
             await admin.database().ref(`/workspaces/${workspaceId}/fields/${fieldId}/cards/${id}`).update({ title, desc, color, updatedAt: Date.now() }, () => {

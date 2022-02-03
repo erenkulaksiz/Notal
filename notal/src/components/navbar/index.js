@@ -1,8 +1,8 @@
-import { Button, Text, Grid, Card, Link as ALink, Switch, Avatar, useTheme, Row } from '@nextui-org/react';
 import styled from 'styled-components'
 import { useTheme as useNextTheme } from 'next-themes';
 import { useRouter } from 'next/router';
-//import { Link } from 'next/link';
+import Link from 'next/link';
+import { Button, Text, Grid, Card, Link as ALink, Switch, Avatar, useTheme, Row } from '@nextui-org/react';
 
 import UserIcon from '../../../public/icons/user.svg';
 import DarkIcon from '../../../public/icons/dark.svg';
@@ -50,13 +50,15 @@ const Navbar = ({ user }) => {
     return (<Header isDark={isDark}>
         <Grid.Container justify="center">
             <Grid xs={6} sm={4} alignItems='center'>
-                <ALink onClick={() => router.push(auth?.authUser ? "/home" : "/login")}>
-                    <img
-                        src={isDark ? "/icon_white.png" : "/icon_galactic.png"}
-                        alt="Logo of Notal"
-                        style={{ maxHeight: "100%", width: 160, }}
-                    />
-                </ALink>
+                <Link href={auth?.authUser ? "/home" : "/login"} passHref prefetch>
+                    <ALink>
+                        <img
+                            src={isDark ? "/icon_white.png" : "/icon_galactic.png"}
+                            alt="Logo of Notal"
+                            style={{ maxHeight: "100%", width: 160, }}
+                        />
+                    </ALink>
+                </Link>
             </Grid>
             <Grid xs={0} sm={4} justify='center' alignItems='center'>
 
@@ -98,15 +100,18 @@ const Navbar = ({ user }) => {
                         </Row>
                         <Text h4>{user?.fullname || "@" + user?.username}</Text>
                         <Text span>{user?.email}</Text>
-                        <Button
-                            icon={<UserIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-                            onClick={() => router.push(`/profile/${user?.username}`)}
-                            css={{ mt: 12 }}
-                            size="md"
-                            color="gradient"
-                        >
-                            Profile
-                        </Button>
+                        <Link href="/profile/[username]" as={`/profile/${user?.username}`} passHref prefetch>
+                            <ALink css={{ mt: 8 }}>
+                                <Button
+                                    icon={<UserIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+                                    css={{ mt: 12 }}
+                                    size="md"
+                                    color="gradient"
+                                >
+                                    Profile
+                                </Button>
+                            </ALink>
+                        </Link>
                         <Button
                             icon={<LogoutIcon height={24} width={24} style={{ fill: "currentColor", }} />}
                             onClick={() => {

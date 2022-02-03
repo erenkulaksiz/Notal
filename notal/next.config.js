@@ -17,6 +17,8 @@ module.exports = withPWA({
       issuer: /\.[jt]sx?$/,
       use: ['@svgr/webpack'],
     })
+    config.experiments = config.experiments || {};
+    config.experiments.topLevelAwait = true;
 
     return config
   },
