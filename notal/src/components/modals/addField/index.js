@@ -12,8 +12,8 @@ const AddFieldModal = ({ visible, onClose, onAdd }) => {
     const [title, setTitle] = useState("");
 
     const add = () => {
-        if (title.length < 3 || title.length > 20) {
-            setTitleError("Title must be between 2 and 20 characters long.");
+        if (title.length < 3 || title.length > 30) {
+            setTitleError("Title must be between 3 and 30 characters long.");
             return;
         }
         onAdd({ title });
@@ -47,7 +47,7 @@ const AddFieldModal = ({ visible, onClose, onAdd }) => {
                     label={<Text css={{ color: "$gray700", fontWeight: "500" }}>Field Title</Text>}
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    maxLength={20}
+                    maxLength={30}
                 />
                 {titleError != false && <Text color={"$error"}>{titleError}</Text>}
             </Row>

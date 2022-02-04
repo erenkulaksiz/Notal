@@ -12,7 +12,7 @@ const AddWorkspaceModal = ({ newWorkspaceVisible, setNewWorkspaceVisible, onAdd 
 
     const submit = () => {
         if (newWorkspace.title.length < 3) {
-            setNewWorkspaceErr({ ...newWorkspaceErr, title: "Please enter a valid title." });
+            setNewWorkspaceErr({ ...newWorkspaceErr, title: "Title must be minimum 3 characters long." });
             return;
         }
 

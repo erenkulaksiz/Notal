@@ -295,28 +295,28 @@ const Profile = (props) => {
                                 || props.profile?.data?.links?.website.length != 0) && <Row css={{ justifyContent: "flex-end", pt: 0, pb: 0, "@mdMax": { justifyContent: "center", pt: 20, pb: 12, }, alignItems: "flex-start" }}>
                                     {props.profile?.data?.links?.twitter.length != 0 && <Tooltip content="Twitter">
                                         <Link href={"https://twitter.com/" + props.profile?.data?.links?.twitter ?? ""} passHref>
-                                            <ALink css={{ color: "currentColor", padding: 8 }}>
+                                            <ALink css={{ color: "currentColor", padding: 8 }} target="_blank">
                                                 <TwitterIcon height={24} width={24} fill={"currentColor"} />
                                             </ALink>
                                         </Link>
                                     </Tooltip>}
                                     {props.profile?.data?.links?.github.length != 0 && <Tooltip content="GitHub">
                                         <Link href={"https://github.com/" + props.profile?.data?.links?.github ?? ""} passHref>
-                                            <ALink css={{ color: "currentColor", padding: 8 }}>
+                                            <ALink css={{ color: "currentColor", padding: 8 }} target="_blank">
                                                 <GithubIcon height={24} width={24} fill={"currentColor"} />
                                             </ALink>
                                         </Link>
                                     </Tooltip>}
                                     {props.profile?.data?.links?.instagram.length != 0 && <Tooltip content="Instagram">
                                         <Link href={"https://instagram.com/" + props.profile?.data?.links?.instagram ?? ""} passHref>
-                                            <ALink css={{ color: "currentColor", padding: 8 }}>
+                                            <ALink css={{ color: "currentColor", padding: 8 }} target="_blank">
                                                 <InstagramIcon height={24} width={24} fill={"currentColor"} />
                                             </ALink>
                                         </Link>
                                     </Tooltip>}
                                     {props.profile?.data?.links?.website.length != 0 && <Tooltip content={props.profile?.data?.links?.website}>
-                                        <Link href={"https://" + props.profile?.data?.links?.website + "?utm_source=notalapp"} passHref>
-                                            <ALink css={{ color: "currentColor", padding: 8, pr: 8, "@md": { pr: 0 } }}>
+                                        <Link href={"https://" + props.profile?.data?.links?.website + "?utm_source=notalapp"} passHref target="_blank">
+                                            <ALink css={{ color: "currentColor", padding: 8, pr: 8, "@md": { pr: 0 } }} target="_blank">
                                                 <WebsiteIcon height={24} width={24} fill={"currentColor"} />
                                             </ALink>
                                         </Link>

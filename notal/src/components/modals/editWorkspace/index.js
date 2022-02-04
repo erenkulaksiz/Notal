@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Text, Modal, Input, Row } from '@nextui-org/react';
 
 import EditIcon from '../../../../public/icons/edit.svg';
@@ -13,13 +13,14 @@ const EditWorkspaceModal = ({ visible, onClose, onEdit, title, desc }) => {
     const [editTitle, setEditTitle] = useState(title);
     const [editDesc, setEditDesc] = useState(desc);
 
+    useEffect(() => { // #TODO: remove this useeffect
+        setEditTitle(title);
+        setEditDesc(desc);
+    }, [title, desc])
+
     const edit = () => {
-        if (editTitle.length < 3) {
-            setTitleError("Please enter a valid title.");
-            return;
-        }
-        if (editTitle.length > 20) {
-            setTitleError("Maximum 20 characters allowed.");
+        if (editTitle.length < 3 || editTitle.length > 20) {
+            setTitleError("Title must be between 3 and 20 characters long.");
             return;
         }
         if (editDesc.lenght > 20) {
@@ -56,6 +57,7 @@ const EditWorkspaceModal = ({ visible, onClose, onEdit, title, desc }) => {
                     label={<Text css={{ color: "$gray700", fontWeight: "500" }}>Workspace Title</Text>}
                     value={editTitle}
                     onChange={(e) => setEditTitle(e.target.value)}
+                    maxLength={20}
                 />
                 {titleError != false && <Text color={"$error"}>{titleError}</Text>}
             </Row>
@@ -67,6 +69,7 @@ const EditWorkspaceModal = ({ visible, onClose, onEdit, title, desc }) => {
                     label={<Text css={{ color: "$gray700", fontWeight: "500" }}>Workspace Description</Text>}
                     value={editDesc}
                     onChange={(e) => setEditDesc(e.target.value)}
+                    maxLength={20}
                 />
                 {descError != false && <Text color={"$error"}>{descError}</Text>}
             </Row>

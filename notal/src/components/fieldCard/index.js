@@ -27,9 +27,9 @@ const FieldCard = ({ card, onDelete }) => {
                 </Grid>
                 <Grid xs={2} sm={2} justify='flex-end' alignItems='center'>
                     <Checkbox size="xs" checked={false} css={{ mr: 8 }} disabled />
-                    <div style={{ marginRight: 14, marginBottom: 10, position: "relative" }}>
+                    {card.color && <div style={{ marginRight: 14, marginBottom: 10, position: "relative" }}>
                         <CardColor color={card.color} />
-                    </div>
+                    </div>}
                     <Tooltip
                         css={{ pointerEvents: "none" }}
                         content={

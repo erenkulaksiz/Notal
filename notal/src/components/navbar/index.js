@@ -50,7 +50,7 @@ const Navbar = ({ user }) => {
     return (<Header isDark={isDark}>
         <Grid.Container justify="center">
             <Grid xs={6} sm={4} alignItems='center'>
-                <Link href={auth?.authUser ? "/home" : "/login"} passHref prefetch>
+                <Link href={auth?.authUser ? "/home" : "/login"} passHref>
                     <ALink>
                         <img
                             src={isDark ? "/icon_white.png" : "/icon_galactic.png"}
@@ -96,7 +96,7 @@ const Navbar = ({ user }) => {
                         </Row>
                         <Text h4 css={{ mt: 8 }}>{user?.fullname || "@" + user?.username}</Text>
                         <Text span>{user?.email}</Text>
-                        <Link href="/profile/[username]" as={`/profile/${user?.username}`} passHref prefetch>
+                        <Link href="/profile/[username]" as={`/profile/${user?.username}`} passHref>
                             <ALink css={{ mt: 16 }}>
                                 <Button
                                     icon={<UserIcon height={24} width={24} style={{ fill: "currentColor" }} />}

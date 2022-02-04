@@ -179,24 +179,31 @@ export default async function handler(req, res) {
             // id: field id
 
             console.log(color, title, desc, workspaceId, uid, id);
-            if (!id || !uid || !workspaceId || !title || !desc || !color) {
+            if (!id || !uid || !workspaceId || !title /*|| !desc || !color*/) {
                 res.status(400).send({ success: false, error: "invalid-params" });
                 return;
             }
 
             try {
-                await workspacesCollection.updateOne({ "_id": ObjectId(workspaceId), "fields._id": ObjectId(id) }, {
-                    $push: {
-                        "fields.$.cards": {
-                            title,
-                            desc,
-                            color,
-                            createdAt: Date.now(),
-                            _id: ObjectId(),
+                workspacesCollection.findOneAndUpdate({ "_id": ObjectId(workspaceId), "fields._id": ObjectId(id) },
+                    {
+                        $push: {
+                            "fields.$.cards": {
+                                title,
+                                desc,
+                                color,
+                                createdAt: Date.now(),
+                                _id: ObjectId(),
+                            }
+                        }
+                    }, { returnDocument: 'after' }, (err, documents) => {
+                        if (!err) {
+                            res.status(200).send({ success: true, data: documents.value.fields });
+                        } else {
+                            res.status(400).send({ success: false, error: new Error(err).message });
                         }
                     }
-                });
-                res.status(200).send({ success: true });
+                )
             } catch (error) {
                 res.status(400).send({ success: false, error: new Error(error).message });
             }

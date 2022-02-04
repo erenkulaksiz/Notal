@@ -41,10 +41,23 @@ const AddCardModal = ({ visible, onClose, onAdd }) => {
     const [desc, setDesc] = useState("");
     const [color, setColor] = useState({ code: "", name: "" });
 
+    const [titleError, setTitleError] = useState("");
+
+    const add = () => {
+        if (title.length < 3 || title.length > 30) {
+            setTitleError("Title must be between 3 and 30 characters long.");
+            return;
+        }
+        setTitleError("");
+        onAdd({ title, desc, color: color.code });
+        close();
+    }
+
     const close = () => {
         setTitle("");
         setDesc("");
         setColor({ code: "", name: "" });
+        setTitleError("");
         onClose();
     }
 
@@ -70,7 +83,9 @@ const AddCardModal = ({ visible, onClose, onAdd }) => {
                     label={<Text css={{ color: "$gray700", fontWeight: "500" }}>Card Title</Text>}
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
+                    maxLength={30}
                 />
+                {titleError != false && <Text color={"$error"}>{titleError}</Text>}
             </Row>
             <Row css={{ fd: "column", m: 0 }}>
                 <Input
@@ -96,13 +111,13 @@ const AddCardModal = ({ visible, onClose, onAdd }) => {
                             <Row css={{ justifyContent: "space-between", flexDirection: "row" }}>
                                 <Row>
                                     {color.code && <CardColor color={color.code} style={{ marginTop: 8 }} />}
-                                    <Text css={{ width: "50%", color: color.code ? color.code : "CurrentColor", marginLeft: color.code ? 18 : 0 }} b>{color.code ? color.name : "Set Color"}</Text>
+                                    <Text css={{ width: "50%", color: color.code ? color.code : "CurrentColor", marginLeft: color.code ? 18 : 0 }} b={color.code != ""}>{color.code ? color.name : "Set Color"}</Text>
                                 </Row>
                                 <ArrowDownIcon size={24} fill={"currentColor"} />
                             </Row>
                         </Card>
                     </summary>
-                    <Card css={{ zIndex: 500, position: "absolute", left: 0, width: "auto", boxShadow: "$lg", bg: isDark ? "#1c1c1c" : "$background" }}>
+                    <Card css={{ zIndex: 500, height: 160, position: "absolute", left: 0, width: "auto", boxShadow: "$lg", bg: isDark ? "#1c1c1c" : "$background" }}>
                         <ALink onClick={() => setColor({ code: "", name: "" })} css={{ p: 8, color: isDark ? "$white" : "$black", position: "relative" }}>
                             <Text css={{ color: "CurrentColor" }} b>None</Text>
                         </ALink>
@@ -146,10 +161,7 @@ const AddCardModal = ({ visible, onClose, onAdd }) => {
                 Cancel
             </Button>
             <Button auto css={{ width: "46%" }}
-                onClick={() => {
-                    onAdd({ title, desc, color: color.code });
-                    close();
-                }}>
+                onClick={add}>
                 <CheckIcon height={24} width={24} style={{ fill: "currentColor", transform: "scale(0.8)", marginRight: 4 }} />
                 Add
             </Button>

@@ -272,10 +272,8 @@ const AuthService = {
             body: JSON.stringify({ id, action: "ADDCARD", uid: auth?.currentUser?.uid, workspaceId, title, desc, color }),
         }).then(response => response.json());
 
-        console.log("add card to field res: ", data);
-
         if (data?.success) {
-            return { success: true }
+            return { success: true, data: data.data }
         } else {
             return { error: data?.error }
         }

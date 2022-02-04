@@ -11,7 +11,7 @@ import FieldCard from '../fieldCard';
 const Field = ({ field, onAddCard, onDeleteField, onDeleteCard, onEditClick }) => {
     const { isDark } = useTheme();
 
-    return (<Grid css={{ minWidth: 380, maxWidth: 400, }} key={field._id}>
+    return (<Grid css={{ minWidth: 380, maxWidth: 400, }}>
         <Card css={{ boxShadow: "$sm" }}>
             <div style={{ display: "flex" }}>
                 <Grid.Container>
@@ -24,9 +24,11 @@ const Field = ({ field, onAddCard, onDeleteField, onDeleteCard, onEditClick }) =
                                     </Text>
                                 </Grid>
                                 <Grid xs={6} sm={6} css={{ justifyContent: "flex-end" }}>
-                                    <Button size="sm" css={{ minWidth: 44, "&:hover": { bg: isDark ? "$gray800" : "$gray200" }, mr: 4 }} light>
-                                        <FilterIcon size={24} fill={"currentColor"} />
-                                    </Button>
+                                    <Tooltip content="Filter" css={{ pointerEvents: "none" }}>
+                                        <Button size="sm" css={{ minWidth: 44, "&:hover": { bg: isDark ? "$gray800" : "$gray200" }, mr: 4 }} light>
+                                            <FilterIcon size={24} fill={"currentColor"} />
+                                        </Button>
+                                    </Tooltip>
                                     <Tooltip
                                         content={
                                             <div style={{ display: "flex", flexDirection: "row" }}>
@@ -47,7 +49,7 @@ const Field = ({ field, onAddCard, onDeleteField, onDeleteCard, onEditClick }) =
                     </Grid>
 
                     {field?.cards && field.cards.map((card, index) => <FieldCard
-                        key={card._id}
+                        key={card._id ? card._id : index}
                         card={card}
                         onDelete={({ id }) => onDeleteCard({ id })}
                     />)}

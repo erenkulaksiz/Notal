@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 //import { DragDropContext } from 'react-beautiful-dnd';
-import { Button, Spacer, Container, Text, Grid, Card, useTheme, Row, Tooltip, Checkbox } from '@nextui-org/react';
+import { Button, Spacer, Container, Text, Grid, Card, useTheme, Loading } from '@nextui-org/react';
 
 import { server } from '../../config';
 import useAuth from '../../hooks/auth';
@@ -64,6 +64,8 @@ const Workspace = (props) => {
     const handle = {
         editWorkspace: async ({ title, desc }) => {
             if (_workspace.title != title || _workspace.desc != desc) {
+                const newWorkspace = { ..._workspace, title, desc };
+                _setWorkspace(newWorkspace);
                 const data = await auth.workspace.editWorkspace({ id: _workspace._id, title, desc });
 
                 if (data.success) {
@@ -75,12 +77,12 @@ const Workspace = (props) => {
             }
         },
         starWorkspace: async () => {
+            const newWorkspace = { ..._workspace, starred: !_workspace.starred };
+            _setWorkspace(newWorkspace);
             const data = await auth.workspace.starWorkspace({ id: _workspace._id });
 
-            if (data.success) {
-                router.replace(router.asPath);
-            } else if (data?.error) {
-                console.error("error on star workspace: ", data.error);
+            if (data.success != true) {
+                console.log("error star workspace: ", data?.error);
             }
         },
         addField: async ({ title }) => {
@@ -102,12 +104,14 @@ const Workspace = (props) => {
             }
         },
         deleteField: async ({ id }) => {
+            const newFields = _workspace;
+            newFields.fields.splice(_workspace.fields.findIndex(el => el._id == id), 1);
+            _setWorkspace({ ...newFields });
+
             const data = await auth.workspace.field.removeField({ id, workspaceId: _workspace._id });
 
-            if (data.success) {
-                router.replace(router.asPath);
-            } else if (data?.error) {
-                console.error("error on delete field: ", data.error);
+            if (data.success != true) {
+                console.log("delete field error: ", data?.error);
             }
         },
         deleteWorkspace: async () => {
@@ -120,6 +124,10 @@ const Workspace = (props) => {
             }
         },
         addCardToField: async ({ fieldId, title, desc, color }) => {
+            const newFields = _workspace;
+            newFields.fields[_workspace.fields.findIndex(el => el._id == fieldId)].cards?.push({ title, desc, color, createdAt: Date.now() });
+            _setWorkspace(newFields);
+
             const data = await auth.workspace.field.addCard({
                 id: fieldId,
                 workspaceId: _workspace._id,
@@ -128,32 +136,36 @@ const Workspace = (props) => {
                 color
             });
 
-            if (data.success) {
-                router.replace(router.asPath);
-            } else {
+            console.log("addCardToField res: ", data);
+
+            if (data.success != true) {
                 console.log("add card error: ", data?.error);
+            } else {
+                _setWorkspace({ ..._workspace, fields: data.data });
             }
         },
         deleteCard: async ({ id, fieldId }) => {
+            const newFields = _workspace;
+            const cardIndex = newFields.fields[_workspace.fields.findIndex(el => el._id == fieldId)].cards.findIndex(el => el._id == id);
+            newFields.fields[_workspace.fields.findIndex(el => el._id == fieldId)].cards.splice(cardIndex, 1);
+            _setWorkspace({ ...newFields });
+
             const data = await auth.workspace.field.removeCard({
                 id,
                 fieldId,
                 workspaceId: _workspace._id,
             });
-
             console.log("data delete card: ", data);
 
-            if (data.success) {
-                router.replace(router.asPath);
-            } else {
-                console.log("add card error: ", data?.error);
+            if (data.success != true) {
+                console.log("delete card error: ", data?.error);
             }
         },
     }
 
     return (<Container fluid css={{ position: "relative", padding: 0, overflowX: "hidden" }}>
         <Head>
-            <title>{props.workspace?.data?.title ?? "Not Found"}</title>
+            <title>{_workspace?.title ?? "Not Found"}</title>
             <meta name="description" content="Notal. The next generation taking notes and sharing todo snippets platform." />
             <link rel="icon" href="/favicon.ico" />
         </Head>
@@ -191,20 +203,21 @@ const Workspace = (props) => {
         </Container> : <div style={{ display: "flex", flexDirection: "column", flexShrink: 0 }}>
 
             <div style={{ paddingLeft: 12, paddingRight: 12, position: "sticky", top: 70, zIndex: 500 }}>
-                <WorkspaceNav
-                    title={props.workspace?.data?.title}
-                    desc={props.workspace?.data?.desc}
-                    starred={props.workspace?.data?.starred}
+                {loadingWorkspace ? <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
+                    <Loading />
+                </div> : <WorkspaceNav
+                    title={_workspace.title}
+                    desc={_workspace.desc}
+                    starred={_workspace.starred}
                     onFavClick={() => handle.starWorkspace()}
                     onDeleteClick={() => setDeleteWorkspace(true)}
                     onEditWorkspace={() => setEditWorkspace(true)}
-                />
+                />}
             </div>
 
-            <div style={{ display: "flex", width: "100%", flexDirection: "column", paddingTop: 8 }}>
-                <Grid.Container gap={1} css={{ flexWrap: "nowrap", alignItems: "flex-start", justifyContent: "flex-start", overflowX: "auto" }}>
-
-                    {props.workspace.data?.fields && props.workspace.data.fields.map(field => {
+            <div style={{ display: "flex", width: "100%", flexDirection: "column", paddingTop: 8, justifyContent: "center", alignContent: "center" }}>
+                {!loadingWorkspace && <Grid.Container gap={1} css={{ flexWrap: "nowrap", alignItems: "flex-start", justifyContent: "flex-start", overflowX: "auto" }}>
+                    {(_workspace?.fields) && _workspace.fields.map(field => {
                         return (<Field
                             field={field}
                             key={field._id}
@@ -228,52 +241,54 @@ const Workspace = (props) => {
                         </Text>
                     </Card>
                     <Spacer x={1} />
-                </Grid.Container>
+                </Grid.Container>}
             </div>
         </div>}
-        <AddFieldModal
-            visible={addFieldModal}
-            onClose={() => setAddFieldModal(false)}
-            onAdd={(({ title }) => {
-                setAddFieldModal(false)
-                handle.addField({ title });
-            })}
-        />
-        <AddCardModal
-            visible={addCardModal.visible}
-            onClose={() => setAddCardModal({ ...addCardModal, visible: false, field: "" })}
-            onAdd={({ title, desc, color }) => {
-                setAddCardModal({ visible: false, field: "" });
-                handle.addCardToField({ fieldId: addCardModal.field, title, desc, color });
-            }}
-        />
-        <DeleteWorkspaceModal
-            visible={deleteWorkspaceModal}
-            onClose={() => setDeleteWorkspace(false)}
-            onDelete={() => {
-                setDeleteWorkspace(false);
-                handle.deleteWorkspace();
-            }}
-        />
-        <EditWorkspaceModal
-            visible={editWorkspace}
-            onClose={() => setEditWorkspace(false)}
-            title={props.workspace?.data?.title}
-            desc={props.workspace?.data?.desc}
-            onEdit={({ title, desc }) => {
-                setEditWorkspace(false);
-                handle.editWorkspace({ title, desc });
-            }}
-        />
-        <EditFieldModal
-            visible={editField.visible}
-            onClose={() => setEditField({ ...editField, visible: false })}
-            title={editField.title}
-            onEdit={({ title }) => {
-                handle.editField({ id: editField.id, title });
-                setEditField({ ...editField, visible: false });
-            }}
-        />
+        {!loadingWorkspace && <>
+            <AddFieldModal
+                visible={addFieldModal}
+                onClose={() => setAddFieldModal(false)}
+                onAdd={(({ title }) => {
+                    setAddFieldModal(false)
+                    handle.addField({ title });
+                })}
+            />
+            <AddCardModal
+                visible={addCardModal.visible}
+                onClose={() => setAddCardModal({ ...addCardModal, visible: false, field: "" })}
+                onAdd={({ title, desc, color }) => {
+                    setAddCardModal({ visible: false, field: "" });
+                    handle.addCardToField({ fieldId: addCardModal.field, title, desc, color });
+                }}
+            />
+            <DeleteWorkspaceModal
+                visible={deleteWorkspaceModal}
+                onClose={() => setDeleteWorkspace(false)}
+                onDelete={() => {
+                    setDeleteWorkspace(false);
+                    handle.deleteWorkspace();
+                }}
+            />
+            <EditWorkspaceModal
+                visible={editWorkspace}
+                onClose={() => setEditWorkspace(false)}
+                title={_workspace.title}
+                desc={_workspace.desc}
+                onEdit={({ title, desc }) => {
+                    setEditWorkspace(false);
+                    handle.editWorkspace({ title, desc });
+                }}
+            />
+            <EditFieldModal
+                visible={editField.visible}
+                onClose={() => setEditField({ ...editField, visible: false })}
+                title={editField.title}
+                onEdit={({ title }) => {
+                    handle.editField({ id: editField.id, title });
+                    setEditField({ ...editField, visible: false });
+                }}
+            />
+        </>}
     </Container >)
 }
 
