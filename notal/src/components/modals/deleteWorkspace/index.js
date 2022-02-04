@@ -1,4 +1,4 @@
-import { Button, Text, Grid, Modal, } from '@nextui-org/react';
+import { Button, Text, Grid, Modal, Row } from '@nextui-org/react';
 
 import DeleteIcon from '../../../../public/icons/delete.svg';
 import CrossIcon from '../../../../public/icons/cross.svg';
@@ -19,19 +19,21 @@ const DeleteWorkspaceModal = ({ visible, onClose, onDelete }) => {
             </Text>
         </Modal.Header>
         <Modal.Body>
-            <Text size={18}>Are you sure want to delete this workspace?</Text>
+            <Row css={{ pl: 8, pr: 8 }}>
+                <Text size={18}>Are you sure want to delete this workspace?</Text>
+            </Row>
         </Modal.Body>
         <Modal.Footer>
             <Grid.Container gap={2}>
                 <Grid xs={6} justify='center'>
                     <Button auto css={{ width: "100%" }} flat color="error" onClick={onClose}>
-                        <CrossIcon height={24} width={24} style={{ fill: "currentColor" }} />
+                        <CrossIcon height={24} width={24} style={{ fill: "currentColor", transform: "scale(0.8)", marginRight: 4 }} />
                         Cancel
                     </Button>
                 </Grid>
                 <Grid xs={6} justify='center'>
                     <Button auto css={{ width: "100%" }} onClick={onDelete}>
-                        <CheckIcon height={24} width={24} style={{ fill: "currentColor" }} />
+                        <CheckIcon height={24} width={24} style={{ fill: "currentColor", transform: "scale(0.8)", marginRight: 4 }} />
                         Delete
                     </Button>
                 </Grid>

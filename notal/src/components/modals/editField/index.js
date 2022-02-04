@@ -1,40 +1,45 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Text, Modal, Input, Row } from '@nextui-org/react';
 
-import AddIcon from '../../../../public/icons/add.svg';
+import EditIcon from '../../../../public/icons/edit.svg';
 import CrossIcon from '../../../../public/icons/cross.svg';
 import CheckIcon from '../../../../public/icons/check.svg';
 
-const AddFieldModal = ({ visible, onClose, onAdd }) => {
+const EditFieldModal = ({ visible, onClose, onEdit, title }) => {
+
+    useEffect(() => {
+        setEditTitle(title);
+    }, [title]); // #TODO: get rid of useEffect here
 
     const [titleError, setTitleError] = useState("");
 
-    const [title, setTitle] = useState("");
+    const [editTitle, setEditTitle] = useState(title);
 
-    const add = () => {
-        if (title.length < 3 || title.length > 20) {
+    const edit = () => {
+        if (editTitle.length < 3 || editTitle.length > 20) {
             setTitleError("Title must be between 2 and 20 characters long.");
             return;
         }
-        onAdd({ title });
+        onEdit({ title: editTitle });
+        close();
     }
 
     const close = () => {
-        setTitle("");
         setTitleError("");
+        setEditTitle(title);
         onClose();
     }
 
     return (<Modal
         closeButton
-        aria-labelledby="add-field"
+        aria-labelledby="edit-field"
         open={visible}
         onClose={close}
     >
         <Modal.Header>
-            <AddIcon height={24} width={24} style={{ fill: "currentColor" }} />
-            <Text b id="add-field" size={18} css={{ ml: 4 }}>
-                Add a field
+            <EditIcon height={24} width={24} style={{ fill: "currentColor" }} />
+            <Text b id="edit-field" size={18} css={{ ml: 4 }}>
+                Edit Field
             </Text>
         </Modal.Header>
         <Modal.Body>
@@ -45,8 +50,8 @@ const AddFieldModal = ({ visible, onClose, onAdd }) => {
                     fullWidth
                     color="primary"
                     label={<Text css={{ color: "$gray700", fontWeight: "500" }}>Field Title</Text>}
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    value={editTitle}
+                    onChange={(e) => setEditTitle(e.target.value)}
                     maxLength={20}
                 />
                 {titleError != false && <Text color={"$error"}>{titleError}</Text>}
@@ -57,12 +62,12 @@ const AddFieldModal = ({ visible, onClose, onAdd }) => {
                 <CrossIcon height={24} width={24} style={{ fill: "currentColor", transform: "scale(0.8)", marginRight: 4 }} />
                 Cancel
             </Button>
-            <Button auto css={{ width: "46%" }} onClick={add}>
+            <Button auto css={{ width: "46%" }} onClick={edit}>
                 <CheckIcon height={24} width={24} style={{ fill: "currentColor", transform: "scale(0.8)", marginRight: 4 }} />
-                Add
+                Edit
             </Button>
         </Modal.Footer>
     </Modal>)
 }
 
-export default AddFieldModal;
+export default EditFieldModal;

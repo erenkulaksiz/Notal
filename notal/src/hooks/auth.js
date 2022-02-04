@@ -13,6 +13,8 @@ export function AuthProvider(props) {
     const [user, setUser] = useState(null);
     const [error, setError] = useState(null);
 
+    // #TODO: cache setUser
+
     /*useEffect(() => {
         console.log("userAuthProvider:", user);
     }, [user]);*/

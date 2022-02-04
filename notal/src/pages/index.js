@@ -71,7 +71,7 @@ const Landing = (props) => {
                 // `event.wasWaitingBeforeRegister` will be false if this is the first time the updated service worker is waiting.
                 // When `event.wasWaitingBeforeRegister` is true, a previously updated service worker is still waiting.
                 // You may want to customize the UI prompt accordingly.
-                if (confirm('A newer version of this web app is available, reload to update?')) {
+                if (confirm('A newer version of Notal is available, reload to update?')) {
                     wb.addEventListener('controlling', event => {
                         window.location.reload()
                     })
@@ -147,10 +147,10 @@ const Landing = (props) => {
                             "@md": {
                                 fs: "4em"
                             }
-                        }}>Take notes to <Text span css={{ bg: "$gradient", backgroundImage: "$gradient", "-webkit-background-clip": 'text', "-webkit-text-fill-color": 'transparent' }}>next</Text> level with Notal 🚀</Text>
+                        }}>Take planning <Text span css={{ bg: "$gradient", backgroundImage: "$textGradient", "-webkit-background-clip": 'text', "-webkit-text-fill-color": 'transparent' }}>next</Text> level with Notal 🚀</Text>
                     </Row>
                     <Row>
-                        <Text b css={{ fs: "1.2em", color: isDark ? "$gray500" : "$gray200" }}>Keep focus on your project, not on your planning.</Text>
+                        <Text b css={{ fs: "1.2em", color: isDark ? "$gray500" : "$gray200" }}>{`Developer's solution from an developer. Keep focus on your project, not on your planning.`}</Text>
                     </Row>
                     <Spacer y={1} />
                     <Row>

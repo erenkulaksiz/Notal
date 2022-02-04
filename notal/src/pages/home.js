@@ -2,7 +2,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Button, Spacer, Container, Text, Grid, Card, Link as ALink, Loading, Avatar } from '@nextui-org/react';
+import { Button, Spacer, Container, Text, Grid, Card, Link as ALink, Loading, Avatar, Row, Tooltip } from '@nextui-org/react';
 //import Confetti from 'react-confetti'; // :)
 
 import { server } from '../config';
@@ -13,6 +13,7 @@ import StarFilledIcon from '../../public/icons/star_filled.svg';
 import AddIcon from '../../public/icons/add.svg';
 import DeleteIcon from '../../public/icons/delete.svg';
 import UserIcon from '../../public/icons/user.svg';
+import WarningIcon from '../../public/icons/warning.svg';
 
 import AddWorkspaceModal from '../components/modals/addWorkspace';
 import DeleteWorkspaceModal from '../components/modals/deleteWorkspace';
@@ -136,6 +137,7 @@ const Home = (props) => {
                     onClick={() => setViewing("workspaces")}
                     css={{ minWidth: "100%" }}
                     bordered={viewing != "workspaces"}
+                    size="lg"
                 >
                     Workspaces
                 </Button>
@@ -145,35 +147,25 @@ const Home = (props) => {
                     onClick={() => setViewing("favorites")}
                     css={{ minWidth: "100%" }}
                     bordered={viewing != "favorites"}
+                    size="lg"
                 >
                     Favorites
                 </Button>
-            </Grid>
-            <Grid xs={12} sm={9} md={9}>
-                <Card css={{ jc: "center", minHeight: 80 }}>
-                    {/*<Grid.Container>
-                        <Grid xs alignItems='center' css={{ fd: "row" }}>
-                        <UserIcon height={24} width={24} style={{ fill: "currentColor", }} />
-                        <Text span>Your Workspaces</Text>
-                        </Grid>
-                    </Grid.Container>*/}
-                    <Grid.Container gap={1}>
-                        {/*<Grid xs={12} sm={6} md={3}>
-                                <Button auto css={{ width: "100%" }} onClick={() => setNewWorkspaceVisible(true)}>
-                                    <AddIcon height={24} width={24} style={{ fill: "currentColor" }} />
-                                    Add Workspace
-                                </Button>
-                                </Grid>
-                                <Grid xs={12} sm={6} md={3}>
-                                    <Button auto css={{ width: "100%" }} onClick={() => setDeleteModal({ ...deleteModal, visible: false })}>
-                                        <QuestionIcon height={24} width={24} style={{ fill: "currentColor" }} />
-                                        About
-                                    </Button>
-                        </Grid>*/}
-                    </Grid.Container>
+                <Spacer y={1} />
+                <Card css={{ fill: "$warning", "@mdMax": { width: "100%" } }}>
+                    <Row>
+                        <WarningIcon size={20} style={{ transform: "scale(0.8)" }} />
+                        <Text h5 css={{ color: "$warningDark", ml: 4 }}>Alpha Warning</Text>
+                    </Row>
+                    <Text b>This project is currently in private alpha.</Text>
+                    <Row css={{ mt: 12 }}>
+                        <ALink href='mailto:erenkulaksz@gmail.com'>
+                            Feedback
+                        </ALink>
+                    </Row>
                 </Card>
             </Grid>
-            <Grid xs={12}>
+            <Grid xs={12} sm={9} md={9}>
                 <Card css={{ jc: "center" }}>
                     {loadingWorkspaces ? <Card css={{ p: 12, dflex: "center" }}>
                         <Loading />
@@ -188,8 +180,8 @@ const Home = (props) => {
                             <Text h3>Your Workspaces</Text>
                         </Grid>
                         {workspace.getWorkspacesWithFilter(_workspaces).length > 0 ? workspace.getWorkspacesWithFilter(_workspaces).map((element, index) =>
-                            <Grid xs={12} sm={3} lg={2} key={index}>
-                                <Card color={'gradient'} css={{ height: 140, justifyContent: "flex-end", }}>
+                            <Grid xs={12} sm={4} lg={3} key={index}>
+                                <Card color={'gradient'} css={{ height: 140, justifyContent: "flex-end" }}>
                                     <Grid.Container>
                                         <Grid xs={10} css={{ fd: "column" }} justify='flex-end'>
                                             <Link href="/workspace/[pid]" as={`/workspace/${element._id}`}>
@@ -197,34 +189,42 @@ const Home = (props) => {
                                                     <Text h3 color={"white"}>{element.title}</Text>
                                                 </ALink>
                                             </Link>
-                                            <Link href="/workspace/[pid]" as={`/workspace/${element._id}`}>
+                                            {element.desc && <Link href="/workspace/[pid]" as={`/workspace/${element._id}`}>
                                                 <ALink>
                                                     <Text h6 color={"white"}>{element.desc}</Text>
                                                 </ALink>
-                                            </Link>
+                                            </Link>}
                                         </Grid>
                                         <Grid xs={2} justify='flex-end' alignItems='flex-end' css={{ fd: "column" }}>
-                                            <Button
-                                                icon={
-                                                    element.starred == true ?
-                                                        <StarFilledIcon height={24} width={24} style={{ fill: "white" }} /> :
-                                                        <StarOutlineIcon height={24} width={24} style={{ fill: "white" }} />
-                                                }
-                                                onClick={() => workspace.star({ id: element._id })}
-                                                css={{ minWidth: 20, justifyContent: "flex-end" }}
-                                                light
-                                            />
-                                            <Button
-                                                icon={<DeleteIcon height={24} width={24} style={{ fill: "white" }} />}
-                                                onClick={() => setDeleteModal({ ...deleteModal, visible: true, workspace: element._id })}
-                                                css={{ minWidth: 20, justifyContent: "flex-end" }}
-                                                light
-                                            />
+                                            <Tooltip
+                                                content={element.starred == true ? "Remove from favorites" : "Add to favorites"}
+                                                css={{ pointerEvents: "none" }}
+                                            >
+                                                <Button
+                                                    icon={
+                                                        element.starred == true ?
+                                                            <StarFilledIcon height={24} width={24} style={{ fill: "white" }} /> :
+                                                            <StarOutlineIcon height={24} width={24} style={{ fill: "white" }} />
+                                                    }
+                                                    onClick={() => workspace.star({ id: element._id })}
+                                                    css={{ minWidth: 20, justifyContent: "flex-end" }}
+                                                    light
+                                                />
+                                            </Tooltip>
+                                            <Tooltip content="Delete this workspace" css={{ pointerEvents: "none" }}>
+                                                <Button
+                                                    icon={<DeleteIcon height={24} width={24} style={{ fill: "white" }} />}
+                                                    onClick={() => setDeleteModal({ ...deleteModal, visible: true, workspace: element._id })}
+                                                    css={{ minWidth: 20, justifyContent: "flex-end" }}
+                                                    light
+                                                />
+                                            </Tooltip>
+
                                         </Grid>
                                     </Grid.Container>
                                 </Card>
                             </Grid>) : null}
-                        <Grid xs={12} sm={3} lg={2}>
+                        <Grid xs={12} sm={4} lg={3}>
                             <Card
                                 bordered
                                 css={{ borderColor: "$primary", dflex: "center", color: "$primary", height: 140, }}
@@ -235,7 +235,6 @@ const Home = (props) => {
                                 Add Workspace
                             </Card>
                         </Grid>
-
                     </Grid.Container>}
                 </Card>
             </Grid>

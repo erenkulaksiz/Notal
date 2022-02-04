@@ -207,14 +207,6 @@ export default async function handler(req, res) {
                 return;
             }
 
-            /*
-            await admin.database().ref(`/workspaces/${workspaceId}/fields/${fieldId}/cards/${id}`).remove(() => {
-                res.status(200).send({ success: true });
-            }).catch((error) => {
-                res.status(400).send({ success: false, error });
-            });
-            */
-
             try {
                 await workspacesCollection.updateOne({ "_id": ObjectId(workspaceId), "fields._id": ObjectId(fieldId) }, {
                     $pull: {
@@ -234,13 +226,13 @@ export default async function handler(req, res) {
                 return;
             }
 
-            /*
-            await admin.database().ref(`/workspaces/${workspaceId}/fields/${id}`).update({ title, updatedAt: Date.now() }, () => {
+            try {
+                await workspacesCollection.updateOne({ "_id": ObjectId(workspaceId), "fields._id": ObjectId(id) }, { $set: { "fields.$.title": title } });
                 res.status(200).send({ success: true });
-            }).catch(error => {
-                res.status(400).send({ success: false, error });
-            });
-            */
+            } catch (error) {
+                res.status(400).send({ success: false, error: new Error(error).message });
+            }
+
         },
         editcard: async () => {
             if (!id || !uid || !workspaceId || !title || !desc || !color || !fieldId) {

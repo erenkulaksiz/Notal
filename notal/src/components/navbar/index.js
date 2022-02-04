@@ -73,11 +73,7 @@ const Navbar = ({ user }) => {
                     css={{ mr: 12 }}
                     size="sm"
                 />}
-                {auth?.authUser ? <Details style={{
-                    position: "relative",
-                    display: "inline-block",
-                    backgroundColor: "transparent"
-                }}>
+                {auth?.authUser ? <Details>
                     <summary style={{
                         userSelect: "none",
                         "&::WebkitDetailsMarket": {
@@ -86,7 +82,7 @@ const Navbar = ({ user }) => {
                     }}>
                         <Avatar size="md" color="gradient" bordered src={user?.avatar} referrerPolicy='no-refferer' icon={<UserIcon height={24} width={24} style={{ fill: "white" }} />} pointer />
                     </summary>
-                    <Card css={{ zIndex: 2, position: "absolute", right: 0, top: "100%", width: "auto" }}>
+                    <Card css={{ zIndex: 2, position: "absolute", right: 0, top: "100%", width: "auto", boxShadow: "$lg" }}>
                         <Row css={{ mt: 0, justifyContent: "flex-end", }}>
                             {auth?.authUser && <Switch
                                 color="primary"
@@ -98,10 +94,10 @@ const Navbar = ({ user }) => {
                                 css={{ position: "absolute", right: 0, top: 0, }}
                             />}
                         </Row>
-                        <Text h4>{user?.fullname || "@" + user?.username}</Text>
+                        <Text h4 css={{ mt: 8 }}>{user?.fullname || "@" + user?.username}</Text>
                         <Text span>{user?.email}</Text>
                         <Link href="/profile/[username]" as={`/profile/${user?.username}`} passHref prefetch>
-                            <ALink css={{ mt: 8 }}>
+                            <ALink css={{ mt: 16 }}>
                                 <Button
                                     icon={<UserIcon height={24} width={24} style={{ fill: "currentColor" }} />}
                                     css={{ mt: 12 }}
@@ -118,7 +114,7 @@ const Navbar = ({ user }) => {
                                 auth.users.logout();
                                 router.replace(router.asPath);
                             }}
-                            css={{ mt: 8 }}
+                            css={{ mt: 8, mb: 8 }}
                             size="md"
                             color="gradient"
                         >

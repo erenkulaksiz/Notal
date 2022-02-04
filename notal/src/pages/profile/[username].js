@@ -3,7 +3,6 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Button, Spacer, Container, Text, Grid, Card, Switch, useTheme, Input, Row, Avatar, Textarea, Loading, Link as ALink, Tooltip, Modal } from '@nextui-org/react';
-import moment from 'moment';
 
 import useAuth from '../../hooks/auth';
 import { server } from '../../config';
@@ -219,7 +218,7 @@ const Profile = (props) => {
                     Back
                 </Button>
             </Card>
-        </Container> : <Container sm>
+        </Container> : <Container sm css={{ pb: 24 }}>
             <Grid.Container gap={1}>
                 <Grid xs={12} sm={12} md={2} lg={2} xl={2} justify="center" css={{ fd: "column", alignItems: "center", }}>
                     <Avatar bordered color="gradient" src={props.profile?.data?.avatar ?? ""} referrerPolicy="no-refferer" icon={<UserIcon size={12} style={{ fill: "white", transform: "scale(3)" }} />} size="xl" css={{ size: "128px", minWidth: 124 }} />
@@ -296,28 +295,28 @@ const Profile = (props) => {
                                 || props.profile?.data?.links?.website.length != 0) && <Row css={{ justifyContent: "flex-end", pt: 0, pb: 0, "@mdMax": { justifyContent: "center", pt: 20, pb: 12, }, alignItems: "flex-start" }}>
                                     {props.profile?.data?.links?.twitter.length != 0 && <Tooltip content="Twitter">
                                         <Link href={"https://twitter.com/" + props.profile?.data?.links?.twitter ?? ""} passHref>
-                                            <ALink css={{ color: "currentColor" }}>
-                                                <TwitterIcon height={24} width={24} fill={"currentColor"} style={{ marginRight: 8 }} />
+                                            <ALink css={{ color: "currentColor", padding: 8 }}>
+                                                <TwitterIcon height={24} width={24} fill={"currentColor"} />
                                             </ALink>
                                         </Link>
                                     </Tooltip>}
                                     {props.profile?.data?.links?.github.length != 0 && <Tooltip content="GitHub">
                                         <Link href={"https://github.com/" + props.profile?.data?.links?.github ?? ""} passHref>
-                                            <ALink css={{ color: "currentColor" }}>
-                                                <GithubIcon height={24} width={24} fill={"currentColor"} style={{ marginRight: 8 }} />
+                                            <ALink css={{ color: "currentColor", padding: 8 }}>
+                                                <GithubIcon height={24} width={24} fill={"currentColor"} />
                                             </ALink>
                                         </Link>
                                     </Tooltip>}
                                     {props.profile?.data?.links?.instagram.length != 0 && <Tooltip content="Instagram">
                                         <Link href={"https://instagram.com/" + props.profile?.data?.links?.instagram ?? ""} passHref>
-                                            <ALink css={{ color: "currentColor" }}>
-                                                <InstagramIcon height={24} width={24} fill={"currentColor"} style={{ marginRight: 8 }} />
+                                            <ALink css={{ color: "currentColor", padding: 8 }}>
+                                                <InstagramIcon height={24} width={24} fill={"currentColor"} />
                                             </ALink>
                                         </Link>
                                     </Tooltip>}
                                     {props.profile?.data?.links?.website.length != 0 && <Tooltip content={props.profile?.data?.links?.website}>
                                         <Link href={"https://" + props.profile?.data?.links?.website + "?utm_source=notalapp"} passHref>
-                                            <ALink css={{ color: "currentColor" }}>
+                                            <ALink css={{ color: "currentColor", padding: 8, pr: 8, "@md": { pr: 0 } }}>
                                                 <WebsiteIcon height={24} width={24} fill={"currentColor"} />
                                             </ALink>
                                         </Link>
@@ -325,34 +324,41 @@ const Profile = (props) => {
                                 </Row>}
                             <Row css={{ justifyContent: "flex-end", pt: 8, pb: 0, fill: "$gray500", "@mdMax": { justifyContent: "center", pt: 12, pb: 12, }, alignItems: "flex-start" }}>
                                 <CakeIcon height={24} width={24} style={{ transform: "scale(0.8)" }} />
-                                <Text css={{ ml: 4, fs: "1em", color: "$gray500", fontWeight: "600" }}>{`Joined ${moment(props.profile?.data?.createdAt).format('MMM DD, YYYY')}`}</Text>
+                                <Text css={{ ml: 4, fs: "1em", color: "$gray500", fontWeight: "600" }}>
+                                    {`Joined 
+                                    ${new Date(props.profile?.data?.createdAt).getDate()} 
+                                    ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][new Date(props.profile?.data?.createdAt).getMonth()]},
+                                    ${new Date(props.profile?.data?.createdAt).getFullYear()}
+                                    `}
+                                </Text>
                             </Row>
                         </Grid>
                     </Grid.Container>
                 </Grid>
 
                 {(props.profile?.data?.bio || editingProfile) && <Grid xs={12} css={{ mt: 18, p: 0 }}>
-                    <Card css={{ bg: "$gradient" }}>
+                    <Card bordered>
                         <Grid.Container gap={editingProfile ? 1 : 0}>
                             <Grid xs={12} md={editingProfile ? 6 : 12} css={{ whiteSpace: "pre-line", maxH: 200, fd: "column" }}>
-                                <Text h4 css={{ color: "$white" }}>Biography</Text>
+                                <Text h4>Biography</Text>
                                 <Spacer y={0.5} />
                                 {editingProfile ?
                                     <Textarea
-                                        css={{ minWidth: "100%", }}
+                                        css={{ minWidth: "100%" }}
                                         placeholder="Enter your biography. You can also leave this empty."
                                         onChange={e => setEditProfile({ ...editProfile, bio: e.target.value })}
                                         value={editProfile.bio}
                                         maxLength={200}
                                         maxRows={4}
                                         animated={false}
-                                    /> :
-                                    <Text css={{ color: "$white", overflowWrap: "anywhere" }}>{props.profile?.data?.bio}</Text>}
+                                    />
+                                    :
+                                    <Text css={{ overflowWrap: "anywhere", fs: "1.1em" }}>{props.profile?.data?.bio}</Text>}
                             </Grid>
                             <Grid xs={editingProfile ? 12 : 0} md={editingProfile ? 6 : 0} css={{ fd: "column" }}>
-                                <Text h4 css={{ color: "$white" }}>Profile Visibility</Text>
+                                <Text h4>Profile Visibility</Text>
                                 <Spacer y={0.5} />
-                                <Card css={{ backgroundColor: isDark ? "$gray900" : "$background", justifyContent: "center", height: "100%" }}>
+                                <Card css={{ backgroundColor: isDark ? "#1c1c1c" : "$background", justifyContent: "center", height: "100%" }} shadow={false}>
                                     <Row>
                                         <Switch
                                             checked={editProfile.visibility}
@@ -426,22 +432,20 @@ const Profile = (props) => {
                             <Grid.Container gap={1} css={{ padding: 0 }}>
                                 {props.profile?.data?.workspaces && props.profile?.data?.workspaces != "user-profile-private" ? props.profile.data.workspaces.map((workspace, index) => {
                                     return (<Grid xs={12} sm={4} lg={3} key={workspace._id}>
-                                        <Card color={'gradient'} css={{ height: 140, justifyContent: "flex-end", }}>
-                                            <Grid.Container>
-                                                <Grid xs={10} css={{ fd: "column" }} justify='flex-end'>
-                                                    <Link href="/workspace/[pid]" as={`/workspace/${workspace._id}`} passHref>
+                                        <Link href="/workspace/[pid]" as={`/workspace/${workspace._id}`} passHref>
+                                            <Card color={'gradient'} css={{ height: 140, justifyContent: "flex-end", }} clickable>
+                                                <Grid.Container>
+                                                    <Grid xs={10} css={{ fd: "column" }} justify='flex-end'>
                                                         <ALink>
                                                             <Text h3 color={"white"}>{workspace.title}</Text>
                                                         </ALink>
-                                                    </Link>
-                                                    <Link href="/workspace/[pid]" as={`/workspace/${workspace._id}`} passHref>
                                                         <ALink>
                                                             <Text h6 color={"white"}>{workspace.desc}</Text>
                                                         </ALink>
-                                                    </Link>
-                                                </Grid>
-                                            </Grid.Container>
-                                        </Card>
+                                                    </Grid>
+                                                </Grid.Container>
+                                            </Card>
+                                        </Link>
                                     </Grid>)
                                 }) : <Text>This user has no workspaces</Text>}
                             </Grid.Container>

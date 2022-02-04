@@ -2,13 +2,13 @@ import Head from 'next/head';
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 //import { DragDropContext } from 'react-beautiful-dnd';
-import { Button, Spacer, Container, Text, Grid, Card, Link as ALink, useTheme, Loading, Row, Tooltip, Modal, Input } from '@nextui-org/react';
-import styled from 'styled-components';
+import { Button, Spacer, Container, Text, Grid, Card, useTheme, Row, Tooltip, Checkbox } from '@nextui-org/react';
 
 import { server } from '../../config';
 import useAuth from '../../hooks/auth';
 
 import Navbar from '../../components/navbar';
+import Field from '../../components/field';
 import WorkspaceNav from '../../components/workspaceNav';
 import DeleteWorkspaceModal from '../../components/modals/deleteWorkspace';
 import AddCardModal from '../../components/modals/addCard';
@@ -23,15 +23,7 @@ import BackIcon from '../../../public/icons/back.svg';
 
 import { CheckToken } from '../../utils';
 import EditWorkspaceModal from '../../components/modals/editWorkspace';
-
-const CardColor = styled.div`
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    background-color: ${props => props.color};
-    z-index: 5;
-    border-radius: 100%;
-`;
+import EditFieldModal from '../../components/modals/editField';
 
 const Workspace = (props) => {
     const auth = useAuth();
@@ -44,6 +36,7 @@ const Workspace = (props) => {
     const [addCardModal, setAddCardModal] = useState({ visible: false, field: "" });
 
     const [editWorkspace, setEditWorkspace] = useState(false);
+    const [editField, setEditField] = useState({ visible: false, title: "" });
 
     // Workspace
     const [loadingWorkspace, setLoadingWorkspace] = useState(true);
@@ -126,13 +119,13 @@ const Workspace = (props) => {
                 console.error("error on delete workspace: ", data.error);
             }
         },
-        addCardToField: async ({ fieldId, title, desc, }) => {
+        addCardToField: async ({ fieldId, title, desc, color }) => {
             const data = await auth.workspace.field.addCard({
                 id: fieldId,
                 workspaceId: _workspace._id,
                 title,
                 desc,
-                color: "red"
+                color
             });
 
             if (data.success) {
@@ -158,8 +151,7 @@ const Workspace = (props) => {
         },
     }
 
-
-    return (<Container xl css={{ position: "relative", padding: 0, overflow: "hidden", overflow: "auto", overflowX: "hidden", }}>
+    return (<Container fluid css={{ position: "relative", padding: 0, overflowX: "hidden" }}>
         <Head>
             <title>{props.workspace?.data?.title ?? "Not Found"}</title>
             <meta name="description" content="Notal. The next generation taking notes and sharing todo snippets platform." />
@@ -196,9 +188,9 @@ const Workspace = (props) => {
                     Back
                 </Button>
             </Card>
-        </Container> : <div style={{ display: "flex", flexDirection: "column", }}>
+        </Container> : <div style={{ display: "flex", flexDirection: "column", flexShrink: 0 }}>
 
-            <div style={{ paddingLeft: 6, paddingRight: 6 }}>
+            <div style={{ paddingLeft: 12, paddingRight: 12, position: "sticky", top: 70, zIndex: 500 }}>
                 <WorkspaceNav
                     title={props.workspace?.data?.title}
                     desc={props.workspace?.data?.desc}
@@ -209,121 +201,36 @@ const Workspace = (props) => {
                 />
             </div>
 
-            <div style={{ width: "100%", flexDirection: "column", paddingTop: 8 }}>
-                <Grid.Container gap={1} css={{ flexWrap: "nowrap", alignItems: "flex-start", justifyContent: "flex-start", overflowX: "auto", }}>
-                    {/* FIELD */}
-                    {props.workspace.data?.fields && props.workspace.data.fields.map((field, index) => {
-                        return (<Grid css={{ minWidth: 380, maxWidth: 400 }} key={field._id}>
-                            <Card css={{ display: "flex", maxHeight: "78vh", }}>
-                                <div style={{ display: "flex", }}>
-                                    <Grid.Container>
-                                        <Grid xs={12} css={{ position: "sticky", top: 0, zIndex: "$3" }}>
-                                            <Card bordered shadow>
-                                                <Grid.Container>
-                                                    <Grid xs={6} sm={6}>
-                                                        <Text h4>
-                                                            {field.title}
-                                                        </Text>
-                                                    </Grid>
-                                                    <Grid xs={6} sm={6} css={{ justifyContent: "flex-end" }}>
-                                                        <Tooltip
-                                                            content={
-                                                                <div style={{ display: "flex", flexDirection: "row" }}>
-                                                                    <Button size="sm" css={{ minWidth: 44, mr: 4 }} onClick={() => handle.deleteField({ id: field._id })}>
-                                                                        <DeleteIcon size={24} fill={"currentColor"} />
-                                                                    </Button>
-                                                                    <Button size="sm" css={{ minWidth: 44, }}>
-                                                                        <EditIcon size={24} fill={"currentColor"} />
-                                                                    </Button>
-                                                                </div>}>
-                                                            <Button size="sm" css={{ minWidth: 44 }}>
-                                                                <MoreIcon size={24} fill={"currentColor"} />
-                                                            </Button>
-                                                        </Tooltip>
-                                                    </Grid>
-                                                </Grid.Container>
-                                            </Card>
-                                        </Grid>
-                                        {field?.cards && field.cards.map((card, index) => {
-                                            return (<Grid xs={12} css={{ mt: 8, }} key={card._id}>
-                                                <Card bordered css={{ width: "100%" }}>
-                                                    <Grid.Container>
-                                                        <Grid xs={10} sm={10}>
-                                                            <Text h4>
-                                                                {card.title}
-                                                            </Text>
-                                                        </Grid>
-                                                        <Grid xs={2} sm={2} justify='flex-end' alignItems='center'>
-                                                            <div style={{ marginRight: 16, marginBottom: 10, position: "relative" }}>
-                                                                <CardColor color={card.color} />
-                                                            </div>
-                                                            <Tooltip
-                                                                content={
-                                                                    <div style={{ display: "flex", flexDirection: "row" }}>
-                                                                        <Button size="sm" css={{ minWidth: 44, mr: 4 }} onClick={() => handle.deleteCard({ id: card._id, fieldId: field._id })}>
-                                                                            <DeleteIcon size={24} fill={"currentColor"} />
-                                                                        </Button>
-                                                                        <Button size="sm" css={{ minWidth: 44 }} onClick={() => { }}>
-                                                                            <EditIcon size={24} fill={"currentColor"} />
-                                                                        </Button>
-                                                                    </div>}>
-                                                                <Button size="sm" css={{ minWidth: 44 }}>
-                                                                    <MoreIcon size={24} fill={"currentColor"} />
-                                                                </Button>
-                                                            </Tooltip>
-                                                        </Grid>
-                                                        <Grid xs={12}>
-                                                            <Text>
-                                                                {card.desc}
-                                                            </Text>
-                                                        </Grid>
-                                                    </Grid.Container>
-                                                </Card>
-                                            </Grid>)
-                                        })}
-                                        <Grid xs={12} css={{ mt: 8 }}>
-                                            <Card
-                                                css={{ dflex: "center", borderColor: "$primary", color: "$primary", bg: "transparent" }}
-                                                bordered
-                                                clickable
-                                                onClick={() => setAddCardModal({ ...addCardModal, visible: true, field: field._id })}>
-                                                <AddIcon size={24} fill={"currentColor"} />
-                                                <Text h4 css={{ color: "$primary" }}>
-                                                    Add a card
-                                                </Text>
-                                            </Card>
-                                        </Grid>
-                                    </Grid.Container>
-                                </div>
-                            </Card>
-                        </Grid>)
+            <div style={{ display: "flex", width: "100%", flexDirection: "column", paddingTop: 8 }}>
+                <Grid.Container gap={1} css={{ flexWrap: "nowrap", alignItems: "flex-start", justifyContent: "flex-start", overflowX: "auto" }}>
+
+                    {props.workspace.data?.fields && props.workspace.data.fields.map(field => {
+                        return (<Field
+                            field={field}
+                            key={field._id}
+                            onAddCard={() => setAddCardModal({ ...addCardModal, visible: true, field: field._id })}
+                            onDeleteField={() => handle.deleteField({ id: field._id })}
+                            onDeleteCard={({ id }) => handle.deleteCard({ id, fieldId: field._id })}
+                            onEditClick={() => setEditField({ ...editField, visible: true, title: field.title, id: field._id })}
+                        />)
                     })}
-                    <Grid xs={12} sm={6} md={4} lg={3} >
-                        <Card
-                            css={{ dflex: "center", borderColor: "$primary", color: "$primary", bg: "transparent", pb: 16, pt: 16, minWidth: 380, maxWidth: 400 }}
-                            bordered
-                            clickable
-                            onClick={() => setAddFieldModal(true)}
-                        >
-                            <AddIcon size={24} fill={"currentColor"} />
-                            <Text h4 css={{ color: "$primary" }}>
-                                Add a field
-                            </Text>
-                        </Card>
-                    </Grid>
+
+                    <Card
+                        css={{ dflex: "center", borderColor: "$primary", color: "$primary", bg: "transparent", pb: 16, pt: 16, ml: 8, mt: 5, minWidth: 300, maxWidth: 400 }}
+                        bordered
+                        clickable
+                        onClick={() => setAddFieldModal(true)}
+                        shadow={false}
+                    >
+                        <AddIcon size={24} fill={"currentColor"} />
+                        <Text h4 css={{ color: "$primary" }}>
+                            Add a field
+                        </Text>
+                    </Card>
+                    <Spacer x={1} />
                 </Grid.Container>
             </div>
         </div>}
-        <EditWorkspaceModal
-            visible={editWorkspace}
-            onClose={() => setEditWorkspace(false)}
-            title={props.workspace?.data?.title}
-            desc={props.workspace?.data?.desc}
-            onEdit={({ title, desc }) => {
-                setEditWorkspace(false);
-                handle.editWorkspace({ title, desc });
-            }}
-        />
         <AddFieldModal
             visible={addFieldModal}
             onClose={() => setAddFieldModal(false)}
@@ -335,9 +242,9 @@ const Workspace = (props) => {
         <AddCardModal
             visible={addCardModal.visible}
             onClose={() => setAddCardModal({ ...addCardModal, visible: false, field: "" })}
-            onAdd={({ title, desc }) => {
+            onAdd={({ title, desc, color }) => {
                 setAddCardModal({ visible: false, field: "" });
-                handle.addCardToField({ fieldId: addCardModal.field, title, desc });
+                handle.addCardToField({ fieldId: addCardModal.field, title, desc, color });
             }}
         />
         <DeleteWorkspaceModal
@@ -346,6 +253,25 @@ const Workspace = (props) => {
             onDelete={() => {
                 setDeleteWorkspace(false);
                 handle.deleteWorkspace();
+            }}
+        />
+        <EditWorkspaceModal
+            visible={editWorkspace}
+            onClose={() => setEditWorkspace(false)}
+            title={props.workspace?.data?.title}
+            desc={props.workspace?.data?.desc}
+            onEdit={({ title, desc }) => {
+                setEditWorkspace(false);
+                handle.editWorkspace({ title, desc });
+            }}
+        />
+        <EditFieldModal
+            visible={editField.visible}
+            onClose={() => setEditField({ ...editField, visible: false })}
+            title={editField.title}
+            onEdit={({ title }) => {
+                handle.editField({ id: editField.id, title });
+                setEditField({ ...editField, visible: false });
             }}
         />
     </Container >)
