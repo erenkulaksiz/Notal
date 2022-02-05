@@ -1,4 +1,6 @@
-
+const { connectToDatabase } = require('../../../lib/mongodb');
+const { db } = await connectToDatabase();
+const usersCollection = db.collection("users");
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
@@ -17,11 +19,6 @@ export default async function handler(req, res) {
         res.status(400).json({ success: false, error: "auth/username-too-short" });
         return;
     }
-    const { connectToDatabase } = require('../../../lib/mongodb');
-    const { db } = await connectToDatabase();
-    const usersCollection = db.collection("users");
-
-    console.log("links: ", data.links);
 
     if (data?.type == "avatar") {
         if (!data.avatar) {

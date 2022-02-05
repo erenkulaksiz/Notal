@@ -1,17 +1,20 @@
-import { useState } from 'react';
-import { Button, Text, Grid, Card, useTheme, Row, Tooltip } from '@nextui-org/react';
+//import { useState } from 'react';
+import { Button, Text, Grid, Card, useTheme, Row, Tooltip, Avatar, Link as ALink } from '@nextui-org/react';
+import Link from 'next/link';
 
 import StarFilledIcon from '../../../public/icons/star_filled.svg';
 import StarOutlineIcon from '../../../public/icons/star_outline.svg';
 import VisibleIcon from '../../../public/icons/visible.svg';
+import VisibleOffIcon from '../../../public/icons/visible_off.svg';
 import DeleteIcon from '../../../public/icons/delete.svg';
 import EditIcon from '../../../public/icons/edit.svg';
+import UserIcon from '../../../public/icons/user.svg';
 
-const WorkspaceNav = ({ title, desc, starred, onFavClick, onDeleteClick, onEditWorkspace }) => {
+const WorkspaceNav = ({ title, desc, starred, onFavClick, onDeleteClick, onEditWorkspace, isOwner, user, onVisibleClick, visible }) => {
     const { isDark } = useTheme();
 
     return (<Card css={{ bgBlur: isDark ? "#000000" : "#ffffff" }} shadow={false}>
-        <Grid.Container>
+        <Grid.Container justify='flex-end'>
             <Grid xs={5} sm={8} css={{ flexDirection: "column" }}>
                 <Tooltip css={{ pl: 8, pr: 8 }} content={<div style={{ display: "flex", flexDirection: "row" }}>
                     <Button size="sm" css={{ minWidth: 44 }} onClick={onEditWorkspace}>
@@ -36,7 +39,7 @@ const WorkspaceNav = ({ title, desc, starred, onFavClick, onDeleteClick, onEditW
                     </Row>
                 </Tooltip>}
             </Grid>
-            <Grid xs={7} sm={4} justify="flex-end">
+            {isOwner ? <Grid xs={7} sm={4} justify="flex-end">
                 <Tooltip
                     content={starred == true ? "Remove from favorites" : "Add to favorites"}
                     css={{ pointerEvents: "none" }}
@@ -46,11 +49,11 @@ const WorkspaceNav = ({ title, desc, starred, onFavClick, onDeleteClick, onEditW
                     </Button>
                 </Tooltip>
                 <Tooltip
-                    content="Edit visibility"
+                    content="Change visibility"
                     css={{ pointerEvents: "none" }}
                 >
-                    <Button css={{ bg: "$gradient", height: 60, minWidth: 60, mr: 8 }} >
-                        <VisibleIcon width={18} fill={"currentColor"} />
+                    <Button css={{ bg: "$gradient", height: 60, minWidth: 60, mr: 8 }} onClick={onVisibleClick}>
+                        {visible ? <VisibleIcon width={18} fill={"currentColor"} /> : <VisibleOffIcon width={18} fill={"currentColor"} />}
                     </Button>
                 </Tooltip>
                 <Tooltip
@@ -61,7 +64,21 @@ const WorkspaceNav = ({ title, desc, starred, onFavClick, onDeleteClick, onEditW
                         <DeleteIcon size={24} fill={"currentColor"} />
                     </Button>
                 </Tooltip>
-            </Grid>
+            </Grid> : <Grid xs={7} sm={4} justify="flex-end">
+                <Link href={`/profile/${user?.username}`} passHref>
+                    <ALink>
+                        <Card css={{ width: "60%", minWidth: 200 }} clickable>
+                            <Row css={{ fd: "row", alignItems: "center" }}>
+                                <Avatar size="lg" color="gradient" bordered src={user?.avatar} referrerPolicy='no-refferer' icon={<UserIcon height={24} width={24} style={{ fill: "white" }} />} />
+                                <Row css={{ fd: "column" }}>
+                                    <Text css={{ ml: 8, fs: "1.2em", fontWeight: "600" }}>{user.fullname ? user?.fullname : "@" + user?.username}</Text>
+                                    {user.fullname && <Text css={{ ml: 8, }}>@{user?.username}</Text>}
+                                </Row>
+                            </Row>
+                        </Card>
+                    </ALink>
+                </Link>
+            </Grid>}
         </Grid.Container>
     </Card>)
 }

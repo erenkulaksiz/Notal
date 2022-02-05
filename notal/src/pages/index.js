@@ -19,7 +19,7 @@ import WarningIcon from '../../public/icons/warning.svg';
 import Navbar from '../components/navbar';
 
 import useAuth from '../hooks/auth';
-import { CheckToken } from '../utils';
+import { CheckToken, ValidateToken } from '../utils';
 import Link from 'next/link';
 import styled from 'styled-components';
 
@@ -304,24 +304,7 @@ export async function getServerSideProps(ctx) {
 
     if (req) {
         const authCookie = req.cookies.auth;
-        //const emailCookie = req.cookies.email;
-
-        if (authCookie) {
-            const data = await fetch(`${server}/api/validate`, {
-                'Content-Type': 'application/json',
-                method: "POST",
-                body: JSON.stringify({ token: authCookie }),
-            }).then(response => response.json());
-
-            console.log("data (index.js): ", data);
-            if (data.success) {
-                validate = { ...data };
-            } else {
-                validate = { error: data.error?.code }
-            }
-        } else {
-            validate = { error: "no-token" }
-        }
+        validate = await ValidateToken({ token: authCookie });
     }
     return { props: { validate } }
 }

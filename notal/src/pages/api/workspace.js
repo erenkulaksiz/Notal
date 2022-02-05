@@ -1,22 +1,20 @@
-//const admin = require("firebase-admin");
-//const { firebaseConfig } = require('../../config/firebaseApp.config');
+const admin = require("firebase-admin");
+const { firebaseConfig } = require('../../config/firebaseApp.config');
 const { connectToDatabase } = require('../../../lib/mongodb');
 const ObjectId = require('mongodb').ObjectId;
 
-//const googleService = JSON.parse(process.env.NEXT_PUBLIC_GOOGLE_SERVICE);
+const googleService = JSON.parse(process.env.NEXT_PUBLIC_GOOGLE_SERVICE);
 
-/*
 if (!admin.apps.length) {
     admin.initializeApp({
         credential: admin.credential.cert(googleService),
-        databaseURL: firebaseConfig.databaseURL
+        //databaseURL: firebaseConfig.databaseURL
     });
 }
-*/
 
 const { db } = await connectToDatabase();
 const workspacesCollection = db.collection("workspaces");
-//const usersCollection = db.collection("users");
+const usersCollection = db.collection("users");
 //const fieldsCollection = db.collection("fields");
 
 export default async function handler(req, res) {
@@ -26,7 +24,9 @@ export default async function handler(req, res) {
         return;
     }
 
-    const { uid, title, desc, action, starred, id, workspaceId, color, fieldId, filterBy, swapType, cardId, toFieldId, toCardId } = JSON.parse(req.body);
+    const body = JSON.parse(req.body);
+
+    const { uid, title, desc, action, starred, id, workspaceId, color, fieldId, filterBy, swapType, cardId, toFieldId, toCardId, workspaceVisible } = body ?? "";
 
     const workspaceAction = {
         create: async () => {
@@ -51,35 +51,101 @@ export default async function handler(req, res) {
             }
         },
         get_workspaces: async () => {
-            const { uid } = JSON.parse(req.body);
 
             if (!uid) {
                 res.status(400).send({ success: false, error: "invalid-params" });
                 return;
             }
 
-            try {
-                const workspaces = await workspacesCollection.find({ owner: uid }).toArray();
-                if (workspaces) {
-                    res.status(200).send({ success: true, data: workspaces });
-                } else {
-                    res.status(400).send({ success: false, error: "user-not-found" });
-                }
-            } catch (error) {
-                res.status(200).send({ success: false, error: new Error(error).message });
+            const bearer = req.headers['authorization'];
+            if (typeof bearer !== "undefined") {
+                const bearerToken = bearer?.split(' ')[1];
+
+                await admin.auth().verifyIdToken(bearerToken).then(async (decodedToken) => {
+                    console.log("decodedToken workspace: ", decodedToken);
+
+                    const user = await usersCollection.findOne({ uid: decodedToken.user_id });
+
+                    if (uid === user.uid || user?.role === "admin") {
+                        try {
+                            const workspaces = await workspacesCollection.find({ owner: uid }).toArray();
+                            res.status(200).send({ success: true, data: workspaces });
+                        } catch (error) {
+                            res.status(200).send({ success: false, error: new Error(error).message });
+                        }
+                    } else {
+                        res.status(400).send({ success: false, error: "invalid-params" });
+                    }
+                }).catch(error => {
+                    res.status(400).json({ success: false, error });
+                    return; // dont run code below
+                });
+            } else {
+                res.status(400).send({ success: false, error: "invalid-params" });
             }
         },
         get_workspace: async () => {
+            console.log("!!!getting workspace with id: ", id);
             if (!id) {
                 res.status(400).send({ success: false, error: "invalid-params" });
                 return;
             }
+            const bearer = req.headers['authorization'];
             try {
                 const workspace = await workspacesCollection.findOne({ "_id": ObjectId(id) });
                 if (!workspace) {
-                    res.status(400).send({ success: false });
+                    res.status(400).send({ success: false, error: "not-found" });
                 } else {
-                    res.status(200).send({ success: true, data: workspace });
+                    if (workspace.workspaceVisible) {
+                        const user = await usersCollection.findOne({ "uid": workspace.owner });
+                        console.log("user: ", user);
+                        if (user) {
+                            res.status(200).send({
+                                success: true,
+                                data: {
+                                    ...workspace,
+                                    username: user.username,
+                                    fullname: user.fullname ?? "",
+                                    avatar: user.avatar ?? ""
+                                }
+                            });
+                        } else {
+                            res.status(400).send({ success: false, error: "please report this to erenkulaksz@gmail.com", reason: "workspace owner doesnt match" });
+                        }
+                    } else {
+                        // check bearer
+                        if (typeof bearer !== 'undefined') {
+                            const bearerToken = bearer?.split(' ')[1];
+
+                            await admin.auth().verifyIdToken(bearerToken).then(async (decodedToken) => {
+
+                                const user = await usersCollection.findOne({ uid: decodedToken.user_id });
+
+                                if (workspace.owner === user.uid || user?.role === "admin") {
+                                    try {
+                                        res.status(200).send({
+                                            success: true,
+                                            data: {
+                                                ...workspace,
+                                                username: user.username,
+                                                fullname: user.fullname ?? "",
+                                                avatar: user.avatar ?? ""
+                                            }
+                                        });
+                                    } catch (error) {
+                                        res.status(400).send({ success: false, error: new Error(error).message });
+                                    }
+                                } else {
+                                    res.status(400).send({ success: false, error: "invalid-params" });
+                                }
+                            }).catch(error => {
+                                res.status(400).json({ success: false, error: error.code == "auth/argument-error" ? "user-workspace-private" : error });
+                                return; // dont run code below
+                            });
+                        } else {
+                            res.status(400).send({ success: false, error: "user-workspace-private" });
+                        }
+                    }
                 }
             } catch (error) {
                 console.log("error with workspace fetch: ", new Error(error).message);
@@ -123,7 +189,7 @@ export default async function handler(req, res) {
             } // uid: owner, id: workspace
 
             try {
-                await workspacesCollection.updateOne({ "_id": ObjectId(id) }, { $set: { title, desc } })
+                await workspacesCollection.updateOne({ "_id": ObjectId(id) }, { $set: { title, desc, workspaceVisible } })
                     .then(() => {
                         res.status(200).send({ success: true });
                     });
@@ -257,9 +323,9 @@ export default async function handler(req, res) {
         }
     }
 
-    if (!workspaceAction[action.toLowerCase()]) {
-        res.status(400).send({ success: false });
+    if (!workspaceAction[action?.toLowerCase()]) {
+        res.status(400).send({ success: false, error: "invalid-params-action" });
     } else {
-        await workspaceAction[action.toLowerCase()]();
+        await workspaceAction[action?.toLowerCase()]();
     }
 }

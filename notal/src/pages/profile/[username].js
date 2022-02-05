@@ -2,10 +2,9 @@ import React, { useEffect, useState, useRef } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Button, Spacer, Container, Text, Grid, Card, Switch, useTheme, Input, Row, Avatar, Textarea, Loading, Link as ALink, Tooltip, Modal } from '@nextui-org/react';
+import { Button, Spacer, Container, Text, Grid, Card, Switch, useTheme, Input, Row, Avatar, Textarea, Loading, Link as ALink, Tooltip, Modal, useInput } from '@nextui-org/react';
 
 import useAuth from '../../hooks/auth';
-import { server } from '../../config';
 
 import BackIcon from '../../../public/icons/back.svg';
 import HomeFilledIcon from '../../../public/icons/home_filled.svg';
@@ -24,8 +23,9 @@ import TwitterIcon from '../../../public/icons/twitter.svg';
 import InstagramIcon from '../../../public/icons/instagram.svg';
 import CakeIcon from '../../../public/icons/cake.svg';
 import LinkIcon from '../../../public/icons/link.svg';
+import StarFilledIcon from '../../../public/icons/star_filled.svg';
 
-import { CheckToken } from '../../utils';
+import { CheckToken, GetProfile, ValidateToken } from '../../utils';
 
 import Navbar from '../../components/navbar';
 import EditLinksModal from '../../components/modals/editLinks';
@@ -45,6 +45,14 @@ const Profile = (props) => {
     const [editErrors, setEditErrors] = useState({ fullname: false, username: false, bio: false });
     const [editAvatarLoading, setEditAvatarLoading] = useState(false);
     const [editingLinks, setEditingLinks] = useState(false);
+
+    useEffect(() => {
+        // reload page when logout
+        console.log("Reload! /pages/profile/[username].js");
+        setTimeout(() => {
+            router.replace(router.asPath);
+        }, 1000);
+    }, [auth.authUser]);
 
     useEffect(() => {
         console.log("props on profile: ", props);
@@ -220,7 +228,7 @@ const Profile = (props) => {
             </Card>
         </Container> : <Container sm css={{ pb: 24 }}>
             <Grid.Container gap={1}>
-                <Grid xs={12} sm={12} md={2} lg={2} xl={2} justify="center" css={{ fd: "column", alignItems: "center", }}>
+                <Grid xs={12} sm={12} md={2} lg={2} xl={2} justify="center" css={{ fd: "column", alignItems: "center" }}>
                     <Avatar bordered color="gradient" src={props.profile?.data?.avatar ?? ""} referrerPolicy="no-refferer" icon={<UserIcon size={12} style={{ fill: "white", transform: "scale(3)" }} />} size="xl" css={{ size: "128px", minWidth: 124 }} />
                     {editingProfile && <Button size="xs"
                         clickable={!editAvatarLoading}
@@ -435,7 +443,7 @@ const Profile = (props) => {
                                         <Link href="/workspace/[pid]" as={`/workspace/${workspace._id}`} passHref>
                                             <Card color={'gradient'} css={{ height: 140, justifyContent: "flex-end", }} clickable>
                                                 <Grid.Container>
-                                                    <Grid xs={10} css={{ fd: "column" }} justify='flex-end'>
+                                                    <Grid xs={10} css={{ fd: "column" }}>
                                                         <ALink>
                                                             <Text h3 color={"white"}>{workspace.title}</Text>
                                                         </ALink>
@@ -443,6 +451,14 @@ const Profile = (props) => {
                                                             <Text h6 color={"white"}>{workspace.desc}</Text>
                                                         </ALink>
                                                     </Grid>
+                                                    {(!workspace?.workspaceVisible || workspace?.starred) && <Grid xs={2} css={{ fd: "column" }} alignItems='flex-end' justify='flex-end'>
+                                                        {!workspace?.workspaceVisible && <Tooltip content="This workspace is set to private." css={{ pointerEvents: "none" }}>
+                                                            <VisibleOffIcon height={24} width={24} fill={"currentColor"} />
+                                                        </Tooltip>}
+                                                        {workspace?.starred && <Tooltip content={`Added to favorites`} css={{ pointerEvents: "none" }}>
+                                                            <StarFilledIcon height={24} width={24} fill={"currentColor"} />
+                                                        </Tooltip>}
+                                                    </Grid>}
                                                 </Grid.Container>
                                             </Card>
                                         </Link>
@@ -487,32 +503,8 @@ export async function getServerSideProps(ctx) {
     if (req) {
         const authCookie = req.cookies.auth;
 
-        const fetchProfile = async ({ auth }) => {
-            const profileData = await fetch(`${server}/api/profile/${queryUsername}`, {
-                'Content-Type': 'application/json',
-                method: "POST",
-                body: JSON.stringify({ auth: auth ?? false }),
-            }).then(response => response.json());
-            profile = { ...profileData };
-        }
-
-        if (authCookie) {
-            const data = await fetch(`${server}/api/validate`, {
-                'Content-Type': 'application/json',
-                method: "POST",
-                body: JSON.stringify({ token: authCookie }),
-            }).then(response => response.json());
-            if (data.success) {
-                validate = { ...data };
-                await fetchProfile({ auth: data.data });
-            } else {
-                validate = { error: data.error?.code }
-                await fetchProfile({ auth: false });
-            }
-        } else {
-            validate = {}
-            await fetchProfile({ auth: false });
-        }
+        validate = await ValidateToken({ token: authCookie });
+        profile = await GetProfile({ username: queryUsername, token: authCookie })
     }
     return { props: { validate, profile } }
 }

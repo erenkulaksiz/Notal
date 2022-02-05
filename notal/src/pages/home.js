@@ -21,7 +21,7 @@ import Navbar from '../components/navbar';
 
 import { withAuth } from '../hooks/route';
 import useAuth from '../hooks/auth';
-import { CheckToken } from '../utils';
+import { CheckToken, GetWorkspaces, ValidateToken } from '../utils';
 
 const Home = (props) => {
     //const auth = useAuth();
@@ -78,8 +78,7 @@ const Home = (props) => {
 
     const workspace = {
         create: async ({ title, desc, starred }) => {
-
-            const data = await auth.workspace.createWorkspace({ title, desc, starred });
+            const data = await auth.workspace.createWorkspace({ title, desc, starred, workspaceVisible: true });
 
             console.log("data: ", data);
 
@@ -265,43 +264,9 @@ export async function getServerSideProps(ctx) {
 
     if (req) {
         const authCookie = req.cookies.auth;
-        //const emailCookie = req.cookies.email;
 
-        if (authCookie) {
-            const dataValidate = await fetch(`${server}/api/validate`, {
-                'Content-Type': 'application/json',
-                method: "POST",
-                body: JSON.stringify({ token: authCookie }),
-            }).then(response => response.json()).catch(error => {
-                return { success: false, error: { code: "validation-error", errorMessage: error } }
-            });
-
-            console.log("data-validate: ", dataValidate);
-
-            if (dataValidate.success) {
-                validate = { ...dataValidate };
-
-                const dataWorkspaces = await fetch(`${server}/api/workspace`, {
-                    'Content-Type': 'application/json',
-                    method: "POST",
-                    body: JSON.stringify({ uid: dataValidate.data.uid, action: "GET_WORKSPACES" }),
-                }).then(response => response.json());
-
-                console.log("data workspaces: ", dataWorkspaces);
-
-                if (dataWorkspaces?.success) {
-                    if (dataWorkspaces?.data) {
-                        workspaces = { data: dataWorkspaces?.data, success: true };
-                    } else {
-                        workspaces = { success: true }
-                    }
-                }
-            } else {
-                validate = { error: dataValidate?.error?.code }
-            }
-        } else {
-            validate = { error: "no-token" }
-        }
+        validate = await ValidateToken({ token: authCookie });
+        workspaces = await GetWorkspaces({ uid: validate.data.uid, token: authCookie });
     }
     return { props: { validate, workspaces } }
 }

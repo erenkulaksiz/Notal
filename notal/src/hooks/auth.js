@@ -98,8 +98,8 @@ export function AuthProvider(props) {
     }
 
     const workspace = {
-        createWorkspace: async ({ title, desc, starred }) => {
-            const res = await AuthService.createWorkspace({ title, desc, starred });
+        createWorkspace: async ({ title, desc, starred, workspaceVisible }) => {
+            const res = await AuthService.createWorkspace({ title, desc, starred, workspaceVisible });
             return res;
         },
         deleteWorkspace: async ({ id }) => {
@@ -110,8 +110,8 @@ export function AuthProvider(props) {
             const res = await AuthService.starWorkspace({ id });
             return res;
         },
-        editWorkspace: async ({ id, title, desc }) => {
-            const res = await AuthService.editWorkspace({ id, title, desc });
+        editWorkspace: async ({ id, title, desc, workspaceVisible }) => {
+            const res = await AuthService.editWorkspace({ id, title, desc, workspaceVisible });
             return res;
         },
         field: {

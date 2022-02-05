@@ -14,7 +14,7 @@ const CardColor = styled.div`
     border-radius: 100%;
 `;
 
-const FieldCard = ({ card, onDelete }) => {
+const FieldCard = ({ card, onDelete, isOwner }) => {
     const { isDark } = useTheme();
 
     return (<Grid xs={12} css={{ mt: 8, }} key={card._id}>
@@ -30,7 +30,7 @@ const FieldCard = ({ card, onDelete }) => {
                     {card.color && <div style={{ marginRight: 14, marginBottom: 10, position: "relative" }}>
                         <CardColor color={card.color} />
                     </div>}
-                    <Tooltip
+                    {isOwner && <Tooltip
                         css={{ pointerEvents: "none" }}
                         content={
                             <div style={{ display: "flex", flexDirection: "row" }}>
@@ -44,7 +44,7 @@ const FieldCard = ({ card, onDelete }) => {
                         <Button size="sm" css={{ minWidth: 44, "&:hover": { bg: isDark ? "$gray800" : "$gray200" } }} light>
                             <MoreIcon size={24} fill={"currentColor"} />
                         </Button>
-                    </Tooltip>
+                    </Tooltip>}
                 </Grid>
                 <Grid xs={12}>
                     <Text>

@@ -166,13 +166,13 @@ const AuthService = {
             return { success: false, error }
         });
     },
-    createWorkspace: async ({ title, desc, starred }) => {
+    createWorkspace: async ({ title, desc, starred, workspaceVisible }) => {
         const auth = getAuth();
 
         const data = await fetch(`${server}/api/workspace`, {
             'Content-Type': 'application/json',
             method: "POST",
-            body: JSON.stringify({ uid: auth?.currentUser?.uid, title, desc, starred, action: "CREATE" }),
+            body: JSON.stringify({ uid: auth?.currentUser?.uid, title, desc, starred, action: "CREATE", workspaceVisible }),
         }).then(response => response.json());
 
         if (data?.success) {
@@ -196,13 +196,13 @@ const AuthService = {
             return { error: data?.error }
         }
     },
-    editWorkspace: async ({ id, title, desc }) => {
+    editWorkspace: async ({ id, title, desc, workspaceVisible }) => {
         const auth = getAuth();
 
         const data = await fetch(`${server}/api/workspace`, {
             'Content-Type': 'application/json',
             method: "POST",
-            body: JSON.stringify({ id, action: "EDIT", uid: auth?.currentUser?.uid, title, desc }),
+            body: JSON.stringify({ id, action: "EDIT", uid: auth?.currentUser?.uid, title, desc, workspaceVisible }),
         }).then(response => response.json());
 
         if (data?.success) {

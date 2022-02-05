@@ -1,4 +1,18 @@
+const admin = require("firebase-admin");
+const googleService = JSON.parse(process.env.NEXT_PUBLIC_GOOGLE_SERVICE);
+
 const { connectToDatabase } = require('../../../../lib/mongodb');
+const { db } = await connectToDatabase();
+
+if (!admin.apps.length) {
+    admin.initializeApp({
+        credential: admin.credential.cert(googleService),
+        //databaseURL: firebaseConfig.databaseURL
+    });
+}
+
+const usersCollection = db.collection("users");
+const workspacesCollection = db.collection("workspaces");
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
@@ -7,33 +21,54 @@ export default async function handler(req, res) {
     }
     const { username } = req.query;
 
-    let auth = {};
-
-    if (JSON.parse(req.body).auth) {
-        auth = JSON.parse(req.body).auth;
-    }
-
-    console.log("auth: ", auth);
-
-    const { db } = await connectToDatabase();
-    console.log("search for username:", username);
     try {
-        const usersCollection = db.collection("users");
         const user = await usersCollection.findOne({ username });
         if (user) {
-
             let workspaces = [];
             if (user.profileVisible) {
-                const workspacesCollection = db.collection("workspaces");
-                workspaces = await workspacesCollection.find({ owner: user.uid }).toArray();
+                // dont show private workspaces here
+                const bearer = req.headers['authorization'];
+                if (typeof bearer !== "undefined") {
+                    const bearerToken = bearer?.split(' ')[1];
+
+                    await admin.auth().verifyIdToken(bearerToken).then(async (decodedToken) => {
+                        if (decodedToken.uid === user.uid) {
+                            try {
+                                console.log("Verified token!");
+                                workspaces = await workspacesCollection.find({ owner: user.uid }).toArray();
+                            } catch (error) {
+                                workspaces = "auth-error";
+                            }
+                        } else {
+                            // no auth present
+                            workspaces = await workspacesCollection.find({ owner: user.uid, workspaceVisible: true }).toArray();
+                        }
+                    }).catch(async (error) => {
+                        // no auth present
+                        workspaces = await workspacesCollection.find({ owner: user.uid, workspaceVisible: true }).toArray();
+                    });
+                } else {
+                    // no auth present
+                    workspaces = await workspacesCollection.find({ owner: user.uid, workspaceVisible: true }).toArray();
+                }
             } else {
-                if (auth) {
-                    if (user._id == auth._id) {
-                        const workspacesCollection = db.collection("workspaces");
-                        workspaces = await workspacesCollection.find({ owner: user.uid }).toArray();
-                    } else {
-                        workspaces = "user-profile-private";
-                    }
+                const bearer = req.headers['authorization'];
+                if (typeof bearer !== "undefined") {
+                    const bearerToken = bearer?.split(' ')[1];
+
+                    await admin.auth().verifyIdToken(bearerToken).then(async (decodedToken) => {
+                        if (decodedToken.uid === user.uid || user?.role === "admin") {
+                            try {
+                                workspaces = await workspacesCollection.find({ owner: user.uid }).toArray();
+                            } catch (error) {
+                                workspaces = "auth-error";
+                            }
+                        } else {
+                            workspaces = "auth-error";
+                        }
+                    }).catch(error => {
+                        workspaces = "auth-error";
+                    });
                 } else {
                     workspaces = "user-profile-private";
                 }

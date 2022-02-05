@@ -8,7 +8,7 @@ import FilterIcon from '../../../public/icons/filter.svg';
 
 import FieldCard from '../fieldCard';
 
-const Field = ({ field, onAddCard, onDeleteField, onDeleteCard, onEditClick }) => {
+const Field = ({ field, onAddCard, onDeleteField, onDeleteCard, onEditClick, isOwner }) => {
     const { isDark } = useTheme();
 
     return (<Grid css={{ minWidth: 380, maxWidth: 400, }}>
@@ -18,12 +18,12 @@ const Field = ({ field, onAddCard, onDeleteField, onDeleteCard, onEditClick }) =
                     <Grid xs={12} css={{ position: "sticky", top: 0, zIndex: "$3" }}>
                         <Card bordered shadow={false}>
                             <Grid.Container>
-                                <Grid xs={6} sm={6}>
+                                <Grid xs={isOwner ? 6 : 12} sm={isOwner ? 6 : 12}>
                                     <Text h4>
                                         {field.title}
                                     </Text>
                                 </Grid>
-                                <Grid xs={6} sm={6} css={{ justifyContent: "flex-end" }}>
+                                {isOwner && <Grid xs={6} sm={6} css={{ justifyContent: "flex-end" }}>
                                     <Tooltip content="Filter" css={{ pointerEvents: "none" }}>
                                         <Button size="sm" css={{ minWidth: 44, "&:hover": { bg: isDark ? "$gray800" : "$gray200" }, mr: 4 }} light>
                                             <FilterIcon size={24} fill={"currentColor"} />
@@ -43,7 +43,7 @@ const Field = ({ field, onAddCard, onDeleteField, onDeleteCard, onEditClick }) =
                                             <MoreIcon size={24} fill={"currentColor"} />
                                         </Button>
                                     </Tooltip>
-                                </Grid>
+                                </Grid>}
                             </Grid.Container>
                         </Card>
                     </Grid>
@@ -52,9 +52,10 @@ const Field = ({ field, onAddCard, onDeleteField, onDeleteCard, onEditClick }) =
                         key={card._id ? card._id : index}
                         card={card}
                         onDelete={({ id }) => onDeleteCard({ id })}
+                        isOwner={isOwner}
                     />)}
 
-                    <Grid xs={12} css={{ mt: 8 }}>
+                    {isOwner && <Grid xs={12} css={{ mt: 8 }}>
                         <Card
                             css={{ dflex: "center", borderColor: "$primary", color: "$primary", bg: "transparent" }}
                             bordered
@@ -67,7 +68,7 @@ const Field = ({ field, onAddCard, onDeleteField, onDeleteCard, onEditClick }) =
                                 Add a card
                             </Text>
                         </Card>
-                    </Grid>
+                    </Grid>}
                 </Grid.Container>
             </div>
         </Card>

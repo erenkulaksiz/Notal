@@ -20,14 +20,12 @@ export async function connectToDatabase() {
     // check the cached.
     if (cachedClient && cachedDb) {
         // load from cache
-        console.log("loaded db from cache!");
         return {
             client: cachedClient,
             db: cachedDb,
         };
     }
 
-    console.log("loading db from new");
     // set the connection options
     const opts = {
         useNewUrlParser: true,

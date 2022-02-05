@@ -71,8 +71,11 @@ const Signup = (props) => {
 
         setError({ email: false, password: false, fullname: false, username: false, paac: false });
 
-        const register = await auth.users.createUser({ email: email.toLowerCase(), password, fullname, username: username.toLowerCase(), paac: PAAC });
+        alert("Sign up with email is currently disabled.");
 
+        //const register = await auth.users.createUser({ email: email.toLowerCase(), password, fullname, username: username.toLowerCase(), paac: PAAC });
+
+        /*
         if (register?.authError?.errorCode == "auth/email-already-in-use") {
             setError({ email: "This email is already in use.", password: false, fullname: false, username: false });
             return;
@@ -97,6 +100,7 @@ const Signup = (props) => {
         } else {
             setError({ email: false, password: false, fullname: false, username: false });
         }
+        */
     }
 
     return (<Container xs css={{ dflex: "center", ac: "center", ai: "center" }}>

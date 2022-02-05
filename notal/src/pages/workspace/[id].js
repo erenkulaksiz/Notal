@@ -2,28 +2,25 @@ import Head from 'next/head';
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 //import { DragDropContext } from 'react-beautiful-dnd';
-import { Button, Spacer, Container, Text, Grid, Card, useTheme, Loading } from '@nextui-org/react';
+import { Button, Spacer, Container, Text, Grid, Card, useTheme, Loading, Modal, Row } from '@nextui-org/react';
 
-import { server } from '../../config';
 import useAuth from '../../hooks/auth';
 
 import Navbar from '../../components/navbar';
 import Field from '../../components/field';
 import WorkspaceNav from '../../components/workspaceNav';
+import Workspace404 from '../../components/workspace404';
 import DeleteWorkspaceModal from '../../components/modals/deleteWorkspace';
 import AddCardModal from '../../components/modals/addCard';
 import AddFieldModal from '../../components/modals/addField';
 
-import DeleteIcon from '../../../public/icons/delete.svg';
-import EditIcon from '../../../public/icons/edit.svg';
 import AddIcon from '../../../public/icons/add.svg';
-import MoreIcon from '../../../public/icons/more.svg';
-import HomeFilledIcon from '../../../public/icons/home_filled.svg';
-import BackIcon from '../../../public/icons/back.svg';
 
-import { CheckToken } from '../../utils';
+import { CheckToken, GetWorkspace, ValidateToken } from '../../utils';
 import EditWorkspaceModal from '../../components/modals/editWorkspace';
 import EditFieldModal from '../../components/modals/editField';
+import WorkspaceAddField from '../../components/workspaceAddField';
+import VisibilityWorkspaceModal from '../../components/modals/visibilityWorkspace';
 
 const Workspace = (props) => {
     const auth = useAuth();
@@ -31,6 +28,8 @@ const Workspace = (props) => {
     const { isDark } = useTheme();
 
     // Modals
+    const [privateModal, setPrivateModal] = useState({ visible: false, desc: "" });
+
     const [addFieldModal, setAddFieldModal] = useState(false);
     const [deleteWorkspaceModal, setDeleteWorkspace] = useState(false);
     const [addCardModal, setAddCardModal] = useState({ visible: false, field: "" });
@@ -41,6 +40,8 @@ const Workspace = (props) => {
     // Workspace
     const [loadingWorkspace, setLoadingWorkspace] = useState(true);
     const [_workspace, _setWorkspace] = useState(null);
+
+    const isOwner = (_workspace ? _workspace?.owner == auth.authUser?.uid : false);
 
     useEffect(() => {
         console.log("props workspace: ", props);
@@ -62,11 +63,19 @@ const Workspace = (props) => {
     }, [props.workspace]);
 
     const handle = {
-        editWorkspace: async ({ title, desc }) => {
-            if (_workspace.title != title || _workspace.desc != desc) {
-                const newWorkspace = { ..._workspace, title, desc };
+        editWorkspace: async ({ title = _workspace.title, desc = _workspace.desc, workspaceVisible = _workspace.workspaceVisible ?? false }) => {
+            if (_workspace.title != title || _workspace.desc != desc || _workspace.workspaceVisible != workspaceVisible) {
+
+                if (_workspace.workspaceVisible != workspaceVisible) {
+                    setPrivateModal({ ...privateModal, visible: true, desc: workspaceVisible ? "This workspace is now visible to everyone who has the link." : "This workspace is now set to private." })
+                } else {
+                    setPrivateModal({ ...privateModal, visible: false });
+                }
+
+                const newWorkspace = { ..._workspace, title, desc, workspaceVisible };
                 _setWorkspace(newWorkspace);
-                const data = await auth.workspace.editWorkspace({ id: _workspace._id, title, desc });
+
+                const data = await auth.workspace.editWorkspace({ id: _workspace._id, title, desc, workspaceVisible });
 
                 if (data.success) {
                     //window.gtag('event', "editWorkspace", { login: "type:google/" + user.email });
@@ -172,78 +181,51 @@ const Workspace = (props) => {
 
         <Navbar user={props.validate?.data} />
 
-        {!props.workspace?.success ? <Container sm css={{ dflex: "center", ac: "center", ai: "center", fd: "column" }}>
-            <Card css={{ textAlign: "center", dflex: "center", py: 32, mt: 48 }}>
-                <img
-                    src="https://i.pinimg.com/originals/ee/d0/d0/eed0d023bdf444d37050e27d46364f0b.png"
-                    alt="Michael Scott"
-                    style={{ maxHeight: "100%", maxWidth: "100%", width: 200 }}
-                />
-                <Text h1>[404]</Text>
-                <Text h3 css={{ textAlign: "center" }}>We couldnt find this workspace.</Text>
-                <Button
-                    icon={<HomeFilledIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-                    onClick={() => router.replace("/home")}
-                    css={{ mt: 18 }}
-                    size="xl"
-                    color="gradient"
-                >
-                    Home
-                </Button>
-                <Button
-                    icon={<BackIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-                    onClick={() => router.back()}
-                    css={{ mt: 18 }}
-                    size="xl"
-                    color="gradient"
-                >
-                    Back
-                </Button>
-            </Card>
-        </Container> : <div style={{ display: "flex", flexDirection: "column", flexShrink: 0 }}>
+        {!props.workspace?.success ? <Workspace404 reason={props.workspace?.error == "user-workspace-private" ? "private" : "not-found"} />
+            :
+            <div style={{ display: "flex", flexDirection: "column", flexShrink: 0 }}>
+                <div style={{ paddingLeft: 12, paddingRight: 12, position: "sticky", top: 70, zIndex: 500 }}>
+                    {loadingWorkspace ? <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
+                        <Loading />
+                    </div> : <WorkspaceNav
+                        title={_workspace.title}
+                        desc={_workspace.desc}
+                        starred={_workspace.starred}
+                        onFavClick={() => handle.starWorkspace()}
+                        onVisibleClick={() => handle.editWorkspace({ workspaceVisible: _workspace?.workspaceVisible ? !_workspace?.workspaceVisible : true })}
+                        onDeleteClick={() => setDeleteWorkspace(true)}
+                        onEditWorkspace={() => setEditWorkspace(true)}
+                        isOwner={isOwner}
+                        visible={_workspace.workspaceVisible} // workspace visible
+                        user={{
+                            username: _workspace.username,
+                            fullname: _workspace.fullname ?? "",
+                            avatar: _workspace.avatar ?? "",
+                        }}
+                    />}
+                </div>
 
-            <div style={{ paddingLeft: 12, paddingRight: 12, position: "sticky", top: 70, zIndex: 500 }}>
-                {loadingWorkspace ? <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
-                    <Loading />
-                </div> : <WorkspaceNav
-                    title={_workspace.title}
-                    desc={_workspace.desc}
-                    starred={_workspace.starred}
-                    onFavClick={() => handle.starWorkspace()}
-                    onDeleteClick={() => setDeleteWorkspace(true)}
-                    onEditWorkspace={() => setEditWorkspace(true)}
-                />}
-            </div>
+                <div style={{ display: "flex", width: "100%", flexDirection: "column", paddingTop: 8, justifyContent: "center", alignContent: "center" }}>
+                    {!loadingWorkspace && <Grid.Container gap={1} css={{ flexWrap: "nowrap", alignItems: "flex-start", justifyContent: "flex-start", overflowX: "auto" }}>
+                        {(_workspace?.fields) && _workspace.fields.map(field => {
+                            return (<Field
+                                field={field}
+                                key={field._id}
+                                onAddCard={() => setAddCardModal({ ...addCardModal, visible: true, field: field._id })}
+                                onDeleteField={() => handle.deleteField({ id: field._id })}
+                                onDeleteCard={({ id }) => handle.deleteCard({ id, fieldId: field._id })}
+                                onEditClick={() => setEditField({ ...editField, visible: true, title: field.title, id: field._id })}
+                                isOwner={isOwner}
+                            />)
+                        })}
 
-            <div style={{ display: "flex", width: "100%", flexDirection: "column", paddingTop: 8, justifyContent: "center", alignContent: "center" }}>
-                {!loadingWorkspace && <Grid.Container gap={1} css={{ flexWrap: "nowrap", alignItems: "flex-start", justifyContent: "flex-start", overflowX: "auto" }}>
-                    {(_workspace?.fields) && _workspace.fields.map(field => {
-                        return (<Field
-                            field={field}
-                            key={field._id}
-                            onAddCard={() => setAddCardModal({ ...addCardModal, visible: true, field: field._id })}
-                            onDeleteField={() => handle.deleteField({ id: field._id })}
-                            onDeleteCard={({ id }) => handle.deleteCard({ id, fieldId: field._id })}
-                            onEditClick={() => setEditField({ ...editField, visible: true, title: field.title, id: field._id })}
-                        />)
-                    })}
-
-                    <Card
-                        css={{ dflex: "center", borderColor: "$primary", color: "$primary", bg: "transparent", pb: 16, pt: 16, ml: 8, mt: 5, minWidth: 300, maxWidth: 400 }}
-                        bordered
-                        clickable
-                        onClick={() => setAddFieldModal(true)}
-                        shadow={false}
-                    >
-                        <AddIcon size={24} fill={"currentColor"} />
-                        <Text h4 css={{ color: "$primary" }}>
-                            Add a field
-                        </Text>
-                    </Card>
-                    <Spacer x={1} />
-                </Grid.Container>}
-            </div>
-        </div>}
+                        {isOwner && <>
+                            <WorkspaceAddField onClick={() => setAddFieldModal(true)} />
+                            <Spacer x={1} />
+                        </>}
+                    </Grid.Container>}
+                </div>
+            </div>}
         {!loadingWorkspace && <>
             <AddFieldModal
                 visible={addFieldModal}
@@ -288,6 +270,11 @@ const Workspace = (props) => {
                     setEditField({ ...editField, visible: false });
                 }}
             />
+            <VisibilityWorkspaceModal
+                visible={privateModal.visible}
+                desc={privateModal.desc}
+                onClose={() => setPrivateModal({ ...privateModal, visible: false })}
+            />
         </>}
     </Container >)
 }
@@ -303,37 +290,9 @@ export async function getServerSideProps(ctx) {
 
     if (req) {
         const authCookie = req.cookies.auth;
-        //const emailCookie = req.cookies.email;
 
-        const dataWorkspace = await fetch(`${server}/api/workspace`, {
-            'Content-Type': 'application/json',
-            method: "POST",
-            body: JSON.stringify({ id: queryId, action: "GET_WORKSPACE" }),
-        }).then(response => response.json());
-
-        if (dataWorkspace.success) {
-            workspace = { ...dataWorkspace, data: dataWorkspace.data };
-        } else {
-            workspace = { success: false }
-        }
-        console.log("RES DATA WORKSPACE: ", dataWorkspace);
-
-        if (authCookie) {
-            const dataValidate = await fetch(`${server}/api/validate`, {
-                'Content-Type': 'application/json',
-                method: "POST",
-                body: JSON.stringify({ token: authCookie }),
-            }).then(response => response.json());
-            console.log("validate: ", dataValidate);
-
-            if (dataValidate.success) {
-                validate = { ...dataValidate };
-            } else {
-                validate = { error: dataValidate?.error?.code }
-            }
-        } else {
-            validate = { error: "no-token" }
-        }
+        validate = await ValidateToken({ token: authCookie });
+        workspace = await GetWorkspace({ id: queryId, token: authCookie });
     }
     return { props: { validate, workspace } }
 }
