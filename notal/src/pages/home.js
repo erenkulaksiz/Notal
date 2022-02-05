@@ -21,7 +21,7 @@ import Navbar from '../components/navbar';
 
 import { withAuth } from '../hooks/route';
 import useAuth from '../hooks/auth';
-import { CheckToken, GetWorkspaces, ValidateToken } from '../utils';
+import { CheckToken, GetWorkspaces, ValidateToken, WorkboxInit } from '../utils';
 
 const Home = (props) => {
     //const auth = useAuth();
@@ -67,6 +67,8 @@ const Home = (props) => {
                 router.replace(router.asPath);
             }
         })();
+
+        WorkboxInit();
     }, []);
 
     useEffect(() => {
@@ -89,19 +91,20 @@ const Home = (props) => {
         delete: async ({ id }) => {
             setDeleteModal({ visible: false, workspace: -1 }); // set visiblity to false and id to -1
 
-            const data = await auth.workspace.deleteWorkspace({ id });
+            const newWorkspaces = _workspaces;
+            newWorkspaces.splice(_workspaces.findIndex(el => el._id == id), 1);
+            _setWorkspaces([...newWorkspaces]);
 
-            if (data.success) {
-                router.replace(router.asPath);
-            }
+            const data = await auth.workspace.deleteWorkspace({ id });
         },
         star: async ({ id }) => {
+            const newWorkspaces = _workspaces;
+            const workspaceIndex = newWorkspaces.findIndex(el => el._id == id)
+            newWorkspaces[workspaceIndex].starred = !newWorkspaces[workspaceIndex].starred;
+            _setWorkspaces([...newWorkspaces]);
+
             const data = await auth.workspace.starWorkspace({ id });
             if (data?.error) console.error("error on star workspace: ", data.error);
-            //#TODO: make this work immideatly
-            if (data.success) {
-                router.replace(router.asPath);
-            }
         },
         closeModal: () => {
             setNewWorkspaceVisible(false);

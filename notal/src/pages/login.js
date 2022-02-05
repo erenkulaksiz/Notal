@@ -13,6 +13,8 @@ import BackIcon from '../../public/icons/back.svg';
 
 import AuthService from '../service/AuthService';
 
+import { WorkboxInit } from '../utils';
+
 // Components
 import ForgotPassword from '../components/forgotPassword';
 import EmailLogin from '../components/emailLogin';
@@ -28,6 +30,10 @@ const Login = (props) => {
     const [view, setView] = useState(null);
     const [error, setError] = useState({ email: false, password: false, login: false });
     const [oauthError, setOauthError] = useState(false);
+
+    useEffect(() => {
+        WorkboxInit();
+    }, []);
 
     const onLoginWithGoogle = async () => {
         const login = await auth.login.google();

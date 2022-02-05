@@ -25,7 +25,7 @@ import CakeIcon from '../../../public/icons/cake.svg';
 import LinkIcon from '../../../public/icons/link.svg';
 import StarFilledIcon from '../../../public/icons/star_filled.svg';
 
-import { CheckToken, GetProfile, ValidateToken } from '../../utils';
+import { CheckToken, GetProfile, ValidateToken, WorkboxInit } from '../../utils';
 
 import Navbar from '../../components/navbar';
 import EditLinksModal from '../../components/modals/editLinks';
@@ -63,6 +63,8 @@ const Profile = (props) => {
                 router.replace(router.asPath);
             }
         })();
+
+        WorkboxInit();
     }, []);
 
     useEffect(() => {

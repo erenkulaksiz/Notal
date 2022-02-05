@@ -16,7 +16,7 @@ import AddFieldModal from '../../components/modals/addField';
 
 import AddIcon from '../../../public/icons/add.svg';
 
-import { CheckToken, GetWorkspace, ValidateToken } from '../../utils';
+import { CheckToken, GetWorkspace, ValidateToken, WorkboxInit } from '../../utils';
 import EditWorkspaceModal from '../../components/modals/editWorkspace';
 import EditFieldModal from '../../components/modals/editField';
 import WorkspaceAddField from '../../components/workspaceAddField';
@@ -53,6 +53,8 @@ const Workspace = (props) => {
                 router.replace(router.asPath);
             }
         })();
+
+        WorkboxInit();
     }, []);
 
     useEffect(() => {

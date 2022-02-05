@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import { useTheme as useNextTheme } from 'next-themes';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { Button, Text, Grid, Card, Link as ALink, Switch, Avatar, useTheme, Row } from '@nextui-org/react';
+import { Button, Text, Grid, Card, Link as ALink, Switch, Avatar, useTheme, Row, Tooltip } from '@nextui-org/react';
 
 import UserIcon from '../../../public/icons/user.svg';
 import DarkIcon from '../../../public/icons/dark.svg';

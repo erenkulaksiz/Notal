@@ -67,15 +67,17 @@ const WorkspaceNav = ({ title, desc, starred, onFavClick, onDeleteClick, onEditW
             </Grid> : <Grid xs={7} sm={4} justify="flex-end">
                 <Link href={`/profile/${user?.username}`} passHref>
                     <ALink>
-                        <Card css={{ width: "60%", minWidth: 200 }} clickable>
-                            <Row css={{ fd: "row", alignItems: "center" }}>
-                                <Avatar size="lg" color="gradient" bordered src={user?.avatar} referrerPolicy='no-refferer' icon={<UserIcon height={24} width={24} style={{ fill: "white" }} />} />
-                                <Row css={{ fd: "column" }}>
-                                    <Text css={{ ml: 8, fs: "1.2em", fontWeight: "600" }}>{user.fullname ? user?.fullname : "@" + user?.username}</Text>
-                                    {user.fullname && <Text css={{ ml: 8, }}>@{user?.username}</Text>}
+                        <Tooltip content="Workspace Owner" css={{ pointerEvents: "none" }}>
+                            <Card css={{ width: "60%", minWidth: 200 }} clickable>
+                                <Row css={{ fd: "row", alignItems: "center" }}>
+                                    <Avatar size="xl" color="gradient" bordered src={user?.avatar} referrerPolicy='no-refferer' icon={<UserIcon height={24} width={24} style={{ fill: "white" }} />} pointer />
+                                    <Row css={{ fd: "column", p: 0 }}>
+                                        <Text css={{ ml: 8, mb: 0, fs: "1.2em", fontWeight: "600" }}>{user.fullname ? user?.fullname : "@" + user?.username}</Text>
+                                        {user.fullname && <Text css={{ ml: 8, }}>@{user?.username}</Text>}
+                                    </Row>
                                 </Row>
-                            </Row>
-                        </Card>
+                            </Card>
+                        </Tooltip>
                     </ALink>
                 </Link>
             </Grid>}

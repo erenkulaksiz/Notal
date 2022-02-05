@@ -13,6 +13,7 @@ import CheckIcon from '../../public/icons/check.svg';
 
 import useAuth from '../hooks/auth';
 import { withPublic } from '../hooks/route';
+import { WorkboxInit } from '../utils';
 
 const Signup = (props) => {
     const router = useRouter();
@@ -27,6 +28,10 @@ const Signup = (props) => {
     const [PAAC, setPAAC] = useState("");
 
     const [error, setError] = useState({ fullname: false, email: false, password: false, username: false, paac: false });
+
+    useEffect(() => {
+        WorkboxInit();
+    }, []);
 
     const onRegister = async (e) => {
         e.preventDefault();
