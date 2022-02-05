@@ -2,25 +2,34 @@ import Head from 'next/head';
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 //import { DragDropContext } from 'react-beautiful-dnd';
-import { Button, Spacer, Container, Text, Grid, Card, useTheme, Loading, Modal, Row } from '@nextui-org/react';
+import { Spacer, Container, Grid, useTheme, Loading } from '@nextui-org/react';
+import Cookies from 'js-cookie';
 
 import useAuth from '../../hooks/auth';
 
-import Navbar from '../../components/navbar';
-import Field from '../../components/field';
-import WorkspaceNav from '../../components/workspaceNav';
-import Workspace404 from '../../components/workspace404';
-import DeleteWorkspaceModal from '../../components/modals/deleteWorkspace';
-import AddCardModal from '../../components/modals/addCard';
-import AddFieldModal from '../../components/modals/addField';
+import {
+    WorkboxInit,
+    ValidateToken,
+    GetWorkspace,
+    CheckToken
+} from '../../utils';
 
-import AddIcon from '../../../public/icons/add.svg';
-
-import { CheckToken, GetWorkspace, ValidateToken, WorkboxInit } from '../../utils';
-import EditWorkspaceModal from '../../components/modals/editWorkspace';
-import EditFieldModal from '../../components/modals/editField';
-import WorkspaceAddField from '../../components/workspaceAddField';
-import VisibilityWorkspaceModal from '../../components/modals/visibilityWorkspace';
+// Components
+import {
+    DeleteWorkspaceModal,
+    AddCardModal,
+    AddFieldModal,
+    EditCardModal,
+    EditWorkspaceModal,
+    EditFieldModal,
+    WorkspaceAddField,
+    VisibilityWorkspaceModal,
+    Navbar,
+    Field,
+    WorkspaceNav,
+    Workspace404,
+    AcceptCookies
+} from '../../components';
 
 const Workspace = (props) => {
     const auth = useAuth();
@@ -33,6 +42,7 @@ const Workspace = (props) => {
     const [addFieldModal, setAddFieldModal] = useState(false);
     const [deleteWorkspaceModal, setDeleteWorkspace] = useState(false);
     const [addCardModal, setAddCardModal] = useState({ visible: false, field: "" });
+    const [editCardModal, setEditCardModal] = useState({ visible: false, card: {}, fieldId: "" });
 
     const [editWorkspace, setEditWorkspace] = useState(false);
     const [editField, setEditField] = useState({ visible: false, title: "" });
@@ -172,6 +182,23 @@ const Workspace = (props) => {
                 console.log("delete card error: ", data?.error);
             }
         },
+        editCard: async ({ title, desc, color, id, fieldId }) => {
+            console.log("AAA", title, desc, color, id, fieldId);
+            const data = await auth.workspace.field.editCard({
+                id,
+                fieldId,
+                workspaceId: _workspace._id,
+                title,
+                desc,
+                color,
+            });
+
+            if (data.success) {
+                router.replace(router.asPath);
+            } else {
+                console.log("edit card error: ", data?.error);
+            }
+        },
     }
 
     return (<Container fluid css={{ position: "relative", padding: 0, overflowX: "hidden" }}>
@@ -216,6 +243,7 @@ const Workspace = (props) => {
                                 onAddCard={() => setAddCardModal({ ...addCardModal, visible: true, field: field._id })}
                                 onDeleteField={() => handle.deleteField({ id: field._id })}
                                 onDeleteCard={({ id }) => handle.deleteCard({ id, fieldId: field._id })}
+                                onEditCard={({ card, fieldId }) => setEditCardModal({ visible: true, card, fieldId })}
                                 onEditClick={() => setEditField({ ...editField, visible: true, title: field.title, id: field._id })}
                                 isOwner={isOwner}
                             />)
@@ -277,8 +305,25 @@ const Workspace = (props) => {
                 desc={privateModal.desc}
                 onClose={() => setPrivateModal({ ...privateModal, visible: false })}
             />
+            <EditCardModal
+                visible={editCardModal.visible}
+                onClose={() => setEditCardModal({ ...editCardModal, visible: false })}
+                card={editCardModal.card}
+                onEdit={({ title, desc, color, id }) => {
+                    handle.editCard({ title, desc, color, id, fieldId: editCardModal.fieldId });
+                    setEditCardModal({ ...editCardModal, visible: false });
+                }}
+            />
         </>}
-    </Container >)
+        <AcceptCookies
+            style={{ position: "fixed" }}
+            visible={Cookies.get('cookies') != "true"}
+            onAccept={() => {
+                Cookies.set('cookies', 'true');
+                router.replace(router.asPath);
+            }}
+        />
+    </Container>)
 }
 
 export default Workspace;

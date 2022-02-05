@@ -3,25 +3,34 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Button, Spacer, Container, Text, Grid, Card, Link as ALink, Loading, Avatar, Row, Tooltip } from '@nextui-org/react';
+import Cookies from 'js-cookie';
 //import Confetti from 'react-confetti'; // :)
 
-import { server } from '../config';
+import {
+    DashboardIcon,
+    StarOutlineIcon,
+    StarFilledIcon,
+    AddIcon,
+    DeleteIcon,
+    UserIcon,
+    WarningIcon,
+} from '../icons';
 
-import DashboardIcon from '../../public/icons/dashboard.svg';
-import StarOutlineIcon from '../../public/icons/star_outline.svg';
-import StarFilledIcon from '../../public/icons/star_filled.svg';
-import AddIcon from '../../public/icons/add.svg';
-import DeleteIcon from '../../public/icons/delete.svg';
-import UserIcon from '../../public/icons/user.svg';
-import WarningIcon from '../../public/icons/warning.svg';
-
-import AddWorkspaceModal from '../components/modals/addWorkspace';
-import DeleteWorkspaceModal from '../components/modals/deleteWorkspace';
-import Navbar from '../components/navbar';
+import {
+    Navbar,
+    DeleteWorkspaceModal,
+    AddWorkspaceModal,
+    AcceptCookies,
+} from '../components';
 
 import { withAuth } from '../hooks/route';
-import useAuth from '../hooks/auth';
-import { CheckToken, GetWorkspaces, ValidateToken, WorkboxInit } from '../utils';
+
+import {
+    CheckToken,
+    GetWorkspaces,
+    ValidateToken,
+    WorkboxInit
+} from '../utils';
 
 const Home = (props) => {
     //const auth = useAuth();
@@ -157,7 +166,7 @@ const Home = (props) => {
                 <Card css={{ fill: "$warning", "@mdMax": { width: "100%" } }}>
                     <Row>
                         <WarningIcon size={20} style={{ transform: "scale(0.8)" }} />
-                        <Text h5 css={{ color: "$warningDark", ml: 4 }}>Alpha Warning</Text>
+                        <Text h5 css={{ color: "$warningDark", ml: 4 }}>Alpha Warning v{process.env.NEXT_PUBLIC_APP_VERSION}</Text>
                     </Row>
                     <Text b>This project is currently in private alpha.</Text>
                     <Row css={{ mt: 12 }}>
@@ -221,7 +230,6 @@ const Home = (props) => {
                                                     light
                                                 />
                                             </Tooltip>
-
                                         </Grid>
                                     </Grid.Container>
                                 </Card>
@@ -253,6 +261,14 @@ const Home = (props) => {
             setNewWorkspaceVisible={setNewWorkspaceVisible}
             newWorkspaceVisible={newWorkspaceVisible}
             onAdd={({ title, desc, starred }) => workspace.create({ title, desc, starred })}
+        />
+        <AcceptCookies
+            style={{ position: "fixed" }}
+            visible={Cookies.get('cookies') != "true"}
+            onAccept={() => {
+                Cookies.set('cookies', 'true');
+                router.replace(router.asPath);
+            }}
         />
     </Container>
     )

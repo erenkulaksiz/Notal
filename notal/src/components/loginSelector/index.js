@@ -1,11 +1,13 @@
 import { Button, Text, Grid, Switch, Tooltip, Row, useTheme } from '@nextui-org/react';
 import { useTheme as useNextTheme } from 'next-themes';
 
-import EmailIcon from '../../../public/icons/email.svg';
-import GoogleIcon from '../../../public/icons/google.svg';
-import GithubIcon from '../../../public/icons/github.svg';
-import DarkIcon from '../../../public/icons/dark.svg';
-import LightIcon from '../../../public/icons/light.svg';
+import {
+    EmailIcon,
+    GithubIcon,
+    GoogleIcon,
+    DarkIcon,
+    LightIcon
+} from '../../icons';
 
 const LoginSelector = ({ onLogin, onLoginWithGithub, onLoginWithGoogle, oauthError }) => {
     const { isDark } = useTheme();

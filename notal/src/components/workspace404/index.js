@@ -1,8 +1,10 @@
 import { Button, Container, Text, Card } from '@nextui-org/react';
 import { useRouter } from "next/router";
 
-import HomeFilledIcon from '../../../public/icons/home_filled.svg';
-import BackIcon from '../../../public/icons/back.svg';
+import {
+    HomeFilledIcon,
+    BackIcon
+} from '../../icons';
 
 const Workspace404 = ({ reason }) => {
     const router = useRouter();

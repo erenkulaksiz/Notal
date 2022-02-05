@@ -1,15 +1,15 @@
 import Head from 'next/head';
 import Link from 'next/link';
-//import Image from 'next/image';
 import { useState, useEffect } from 'react';
-//import styles from '../../styles/App.module.scss';
 import { useRouter } from 'next/router';
 import { Button, Spacer, Container, Text, Grid, Card, Link as ALink, useTheme, Input } from '@nextui-org/react';
 
-import EmailIcon from '../../public/icons/email.svg';
-import PasswordIcon from '../../public/icons/password.svg';
-import UserIcon from '../../public/icons/user.svg';
-import CheckIcon from '../../public/icons/check.svg';
+import {
+    EmailIcon,
+    PasswordIcon,
+    UserIcon,
+    CheckIcon
+} from '../icons';
 
 import useAuth from '../hooks/auth';
 import { withPublic } from '../hooks/route';

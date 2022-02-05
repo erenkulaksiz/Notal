@@ -1,10 +1,12 @@
 import { Button, Text, Grid, Input, Link as ALink } from '@nextui-org/react';
 import { useState } from 'react';
 
-import BackIcon from '../../../public/icons/back.svg';
-import EmailIcon from '../../../public/icons/email.svg';
-import PasswordIcon from '../../../public/icons/password.svg';
-import LoginIcon from '../../../public/icons/login.svg';
+import {
+    BackIcon,
+    EmailIcon,
+    PasswordIcon,
+    LoginIcon
+} from '../../icons';
 
 const EmailLogin = ({ onLogin, onBack, setError, error, onForgot }) => {
 

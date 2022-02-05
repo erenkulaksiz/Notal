@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Button, Text, Modal, Input, Row } from '@nextui-org/react';
 
-import EditIcon from '../../../../public/icons/edit.svg';
-import CrossIcon from '../../../../public/icons/cross.svg';
-import CheckIcon from '../../../../public/icons/check.svg';
+import {
+    EditIcon,
+    CrossIcon,
+    CheckIcon
+} from '../../../icons';
 
 const EditFieldModal = ({ visible, onClose, onEdit, title }) => {
 

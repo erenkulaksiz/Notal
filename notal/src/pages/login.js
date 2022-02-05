@@ -1,24 +1,29 @@
 import Head from 'next/head';
-//import Link from 'next/link';
 import { useEffect, useState } from 'react';
-//import styles from '../../styles/App.module.scss';
 import { useRouter } from 'next/router';
 import { Button, Spacer, Container, Text, Grid, Card, Link as ALink, useTheme, Row } from '@nextui-org/react';
+import Cookies from 'js-cookie';
 
 import useAuth from '../hooks/auth';
 import { withPublic } from '../hooks/route';
-
-import CheckOutlineIcon from '../../public/icons/check_outline.svg';
-import BackIcon from '../../public/icons/back.svg';
 
 import AuthService from '../service/AuthService';
 
 import { WorkboxInit } from '../utils';
 
+// Icons
+import {
+    CheckOutlineIcon,
+    BackIcon
+} from '../icons';
+
 // Components
-import ForgotPassword from '../components/forgotPassword';
-import EmailLogin from '../components/emailLogin';
-import LoginSelector from '../components/loginSelector';
+import {
+    AcceptCookies,
+    ForgotPassword,
+    EmailLogin,
+    LoginSelector
+} from '../components';
 
 const Login = (props) => {
     const router = useRouter();
@@ -153,6 +158,14 @@ const Login = (props) => {
                 </Link>
             </Text>
         </Card>*/}
+        <AcceptCookies
+            style={{ position: "absolute" }}
+            visible={Cookies.get('cookies') != "true"}
+            onAccept={() => {
+                Cookies.set('cookies', 'true');
+                router.replace(router.asPath);
+            }}
+        />
     </Container>)
 }
 

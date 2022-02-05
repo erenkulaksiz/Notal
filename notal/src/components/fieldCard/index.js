@@ -1,9 +1,11 @@
 import { Button, Text, Grid, Checkbox, Tooltip, Card, useTheme } from '@nextui-org/react';
 import styled from 'styled-components';
 
-import DeleteIcon from '../../../public/icons/delete.svg';
-import EditIcon from '../../../public/icons/edit.svg';
-import MoreIcon from '../../../public/icons/more.svg';
+import {
+    DeleteIcon,
+    EditIcon,
+    MoreIcon
+} from '../../icons';
 
 const CardColor = styled.div`
     position: absolute;
@@ -14,7 +16,7 @@ const CardColor = styled.div`
     border-radius: 100%;
 `;
 
-const FieldCard = ({ card, onDelete, isOwner }) => {
+const FieldCard = ({ card, onDelete, isOwner, onEdit }) => {
     const { isDark } = useTheme();
 
     return (<Grid xs={12} css={{ mt: 8, }} key={card._id}>
@@ -37,7 +39,7 @@ const FieldCard = ({ card, onDelete, isOwner }) => {
                                 <Button size="sm" css={{ minWidth: 44, mr: 4 }} onClick={() => onDelete({ id: card._id })}>
                                     <DeleteIcon size={24} fill={"currentColor"} />
                                 </Button>
-                                <Button size="sm" css={{ minWidth: 44 }} onClick={() => { }}>
+                                <Button size="sm" css={{ minWidth: 44 }} onClick={onEdit}>
                                     <EditIcon size={24} fill={"currentColor"} />
                                 </Button>
                             </div>}>
@@ -46,7 +48,7 @@ const FieldCard = ({ card, onDelete, isOwner }) => {
                         </Button>
                     </Tooltip>}
                 </Grid>
-                <Grid xs={12}>
+                <Grid xs={12} css={{ wordBreak: "break-word" }}>
                     <Text>
                         {card.desc}
                     </Text>

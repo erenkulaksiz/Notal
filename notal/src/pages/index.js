@@ -2,26 +2,28 @@ import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Button, Spacer, Container, Text, Grid, Card, useTheme, Row, Avatar, Link as ALink } from '@nextui-org/react';
-import PoweredByVercel from 'powered-by-vercel'
+import PoweredByVercel from 'powered-by-vercel';
+import Cookies from 'js-cookie';
+import Link from 'next/link';
+import styled from 'styled-components';
 
-import { server } from '../config';
+import {
+    EditIcon,
+    UserIcon,
+    ShareIcon,
+    PeopleIcon,
+    CodeIcon,
+    HeartIcon,
+    WarningIcon
+} from '../icons';
 
-//import DashboardIcon from '../../public/icons/dashboard.svg';
-import EditIcon from '../../public/icons/edit.svg';
-import UserIcon from '../../public/icons/user.svg';
-import ShareIcon from '../../public/icons/share.svg';
-import PeopleIcon from '../../public/icons/people.svg';
-import CodeIcon from '../../public/icons/code.svg';
-import HeartIcon from '../../public/icons/heart.svg';
-import WarningIcon from '../../public/icons/warning.svg';
-//import LandingImg_shape_1 from '../../public/landing_img_right_1.svg';
-
-import Navbar from '../components/navbar';
+import {
+    Navbar,
+    AcceptCookies
+} from '../components';
 
 import useAuth from '../hooks/auth';
 import { CheckToken, ValidateToken, WorkboxInit } from '../utils';
-import Link from 'next/link';
-import styled from 'styled-components';
 
 const ImageContainer = styled.div`
     width: 100%;
@@ -226,7 +228,15 @@ const Landing = (props) => {
             </footer>
             <Spacer y={2} />
         </Container>
-    </Container >
+        <AcceptCookies
+            style={{ position: "fixed" }}
+            visible={Cookies.get('cookies') != "true"}
+            onAccept={() => {
+                Cookies.set('cookies', 'true');
+                router.replace(router.asPath);
+            }}
+        />
+    </Container>
     )
 }
 

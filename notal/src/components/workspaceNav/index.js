@@ -2,13 +2,15 @@
 import { Button, Text, Grid, Card, useTheme, Row, Tooltip, Avatar, Link as ALink } from '@nextui-org/react';
 import Link from 'next/link';
 
-import StarFilledIcon from '../../../public/icons/star_filled.svg';
-import StarOutlineIcon from '../../../public/icons/star_outline.svg';
-import VisibleIcon from '../../../public/icons/visible.svg';
-import VisibleOffIcon from '../../../public/icons/visible_off.svg';
-import DeleteIcon from '../../../public/icons/delete.svg';
-import EditIcon from '../../../public/icons/edit.svg';
-import UserIcon from '../../../public/icons/user.svg';
+import {
+    StarFilledIcon,
+    StarOutlineIcon,
+    VisibleIcon,
+    DeleteIcon,
+    EditIcon,
+    UserIcon,
+    VisibleOffIcon
+} from '../../icons';
 
 const WorkspaceNav = ({ title, desc, starred, onFavClick, onDeleteClick, onEditWorkspace, isOwner, user, onVisibleClick, visible }) => {
     const { isDark } = useTheme();

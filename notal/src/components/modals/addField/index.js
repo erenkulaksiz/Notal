@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Button, Text, Modal, Input, Row } from '@nextui-org/react';
 
-import AddIcon from '../../../../public/icons/add.svg';
-import CrossIcon from '../../../../public/icons/cross.svg';
-import CheckIcon from '../../../../public/icons/check.svg';
+import {
+    AddIcon,
+    CrossIcon,
+    CheckIcon
+} from '../../../icons';
 
 const AddFieldModal = ({ visible, onClose, onAdd }) => {
 

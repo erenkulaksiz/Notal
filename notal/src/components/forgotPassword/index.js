@@ -1,9 +1,11 @@
 import { Button, Text, Grid, Input, } from '@nextui-org/react';
 import { useState } from 'react';
 
-import BackIcon from '../../../public/icons/back.svg';
-import EmailIcon from '../../../public/icons/email.svg';
-import RefreshIcon from '../../../public/icons/refresh.svg';
+import {
+    BackIcon,
+    EmailIcon,
+    RefreshIcon
+} from '../../icons';
 
 const ForgotPassword = ({ onForgotPassword, onBack, forgotError, setForgotError }) => {
 

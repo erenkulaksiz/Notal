@@ -1,14 +1,16 @@
 import { Button, Text, Grid, Card, Tooltip, useTheme } from '@nextui-org/react';
 
-import DeleteIcon from '../../../public/icons/delete.svg';
-import EditIcon from '../../../public/icons/edit.svg';
-import MoreIcon from '../../../public/icons/more.svg';
-import AddIcon from '../../../public/icons/add.svg';
-import FilterIcon from '../../../public/icons/filter.svg';
+import {
+    DeleteIcon,
+    EditIcon,
+    MoreIcon,
+    AddIcon,
+    FilterIcon
+} from '../../icons';
 
 import FieldCard from '../fieldCard';
 
-const Field = ({ field, onAddCard, onDeleteField, onDeleteCard, onEditClick, isOwner }) => {
+const Field = ({ field, onAddCard, onDeleteField, onDeleteCard, onEditClick, onEditCard, isOwner }) => {
     const { isDark } = useTheme();
 
     return (<Grid css={{ minWidth: 380, maxWidth: 400, }}>
@@ -48,10 +50,11 @@ const Field = ({ field, onAddCard, onDeleteField, onDeleteCard, onEditClick, isO
                         </Card>
                     </Grid>
 
-                    {field?.cards && field.cards.map((card, index) => <FieldCard
+                    {field?.cards && field?.cards.map((card, index) => <FieldCard
                         key={card._id ? card._id : index}
                         card={card}
                         onDelete={({ id }) => onDeleteCard({ id })}
+                        onEdit={() => onEditCard({ card, fieldId: field._id })}
                         isOwner={isOwner}
                     />)}
 

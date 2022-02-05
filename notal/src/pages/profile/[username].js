@@ -2,33 +2,44 @@ import React, { useEffect, useState, useRef } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Button, Spacer, Container, Text, Grid, Card, Switch, useTheme, Input, Row, Avatar, Textarea, Loading, Link as ALink, Tooltip, Modal, useInput } from '@nextui-org/react';
+import { Button, Spacer, Container, Text, Grid, Card, Switch, useTheme, Input, Row, Avatar, Textarea, Loading, Link as ALink, Tooltip } from '@nextui-org/react';
+import Cookies from 'js-cookie';
 
 import useAuth from '../../hooks/auth';
 
-import BackIcon from '../../../public/icons/back.svg';
-import HomeFilledIcon from '../../../public/icons/home_filled.svg';
-import EditIcon from '../../../public/icons/edit.svg';
-import CrossIcon from '../../../public/icons/cross.svg';
-import CheckIcon from '../../../public/icons/check.svg';
-import UserIcon from '../../../public/icons/user.svg';
-import AtIcon from '../../../public/icons/at.svg';
-import LockIcon from '../../../public/icons/lock_outline.svg';
-import VisibleIcon from '../../../public/icons/visible.svg';
-import VisibleOffIcon from '../../../public/icons/visible_off.svg';
-import DashboardIcon from '../../../public/icons/dashboard.svg';
-import GithubIcon from '../../../public/icons/github_2.svg';
-import WebsiteIcon from '../../../public/icons/website.svg';
-import TwitterIcon from '../../../public/icons/twitter.svg';
-import InstagramIcon from '../../../public/icons/instagram.svg';
-import CakeIcon from '../../../public/icons/cake.svg';
-import LinkIcon from '../../../public/icons/link.svg';
-import StarFilledIcon from '../../../public/icons/star_filled.svg';
+import {
+    BackIcon,
+    HomeFilledIcon,
+    EditIcon,
+    CrossIcon,
+    CheckIcon,
+    UserIcon,
+    AtIcon,
+    LockIcon,
+    VisibleIcon,
+    VisibleOffIcon,
+    DashboardIcon,
+    Github2Icon as GithubIcon,
+    WebsiteIcon,
+    TwitterIcon,
+    InstagramIcon,
+    CakeIcon,
+    LinkIcon,
+    StarFilledIcon
+} from '../../icons';
 
-import { CheckToken, GetProfile, ValidateToken, WorkboxInit } from '../../utils';
+import {
+    CheckToken,
+    GetProfile,
+    ValidateToken,
+    WorkboxInit
+} from '../../utils';
 
-import Navbar from '../../components/navbar';
-import EditLinksModal from '../../components/modals/editLinks';
+import {
+    Navbar,
+    EditLinksModal,
+    AcceptCookies
+} from '../../components';
 
 const Profile = (props) => {
     const auth = useAuth();
@@ -228,7 +239,7 @@ const Profile = (props) => {
                     Back
                 </Button>
             </Card>
-        </Container> : <Container sm css={{ pb: 24 }}>
+        </Container> : <Container sm>
             <Grid.Container gap={1}>
                 <Grid xs={12} sm={12} md={2} lg={2} xl={2} justify="center" css={{ fd: "column", alignItems: "center" }}>
                     <Avatar bordered color="gradient" src={props.profile?.data?.avatar ?? ""} referrerPolicy="no-refferer" icon={<UserIcon size={12} style={{ fill: "white", transform: "scale(3)" }} />} size="xl" css={{ size: "128px", minWidth: 124 }} />
@@ -490,7 +501,15 @@ const Profile = (props) => {
                 onFinishEditing({ links: { website, instagram, github, twitter } });
             }}
         />
-    </Container >)
+        <AcceptCookies
+            style={{ position: "fixed" }}
+            visible={Cookies.get('cookies') != "true"}
+            onAccept={() => {
+                Cookies.set('cookies', 'true');
+                router.replace(router.asPath);
+            }}
+        />
+    </Container>)
 }
 
 export default Profile;

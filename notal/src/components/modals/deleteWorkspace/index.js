@@ -1,8 +1,10 @@
 import { Button, Text, Grid, Modal, Row } from '@nextui-org/react';
 
-import DeleteIcon from '../../../../public/icons/delete.svg';
-import CrossIcon from '../../../../public/icons/cross.svg';
-import CheckIcon from '../../../../public/icons/check.svg';
+import {
+    DeleteIcon,
+    CrossIcon,
+    CheckIcon
+} from '../../../icons';
 
 const DeleteWorkspaceModal = ({ visible, onClose, onDelete }) => {
 

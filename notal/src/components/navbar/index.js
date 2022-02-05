@@ -4,11 +4,13 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { Button, Text, Grid, Card, Link as ALink, Switch, Avatar, useTheme, Row, Tooltip } from '@nextui-org/react';
 
-import UserIcon from '../../../public/icons/user.svg';
-import DarkIcon from '../../../public/icons/dark.svg';
-import LightIcon from '../../../public/icons/light.svg';
-import LogoutIcon from '../../../public/icons/logout.svg';
-import LoginIcon from '../../../public/icons/login.svg';
+import {
+    UserIcon,
+    DarkIcon,
+    LightIcon,
+    LogoutIcon,
+    LoginIcon
+} from '../../icons';
 
 import useAuth from '../../hooks/auth';
 

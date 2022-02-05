@@ -1,9 +1,11 @@
 import { Button, Text, Grid, Input, Modal, Row, Checkbox } from '@nextui-org/react';
 import { useState } from 'react';
 
-import AddIcon from '../../../../public/icons/add.svg';
-import CrossIcon from '../../../../public/icons/cross.svg';
-import CheckIcon from '../../../../public/icons/check.svg';
+import {
+    AddIcon,
+    CrossIcon,
+    CheckIcon
+} from '../../../icons';
 
 const AddWorkspaceModal = ({ newWorkspaceVisible, setNewWorkspaceVisible, onAdd }) => {
 

@@ -2,13 +2,15 @@ import { useEffect, useState } from 'react';
 import URL from 'url-parse';
 import { Button, Text, Modal, Input, Row } from '@nextui-org/react';
 
-import LinkIcon from '../../../../public/icons/link.svg';
-import CrossIcon from '../../../../public/icons/cross.svg';
-import CheckIcon from '../../../../public/icons/check.svg';
-import WebsiteIcon from '../../../../public/icons/website.svg';
-import GithubIcon from '../../../../public/icons/github_2.svg';
-import TwitterIcon from '../../../../public/icons/twitter.svg';
-import InstagramIcon from '../../../../public/icons/instagram.svg';
+import {
+    LinkIcon,
+    CrossIcon,
+    CheckIcon,
+    WebsiteIcon,
+    GithubIcon,
+    TwitterIcon,
+    InstagramIcon
+} from '../../../icons';
 
 const EditLinksModal = ({ visible, onClose, onEdit, links }) => {
 

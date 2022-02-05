@@ -323,21 +323,6 @@ const AuthService = {
             return { error: data?.error }
         }
     },
-    cardSwap: async ({ cardId, fieldId, swapType, workspaceId, toFieldId, toCardId }) => {
-        const auth = getAuth(); // { cardId, fieldId, swapType, workspaceId: _workspace.id, toFieldId, toCardId }
-
-        const data = await fetch(`${server}/api/workspace`, {
-            'Content-Type': 'application/json',
-            method: "POST",
-            body: JSON.stringify({ cardId, action: "CARDSWAP", swapType, uid: auth?.currentUser?.uid, workspaceId, fieldId, toFieldId, toCardId }),
-        }).then(response => response.json());
-
-        if (data?.success) {
-            return { success: true }
-        } else {
-            return { error: data?.error }
-        }
-    },
     logout: async () => {
         const auth = getAuth();
         auth.signOut();

@@ -1,6 +1,8 @@
 import { Text, Card } from '@nextui-org/react';
 
-import AddIcon from '../../../public/icons/add.svg';
+import {
+    AddIcon
+} from '../../icons';
 
 const WorkspaceAddField = ({ onClick }) => {
     return (<Card

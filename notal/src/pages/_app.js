@@ -6,6 +6,14 @@ import { NextUIProvider, createTheme } from '@nextui-org/react';
 import { AuthProvider } from '../hooks/auth';
 import AuthStateChanged from '../layout/AuthStateChanged';
 import { useRouter } from 'next/router';
+import ProgressBar from "@badrap/bar-of-progress";
+
+const progress = new ProgressBar({
+  size: 3,
+  color: "#036AE6",
+  className: "progress-bar-notal",
+  delay: 100,
+});
 
 const lightTheme = createTheme({
   type: 'light',
@@ -64,6 +72,17 @@ export function reportWebVitals({ id, name, label, value }) {
 
 const MyApp = ({ Component, pageProps }) => {
   const router = useRouter();
+
+  useEffect(() => {
+    router.events.on("routeChangeStart", progress.start);
+    router.events.on("routeChangeComplete", progress.finish);
+    router.events.on("routeChangeError", progress.finish);
+    return () => {
+      router.events.off("routeChangeStart", progress.start);
+      router.events.off("routeChangeComplete", progress.finish);
+      router.events.off("routeChangeError", progress.finish);
+    }
+  }, [router.events])
 
   useEffect(() => {
     const handleRouteChange = (url) => {

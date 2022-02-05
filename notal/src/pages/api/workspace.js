@@ -305,21 +305,35 @@ export default async function handler(req, res) {
             } catch (error) {
                 res.status(400).send({ success: false, error: new Error(error).message });
             }
-
         },
         editcard: async () => {
-            if (!id || !uid || !workspaceId || !title || !desc || !color || !fieldId) {
+            console.log("editcard", id, uid, workspaceId, title, fieldId);
+
+            if (!id || !uid || !workspaceId || !title || !fieldId) {
                 res.status(400).send({ success: false, error: "invalid-params" });
                 return;
             }
 
-            /*
-            await admin.database().ref(`/workspaces/${workspaceId}/fields/${fieldId}/cards/${id}`).update({ title, desc, color, updatedAt: Date.now() }, () => {
+            try {
+                await workspacesCollection.updateOne(
+                    {
+                        "_id": ObjectId(workspaceId)
+                    },
+                    {
+                        $set: {
+                            "fields.$[i].cards.$[j].title": title,
+                            "fields.$[i].cards.$[j].desc": desc,
+                            "fields.$[i].cards.$[j].color": color
+                        }
+                    },
+                    {
+                        arrayFilters: [{ "i._id": ObjectId(fieldId) }, { "j._id": ObjectId(id) }]
+                    }
+                );
                 res.status(200).send({ success: true });
-            }).catch(error => {
-                res.status(400).send({ success: false, error });
-            });
-            */
+            } catch (error) {
+                res.status(400).send({ success: false, error: new Error(error).message });
+            }
         }
     }
 

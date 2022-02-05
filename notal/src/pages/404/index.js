@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router';
-import { Button, Container, Text, Grid, Card, Input } from '@nextui-org/react';
+import { Button, Container, Text, Card } from '@nextui-org/react';
 
-//import styles from '../../../styles/App.module.scss';
+import {
+    BackIcon,
+    HomeFilledIcon
+} from '../../icons';
 
-import BackIcon from '../../../public/icons/back.svg';
-import HomeFilledIcon from '../../../public/icons/home_filled.svg';
 import useAuth from '../../hooks/auth';
 
 const Page404 = () => {
