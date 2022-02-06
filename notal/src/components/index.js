@@ -16,6 +16,8 @@ export { default as FieldCard } from "./fieldCard";
 export { default as ForgotPassword } from "./forgotPassword";
 export { default as HomeSideNav } from "./homeSideNav";
 export { default as HomeWorkspaceCard } from "./homeWorkspaceCard";
+export { default as LandingFeaturesCard } from "./landingFeaturesCard";
+export { default as LandingFooter } from "./landingFooter";
 export { default as LoginSelector } from "./loginSelector";
 export { default as Navbar } from "./navbar";
 export { default as Profile404 } from "./profile404";

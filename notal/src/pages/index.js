@@ -1,16 +1,12 @@
-import { Button, Spacer, Container, Text, Card, useTheme, Row, Avatar, Link as ALink, Grid } from '@nextui-org/react';
+import { Button, Spacer, Container, Text, Card, useTheme, Row, Avatar, Grid } from '@nextui-org/react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import Cookies from 'js-cookie';
 import Head from 'next/head';
-import Link from 'next/link';
-import PoweredByVercel from 'powered-by-vercel';
 import styled from 'styled-components';
 
 import {
-    CodeIcon,
     EditIcon,
-    HeartIcon,
     PeopleIcon,
     ShareIcon,
     UserIcon,
@@ -19,6 +15,8 @@ import {
 
 import {
     AcceptCookies,
+    LandingFeaturesCard,
+    LandingFooter,
     Navbar
 } from '../components';
 
@@ -37,6 +35,29 @@ const ImageContainer = styled.div`
     opacity: ${props => props.isDark ? 0.4 : 1};
     background-color: black;
 `;
+
+const Features = [
+    {
+        title: "Take Notes",
+        desc: "Add workspaces, add notes into them. You can also create fields, which you can fill in them with cards you like.",
+        icon: <EditIcon size={20} fill="currentColor" />
+    },
+    {
+        title: "Personalize your profile",
+        desc: "You can add a bio, change your avatar and do more on your profile.",
+        icon: <UserIcon size={20} fill="currentColor" />
+    },
+    {
+        title: "Share Notes & Workspaces",
+        desc: "You can share your notes and workspaces, you can also set their visibility to private.",
+        icon: <ShareIcon size={20} fill="currentColor" />
+    },
+    {
+        title: "Create Teams",
+        desc: "You can invite whoever you want to your team. You can create notes & workspaces inside teams and work together.",
+        icon: <PeopleIcon size={20} fill="currentColor" />
+    },
+]
 
 const Landing = (props) => {
     const auth = useAuth();
@@ -63,7 +84,7 @@ const Landing = (props) => {
         </Head>
         <Navbar user={props.validate?.data} />
         <ImageContainer isDark={isDark}>
-            <img src="./landing_bg_1.png" style={{ width: "100%", height: "100%", objectFit: "cover", }} />
+            <img src="./landing_bg_1.png" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </ImageContainer>
         <Container md css={{ position: "relative" }}>
             <Spacer y={6} />
@@ -109,90 +130,12 @@ const Landing = (props) => {
                 </Grid>
             </Grid.Container>
             <Grid.Container gap={2} css={{ zIndex: "$1", position: "relative" }}>
-                <Grid xs={12} sm={6} md={3}> {/* #TODO: make this a component */}
-                    <Card css={{ bf: "saturate(180%) blur(10px)", bg: isDark ? "#ffffff20" : "#ffffffa9" }}>
-                        <Row style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                            <Avatar
-                                squared
-                                icon={<EditIcon size={20} fill="currentColor" />}
-                            />
-                            <Text h4 css={{ ml: 8 }}>
-                                Take notes
-                            </Text>
-                        </Row>
-                        <Spacer y={0.5} />
-                        <Row>
-                            <Text>
-                                Add workspaces, add notes into them. You can also create fields, which you can fill in them with cards you like.
-                            </Text>
-                        </Row>
-                    </Card>
-                </Grid>
-                <Grid xs={12} sm={6} md={3}>
-                    <Card css={{ bf: "saturate(180%) blur(10px)", bg: isDark ? "#ffffff20" : "#ffffffa9" }}>
-                        <Row style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                            <Avatar
-                                squared
-                                icon={<UserIcon size={20} fill="currentColor" />}
-                            />
-                            <Text h4 css={{ ml: 8 }}>
-                                Personalize your profile
-                            </Text>
-                        </Row>
-                        <Spacer y={0.5} />
-                        <Row>
-                            <Text>
-                                You can add a bio, change your avatar and do more on your profile.
-                            </Text>
-                        </Row>
-                    </Card>
-                </Grid>
-                <Grid xs={12} sm={6} md={3}>
-                    <Card css={{ bf: "saturate(180%) blur(10px)", bg: isDark ? "#ffffff20" : "#ffffffa9" }}>
-                        <Row style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                            <Avatar
-                                squared
-                                icon={<ShareIcon size={20} fill="currentColor" />}
-                            />
-                            <Text h4 css={{ ml: 8, fs: "1.2em" }}>
-                                Share Notes & Workspaces
-                            </Text>
-                        </Row>
-                        <Spacer y={0.5} />
-                        <Row>
-                            <Text>
-                                You can share your notes and workspaces, you can also set their visibility to private.
-                            </Text>
-                        </Row>
-                    </Card>
-                </Grid>
-                <Grid xs={12} sm={6} md={3}>
-                    <Card css={{ bf: "saturate(180%) blur(10px)", bg: isDark ? "#ffffff20" : "#ffffffa9" }}>
-                        <Row style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                            <Avatar
-                                squared
-                                icon={<PeopleIcon size={20} fill="currentColor" />}
-                            />
-                            <Text h4 css={{ ml: 8 }}>
-                                Create Teams
-                            </Text>
-                        </Row>
-                        <Spacer y={0.5} />
-                        <Row>
-                            <Text>
-                                You can invite whoever you want to your team. You can create notes & workspaces inside teams and work together.
-                            </Text>
-                        </Row>
-                    </Card>
-                </Grid>
+                {Features.map((feature, index) => <LandingFeaturesCard key={index} feature={feature} />)}
             </Grid.Container>
             <Spacer y={12} />
             <Text h1 css={{
                 color: isDark ? "$white" : "$black",
                 fs: "2em",
-                "@xs": {
-                    fs: "2em",
-                },
                 "@md": {
                     fs: "4em"
                 },
@@ -202,34 +145,12 @@ const Landing = (props) => {
                 <Text span css={{ color: "$primary" }}> projects.</Text>
             </Text>
             <Text b css={{ fs: "1.2em", color: "$gray500" }}>Keep focus on your project, not on your planning.</Text>
+            <Spacer y={16} />
             <div style={{ width: 740, height: 740, position: "absolute", zIndex: 1, left: -200, top: -20, opacity: isDark ? 0.3 : 0.7, backgroundImage: "url(./landing_bg_2.png)", backgroundRepeat: "no-repeat", background: "contain" }} />
             <div style={{ width: 740, height: 740, position: "absolute", zIndex: 1, right: -250, top: -20, opacity: 0.1, backgroundImage: "url(./landing_bg_3.png)", backgroundRepeat: "no-repeat", background: "contain" }} />
-            <Spacer y={12} />
-            <footer>
-                <Grid.Container>
-                    <Grid xs={1} md={4}></Grid>
-                    <Grid xs={10} md={4}>
-                        <Card>
-                            <Row css={{ alignItems: "center", justifyContent: "center" }}>
-                                <CodeIcon size={20} fill="currentColor" style={{ marginRight: 4, transform: "scale(0.8)" }} />
-                                <Text>with</Text>
-                                <HeartIcon size={20} fill="red" style={{ marginLeft: 4, marginRight: 4, transform: "scale(0.8)" }} />
-                                <Text css={{ mr: 8 }}>by</Text>
-                                <Link href="https://github.com/erenkulaksiz" passHref>
-                                    <ALink color>@Eren Kulaksiz</ALink>
-                                </Link>
-                            </Row>
-                        </Card>
-                    </Grid>
-                    <Grid xs={1} md={4}></Grid>
-                    <Spacer y={2} />
-                    <Grid xs={12} justify="center">
-                        <PoweredByVercel utmSource="notal" />
-                    </Grid>
-                </Grid.Container>
-            </footer>
-            <Spacer y={2} />
+            {/*<div style={{ width: 300, height: 300, position: "absolute", zIndex: 1, left: -50, bottom: 600, opacity: 1, backgroundImage: "url(./landing_bg_5.svg)", backgroundRepeat: "no-repeat", background: "contain", transform: "scale(2) rotate(-45deg)" }} />*/}
         </Container>
+        <LandingFooter />
         {Cookies.get('cookies') != "true" && <AcceptCookies
             style={{ position: "fixed" }}
             visible={Cookies.get('cookies') != "true"}
