@@ -140,7 +140,6 @@ const Home = (props) => {
         <Navbar user={props.validate?.data} />
 
         <Grid.Container gap={2}>
-
             <Grid xs={12}>
                 <Card css={{ jc: "center" }}>
                     {loadingWorkspaces ? <Card css={{ p: 12, dflex: "center" }}>

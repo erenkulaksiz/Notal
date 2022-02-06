@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Text, Modal, Input, Row, useTheme, } from '@nextui-org/react';
+import { Button, Text, Modal, Input, Row, Textarea, } from '@nextui-org/react';
 
 import {
     FieldCard,
@@ -38,6 +38,7 @@ const AddCardModal = ({ visible, onClose, onAdd }) => {
     const close = () => {
         setTitle("");
         setDesc("");
+        setTag("");
         setColor({ code: "", name: "", showName: "" });
         setTitleError("");
         onClose();
@@ -74,13 +75,14 @@ const AddCardModal = ({ visible, onClose, onAdd }) => {
                 {titleError != false && <Text color={"$error"}>{titleError}</Text>}
             </Row>
             <Row css={{ fd: "column", m: 0, mb: 8 }}>
-                <Input
+                <Textarea
                     bordered
                     fullWidth
                     color="primary"
                     label={<Text css={{ color: "$gray700", fontWeight: "500" }}>Card Description (Optional)</Text>}
                     value={desc}
                     onChange={(e) => setDesc(e.target.value)}
+                    text
                 />
             </Row>
             <Row css={{ fd: "column", m: 0, overflow: "visible", mb: 6 }}>

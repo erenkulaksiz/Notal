@@ -44,7 +44,7 @@ const ColorSelect = ({ content, onSelect, selected }) => {
                 display: "none",
             }
         }}>
-            <Card css={{ boxShadow: "$md" }} bordered clickable>
+            <Card shadow={false} bordered clickable>
                 <Row css={{ justifyContent: "space-between", flexDirection: "row" }}>
                     <Row>
                         {selected.code && <CardColor color={selected.code} style={{ marginTop: 8 }} />}

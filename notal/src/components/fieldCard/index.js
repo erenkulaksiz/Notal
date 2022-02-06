@@ -26,12 +26,12 @@ const CardTag = styled.div`
     border: 2px solid ${props => props.border};
 `;
 
-const FieldCard = ({ card, onDelete, isOwner, onEdit }) => {
+const FieldCard = ({ card, onDelete, isOwner, onEdit, style }) => {
     const tagColor = "#baa30f"
 
     const { isDark } = useTheme();
 
-    return (<Grid xs={12} css={{ mt: 8, }} key={card._id}>
+    return (<Grid xs={12} css={{ mt: 8, ...style }} key={card._id}>
         <Card bordered css={{ width: "100%", }} shadow={false}>
             <Grid.Container>
                 <Grid xs={10} sm={10}>

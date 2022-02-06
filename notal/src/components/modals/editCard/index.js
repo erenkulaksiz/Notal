@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Text, Modal, Input, Row, Textarea } from '@nextui-org/react';
+import { Button, Text, Modal, Input, Row, Textarea, Divider } from '@nextui-org/react';
 
 import {
     FieldCard,
@@ -78,6 +78,7 @@ const EditCardModal = ({ visible, onClose, onEdit, card }) => {
             <FieldCard
                 card={_card}
                 isOwner={false}
+                style={{ marginTop: 8 }}
             />
             <Row css={{ fd: "column", m: 0, mb: 8 }}>
                 <Input
@@ -109,6 +110,24 @@ const EditCardModal = ({ visible, onClose, onEdit, card }) => {
                     onSelect={({ element }) => setEditColor({ code: element.code, name: element.name, showName: element.showName })}
                     selected={editColor}
                 />
+            </Row>
+            <Row css={{ flexDirection: "column" }}>
+                <Divider css={{ mt: 16, mb: 10 }} />
+                <Text b>{`Created At: 
+                    ${new Date(_card.createdAt).getHours()}:${new Date(_card.createdAt).getMinutes()}
+                    -
+                    ${new Date(_card.createdAt).getDate()} 
+                    ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][new Date(_card.createdAt).getMonth()]},
+                    ${new Date(_card.createdAt).getFullYear()}
+                    `}</Text>
+
+                {_card.createdAt != _card.updatedAt && <Text b>{`Last Updated At: 
+                    ${new Date(_card.updatedAt).getHours()}:${new Date(_card.updatedAt).getMinutes()}
+                    -
+                    ${new Date(_card.updatedAt).getDate()} 
+                    ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][new Date(_card.updatedAt).getMonth()]},
+                    ${new Date(_card.updatedAt).getFullYear()}
+                    `}</Text>}
             </Row>
         </Modal.Body>
         <Modal.Footer css={{ justifyContent: "space-between" }}>
