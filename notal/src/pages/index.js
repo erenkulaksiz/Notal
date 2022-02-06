@@ -1,4 +1,4 @@
-import { Button, Spacer, Container, Text, Card, useTheme, Row, Avatar, Link as ALink } from '@nextui-org/react';
+import { Button, Spacer, Container, Text, Card, useTheme, Row, Avatar, Link as ALink, Grid } from '@nextui-org/react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import Cookies from 'js-cookie';
@@ -86,7 +86,7 @@ const Landing = (props) => {
                                 fs: "2em",
                             },
                             "@md": {
-                                fs: "4em"
+                                fs: "3.5em"
                             }
                         }}>Take planning to <Text span css={{ bg: "$gradient", backgroundImage: "$textGradient", "-webkit-background-clip": 'text', "-webkit-text-fill-color": 'transparent' }}>next</Text> level with Notal 🚀</Text>
                     </Row>
@@ -109,7 +109,7 @@ const Landing = (props) => {
                 </Grid>
             </Grid.Container>
             <Grid.Container gap={2} css={{ zIndex: "$1", position: "relative" }}>
-                <Grid xs={12} sm={6} md={3}>
+                <Grid xs={12} sm={6} md={3}> {/* #TODO: make this a component */}
                     <Card css={{ bf: "saturate(180%) blur(10px)", bg: isDark ? "#ffffff20" : "#ffffffa9" }}>
                         <Row style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                             <Avatar
@@ -202,11 +202,8 @@ const Landing = (props) => {
                 <Text span css={{ color: "$primary" }}> projects.</Text>
             </Text>
             <Text b css={{ fs: "1.2em", color: "$gray500" }}>Keep focus on your project, not on your planning.</Text>
-            <div style={{ width: "100%" }}>
-                <img src="./landing_bg_2.png" style={{ maxWidth: "100%", maxHeight: "100%", position: "absolute", zIndex: 1, left: -200, top: -20, opacity: isDark ? 0.3 : 0.7 }} />
-                <img src="./landing_bg_3.png" style={{ maxWidth: "100%", maxHeight: "100%", position: "absolute", zIndex: 1, right: -300, top: -20, opacity: 0.1 }} />
-                {/*<img src="./landing_bg_4.png" style={{ maxWidth: "100%", maxHeight: "100%", position: "absolute", transform: "scale(0.5)", zIndex: 1, bottom: -150, right: -200, opacity: 1 }} />*/}
-            </div>
+            <div style={{ width: 740, height: 740, position: "absolute", zIndex: 1, left: -200, top: -20, opacity: isDark ? 0.3 : 0.7, backgroundImage: "url(./landing_bg_2.png)", backgroundRepeat: "no-repeat", background: "contain" }} />
+            <div style={{ width: 740, height: 740, position: "absolute", zIndex: 1, right: -250, top: -20, opacity: 0.1, backgroundImage: "url(./landing_bg_3.png)", backgroundRepeat: "no-repeat", background: "contain" }} />
             <Spacer y={12} />
             <footer>
                 <Grid.Container>
