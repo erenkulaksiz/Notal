@@ -1,5 +1,5 @@
 //import { DragDropContext } from 'react-beautiful-dnd';
-import { Container, Grid, Loading, Spacer, useTheme } from '@nextui-org/react';
+import { Container, Grid, Loading, Spacer, useTheme, Text } from '@nextui-org/react';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
@@ -18,6 +18,7 @@ import {
 import {
     AcceptCookies,
     AddCardModal,
+    AddFieldBanner,
     AddFieldModal,
     DeleteWorkspaceModal,
     EditCardModal,
@@ -28,7 +29,7 @@ import {
     VisibilityWorkspaceModal,
     Workspace404,
     WorkspaceAddField,
-    WorkspaceNav
+    WorkspaceNav,
 } from '../../components';
 
 const Workspace = (props) => {
@@ -237,7 +238,7 @@ const Workspace = (props) => {
 
                 <div style={{ display: "flex", width: "100%", flexDirection: "column", paddingTop: 8, justifyContent: "center", alignContent: "center" }}>
                     {!loadingWorkspace && <Grid.Container gap={1} css={{ flexWrap: "nowrap", alignItems: "flex-start", justifyContent: "flex-start", overflowX: "auto" }}>
-                        {(_workspace?.fields) && _workspace.fields.map(field => {
+                        {(_workspace?.fields && _workspace?.fields?.length != 0) ? _workspace?.fields.map(field => {
                             return (<Field
                                 field={field}
                                 key={field._id}
@@ -248,7 +249,7 @@ const Workspace = (props) => {
                                 onEditClick={() => setEditField({ ...editField, visible: true, title: field.title, id: field._id })}
                                 isOwner={isOwner}
                             />)
-                        })}
+                        }) : <AddFieldBanner isOwner={isOwner} />}
 
                         {isOwner && <>
                             <WorkspaceAddField onClick={() => setAddFieldModal(true)} />

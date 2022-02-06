@@ -1,10 +1,11 @@
-import { Button, Card, Grid, Link as ALink, Text, Tooltip } from '@nextui-org/react';
+import { Button, Card, Grid, Link as ALink, Text, Tooltip, Row } from '@nextui-org/react';
 import Link from 'next/link';
 
 import {
     StarFilledIcon,
     StarOutlineIcon,
-    DeleteIcon
+    DeleteIcon,
+    VisibleOffIcon
 } from '../../icons';
 
 const HomeWorkspaceCard = ({ workspace, onStarClick, onDeleteClick }) => {
@@ -12,16 +13,21 @@ const HomeWorkspaceCard = ({ workspace, onStarClick, onDeleteClick }) => {
         <Card color={'gradient'} css={{ height: 140, justifyContent: "flex-end" }}>
             <Grid.Container>
                 <Grid xs={10} css={{ fd: "column" }} justify='flex-end'>
-                    <Link href="/workspace/[pid]" as={`/workspace/${workspace._id}`}>
-                        <ALink>
-                            <Text h3 color={"white"}>{workspace.title}</Text>
-                        </ALink>
-                    </Link>
-                    {workspace.desc && <Link href="/workspace/[pid]" as={`/workspace/${workspace._id}`}>
-                        <ALink>
-                            <Text h6 color={"white"}>{workspace.desc}</Text>
-                        </ALink>
-                    </Link>}
+                    {!workspace?.workspaceVisible && <Tooltip content="This workspace is set to private." css={{ pointerEvents: "none" }}>
+                        <VisibleOffIcon height={24} width={24} fill={"currentColor"} style={{ marginRight: 14 }} />
+                    </Tooltip>}
+                    <Row css={{ fd: "column" }}>
+                        <Link href="/workspace/[pid]" as={`/workspace/${workspace._id}`}>
+                            <ALink>
+                                <Text h3 color={"white"}>{workspace.title}</Text>
+                            </ALink>
+                        </Link>
+                        {workspace.desc && <Link href="/workspace/[pid]" as={`/workspace/${workspace._id}`}>
+                            <ALink>
+                                <Text h6 color={"white"}>{workspace.desc}</Text>
+                            </ALink>
+                        </Link>}
+                    </Row>
                 </Grid>
                 <Grid xs={2} justify='flex-end' alignItems='flex-end' css={{ fd: "column" }}>
                     <Tooltip

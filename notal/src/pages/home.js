@@ -3,8 +3,10 @@ import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import Head from 'next/head';
-import Link from 'next/link';
+import Image from 'next/image';
 //import Confetti from 'react-confetti'; // :)
+
+import addworkspacebanner from '../../public/addfieldbanner.png';
 
 import {
     AddIcon,
@@ -14,9 +16,10 @@ import {
 
 import {
     AcceptCookies,
+    AddFieldBanner,
     AddWorkspaceModal,
     DeleteWorkspaceModal,
-    HomeSideNav,
+    HomeNav,
     HomeWorkspaceCard,
     Navbar,
 } from '../components';
@@ -59,6 +62,8 @@ const Home = (props) => {
     useEffect(() => {
         if (viewing == "favorites") {
             setFilter("favorites");
+        } else if (viewing == "privateWorkspaces") {
+            setFilter("privateWorkspaces");
         } else {
             setFilter(null);
         }
@@ -122,6 +127,9 @@ const Home = (props) => {
             if (filter == "favorites") {
                 if (workspaces) return workspaces.filter(el => el.starred == true);
                 else return []
+            } else if (filter == "privateWorkspaces") {
+                if (workspaces) return workspaces.filter(el => !!el?.workspaceVisible == false);
+                else return []
             } else {
                 // no filter
                 if (workspaces) return workspaces;
@@ -147,7 +155,7 @@ const Home = (props) => {
                         <Loading />
                         <Text css={{ mt: 24, fs: "1.4em" }}>Loading Workspaces...</Text>
                     </Card> : <Grid.Container gap={1}>
-                        <HomeSideNav viewing={viewing} onViewChange={(viewingName) => setViewing(viewingName)} />
+                        <HomeNav viewing={viewing} onViewChange={(viewingName) => setViewing(viewingName)} />
                         <Grid xs={12}>
                             <Avatar
                                 squared
@@ -162,7 +170,17 @@ const Home = (props) => {
                                 workspace={workspaceItem}
                                 onDeleteClick={() => setDeleteModal({ ...deleteModal, visible: true, workspace: workspaceItem._id })}
                                 onStarClick={() => workspace.star({ id: workspaceItem._id })}
-                            />) : null}
+                            />) : <Grid xs={12} sm={4} lg={2}>
+                                <Card
+                                    bordered
+                                    shadow={false}
+                                    css={{ dflex: "center", height: 140, borderColor: "$accents4" }}
+                                    onClick={() => setNewWorkspaceVisible(true)}
+                                >
+                                    <Image src={addworkspacebanner} style={{ zIndex: 50 }} width={64} height={64} placeholder="blur" objectFit='contain' priority={true} />
+                                    <Text h6 css={{ color: "$accents4" }}>You have no workspaces.</Text>
+                                </Card>
+                            </Grid>}
                         <Grid xs={12} sm={4} lg={2}>
                             <Card
                                 bordered

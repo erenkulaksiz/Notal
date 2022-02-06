@@ -70,7 +70,7 @@ const WorkspaceNav = ({ title, desc, starred, onFavClick, onDeleteClick, onEditW
                 <Link href={`/profile/${user?.username}`} passHref>
                     <ALink>
                         <Tooltip content="Workspace Owner" css={{ pointerEvents: "none" }}>
-                            <Card css={{ width: "60%", minWidth: 200 }} clickable>
+                            <Card css={{ width: "60%", minWidth: 200, boxShadow: "$sm" }} clickable>
                                 <Row css={{ fd: "row", alignItems: "center" }}>
                                     <Avatar size="md" color="gradient" bordered src={user?.avatar} referrerPolicy='no-refferer' icon={<UserIcon height={24} width={24} style={{ fill: "white" }} />} pointer />
                                     <Row css={{ fd: "column", p: 0 }}>

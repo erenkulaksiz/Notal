@@ -15,7 +15,7 @@ export { default as EmailLogin } from "./emailLogin";
 export { default as Field } from "./field";
 export { default as FieldCard } from "./fieldCard";
 export { default as ForgotPassword } from "./forgotPassword";
-export { default as HomeSideNav } from "./homeSideNav";
+export { default as HomeNav } from "./homeNav";
 export { default as HomeWorkspaceCard } from "./homeWorkspaceCard";
 export { default as LandingFeaturesCard } from "./landingFeaturesCard";
 export { default as LandingFooter } from "./landingFooter";
@@ -28,3 +28,5 @@ export { default as ProfileWorkspaceCard } from "./profileWorkspaceCard";
 export { default as Workspace404 } from "./workspace404";
 export { default as WorkspaceAddField } from "./workspaceAddField";
 export { default as WorkspaceNav } from "./workspaceNav";
+// Banners
+export { default as AddFieldBanner } from "./addFieldBanner";

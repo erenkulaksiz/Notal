@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Text, Modal, Input, Row, Textarea, Divider } from '@nextui-org/react';
+import { Button, Text, Modal, Input, Row, Textarea, Divider, Collapse } from '@nextui-org/react';
 
 import {
     FieldCard,
@@ -111,24 +111,28 @@ const EditCardModal = ({ visible, onClose, onEdit, card }) => {
                     selected={editColor}
                 />
             </Row>
-            <Row css={{ flexDirection: "column" }}>
-                <Divider css={{ mt: 16, mb: 10 }} />
-                <Text b>{`Created At: 
+            <Collapse title="Card Details" shadow={false} divider={false} css={{ mt: 8 }}>
+                <Row>
+                    <Text b>{`Created At: 
                     ${new Date(_card.createdAt).getHours()}:${new Date(_card.createdAt).getMinutes()}
                     -
                     ${new Date(_card.createdAt).getDate()} 
                     ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][new Date(_card.createdAt).getMonth()]},
                     ${new Date(_card.createdAt).getFullYear()}
                     `}</Text>
-
-                {_card.createdAt != _card.updatedAt && <Text b>{`Last Updated At: 
+                </Row>
+                <Row>
+                    {_card.createdAt != _card.updatedAt && <Text b>{`Last Updated At: 
                     ${new Date(_card.updatedAt).getHours()}:${new Date(_card.updatedAt).getMinutes()}
                     -
                     ${new Date(_card.updatedAt).getDate()} 
                     ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][new Date(_card.updatedAt).getMonth()]},
                     ${new Date(_card.updatedAt).getFullYear()}
                     `}</Text>}
-            </Row>
+                </Row>
+
+
+            </Collapse>
         </Modal.Body>
         <Modal.Footer css={{ justifyContent: "space-between" }}>
             <Button auto flat color="error" css={{ width: "46%" }} onClick={close}>
