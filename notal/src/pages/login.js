@@ -79,8 +79,9 @@ const Login = (props) => {
     return (<Container xs css={{ dflex: "center", ac: "center", ai: "center" }}>
         <Head>
             <title>Login · Notal</title>
-            <meta name="description" content="Login to Notal, the greatest note app" />
-            <link rel="icon" href="/favicon.ico" />
+            <meta name='twitter:description' content='Take your notes to next level with Notal' />
+            <meta property='og:description' content='Take your notes to next level with Notal' />
+            <meta name='description' content='Take your notes to next level with Notal' />
         </Head>
         <ALink onClick={() => router.push("/")}>
             <img

@@ -79,8 +79,9 @@ const Landing = (props) => {
     return (<Container xl css={{ position: "relative", padding: 0, width: "100%", height: "100%", overflowX: "hidden" }}>
         <Head>
             <title>Home · Notal</title>
-            <meta name="description" content="Notal. The next generation taking notes and sharing todo snippets platform." />
-            <link rel="icon" href="/favicon.ico" />
+            <meta name='twitter:description' content='Take your notes to next level with Notal' />
+            <meta property='og:description' content='Take your notes to next level with Notal' />
+            <meta name='description' content='Take your notes to next level with Notal' />
         </Head>
         <Navbar user={props.validate?.data} />
         <ImageContainer isDark={isDark}>

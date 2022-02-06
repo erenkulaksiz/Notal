@@ -193,7 +193,7 @@ const Profile = (props) => {
             <meta name="description" content="Notal" />
             <meta property='og:description' name='og:description' content={props.profile?.success ? props.profile?.data?.username + "'s profile" : "Not Found"} />
             <meta name='twitter:description' content={props.profile?.success ? props.profile?.data?.username + "'s profile" : "Not Found"} />
-            <link rel="icon" href="/favicon.ico" />
+            <meta name='description' content={props.profile?.success ? props.profile?.data?.username + "'s profile" : "Not Found"} />
         </Head>
         <Navbar user={props.validate?.data} />
         <Spacer y={2} />

@@ -15,7 +15,6 @@ export default function Document() {
                 <meta name='apple-mobile-web-app-capable' content='yes' />
                 <meta name='apple-mobile-web-app-status-bar-style' content='default' />
                 <meta name='apple-mobile-web-app-title' content='Notal' />
-                <meta name='description' content='Take your notes to next level with Notal' />
                 <meta name='format-detection' content='telephone=no' />
                 <meta name='mobile-web-app-capable' content='yes' />
 
@@ -27,12 +26,10 @@ export default function Document() {
                 <meta name='twitter:card' content='summary' />
                 <meta name='twitter:url' content='https://notal.app' />
                 <meta name='twitter:title' content='Notal' />
-                <meta name='twitter:description' content='Take your notes to next level with Notal' />
                 <meta name='twitter:image' content='https://notal.app/icon_big.png' />
                 <meta name='twitter:creator' content='@erencode' />
                 <meta property='og:type' content='website' />
                 <meta property='og:title' content='Notal' />
-                <meta property='og:description' content='Take your notes to next level with Notal' />
                 <meta property='og:site_name' content='Notal' />
                 <meta property='og:url' content='https://notal.app' />
                 <meta property='og:image' content='https://notal.app/icon_big.png' />

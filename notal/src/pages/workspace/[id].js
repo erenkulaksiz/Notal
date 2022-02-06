@@ -204,8 +204,9 @@ const Workspace = (props) => {
     return (<Container fluid css={{ position: "relative", padding: 0, overflowX: "hidden" }}>
         <Head>
             <title>{_workspace?.title ?? "Not Found"}</title>
-            <meta name="description" content="Notal. The next generation taking notes and sharing todo snippets platform." />
-            <link rel="icon" href="/favicon.ico" />
+            <meta name='twitter:description' content='Take your notes to next level with Notal' />
+            <meta property='og:description' content='Take your notes to next level with Notal' />
+            <meta name='description' content='Take your notes to next level with Notal' />
         </Head>
 
         <Navbar user={props.validate?.data} />
