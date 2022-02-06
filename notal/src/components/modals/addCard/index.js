@@ -1,51 +1,27 @@
 import { useState } from 'react';
-import { Button, Text, Modal, Input, Row, Card, useTheme, Link as ALink } from '@nextui-org/react';
-import styled from 'styled-components';
+import { Button, Text, Modal, Input, Row, useTheme, } from '@nextui-org/react';
 
 import {
-    FieldCard
+    FieldCard,
+    ColorSelect
 } from '../../';
 
 import {
     AddIcon,
     CrossIcon,
-    CheckIcon,
-    ArrowDownIcon
+    CheckIcon
 } from '../../../icons';
 
-const CardColor = styled.div`
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    background-color: ${props => props.color};
-    z-index: 5;
-    border-radius: 100%;
-`;
+import {
+    CardColors
+} from '../../../utils';
 
-const Details = styled.details`
-    position: relative;
-    display: inline-block;
-    background-color: transparent;
-    width: 100%;
-    &[open] > summary:before {
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        z-index: 1;
-        display: block;
-        cursor: default;
-        content: " ";
-    }
-`;
 
 const AddCardModal = ({ visible, onClose, onAdd }) => {
-    const { isDark } = useTheme();
-
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
-    const [color, setColor] = useState({ code: "", name: "" });
+    const [color, setColor] = useState({ code: "", name: "", showName: "" });
+    const [tag, setTag] = useState("");
 
     const [titleError, setTitleError] = useState("");
 
@@ -62,7 +38,7 @@ const AddCardModal = ({ visible, onClose, onAdd }) => {
     const close = () => {
         setTitle("");
         setDesc("");
-        setColor({ code: "", name: "" });
+        setColor({ code: "", name: "", showName: "" });
         setTitleError("");
         onClose();
     }
@@ -82,7 +58,7 @@ const AddCardModal = ({ visible, onClose, onAdd }) => {
         </Modal.Header>
         <Modal.Body css={{ overflow: "visible" }}>
             <FieldCard
-                card={{ title: title != "" ? title : "Enter a title...", desc, color: color.code }}
+                card={{ title: title != "" ? title : "Enter a title...", desc, color: color.code, tag: { title: tag != "" ? tag : "tag" } }}
                 isOwner={false}
             />
             <Row css={{ fd: "column", m: 0, mb: 8 }}>
@@ -97,72 +73,34 @@ const AddCardModal = ({ visible, onClose, onAdd }) => {
                 />
                 {titleError != false && <Text color={"$error"}>{titleError}</Text>}
             </Row>
-            <Row css={{ fd: "column", m: 0 }}>
+            <Row css={{ fd: "column", m: 0, mb: 8 }}>
                 <Input
                     bordered
                     fullWidth
                     color="primary"
-                    label={<Text css={{ color: "$gray700", fontWeight: "500" }}>Card Description</Text>}
+                    label={<Text css={{ color: "$gray700", fontWeight: "500" }}>Card Description (Optional)</Text>}
                     value={desc}
                     onChange={(e) => setDesc(e.target.value)}
                 />
             </Row>
-            <Row css={{ fd: "column", m: 0, overflow: "visible", mt: 6 }}>
-                <Text css={{ color: "$gray700", fontWeight: "500" }}>Card Color</Text>
-                <Details>
-                    <summary style={{
-                        userSelect: "none",
-                        position: "relative",
-                        "&::WebkitDetailsMarket": {
-                            display: "none",
-                        }
-                    }}>
-                        <Card css={{ boxShadow: "$md" }}>
-                            <Row css={{ justifyContent: "space-between", flexDirection: "row" }}>
-                                <Row>
-                                    {color.code && <CardColor color={color.code} style={{ marginTop: 8 }} />}
-                                    <Text css={{ width: "50%", color: color.code ? color.code : "CurrentColor", marginLeft: color.code ? 18 : 0 }} b={color.code != ""}>{color.code ? color.name : "Set Color"}</Text>
-                                </Row>
-                                <ArrowDownIcon size={24} fill={"currentColor"} />
-                            </Row>
-                        </Card>
-                    </summary>
-                    <Card css={{ zIndex: 500, height: 160, position: "absolute", left: 0, width: "auto", boxShadow: "$lg", bg: isDark ? "#1c1c1c" : "$background" }}>
-                        <ALink onClick={() => setColor({ code: "", name: "" })} css={{ p: 8, color: isDark ? "$white" : "$black", position: "relative" }}>
-                            <Text css={{ color: "CurrentColor" }} b>None</Text>
-                        </ALink>
-                        <ALink onClick={() => setColor({ code: "#a30b0b", name: "Red" })} css={{ p: 8 }}>
-                            <div style={{ position: "relative", paddingBottom: 10, }}>
-                                <CardColor color="#a30b0b" />
-                            </div>
-                            <Text css={{ color: "#a30b0b", ml: 18 }} b>Red</Text>
-                        </ALink>
-                        <ALink onClick={() => setColor({ code: "#10AC63", name: "Green" })} css={{ p: 8 }}>
-                            <div style={{ position: "relative", paddingBottom: 10, }}>
-                                <CardColor color="#10AC63" />
-                            </div>
-                            <Text css={{ color: "#10AC63", ml: 18 }} b>Green</Text>
-                        </ALink>
-                        <ALink onClick={() => setColor({ code: "#0070F3", name: "Blue" })} css={{ p: 8 }}>
-                            <div style={{ position: "relative", paddingBottom: 10, }}>
-                                <CardColor color="#0070F3" />
-                            </div>
-                            <Text css={{ color: "#0070F3", ml: 18 }} b>Blue</Text>
-                        </ALink>
-                        <ALink onClick={() => setColor({ code: "#D28519", name: "Yellow" })} css={{ p: 8 }}>
-                            <div style={{ position: "relative", paddingBottom: 10, }}>
-                                <CardColor color="#D28519" />
-                            </div>
-                            <Text css={{ color: "#D28519", ml: 18 }} b>Yellow</Text>
-                        </ALink>
-                        <ALink css={{ p: 8 }}>
-                            <div style={{ position: "relative", paddingBottom: 10, }}>
-                                <CardColor color="gray" />
-                            </div>
-                            <Text css={{ color: "gray", ml: 18 }} b>Custom (coming soon)</Text>
-                        </ALink>
-                    </Card>
-                </Details>
+            <Row css={{ fd: "column", m: 0, overflow: "visible", mb: 6 }}>
+                <Text css={{ color: "$gray700", fontWeight: "500", ml: 4 }}>Card Color (Optional)</Text>
+                <ColorSelect
+                    content={CardColors} // will show card colors here
+                    onSelect={({ element }) => setColor({ code: element.code, name: element.name, showName: element.showName })}
+                    selected={color}
+                />
+            </Row>
+            <Row css={{ fd: "column", m: 0, }}>
+                <Input
+                    bordered
+                    fullWidth
+                    color="primary"
+                    label={<Text css={{ color: "$gray700", fontWeight: "500" }}>Card Tag (Optional)</Text>}
+                    value={tag}
+                    onChange={(e) => setTag(e.target.value)}
+                    maxLength={16}
+                />
             </Row>
         </Modal.Body>
         <Modal.Footer css={{ justifyContent: "space-between" }}>

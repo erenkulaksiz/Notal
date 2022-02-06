@@ -180,3 +180,5 @@ export const WorkboxInit = () => {
         wb.register()
     }
 }
+
+export { default as CardColors } from './constants';

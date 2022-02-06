@@ -1,54 +1,28 @@
 import { useEffect, useState } from 'react';
-import { Button, Text, Modal, Input, Row, Textarea, useTheme, Card, Link as ALink } from '@nextui-org/react';
-import styled from 'styled-components';
+import { Button, Text, Modal, Input, Row, Textarea } from '@nextui-org/react';
 
 import {
     FieldCard,
+    ColorSelect
 } from '../../';
 
 import {
     EditIcon,
     CrossIcon,
     CheckIcon,
-    ArrowDownIcon
 } from '../../../icons';
 
-const CardColor = styled.div`
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    background-color: ${props => props.color};
-    z-index: 5;
-    border-radius: 100%;
-`;
-
-const Details = styled.details`
-    position: relative;
-    display: inline-block;
-    background-color: transparent;
-    width: 100%;
-    &[open] > summary:before {
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        z-index: 1;
-        display: block;
-        cursor: default;
-        content: " ";
-    }
-`;
+import {
+    CardColors,
+} from '../../../utils';
 
 const EditCardModal = ({ visible, onClose, onEdit, card }) => {
-    const { isDark } = useTheme();
-
     const [titleError, setTitleError] = useState("");
     const [descError, setDescError] = useState("");
 
     const [editTitle, setEditTitle] = useState(card.title);
     const [editDesc, setEditDesc] = useState(card.desc);
-    const [editColor, setEditColor] = useState({ code: card.color, name: "" });
+    const [editColor, setEditColor] = useState({ code: card.color, name: "", showName: "" });
 
     const [_card, _setCard] = useState(card);
 
@@ -56,7 +30,7 @@ const EditCardModal = ({ visible, onClose, onEdit, card }) => {
         _setCard(card);
         setEditTitle(card.title);
         setEditDesc(card.desc);
-        setEditColor({ ...editColor, code: card.color, name: "" });
+        setEditColor({ ...editColor, code: card.color, name: "", showName: "" });
     }, [card]);
 
     useEffect(() => {
@@ -81,6 +55,9 @@ const EditCardModal = ({ visible, onClose, onEdit, card }) => {
     const close = () => {
         setTitleError("");
         setDescError("");
+        setEditTitle(card.title);
+        setEditDesc(card.title);
+        setEditColor({ ...editColor, code: card.color, name: "" });
         onClose();
     }
 
@@ -107,7 +84,7 @@ const EditCardModal = ({ visible, onClose, onEdit, card }) => {
                     bordered
                     fullWidth
                     color="primary"
-                    label={<Text css={{ color: "$gray700", fontWeight: "500" }}>Workspace Title</Text>}
+                    label={<Text css={{ color: "$gray700", fontWeight: "500" }}>Card Title (Optional)</Text>}
                     value={editTitle}
                     onChange={(e) => setEditTitle(e.target.value)}
                     maxLength={20}
@@ -119,68 +96,19 @@ const EditCardModal = ({ visible, onClose, onEdit, card }) => {
                     bordered
                     fullWidth
                     color="primary"
-                    label={<Text css={{ color: "$gray700", fontWeight: "500" }}>Workspace Description</Text>}
+                    label={<Text css={{ color: "$gray700", fontWeight: "500" }}>Card Description (Optional)</Text>}
                     value={editDesc}
                     onChange={(e) => setEditDesc(e.target.value)}
                 />
                 {descError != false && <Text color={"$error"}>{descError}</Text>}
             </Row>
             <Row css={{ fd: "column", m: 0, overflow: "visible", mt: 6 }}>
-                <Text css={{ color: "$gray700", fontWeight: "500" }}>Card Color</Text>
-                <Details>
-                    <summary style={{
-                        userSelect: "none",
-                        position: "relative",
-                        "&::WebkitDetailsMarket": {
-                            display: "none",
-                        }
-                    }}>
-                        <Card css={{ boxShadow: "$md" }}>
-                            <Row css={{ justifyContent: "space-between", flexDirection: "row" }}>
-                                <Row>
-                                    {editColor.code && <CardColor color={editColor.code} style={{ marginTop: 8 }} />}
-                                    <Text css={{ width: "50%", color: editColor.code ? editColor.code : "CurrentColor", marginLeft: editColor.code ? 18 : 0 }} b={editColor.code != ""}>{editColor.code ? editColor.name : "Set Color"}</Text>
-                                </Row>
-                                <ArrowDownIcon size={24} fill={"currentColor"} />
-                            </Row>
-                        </Card>
-                    </summary>
-                    <Card css={{ zIndex: 500, height: 160, position: "absolute", left: 0, width: "auto", boxShadow: "$lg", bg: isDark ? "#1c1c1c" : "$background" }}>
-                        <ALink onClick={() => setEditColor({ code: "", name: "" })} css={{ p: 8, color: isDark ? "$white" : "$black", position: "relative" }}>
-                            <Text css={{ color: "CurrentColor" }} b>None</Text>
-                        </ALink>
-                        <ALink onClick={() => setEditColor({ code: "#a30b0b", name: "Red" })} css={{ p: 8 }}>
-                            <div style={{ position: "relative", paddingBottom: 10, }}>
-                                <CardColor color="#a30b0b" />
-                            </div>
-                            <Text css={{ color: "#a30b0b", ml: 18 }} b>Red</Text>
-                        </ALink>
-                        <ALink onClick={() => setEditColor({ code: "#10AC63", name: "Green" })} css={{ p: 8 }}>
-                            <div style={{ position: "relative", paddingBottom: 10, }}>
-                                <CardColor color="#10AC63" />
-                            </div>
-                            <Text css={{ color: "#10AC63", ml: 18 }} b>Green</Text>
-                        </ALink>
-                        <ALink onClick={() => setEditColor({ code: "#0070F3", name: "Blue" })} css={{ p: 8 }}>
-                            <div style={{ position: "relative", paddingBottom: 10, }}>
-                                <CardColor color="#0070F3" />
-                            </div>
-                            <Text css={{ color: "#0070F3", ml: 18 }} b>Blue</Text>
-                        </ALink>
-                        <ALink onClick={() => setEditColor({ code: "#D28519", name: "Yellow" })} css={{ p: 8 }}>
-                            <div style={{ position: "relative", paddingBottom: 10, }}>
-                                <CardColor color="#D28519" />
-                            </div>
-                            <Text css={{ color: "#D28519", ml: 18 }} b>Yellow</Text>
-                        </ALink>
-                        <ALink css={{ p: 8 }}>
-                            <div style={{ position: "relative", paddingBottom: 10, }}>
-                                <CardColor color="gray" />
-                            </div>
-                            <Text css={{ color: "gray", ml: 18 }} b>Custom (coming soon)</Text>
-                        </ALink>
-                    </Card>
-                </Details>
+                <Text css={{ color: "$gray700", fontWeight: "500", ml: 4 }}>Card Color (Optional)</Text>
+                <ColorSelect
+                    content={CardColors} // will show card colors here
+                    onSelect={({ element }) => setEditColor({ code: element.code, name: element.name, showName: element.showName })}
+                    selected={editColor}
+                />
             </Row>
         </Modal.Body>
         <Modal.Footer css={{ justifyContent: "space-between" }}>

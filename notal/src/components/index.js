@@ -10,6 +10,7 @@ export { default as EditWorkspaceModal } from "./modals/editWorkspace";
 export { default as VisibilityWorkspaceModal } from "./modals/visibilityWorkspace";
 // Components
 export { default as AcceptCookies } from "./acceptCookies";
+export { default as ColorSelect } from "./colorSelect";
 export { default as EmailLogin } from "./emailLogin";
 export { default as Field } from "./field";
 export { default as FieldCard } from "./fieldCard";

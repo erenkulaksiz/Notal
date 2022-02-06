@@ -141,21 +141,20 @@ const Home = (props) => {
 
         <Grid.Container gap={2}>
 
-            <HomeSideNav viewing={viewing} onViewChange={(viewingName) => setViewing(viewingName)} />
-
-            <Grid xs={12} sm={9} md={10}>
+            <Grid xs={12}>
                 <Card css={{ jc: "center" }}>
                     {loadingWorkspaces ? <Card css={{ p: 12, dflex: "center" }}>
                         <Loading />
                         <Text css={{ mt: 24, fs: "1.4em" }}>Loading Workspaces...</Text>
                     </Card> : <Grid.Container gap={1}>
+                        <HomeSideNav viewing={viewing} onViewChange={(viewingName) => setViewing(viewingName)} />
                         <Grid xs={12}>
                             <Avatar
                                 squared
                                 icon={<UserIcon size={20} fill="currentColor" />}
                             />
                             <Spacer x={0.5} />
-                            <Text h3>Workspaces</Text>
+                            <Text h3>{viewing == "favorites" ? "Favorite Workspaces" : "Workspaces"}</Text>
                         </Grid>
                         {workspace.getWorkspacesWithFilter(_workspaces).length > 0 ?
                             workspace.getWorkspacesWithFilter(_workspaces).map(workspaceItem => <HomeWorkspaceCard
@@ -178,7 +177,7 @@ const Home = (props) => {
                     </Grid.Container>}
                 </Card>
             </Grid>
-            <Grid xs={6}>
+            <Grid xs={12}>
                 <Card>
                     <Grid.Container>
                         <Grid xs={12}>
