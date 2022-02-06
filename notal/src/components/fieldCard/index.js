@@ -1,4 +1,4 @@
-import { Button, Text, Grid, Checkbox, Tooltip, Card, useTheme } from '@nextui-org/react';
+import { Button, Text, Grid, Checkbox, Tooltip, Card, useTheme, Row } from '@nextui-org/react';
 import styled from 'styled-components';
 
 import {
@@ -16,7 +16,19 @@ const CardColor = styled.div`
     border-radius: 100%;
 `;
 
+const CardTag = styled.div`
+    position: absolute;
+    z-index: 5;
+    right: 30px;
+    padding-left: 4px;
+    padding-right: 4px;
+    border-radius: 8px;
+    outline: 2px solid ${props => props.border};
+`;
+
 const FieldCard = ({ card, onDelete, isOwner, onEdit }) => {
+    const tagColor = "#baa30f"
+
     const { isDark } = useTheme();
 
     return (<Grid xs={12} css={{ mt: 8, }} key={card._id}>
@@ -29,6 +41,11 @@ const FieldCard = ({ card, onDelete, isOwner, onEdit }) => {
                 </Grid>
                 <Grid xs={2} sm={2} justify='flex-end' alignItems='center'>
                     <Checkbox size="xs" checked={false} css={{ mr: 8 }} disabled />
+                    <div style={{ display: "flex", position: "relative", alignItems: "center", }}>
+                        <CardTag border={tagColor}>
+                            <Text span css={{ fs: "0.85em", color: tagColor }}>feature</Text>
+                        </CardTag>
+                    </div>
                     {card.color && <div style={{ marginRight: 14, marginBottom: 10, position: "relative" }}>
                         <CardColor color={card.color} />
                     </div>}
@@ -55,7 +72,7 @@ const FieldCard = ({ card, onDelete, isOwner, onEdit }) => {
                 </Grid>
             </Grid.Container>
         </Card>
-    </Grid>)
+    </Grid >)
 }
 
 export default FieldCard;

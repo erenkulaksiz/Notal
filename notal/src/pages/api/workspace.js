@@ -43,6 +43,7 @@ export default async function handler(req, res) {
                     createdAt: Date.now(),
                     updatedAt: Date.now(),
                     owner: uid,
+                    workspaceVisible,
                 }).then(() => {
                     res.status(200).send({ success: true });
                 });
@@ -52,10 +53,12 @@ export default async function handler(req, res) {
         },
         get_workspaces: async () => {
 
+            /*
             if (!uid) {
                 res.status(400).send({ success: false, error: "invalid-params" });
                 return;
             }
+            */
 
             const bearer = req.headers['authorization'];
             if (typeof bearer !== "undefined") {
@@ -66,15 +69,20 @@ export default async function handler(req, res) {
 
                     const user = await usersCollection.findOne({ uid: decodedToken.user_id });
 
-                    if (uid === user.uid || user?.role === "admin") {
-                        try {
-                            const workspaces = await workspacesCollection.find({ owner: uid }).toArray();
-                            res.status(200).send({ success: true, data: workspaces });
-                        } catch (error) {
-                            res.status(200).send({ success: false, error: new Error(error).message });
+                    if (uid) { // if no uid present, find workspaces based on decodedtoken
+                        if (uid === user.uid || user?.role === "admin") {
+                            try {
+                                const workspaces = await workspacesCollection.find({ owner: uid }).toArray();
+                                res.status(200).send({ success: true, data: workspaces });
+                            } catch (error) {
+                                res.status(200).send({ success: false, error: new Error(error).message });
+                            }
+                        } else {
+                            res.status(400).send({ success: false, error: "invalid-params" });
                         }
                     } else {
-                        res.status(400).send({ success: false, error: "invalid-params" });
+                        const workspaces = await workspacesCollection.find({ owner: decodedToken.uid }).toArray();
+                        res.status(200).send({ success: true, data: workspaces });
                     }
                 }).catch(error => {
                     res.status(400).json({ success: false, error });
@@ -259,6 +267,7 @@ export default async function handler(req, res) {
                                 desc,
                                 color,
                                 createdAt: Date.now(),
+                                updatedAt: Date.now(),
                                 _id: ObjectId(),
                             }
                         }
@@ -323,7 +332,8 @@ export default async function handler(req, res) {
                         $set: {
                             "fields.$[i].cards.$[j].title": title,
                             "fields.$[i].cards.$[j].desc": desc,
-                            "fields.$[i].cards.$[j].color": color
+                            "fields.$[i].cards.$[j].color": color,
+                            "fields.$[i].cards.$[j].updatedAt": Date.now(),
                         }
                     },
                     {

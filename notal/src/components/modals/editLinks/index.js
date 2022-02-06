@@ -7,7 +7,7 @@ import {
     CrossIcon,
     CheckIcon,
     WebsiteIcon,
-    GithubIcon,
+    Github2Icon as GithubIcon,
     TwitterIcon,
     InstagramIcon
 } from '../../../icons';

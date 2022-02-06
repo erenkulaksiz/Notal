@@ -1,29 +1,34 @@
-import Head from 'next/head';
-import { useState, useEffect } from 'react';
+import { Button, Spacer, Container, Text, Card, useTheme, Row, Avatar, Link as ALink } from '@nextui-org/react';
 import { useRouter } from 'next/router';
-import { Button, Spacer, Container, Text, Grid, Card, useTheme, Row, Avatar, Link as ALink } from '@nextui-org/react';
-import PoweredByVercel from 'powered-by-vercel';
+import { useEffect } from 'react';
 import Cookies from 'js-cookie';
+import Head from 'next/head';
 import Link from 'next/link';
+import PoweredByVercel from 'powered-by-vercel';
 import styled from 'styled-components';
 
 import {
-    EditIcon,
-    UserIcon,
-    ShareIcon,
-    PeopleIcon,
     CodeIcon,
+    EditIcon,
     HeartIcon,
+    PeopleIcon,
+    ShareIcon,
+    UserIcon,
     WarningIcon
 } from '../icons';
 
 import {
-    Navbar,
-    AcceptCookies
+    AcceptCookies,
+    Navbar
 } from '../components';
 
 import useAuth from '../hooks/auth';
-import { CheckToken, ValidateToken, WorkboxInit } from '../utils';
+
+import {
+    CheckToken,
+    ValidateToken,
+    WorkboxInit
+} from '../utils';
 
 const ImageContainer = styled.div`
     width: 100%;
@@ -83,7 +88,7 @@ const Landing = (props) => {
                             "@md": {
                                 fs: "4em"
                             }
-                        }}>Take planning <Text span css={{ bg: "$gradient", backgroundImage: "$textGradient", "-webkit-background-clip": 'text', "-webkit-text-fill-color": 'transparent' }}>next</Text> level with Notal 🚀</Text>
+                        }}>Take planning to <Text span css={{ bg: "$gradient", backgroundImage: "$textGradient", "-webkit-background-clip": 'text', "-webkit-text-fill-color": 'transparent' }}>next</Text> level with Notal 🚀</Text>
                     </Row>
                     <Row>
                         <Text b css={{ fs: "1.2em", color: isDark ? "$gray500" : "$gray200" }}>{`Developer's solution from an developer. Keep focus on your project, not on your planning.`}</Text>
@@ -228,14 +233,14 @@ const Landing = (props) => {
             </footer>
             <Spacer y={2} />
         </Container>
-        <AcceptCookies
+        {Cookies.get('cookies') != "true" && <AcceptCookies
             style={{ position: "fixed" }}
             visible={Cookies.get('cookies') != "true"}
             onAccept={() => {
                 Cookies.set('cookies', 'true');
                 router.replace(router.asPath);
             }}
-        />
+        />}
     </Container>
     )
 }

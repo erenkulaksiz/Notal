@@ -3,6 +3,10 @@ import { Button, Text, Modal, Input, Row, Card, useTheme, Link as ALink } from '
 import styled from 'styled-components';
 
 import {
+    FieldCard
+} from '../../';
+
+import {
     AddIcon,
     CrossIcon,
     CheckIcon,
@@ -77,6 +81,10 @@ const AddCardModal = ({ visible, onClose, onAdd }) => {
             </Text>
         </Modal.Header>
         <Modal.Body css={{ overflow: "visible" }}>
+            <FieldCard
+                card={{ title: title != "" ? title : "Enter a title...", desc, color: color.code }}
+                isOwner={false}
+            />
             <Row css={{ fd: "column", m: 0, mb: 8 }}>
                 <Input
                     bordered

@@ -1,31 +1,20 @@
-import React, { useEffect, useState, useRef } from 'react';
-import Head from 'next/head';
-import Link from 'next/link';
+import { Avatar, Button, Card, Container, Grid, Input, Loading, Row, Spacer, Text, useTheme } from '@nextui-org/react';
 import { useRouter } from 'next/router';
-import { Button, Spacer, Container, Text, Grid, Card, Switch, useTheme, Input, Row, Avatar, Textarea, Loading, Link as ALink, Tooltip } from '@nextui-org/react';
 import Cookies from 'js-cookie';
+import Head from 'next/head';
+import React, { useEffect, useState, useRef } from 'react';
 
 import useAuth from '../../hooks/auth';
 
 import {
-    BackIcon,
-    HomeFilledIcon,
     EditIcon,
     CrossIcon,
     CheckIcon,
     UserIcon,
     AtIcon,
-    LockIcon,
-    VisibleIcon,
-    VisibleOffIcon,
     DashboardIcon,
-    Github2Icon as GithubIcon,
-    WebsiteIcon,
-    TwitterIcon,
-    InstagramIcon,
-    CakeIcon,
     LinkIcon,
-    StarFilledIcon
+    LockOutlineIcon
 } from '../../icons';
 
 import {
@@ -36,9 +25,13 @@ import {
 } from '../../utils';
 
 import {
-    Navbar,
+    AcceptCookies,
     EditLinksModal,
-    AcceptCookies
+    Navbar,
+    Profile404,
+    ProfileBio,
+    ProfileDetails,
+    ProfileWorkspaceCard
 } from '../../components';
 
 const Profile = (props) => {
@@ -113,12 +106,6 @@ const Profile = (props) => {
             setEditErrors({ ...editErrors, fullname: "Fullname must be minimum 3 characters." });
             return;
         }
-
-        /*console.log("website: ", links?.website != props.profile?.data?.links?.website);
-        console.log("instagram: ", links?.instagram != props.profile?.data?.links?.instagram);
-        console.log("github: ", links?.github != props.profile?.data?.links?.github);
-        console.log("twitter: ", links?.twitter != props.profile?.data?.links?.twitter);
-        console.log("twitter: ", links?.twitter, " propTwitter:", props.profile?.data?.links?.twitter);*/
 
         if (editProfile.fullname != props.validate?.data?.fullname
             || editProfile.username != props.validate?.data?.username
@@ -212,33 +199,7 @@ const Profile = (props) => {
             <Loading />
             <Text css={{ mt: 24, fs: "1.4em" }}>Loading Profile...</Text>
         </Card> : props.profile?.success == false && props.profile?.error == "cant-find-user" ? <Container sm css={{ dflex: "center", ac: "center", ai: "center", fd: "column" }}>
-            <Card css={{ textAlign: "center", dflex: "center", py: 32 }}>
-                <img
-                    src="https://i.pinimg.com/originals/ee/d0/d0/eed0d023bdf444d37050e27d46364f0b.png"
-                    alt="Michael Scott"
-                    style={{ maxHeight: "100%", maxWidth: "100%", width: 200 }}
-                />
-                <Text h1>[404]</Text>
-                <Text h3 css={{ textAlign: "center" }}>We couldnt find this user.</Text>
-                <Button
-                    icon={<HomeFilledIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-                    onClick={() => router.replace("/home")}
-                    css={{ mt: 18 }}
-                    size="xl"
-                    color="gradient"
-                >
-                    Home
-                </Button>
-                <Button
-                    icon={<BackIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-                    onClick={() => router.back()}
-                    css={{ mt: 18 }}
-                    size="xl"
-                    color="gradient"
-                >
-                    Back
-                </Button>
-            </Card>
+            <Profile404 />
         </Container> : <Container sm>
             <Grid.Container gap={1}>
                 <Grid xs={12} sm={12} md={2} lg={2} xl={2} justify="center" css={{ fd: "column", alignItems: "center" }}>
@@ -265,9 +226,9 @@ const Profile = (props) => {
                         clearable
                     /> : <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                         <Text h3 style={{ alignItems: "center" }} >
-                            {props.profile.data?.fullname ? props.profile.data?.fullname : "@" + props.profile.data?.username}
+                            {props.profile.data?.fullname ? props.profile.data?.fullname : `@${props.profile.data?.username}`}
                         </Text>
-                        {props.profile.data?.profileVisible || <LockIcon height={24} width={24} style={{ fill: "currentColor", marginLeft: 8 }} />}
+                        {props.profile.data?.profileVisible || <LockOutlineIcon height={24} width={24} style={{ fill: "currentColor", marginLeft: 8 }} />}
                     </div>}
 
                     {editErrors.fullname != false && <Text color={"$error"}>{editErrors.fullname}</Text>}
@@ -308,95 +269,17 @@ const Profile = (props) => {
                 </Grid>
 
                 <Grid xs={12} sm={12} md={6} lg={6} xl={6} css={{ p: 0, }}>
-                    <Grid.Container>
-                        <Grid xs={12} css={{ fd: "column", }}>
-                            {props.profile?.data?.links && (props.profile?.data?.links?.twitter.length != 0
-                                || props.profile?.data?.links?.github.length != 0
-                                || props.profile?.data?.links?.instagram.length != 0
-                                || props.profile?.data?.links?.website.length != 0) && <Row css={{ justifyContent: "flex-end", pt: 0, pb: 0, "@mdMax": { justifyContent: "center", pt: 20, pb: 12, }, alignItems: "flex-start" }}>
-                                    {props.profile?.data?.links?.twitter.length != 0 && <Tooltip content="Twitter">
-                                        <Link href={"https://twitter.com/" + props.profile?.data?.links?.twitter ?? ""} passHref>
-                                            <ALink css={{ color: "currentColor", padding: 8 }} target="_blank">
-                                                <TwitterIcon height={24} width={24} fill={"currentColor"} />
-                                            </ALink>
-                                        </Link>
-                                    </Tooltip>}
-                                    {props.profile?.data?.links?.github.length != 0 && <Tooltip content="GitHub">
-                                        <Link href={"https://github.com/" + props.profile?.data?.links?.github ?? ""} passHref>
-                                            <ALink css={{ color: "currentColor", padding: 8 }} target="_blank">
-                                                <GithubIcon height={24} width={24} fill={"currentColor"} />
-                                            </ALink>
-                                        </Link>
-                                    </Tooltip>}
-                                    {props.profile?.data?.links?.instagram.length != 0 && <Tooltip content="Instagram">
-                                        <Link href={"https://instagram.com/" + props.profile?.data?.links?.instagram ?? ""} passHref>
-                                            <ALink css={{ color: "currentColor", padding: 8 }} target="_blank">
-                                                <InstagramIcon height={24} width={24} fill={"currentColor"} />
-                                            </ALink>
-                                        </Link>
-                                    </Tooltip>}
-                                    {props.profile?.data?.links?.website.length != 0 && <Tooltip content={props.profile?.data?.links?.website}>
-                                        <Link href={"https://" + props.profile?.data?.links?.website + "?utm_source=notalapp"} passHref target="_blank">
-                                            <ALink css={{ color: "currentColor", padding: 8, pr: 8, "@md": { pr: 0 } }} target="_blank">
-                                                <WebsiteIcon height={24} width={24} fill={"currentColor"} />
-                                            </ALink>
-                                        </Link>
-                                    </Tooltip>}
-                                </Row>}
-                            <Row css={{ justifyContent: "flex-end", pt: 8, pb: 0, fill: "$gray500", "@mdMax": { justifyContent: "center", pt: 12, pb: 12, }, alignItems: "flex-start" }}>
-                                <CakeIcon height={24} width={24} style={{ transform: "scale(0.8)" }} />
-                                <Text css={{ ml: 4, fs: "1em", color: "$gray500", fontWeight: "600" }}>
-                                    {`Joined 
-                                    ${new Date(props.profile?.data?.createdAt).getDate()} 
-                                    ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][new Date(props.profile?.data?.createdAt).getMonth()]},
-                                    ${new Date(props.profile?.data?.createdAt).getFullYear()}
-                                    `}
-                                </Text>
-                            </Row>
-                        </Grid>
-                    </Grid.Container>
+                    <ProfileDetails links={props.profile?.data?.links} createdAt={props.profile?.data?.createdAt} />
                 </Grid>
 
-                {(props.profile?.data?.bio || editingProfile) && <Grid xs={12} css={{ mt: 18, p: 0 }}>
-                    <Card bordered>
-                        <Grid.Container gap={editingProfile ? 1 : 0}>
-                            <Grid xs={12} md={editingProfile ? 6 : 12} css={{ whiteSpace: "pre-line", maxH: 200, fd: "column" }}>
-                                <Text h4>Biography</Text>
-                                <Spacer y={0.5} />
-                                {editingProfile ?
-                                    <Textarea
-                                        css={{ minWidth: "100%" }}
-                                        placeholder="Enter your biography. You can also leave this empty."
-                                        onChange={e => setEditProfile({ ...editProfile, bio: e.target.value })}
-                                        value={editProfile.bio}
-                                        maxLength={200}
-                                        maxRows={4}
-                                        animated={false}
-                                    />
-                                    :
-                                    <Text css={{ overflowWrap: "anywhere", fs: "1.1em" }}>{props.profile?.data?.bio}</Text>}
-                            </Grid>
-                            <Grid xs={editingProfile ? 12 : 0} md={editingProfile ? 6 : 0} css={{ fd: "column" }}>
-                                <Text h4>Profile Visibility</Text>
-                                <Spacer y={0.5} />
-                                <Card css={{ backgroundColor: isDark ? "#1c1c1c" : "$background", justifyContent: "center", height: "100%" }} shadow={false}>
-                                    <Row>
-                                        <Switch
-                                            checked={editProfile.visibility}
-                                            onChange={e => setEditProfile({ ...editProfile, visibility: e.target.checked })}
-                                            size="lg"
-                                            iconOn={<VisibleIcon height={24} width={24} fill={"currentColor"} />}
-                                            iconOff={<VisibleOffIcon height={24} width={24} fill={"currentColor"} />}
-                                        />
-                                        <Text css={{ fs: "1.2em", fontWeight: "500", ml: 8 }}>
-                                            {editProfile.visibility ? "Your profile is visible to public." : "Your profile is private."}
-                                        </Text>
-                                    </Row>
-                                </Card>
-                            </Grid>
-                        </Grid.Container>
-                    </Card>
-                </Grid>}
+                {(props.profile?.data?.bio || editingProfile) && <ProfileBio
+                    onBioChange={(e) => setEditProfile({ ...editProfile, bio: e.target.value })}
+                    bio={props.profile?.data?.bio}
+                    bioText={editProfile.bio}
+                    visibility={editProfile.visibility}
+                    onVisibilityChange={(e) => setEditProfile({ ...editProfile, visibility: e.target.checked })}
+                    editingProfile={editingProfile}
+                />}
 
                 {((auth?.authUser?.uid == props.profile?.data?.uid) && editingProfile) && <Grid xs={12} css={{ pl: 0, pr: 0 }}>
                     <Row css={{ mt: 12, justifyContent: "space-between" }}>
@@ -449,36 +332,11 @@ const Profile = (props) => {
                         <Text h3>{props.profile.data?.fullname ? props.profile.data?.fullname + "'s Workspaces" : "@" + props.profile.data?.username + "'s Workspaces"}</Text>
                     </Grid>
                     <Grid xs={12}>
-                        <div style={{ width: "100%", height: "100%" }}>
-                            <Grid.Container gap={1} css={{ padding: 0 }}>
-                                {props.profile?.data?.workspaces && props.profile?.data?.workspaces != "user-profile-private" ? props.profile.data.workspaces.map((workspace, index) => {
-                                    return (<Grid xs={12} sm={4} lg={3} key={workspace._id}>
-                                        <Link href="/workspace/[pid]" as={`/workspace/${workspace._id}`} passHref>
-                                            <Card color={'gradient'} css={{ height: 140, justifyContent: "flex-end", }} clickable>
-                                                <Grid.Container>
-                                                    <Grid xs={10} css={{ fd: "column" }}>
-                                                        <ALink>
-                                                            <Text h3 color={"white"}>{workspace.title}</Text>
-                                                        </ALink>
-                                                        <ALink>
-                                                            <Text h6 color={"white"}>{workspace.desc}</Text>
-                                                        </ALink>
-                                                    </Grid>
-                                                    {(!workspace?.workspaceVisible || workspace?.starred) && <Grid xs={2} css={{ fd: "column" }} alignItems='flex-end' justify='flex-end'>
-                                                        {!workspace?.workspaceVisible && <Tooltip content="This workspace is set to private." css={{ pointerEvents: "none" }}>
-                                                            <VisibleOffIcon height={24} width={24} fill={"currentColor"} />
-                                                        </Tooltip>}
-                                                        {workspace?.starred && <Tooltip content={`Added to favorites`} css={{ pointerEvents: "none" }}>
-                                                            <StarFilledIcon height={24} width={24} fill={"currentColor"} />
-                                                        </Tooltip>}
-                                                    </Grid>}
-                                                </Grid.Container>
-                                            </Card>
-                                        </Link>
-                                    </Grid>)
-                                }) : <Text>This user has no workspaces</Text>}
-                            </Grid.Container>
-                        </div>
+                        <Grid.Container gap={1} css={{ padding: 0 }}>
+                            {props.profile?.data?.workspaces && props.profile?.data?.workspaces != "user-profile-private" ?
+                                props.profile.data.workspaces.map(workspace => <ProfileWorkspaceCard key={workspace._id} workspace={workspace} />)
+                                : <Text>This user has no workspaces</Text>}
+                        </Grid.Container>
                     </Grid>
                 </Grid.Container>
             </Card> : <Card css={{ padding: 24 }}>
@@ -501,14 +359,14 @@ const Profile = (props) => {
                 onFinishEditing({ links: { website, instagram, github, twitter } });
             }}
         />
-        <AcceptCookies
+        {Cookies.get('cookies') != "true" && <AcceptCookies
             style={{ position: "fixed" }}
             visible={Cookies.get('cookies') != "true"}
             onAccept={() => {
                 Cookies.set('cookies', 'true');
                 router.replace(router.asPath);
             }}
-        />
+        />}
     </Container>)
 }
 

@@ -1,19 +1,19 @@
+import { Button, Card, Container, Grid, Input, Link as ALink, Spacer, Text, useTheme } from '@nextui-org/react';
+import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { Button, Spacer, Container, Text, Grid, Card, Link as ALink, useTheme, Input } from '@nextui-org/react';
 
 import {
+    CheckIcon,
     EmailIcon,
     PasswordIcon,
-    UserIcon,
-    CheckIcon
+    UserIcon
 } from '../icons';
 
-import useAuth from '../hooks/auth';
 import { withPublic } from '../hooks/route';
 import { WorkboxInit } from '../utils';
+import useAuth from '../hooks/auth';
 
 const Signup = (props) => {
     const router = useRouter();

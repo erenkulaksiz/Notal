@@ -13,7 +13,7 @@ import FieldCard from '../fieldCard';
 const Field = ({ field, onAddCard, onDeleteField, onDeleteCard, onEditClick, onEditCard, isOwner }) => {
     const { isDark } = useTheme();
 
-    return (<Grid css={{ minWidth: 380, maxWidth: 400, }}>
+    return (<Grid css={{ minWidth: 420, maxWidth: 450, }}>
         <Card css={{ boxShadow: "$sm" }}>
             <div style={{ display: "flex" }}>
                 <Grid.Container>

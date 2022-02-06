@@ -1,34 +1,34 @@
-import Head from 'next/head';
-import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/router';
 //import { DragDropContext } from 'react-beautiful-dnd';
-import { Spacer, Container, Grid, useTheme, Loading } from '@nextui-org/react';
+import { Container, Grid, Loading, Spacer, useTheme } from '@nextui-org/react';
+import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
+import Head from 'next/head';
 
 import useAuth from '../../hooks/auth';
 
 import {
-    WorkboxInit,
-    ValidateToken,
+    CheckToken,
     GetWorkspace,
-    CheckToken
+    ValidateToken,
+    WorkboxInit
 } from '../../utils';
 
 // Components
 import {
-    DeleteWorkspaceModal,
+    AcceptCookies,
     AddCardModal,
     AddFieldModal,
+    DeleteWorkspaceModal,
     EditCardModal,
-    EditWorkspaceModal,
     EditFieldModal,
-    WorkspaceAddField,
-    VisibilityWorkspaceModal,
-    Navbar,
+    EditWorkspaceModal,
     Field,
-    WorkspaceNav,
+    Navbar,
+    VisibilityWorkspaceModal,
     Workspace404,
-    AcceptCookies
+    WorkspaceAddField,
+    WorkspaceNav
 } from '../../components';
 
 const Workspace = (props) => {
@@ -315,14 +315,14 @@ const Workspace = (props) => {
                 }}
             />
         </>}
-        <AcceptCookies
+        {Cookies.get('cookies') != "true" && <AcceptCookies
             style={{ position: "fixed" }}
             visible={Cookies.get('cookies') != "true"}
             onAccept={() => {
                 Cookies.set('cookies', 'true');
                 router.replace(router.asPath);
             }}
-        />
+        />}
     </Container>)
 }
 

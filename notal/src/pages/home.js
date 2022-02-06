@@ -1,26 +1,24 @@
+import { Avatar, Card, Container, Grid, Loading, Spacer, Text } from '@nextui-org/react';
+import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { Button, Spacer, Container, Text, Grid, Card, Link as ALink, Loading, Avatar, Row, Tooltip } from '@nextui-org/react';
-import Cookies from 'js-cookie';
 //import Confetti from 'react-confetti'; // :)
 
 import {
-    DashboardIcon,
-    StarOutlineIcon,
-    StarFilledIcon,
     AddIcon,
-    DeleteIcon,
-    UserIcon,
-    WarningIcon,
+    BookmarkIcon,
+    UserIcon
 } from '../icons';
 
 import {
-    Navbar,
-    DeleteWorkspaceModal,
-    AddWorkspaceModal,
     AcceptCookies,
+    AddWorkspaceModal,
+    DeleteWorkspaceModal,
+    HomeSideNav,
+    HomeWorkspaceCard,
+    Navbar,
 } from '../components';
 
 import { withAuth } from '../hooks/route';
@@ -89,7 +87,7 @@ const Home = (props) => {
 
     const workspace = {
         create: async ({ title, desc, starred }) => {
-            const data = await auth.workspace.createWorkspace({ title, desc, starred, workspaceVisible: true });
+            const data = await auth.workspace.createWorkspace({ title, desc, starred, workspaceVisible: false });
 
             console.log("data: ", data);
 
@@ -141,42 +139,11 @@ const Home = (props) => {
 
         <Navbar user={props.validate?.data} />
 
-        <Grid.Container gap={2} justify="center">
-            <Grid xs={12} sm={3} md={3} css={{ fd: "column" }}>
-                <Button
-                    icon={<DashboardIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-                    onClick={() => setViewing("workspaces")}
-                    css={{ minWidth: "100%" }}
-                    bordered={viewing != "workspaces"}
-                    size="lg"
-                >
-                    Workspaces
-                </Button>
-                <Spacer y={1} />
-                <Button
-                    icon={<StarFilledIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-                    onClick={() => setViewing("favorites")}
-                    css={{ minWidth: "100%" }}
-                    bordered={viewing != "favorites"}
-                    size="lg"
-                >
-                    Favorites
-                </Button>
-                <Spacer y={1} />
-                <Card css={{ fill: "$warning", "@mdMax": { width: "100%" } }}>
-                    <Row>
-                        <WarningIcon size={20} style={{ transform: "scale(0.8)" }} />
-                        <Text h5 css={{ color: "$warningDark", ml: 4 }}>Alpha Warning v{process.env.NEXT_PUBLIC_APP_VERSION}</Text>
-                    </Row>
-                    <Text b>This project is currently in private alpha.</Text>
-                    <Row css={{ mt: 12 }}>
-                        <ALink href='mailto:erenkulaksz@gmail.com'>
-                            Feedback
-                        </ALink>
-                    </Row>
-                </Card>
-            </Grid>
-            <Grid xs={12} sm={9} md={9}>
+        <Grid.Container gap={2}>
+
+            <HomeSideNav viewing={viewing} onViewChange={(viewingName) => setViewing(viewingName)} />
+
+            <Grid xs={12} sm={9} md={10}>
                 <Card css={{ jc: "center" }}>
                     {loadingWorkspaces ? <Card css={{ p: 12, dflex: "center" }}>
                         <Loading />
@@ -188,52 +155,15 @@ const Home = (props) => {
                                 icon={<UserIcon size={20} fill="currentColor" />}
                             />
                             <Spacer x={0.5} />
-                            <Text h3>Your Workspaces</Text>
+                            <Text h3>Workspaces</Text>
                         </Grid>
-                        {workspace.getWorkspacesWithFilter(_workspaces).length > 0 ? workspace.getWorkspacesWithFilter(_workspaces).map((element, index) =>
-                            <Grid xs={12} sm={4} lg={3} key={index}>
-                                <Card color={'gradient'} css={{ height: 140, justifyContent: "flex-end" }}>
-                                    <Grid.Container>
-                                        <Grid xs={10} css={{ fd: "column" }} justify='flex-end'>
-                                            <Link href="/workspace/[pid]" as={`/workspace/${element._id}`}>
-                                                <ALink>
-                                                    <Text h3 color={"white"}>{element.title}</Text>
-                                                </ALink>
-                                            </Link>
-                                            {element.desc && <Link href="/workspace/[pid]" as={`/workspace/${element._id}`}>
-                                                <ALink>
-                                                    <Text h6 color={"white"}>{element.desc}</Text>
-                                                </ALink>
-                                            </Link>}
-                                        </Grid>
-                                        <Grid xs={2} justify='flex-end' alignItems='flex-end' css={{ fd: "column" }}>
-                                            <Tooltip
-                                                content={element.starred == true ? "Remove from favorites" : "Add to favorites"}
-                                                css={{ pointerEvents: "none" }}
-                                            >
-                                                <Button
-                                                    icon={
-                                                        element.starred == true ?
-                                                            <StarFilledIcon height={24} width={24} style={{ fill: "white" }} /> :
-                                                            <StarOutlineIcon height={24} width={24} style={{ fill: "white" }} />
-                                                    }
-                                                    onClick={() => workspace.star({ id: element._id })}
-                                                    css={{ minWidth: 20, justifyContent: "flex-end" }}
-                                                    light
-                                                />
-                                            </Tooltip>
-                                            <Tooltip content="Delete this workspace" css={{ pointerEvents: "none" }}>
-                                                <Button
-                                                    icon={<DeleteIcon height={24} width={24} style={{ fill: "white" }} />}
-                                                    onClick={() => setDeleteModal({ ...deleteModal, visible: true, workspace: element._id })}
-                                                    css={{ minWidth: 20, justifyContent: "flex-end" }}
-                                                    light
-                                                />
-                                            </Tooltip>
-                                        </Grid>
-                                    </Grid.Container>
-                                </Card>
-                            </Grid>) : null}
+                        {workspace.getWorkspacesWithFilter(_workspaces).length > 0 ?
+                            workspace.getWorkspacesWithFilter(_workspaces).map(workspaceItem => <HomeWorkspaceCard
+                                key={workspaceItem._id}
+                                workspace={workspaceItem}
+                                onDeleteClick={() => setDeleteModal({ ...deleteModal, visible: true, workspace: workspaceItem._id })}
+                                onStarClick={() => workspace.star({ id: workspaceItem._id })}
+                            />) : null}
                         <Grid xs={12} sm={4} lg={3}>
                             <Card
                                 bordered
@@ -246,6 +176,20 @@ const Home = (props) => {
                             </Card>
                         </Grid>
                     </Grid.Container>}
+                </Card>
+            </Grid>
+            <Grid xs={6}>
+                <Card>
+                    <Grid.Container>
+                        <Grid xs={12}>
+                            <Avatar
+                                squared
+                                icon={<BookmarkIcon size={20} fill="currentColor" />}
+                            />
+                            <Spacer x={0.5} />
+                            <Text h3>Bookmarks</Text>
+                        </Grid>
+                    </Grid.Container>
                 </Card>
             </Grid>
         </Grid.Container>
@@ -262,14 +206,14 @@ const Home = (props) => {
             newWorkspaceVisible={newWorkspaceVisible}
             onAdd={({ title, desc, starred }) => workspace.create({ title, desc, starred })}
         />
-        <AcceptCookies
+        {Cookies.get('cookies') != "true" && <AcceptCookies
             style={{ position: "fixed" }}
             visible={Cookies.get('cookies') != "true"}
             onAccept={() => {
                 Cookies.set('cookies', 'true');
                 router.replace(router.asPath);
             }}
-        />
+        />}
     </Container>
     )
 }
@@ -285,7 +229,7 @@ export async function getServerSideProps(ctx) {
         const authCookie = req.cookies.auth;
 
         validate = await ValidateToken({ token: authCookie });
-        workspaces = await GetWorkspaces({ uid: validate.data.uid, token: authCookie });
+        workspaces = await GetWorkspaces({ uid: validate?.data?.uid, token: authCookie });
     }
     return { props: { validate, workspaces } }
 }
