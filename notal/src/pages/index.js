@@ -147,7 +147,7 @@ const Landing = (props) => {
             <Text b css={{ fs: "1.2em", color: "$gray500" }}>Keep focus on your project, not on your planning.</Text>
             <Spacer y={16} />
             <div style={{ width: 740, height: 740, position: "absolute", zIndex: 1, left: -200, top: -20, opacity: isDark ? 0.3 : 0.7, backgroundImage: "url(./landing_bg_2.png)", backgroundRepeat: "no-repeat", background: "contain" }} />
-            <div style={{ width: 740, height: 740, position: "absolute", zIndex: 1, right: -250, top: -20, opacity: 0.15, backgroundImage: "url(./landing_bg_3.png)", backgroundRepeat: "no-repeat", background: "contain", }} />
+            <div style={{ width: 740, height: 740, position: "absolute", zIndex: 1, right: -250, top: -20, opacity: isDark ? 0.08 : 0.2, backgroundImage: "url(./landing_bg_3.png)", backgroundRepeat: "no-repeat", background: "contain", }} />
             {/*<div style={{ width: 300, height: 300, position: "absolute", zIndex: 1, left: -50, bottom: 600, opacity: 1, backgroundImage: "url(./landing_bg_5.svg)", backgroundRepeat: "no-repeat", background: "contain", transform: "scale(2) rotate(-45deg)" }} />*/}
         </Container>
         <LandingFooter />

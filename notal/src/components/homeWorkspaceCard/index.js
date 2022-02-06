@@ -8,7 +8,7 @@ import {
 } from '../../icons';
 
 const HomeWorkspaceCard = ({ workspace, onStarClick, onDeleteClick }) => {
-    return (<Grid xs={12} sm={4} lg={3}>
+    return (<Grid xs={12} sm={4} lg={2}>
         <Card color={'gradient'} css={{ height: 140, justifyContent: "flex-end" }}>
             <Grid.Container>
                 <Grid xs={10} css={{ fd: "column" }} justify='flex-end'>

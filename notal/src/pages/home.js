@@ -163,7 +163,7 @@ const Home = (props) => {
                                 onDeleteClick={() => setDeleteModal({ ...deleteModal, visible: true, workspace: workspaceItem._id })}
                                 onStarClick={() => workspace.star({ id: workspaceItem._id })}
                             />) : null}
-                        <Grid xs={12} sm={4} lg={3}>
+                        <Grid xs={12} sm={4} lg={2}>
                             <Card
                                 bordered
                                 css={{ borderColor: "$primary", dflex: "center", color: "$primary", height: 140, }}
