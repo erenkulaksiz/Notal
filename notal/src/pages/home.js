@@ -156,6 +156,7 @@ const Home = (props) => {
                         <Text css={{ mt: 24, fs: "1.4em" }}>Loading Workspaces...</Text>
                     </Card> : <Grid.Container gap={1}>
                         <HomeNav viewing={viewing} onViewChange={(viewingName) => setViewing(viewingName)} />
+                        <Spacer y={1} />
                         <Grid xs={12}>
                             <Avatar
                                 squared

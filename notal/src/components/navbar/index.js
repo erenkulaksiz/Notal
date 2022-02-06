@@ -86,15 +86,16 @@ const Navbar = ({ user }) => {
                     </summary>
                     <Card css={{ zIndex: 2, position: "absolute", right: 0, top: "100%", width: "auto", boxShadow: "$lg" }}>
                         <Row css={{ mt: 0, justifyContent: "flex-end", }}>
-                            {auth?.authUser && <Switch
-                                color="primary"
-                                initialChecked={isDark}
-                                onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
-                                iconOn={<LightIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-                                iconOff={<DarkIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-                                size="sm"
-                                css={{ position: "absolute", right: 0, top: 0, }}
-                            />}
+                            {auth?.authUser && <div style={{ position: "absolute", right: 0, top: 0, display: "flex", flexDirection: "row" }}>
+                                <Text css={{ mr: 8, color: "$accents3" }}>v{process.env.NEXT_PUBLIC_APP_VERSION}</Text>
+                                <Switch
+                                    color="primary"
+                                    initialChecked={isDark}
+                                    onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
+                                    iconOn={<LightIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+                                    iconOff={<DarkIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+                                    size="sm"
+                                /></div>}
                         </Row>
                         <Text h4 css={{ mt: 8 }}>{user?.fullname || "@" + user?.username}</Text>
                         <Text span>{user?.email}</Text>
