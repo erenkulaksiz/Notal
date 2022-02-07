@@ -17,11 +17,11 @@ const CardColor = styled.div`
 `;
 
 const CardTag = styled.div`
-    position: absolute;
     z-index: 5;
     right: 30px;
     padding-left: 4px;
     padding-right: 4px;
+    margin-right: 4px;
     border-radius: 8px;
     border: 2px solid ${props => props.border};
 `;
@@ -34,18 +34,16 @@ const FieldCard = ({ card, onDelete, isOwner, onEdit, style }) => {
     return (<Grid xs={12} css={{ mt: 8, ...style }} key={card._id}>
         <Card bordered css={{ width: "100%", }} shadow={false}>
             <Grid.Container>
-                <Grid xs={10} sm={10}>
-                    <Text h4>
+                <Grid xs={8} sm={8}>
+                    <Text h4 css={{ wordBreak: "break-all" }}>
                         {card.title}
                     </Text>
                 </Grid>
-                <Grid xs={2} sm={2} justify='flex-end' alignItems='center'>
+                <Grid xs={4} sm={4} justify='flex-end' alignItems='center'>
+                    {card?.tag?.title && <CardTag border={tagColor}>
+                        <Text span css={{ fs: "0.85em", color: tagColor }}>{card?.tag?.title}</Text>
+                    </CardTag>}
                     <Checkbox size="xs" checked={false} css={{ mr: 8 }} disabled />
-                    {card?.tag?.title && <div style={{ display: "flex", position: "relative", alignItems: "center", }}>
-                        <CardTag border={tagColor}>
-                            <Text span css={{ fs: "0.85em", color: tagColor }}>{card?.tag?.title}</Text>
-                        </CardTag>
-                    </div>}
                     {card.color && <div style={{ marginRight: 14, marginBottom: 10, position: "relative" }}>
                         <CardColor color={card.color} />
                     </div>}

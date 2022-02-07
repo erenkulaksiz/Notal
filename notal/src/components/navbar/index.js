@@ -1,8 +1,9 @@
+import { useState } from 'react';
 import styled from 'styled-components'
 import { useTheme as useNextTheme } from 'next-themes';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { Button, Text, Grid, Card, Link as ALink, Switch, Avatar, useTheme, Row, Tooltip } from '@nextui-org/react';
+import { Button, Text, Grid, Card, Link as ALink, Switch, Avatar, useTheme, Row, Modal, Input, Tooltip } from '@nextui-org/react';
 
 import {
     UserIcon,
@@ -11,6 +12,10 @@ import {
     LogoutIcon,
     LoginIcon
 } from '../../icons';
+
+import {
+    LoginModal
+} from '../';
 
 import useAuth from '../../hooks/auth';
 
@@ -48,6 +53,8 @@ const Navbar = ({ user }) => {
     const { isDark } = useTheme();
     const auth = useAuth();
     const router = useRouter();
+
+    const [modalVisible, setModalVisible] = useState(false);
 
     return (<Header isDark={isDark}>
         <Grid.Container justify="center">
@@ -126,7 +133,7 @@ const Navbar = ({ user }) => {
                     </Card>
                 </Details> : <>
                     <Button
-                        onClick={() => router.push(`/login`)}
+                        onClick={() => setModalVisible(true)}
                         css={{ minWidth: 20, "@sm": { minWidth: 100 }, height: "80%" }}
                         color="gradient"
                     >
@@ -136,6 +143,14 @@ const Navbar = ({ user }) => {
                 </>}
             </Grid>
         </Grid.Container>
+        <LoginModal
+            visible={modalVisible}
+            onClose={() => setModalVisible(false)}
+            onLoginSuccess={() => {
+                setModalVisible(false);
+                router.replace(router.asPath);
+            }}
+        />
     </Header>)
 }
 

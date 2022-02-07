@@ -7,6 +7,7 @@ export { default as EditCardModal } from "./modals/editCard";
 export { default as EditFieldModal } from "./modals/editField";
 export { default as EditLinksModal } from "./modals/editLinks";
 export { default as EditWorkspaceModal } from "./modals/editWorkspace";
+export { default as LoginModal } from "./modals/login";
 export { default as VisibilityWorkspaceModal } from "./modals/visibilityWorkspace";
 // Components
 export { default as AcceptCookies } from "./acceptCookies";
@@ -27,6 +28,7 @@ export { default as ProfileDetails } from "./profileDetails";
 export { default as ProfileWorkspaceCard } from "./profileWorkspaceCard";
 export { default as Workspace404 } from "./workspace404";
 export { default as WorkspaceAddField } from "./workspaceAddField";
+export { default as WorkspaceLoading } from "./workspaceLoading";
 export { default as WorkspaceNav } from "./workspaceNav";
 // Banners
 export { default as AddFieldBanner } from "./addFieldBanner";

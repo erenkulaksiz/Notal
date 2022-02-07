@@ -3,6 +3,10 @@ import { Button, Text, Grid, Card, useTheme, Row, Tooltip, Avatar, Link as ALink
 import Link from 'next/link';
 
 import {
+    WorkspaceLoading,
+} from '../'
+
+import {
     StarFilledIcon,
     StarOutlineIcon,
     VisibleIcon,
@@ -12,7 +16,7 @@ import {
     VisibleOffIcon
 } from '../../icons';
 
-const WorkspaceNav = ({ title, desc, starred, onFavClick, onDeleteClick, onEditWorkspace, isOwner, user, onVisibleClick, visible }) => {
+const WorkspaceNav = ({ title, desc, starred, onFavClick, onDeleteClick, onEditWorkspace, isOwner, user, onVisibleClick, visible, loading }) => {
     const { isDark } = useTheme();
 
     return (<Card css={{ bgBlur: isDark ? "#000000" : "#ffffff" }} shadow={false}>
@@ -42,6 +46,7 @@ const WorkspaceNav = ({ title, desc, starred, onFavClick, onDeleteClick, onEditW
                 </Tooltip>}
             </Grid>
             {isOwner ? <Grid xs={7} sm={4} justify="flex-end">
+                <WorkspaceLoading loading={loading} />
                 <Tooltip
                     content={starred == true ? "Remove from favorites" : "Add to favorites"}
                     css={{ pointerEvents: "none" }}

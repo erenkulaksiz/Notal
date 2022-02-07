@@ -35,7 +35,8 @@ import {
 const Workspace = (props) => {
     const auth = useAuth();
     const router = useRouter();
-    const { isDark } = useTheme();
+
+    const [savingWorkspace, setSavingWorkspace] = useState(false);
 
     // Modals
     const [privateModal, setPrivateModal] = useState({ visible: false, desc: "" });
@@ -78,6 +79,7 @@ const Workspace = (props) => {
     const handle = {
         editWorkspace: async ({ title = _workspace.title, desc = _workspace.desc, workspaceVisible = _workspace.workspaceVisible ?? false }) => {
             if (_workspace.title != title || _workspace.desc != desc || _workspace.workspaceVisible != workspaceVisible) {
+                setSavingWorkspace(true);
 
                 if (_workspace.workspaceVisible != workspaceVisible) {
                     setPrivateModal({ ...privateModal, visible: true, desc: workspaceVisible ? "This workspace is now visible to everyone who has the link." : "This workspace is now set to private." })
@@ -93,59 +95,71 @@ const Workspace = (props) => {
                 if (data.success) {
                     //window.gtag('event', "editWorkspace", { login: "type:google/" + user.email });
                     router.replace(router.asPath);
+                    setSavingWorkspace(false);
                 } else if (data?.error) {
                     console.error("error on star workspace: ", data.error);
                 }
             }
         },
         starWorkspace: async () => {
+            setSavingWorkspace(true);
             const newWorkspace = { ..._workspace, starred: !_workspace.starred };
             _setWorkspace(newWorkspace);
             const data = await auth.workspace.starWorkspace({ id: _workspace._id });
+            setSavingWorkspace(false);
 
             if (data.success != true) {
                 console.log("error star workspace: ", data?.error);
             }
         },
         addField: async ({ title }) => {
+            setSavingWorkspace(true);
             const data = await auth.workspace.field.addField({ title: title, id: _workspace._id, filterBy: "index" });
 
             if (data.success) {
                 router.replace(router.asPath);
+                setSavingWorkspace(false);
             } else {
                 console.log("addfield error: ", data?.error);
             }
         },
         editField: async ({ id, title }) => {
+            setSavingWorkspace(true);
             const data = await auth.workspace.field.editField({ id, title, workspaceId: _workspace._id });
 
             if (data.success) {
                 router.replace(router.asPath);
+                setSavingWorkspace(false);
             } else if (data?.error) {
                 console.error("error on edit field: ", data.error);
             }
         },
         deleteField: async ({ id }) => {
+            setSavingWorkspace(true);
             const newFields = _workspace;
             newFields.fields.splice(_workspace.fields.findIndex(el => el._id == id), 1);
             _setWorkspace({ ...newFields });
 
             const data = await auth.workspace.field.removeField({ id, workspaceId: _workspace._id });
 
+            setSavingWorkspace(false);
             if (data.success != true) {
                 console.log("delete field error: ", data?.error);
             }
         },
         deleteWorkspace: async () => {
+            setSavingWorkspace(true);
             const data = await auth.workspace.deleteWorkspace({ id: _workspace._id });
 
             if (data.success) {
                 router.replace("/home");
+                setSavingWorkspace(false);
             } else if (data?.error) {
                 console.error("error on delete workspace: ", data.error);
             }
         },
         addCardToField: async ({ fieldId, title, desc, color }) => {
+            setSavingWorkspace(true);
             const newFields = _workspace;
             newFields.fields[_workspace.fields.findIndex(el => el._id == fieldId)].cards?.push({ title, desc, color, createdAt: Date.now() });
             _setWorkspace(newFields);
@@ -163,10 +177,12 @@ const Workspace = (props) => {
             if (data.success != true) {
                 console.log("add card error: ", data?.error);
             } else {
+                setSavingWorkspace(false);
                 _setWorkspace({ ..._workspace, fields: data.data });
             }
         },
         deleteCard: async ({ id, fieldId }) => {
+            setSavingWorkspace(true);
             const newFields = _workspace;
             const cardIndex = newFields.fields[_workspace.fields.findIndex(el => el._id == fieldId)].cards.findIndex(el => el._id == id);
             newFields.fields[_workspace.fields.findIndex(el => el._id == fieldId)].cards.splice(cardIndex, 1);
@@ -177,14 +193,14 @@ const Workspace = (props) => {
                 fieldId,
                 workspaceId: _workspace._id,
             });
-            console.log("data delete card: ", data);
+            setSavingWorkspace(false);
 
             if (data.success != true) {
                 console.log("delete card error: ", data?.error);
             }
         },
         editCard: async ({ title, desc, color, id, fieldId }) => {
-            console.log("AAA", title, desc, color, id, fieldId);
+            setSavingWorkspace(true);
             const data = await auth.workspace.field.editCard({
                 id,
                 fieldId,
@@ -196,6 +212,7 @@ const Workspace = (props) => {
 
             if (data.success) {
                 router.replace(router.asPath);
+                setSavingWorkspace(false);
             } else {
                 console.log("edit card error: ", data?.error);
             }
@@ -233,6 +250,7 @@ const Workspace = (props) => {
                             fullname: _workspace.fullname ?? "",
                             avatar: _workspace.avatar ?? "",
                         }}
+                        loading={savingWorkspace}
                     />}
                 </div>
 

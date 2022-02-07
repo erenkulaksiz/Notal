@@ -9,7 +9,7 @@ import {
 } from '../../icons';
 
 const Footer = styled.footer`
-    background-color: ${props => props.isDark ? "#0a0a0a" : "#f2f2f2"};
+    background-image: ${props => props.isDark ? "linear-gradient(0deg, rgba(25,25,25,1) 0%, rgba(11,11,11,1) 49%, rgba(0,0,0,0) 100%);" : "linear-gradient(0deg, rgba(139,139,139,1) 0%, rgba(139,139,139,0.3449754901960784) 60%, rgba(139,139,139,0) 100%)"};
     padding-top: 24px;
     padding-bottom: 24px;
 `;
@@ -27,7 +27,7 @@ const LandingFooter = () => {
                     <HeartIcon size={20} fill="red" style={{ marginLeft: 4, marginRight: 4, transform: "scale(0.8)" }} />
                     <Text css={{ mr: 8 }}>by</Text>
                     <Link href="https://github.com/erenkulaksiz" passHref>
-                        <ALink color>@Eren Kulaksiz</ALink>
+                        <ALink color target="_blank">@Eren Kulaksiz</ALink>
                     </Link>
                 </Row>
             </Grid>

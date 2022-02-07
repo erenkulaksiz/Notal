@@ -102,7 +102,7 @@ const Login = (props) => {
                     </Tooltip>
                 </Grid>*/}
                 {!view && <LoginSelector
-                    onLogin={() => setView("email")} // Login with email
+                    onLoginWithEmail={() => setView("email")} // Login with email
                     onLoginWithGithub={onLoginWithGithub}
                     onLoginWithGoogle={onLoginWithGoogle}
                     oauthError={oauthError}

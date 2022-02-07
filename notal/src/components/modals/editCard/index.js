@@ -42,12 +42,10 @@ const EditCardModal = ({ visible, onClose, onEdit, card }) => {
     }, [editTitle, editDesc, editColor]);
 
     const edit = () => {
-        if (editTitle.length < 3 || editTitle.length > 20) {
-            setTitleError("Title must be between 3 and 20 characters long.");
+        if (editTitle.length < 3 || editTitle.length > 40) {
+            setTitleError("Title must be between 3 and 40 characters long.");
             return;
         }
-
-        console.log("edit id: ", card);
 
         onEdit({ title: editTitle, desc: editDesc, color: editColor.code, id: card._id });
     }
@@ -56,7 +54,7 @@ const EditCardModal = ({ visible, onClose, onEdit, card }) => {
         setTitleError("");
         setDescError("");
         setEditTitle(card.title);
-        setEditDesc(card.title);
+        setEditDesc(card.desc);
         setEditColor({ ...editColor, code: card.color, name: "" });
         onClose();
     }
@@ -88,7 +86,7 @@ const EditCardModal = ({ visible, onClose, onEdit, card }) => {
                     label={<Text css={{ color: "$gray700", fontWeight: "500" }}>Card Title (Optional)</Text>}
                     value={editTitle}
                     onChange={(e) => setEditTitle(e.target.value)}
-                    maxLength={20}
+                    maxLength={40}
                 />
                 {titleError != false && <Text color={"$error"}>{titleError}</Text>}
             </Row>

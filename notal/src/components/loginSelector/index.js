@@ -1,17 +1,13 @@
 import { Button, Text, Grid, Switch, Tooltip, Row, useTheme } from '@nextui-org/react';
-import { useTheme as useNextTheme } from 'next-themes';
 
 import {
     EmailIcon,
     GithubIcon,
-    GoogleIcon,
-    DarkIcon,
-    LightIcon
+    GoogleIcon
 } from '../../icons';
 
-const LoginSelector = ({ onLogin, onLoginWithGithub, onLoginWithGoogle, oauthError }) => {
+const LoginSelector = ({ onLoginWithEmail, onLoginWithGithub, onLoginWithGoogle, oauthError }) => {
     const { isDark } = useTheme();
-    const { setTheme } = useNextTheme();
 
     return (<>
         <Grid xs={12} alignItems="center" justify="center">
@@ -33,7 +29,7 @@ const LoginSelector = ({ onLogin, onLoginWithGithub, onLoginWithGoogle, oauthErr
         </Grid>
         <Grid xs={12} justify="center" css={{ ai: "center", py: 6, pb: 12 }}>
             <Tooltip content={'Sign in using Email'} css={{ pointerEvents: "none" }}>
-                <Button onClick={onLogin} color="gradient" size="xl" icon={<EmailIcon height={22} width={22} style={{ fill: "currentColor" }} />} >
+                <Button onClick={onLoginWithEmail} color="gradient" size="xl" icon={<EmailIcon height={22} width={22} style={{ fill: "currentColor" }} />} >
                     Email
                 </Button>
             </Tooltip>
@@ -41,13 +37,6 @@ const LoginSelector = ({ onLogin, onLoginWithGithub, onLoginWithGoogle, oauthErr
         <Row style={{ justifyContent: "center" }}>
             {oauthError != false && <Text color={"$error"}>{oauthError}</Text>}
         </Row>
-        <Switch
-            color="primary"
-            initialChecked={isDark}
-            onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
-            iconOn={<LightIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-            iconOff={<DarkIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-        />
     </>)
 }
 

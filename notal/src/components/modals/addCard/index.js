@@ -26,8 +26,8 @@ const AddCardModal = ({ visible, onClose, onAdd }) => {
     const [titleError, setTitleError] = useState("");
 
     const add = () => {
-        if (title.length < 3 || title.length > 30) {
-            setTitleError("Title must be between 3 and 30 characters long.");
+        if (title.length < 3 || title.length > 40) {
+            setTitleError("Title must be between 3 and 40 characters long.");
             return;
         }
         setTitleError("");
@@ -70,7 +70,7 @@ const AddCardModal = ({ visible, onClose, onAdd }) => {
                     label={<Text css={{ color: "$gray700", fontWeight: "500" }}>Card Title</Text>}
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    maxLength={30}
+                    maxLength={40}
                 />
                 {titleError != false && <Text color={"$error"}>{titleError}</Text>}
             </Row>
@@ -82,7 +82,6 @@ const AddCardModal = ({ visible, onClose, onAdd }) => {
                     label={<Text css={{ color: "$gray700", fontWeight: "500" }}>Card Description (Optional)</Text>}
                     value={desc}
                     onChange={(e) => setDesc(e.target.value)}
-                    text
                 />
             </Row>
             <Row css={{ fd: "column", m: 0, overflow: "visible", mb: 6 }}>

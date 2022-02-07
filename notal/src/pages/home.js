@@ -11,12 +11,14 @@ import addworkspacebanner from '../../public/addfieldbanner.png';
 import {
     AddIcon,
     BookmarkIcon,
-    UserIcon
+    DashboardIcon,
+    StarFilledIcon,
+    UserIcon,
+    VisibleOffIcon
 } from '../icons';
 
 import {
     AcceptCookies,
-    AddFieldBanner,
     AddWorkspaceModal,
     DeleteWorkspaceModal,
     HomeNav,
@@ -39,7 +41,7 @@ const Home = (props) => {
     const { auth } = props;
 
     // View/Filter
-    const [viewing, setViewing] = useState("workspaces");
+    const [workspaceViewing, setWorkspaceViewing] = useState("workspaces");
     const [filter, setFilter] = useState(null);
 
     // Delete Modal
@@ -52,22 +54,18 @@ const Home = (props) => {
     const [loadingWorkspaces, setLoadingWorkspaces] = useState(true);
 
     useEffect(() => {
-        if (viewing == "favorites") {
-            setFilter("favorites");
-        } else {
-            setFilter(null);
+        switch (workspaceViewing) {
+            case "favorites":
+                setFilter("favorites");
+                break;
+            case "privateWorkspaces":
+                setFilter("privateWorkspaces");
+                break;
+            default:
+                setFilter(null);
+                break;
         }
-    }, [viewing]);
-
-    useEffect(() => {
-        if (viewing == "favorites") {
-            setFilter("favorites");
-        } else if (viewing == "privateWorkspaces") {
-            setFilter("privateWorkspaces");
-        } else {
-            setFilter(null);
-        }
-    }, [viewing]);
+    }, [workspaceViewing]);
 
     useEffect(() => {
         console.log("props home: ", props);
@@ -124,16 +122,16 @@ const Home = (props) => {
             setNewWorkspace({ ...newWorkspace, title: "", desc: "", starred: "" });
         },
         getWorkspacesWithFilter: (workspaces) => {
-            if (filter == "favorites") {
-                if (workspaces) return workspaces.filter(el => el.starred == true);
-                else return []
-            } else if (filter == "privateWorkspaces") {
-                if (workspaces) return workspaces.filter(el => !!el?.workspaceVisible == false);
-                else return []
-            } else {
-                // no filter
-                if (workspaces) return workspaces;
-                else return []
+            switch (filter) {
+                case "favorites":
+                    if (workspaces) return workspaces.filter(el => el.starred == true);
+                    else return []
+                case "privateWorkspaces":
+                    if (workspaces) return workspaces.filter(el => !!el?.workspaceVisible == false);
+                    else return []
+                default:
+                    if (workspaces) return workspaces;
+                    else return []
             }
         }
     }
@@ -155,15 +153,15 @@ const Home = (props) => {
                         <Loading />
                         <Text css={{ mt: 24, fs: "1.4em" }}>Loading Workspaces...</Text>
                     </Card> : <Grid.Container gap={1}>
-                        <HomeNav viewing={viewing} onViewChange={(viewingName) => setViewing(viewingName)} />
+                        <HomeNav viewing={workspaceViewing} onViewChange={(viewingName) => setWorkspaceViewing(viewingName)} />
                         <Spacer y={1} />
                         <Grid xs={12}>
                             <Avatar
                                 squared
-                                icon={<UserIcon size={20} fill="currentColor" />}
+                                icon={workspaceViewing == "favorites" ? <StarFilledIcon size={20} fill="currentColor" /> : workspaceViewing == "privateWorkspaces" ? <VisibleOffIcon width={20} height={20} fill="currentColor" /> : <DashboardIcon size={20} fill="currentColor" />}
                             />
                             <Spacer x={0.5} />
-                            <Text h3>{viewing == "favorites" ? "Favorite Workspaces" : "Workspaces"}</Text>
+                            <Text h3>{workspaceViewing == "favorites" ? "Favorite Workspaces" : workspaceViewing == "privateWorkspaces" ? "Private Workspaces" : "Your Workspaces"}</Text>
                         </Grid>
                         {workspace.getWorkspacesWithFilter(_workspaces).length > 0 ?
                             workspace.getWorkspacesWithFilter(_workspaces).map(workspaceItem => <HomeWorkspaceCard
