@@ -257,16 +257,16 @@ const Workspace = (props) => {
                 <div style={{ display: "flex", width: "100%", flexDirection: "column", paddingTop: 8, justifyContent: "center", alignContent: "center" }}>
                     {!loadingWorkspace && <Grid.Container gap={1} css={{ flexWrap: "nowrap", alignItems: "flex-start", justifyContent: "flex-start", overflowX: "auto" }}>
                         {(_workspace?.fields && _workspace?.fields?.length != 0) ? _workspace?.fields.map(field => {
-                            return (<Grid css={{ minWidth: 420, maxWidth: 450, }}><Field
-                                field={field}
-                                key={field._id}
-                                onAddCard={() => setAddCardModal({ ...addCardModal, visible: true, field: field._id })}
-                                onDeleteField={() => handle.deleteField({ id: field._id })}
-                                onDeleteCard={({ id }) => handle.deleteCard({ id, fieldId: field._id })}
-                                onEditCard={({ card, fieldId }) => setEditCardModal({ visible: true, card, fieldId })}
-                                onEditClick={() => setEditField({ ...editField, visible: true, title: field.title, id: field._id })}
-                                isOwner={isOwner}
-                            />
+                            return (<Grid css={{ minWidth: 420, maxWidth: 450, }} key={field._id}>
+                                <Field
+                                    field={field}
+                                    onAddCard={() => setAddCardModal({ ...addCardModal, visible: true, field: field._id })}
+                                    onDeleteField={() => handle.deleteField({ id: field._id })}
+                                    onDeleteCard={({ id }) => handle.deleteCard({ id, fieldId: field._id })}
+                                    onEditCard={({ card, fieldId }) => setEditCardModal({ visible: true, card, fieldId })}
+                                    onEditClick={() => setEditField({ ...editField, visible: true, title: field.title, id: field._id })}
+                                    isOwner={isOwner}
+                                />
                             </Grid>)
                         }) : <AddFieldBanner isOwner={isOwner} />}
 
