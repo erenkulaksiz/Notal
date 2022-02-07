@@ -30,7 +30,7 @@ import {
 
 const ImageContainer = styled.div`
     width: 100%;
-    height: 500px;
+    height: 700px;
     position: absolute;
     opacity: ${props => props.isDark ? 0.4 : 1};
     background-color: black;
@@ -85,7 +85,7 @@ const Landing = (props) => {
         </Head>
         <Navbar user={props.validate?.data} />
         <ImageContainer isDark={isDark}>
-            <div style={{ position: "absolute", width: "100%", height: "100%", backgroundImage: isDark ? "linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 38%)" : "linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 38%)" }} />
+            <div style={{ position: "absolute", width: "100%", height: "100%", backgroundImage: isDark ? "linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 42%)" : "linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 42%)" }} />
             <img src="./landing_bg_1.png" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </ImageContainer>
         <Container md css={{ position: "relative" }}>
