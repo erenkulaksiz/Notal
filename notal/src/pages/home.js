@@ -163,8 +163,7 @@ const Home = (props) => {
                             <Text h3>{workspaceViewing == "favorites" ? "Favorite Workspaces" : workspaceViewing == "privateWorkspaces" ? "Private Workspaces" : "Your Workspaces"}</Text>
                         </Grid>
                         {workspace.getWorkspacesWithFilter(_workspaces).length > 0 ?
-                            workspace.getWorkspacesWithFilter(_workspaces).map(workspaceItem => <Grid xs={12} sm={4} lg={2}><HomeWorkspaceCard
-                                key={workspaceItem._id}
+                            workspace.getWorkspacesWithFilter(_workspaces).map(workspaceItem => <Grid xs={12} sm={4} lg={2} key={workspaceItem._id}><HomeWorkspaceCard
                                 workspace={workspaceItem}
                                 onDeleteClick={() => setDeleteModal({ ...deleteModal, visible: true, workspace: workspaceItem._id })}
                                 onStarClick={() => workspace.star({ id: workspaceItem._id })}
