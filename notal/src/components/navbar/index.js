@@ -110,7 +110,7 @@ const Navbar = ({ user }) => {
                             <ALink css={{ mt: 16 }}>
                                 <Button
                                     icon={<UserIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-                                    css={{ mt: 12 }}
+                                    css={{ mt: 12, width: "100%" }}
                                     size="md"
                                     color="gradient"
                                 >

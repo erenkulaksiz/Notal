@@ -49,6 +49,8 @@ export const ValidateToken = async ({ token }) => {
             return { success: false, error: { code: "validation-error", errorMessage: error } }
         });;
 
+    console.log("validate res:", data);
+
     if (data.success) {
         return { ...data };
     }

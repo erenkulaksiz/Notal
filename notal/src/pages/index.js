@@ -21,6 +21,7 @@ import {
 } from '../components';
 
 import useAuth from '../hooks/auth';
+import { withPublic } from '../hooks/route';
 
 import {
     CheckToken,
@@ -32,7 +33,7 @@ const ImageContainer = styled.div`
     width: 100%;
     height: 700px;
     position: absolute;
-    opacity: ${props => props.isDark ? 0.4 : 1};
+    //opacity: ${props => props.isDark ? 0.4 : 0.9};
     background-color: black;
 `;
 
@@ -85,7 +86,8 @@ const Landing = (props) => {
         </Head>
         <Navbar user={props.validate?.data} />
         <ImageContainer isDark={isDark}>
-            <div style={{ position: "absolute", width: "100%", height: "100%", backgroundImage: isDark ? "linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 42%)" : "linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 42%)" }} />
+            <div style={{ position: "absolute", width: "100%", height: "100%", backgroundImage: isDark ? "linear-gradient(0deg, rgba(0,0,0,1) 10%, rgba(0,0,0,0) 48%)" : "linear-gradient(0deg, rgba(255,255,255,1) 10%, rgba(0,0,0,0) 62%)" }} />
+            <div style={{ position: "absolute", width: "100%", height: "100%", background: isDark ? "black" : "white", opacity: isDark ? .4 : .2 }} />
             <img src="./landing_bg_1.png" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </ImageContainer>
         <Container md css={{ position: "relative" }}>
@@ -111,7 +113,7 @@ const Landing = (props) => {
                             "@md": {
                                 fs: "3.5em"
                             }
-                        }}>Take planning to <Text span css={{ bg: "$gradient", backgroundImage: "$textGradient", "-webkit-background-clip": 'text', "-webkit-text-fill-color": 'transparent' }}>next</Text> level with Notal 🚀</Text>
+                        }}>Organize your <Text span css={{ bg: "$gradient", backgroundImage: "$textGradient", "-webkit-background-clip": 'text', "-webkit-text-fill-color": 'transparent' }}>next</Text> project with Notal 🚀</Text>
                     </Row>
                     <Row>
                         <Text b css={{ fs: "1.2em", color: isDark ? "$gray500" : "$gray200" }}>{`Developer's solution from an developer. Keep focus on your project, not on your planning.`}</Text>
@@ -149,8 +151,8 @@ const Landing = (props) => {
             </Text>
             <Text b css={{ fs: "1.2em", color: "$gray500" }}>Keep focus on your project, not on your planning.</Text>
             <Spacer y={16} />
-            <div style={{ width: 740, height: 740, position: "absolute", zIndex: 1, left: -200, top: 150, opacity: isDark ? 0.3 : 0.3, backgroundImage: "url(./landing_bg_2.png)", backgroundRepeat: "no-repeat", background: "contain" }} />
-            <div style={{ width: 740, height: 740, position: "absolute", zIndex: 1, right: -250, top: -20, opacity: isDark ? 0.08 : 0.1, backgroundImage: "url(./landing_bg_3.png)", backgroundRepeat: "no-repeat", background: "contain", }} />
+            <div style={{ width: 740, height: 740, position: "absolute", zIndex: 1, left: -400, top: 150, opacity: isDark ? 0.2 : 0.3, backgroundImage: "url(./landing_bg_2.png)", backgroundRepeat: "no-repeat", background: "contain" }} />
+            <div style={{ width: 740, height: 740, position: "absolute", zIndex: 1, right: -300, top: -20, opacity: isDark ? 0.2 : 0.1, backgroundImage: "url(./landing_bg_3.png)", backgroundRepeat: "no-repeat", background: "contain", }} />
             {/*<div style={{ width: 300, height: 300, position: "absolute", zIndex: 1, left: -50, bottom: 600, opacity: 1, backgroundImage: "url(./landing_bg_5.svg)", backgroundRepeat: "no-repeat", background: "contain", transform: "scale(2) rotate(-45deg)" }} />*/}
         </Container>
         <LandingFooter />
@@ -168,7 +170,7 @@ const Landing = (props) => {
     )
 }
 
-export default Landing;
+export default withPublic(Landing);
 
 export async function getServerSideProps(ctx) {
     const { req, res, query } = ctx;

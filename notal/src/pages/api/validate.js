@@ -10,6 +10,8 @@ if (!admin.apps.length) {
         databaseURL: firebaseConfig.databaseURL
     });
 }
+const { wordlist } = require('../../utils/wordlist');
+const wordlistLength = wordlist.length;
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
@@ -30,21 +32,26 @@ export default async function handler(req, res) {
         await admin.auth().verifyIdToken(token).then(async (decodedToken) => {
             const user = await usersCollection.findOne({ uid: decodedToken.uid });
             if (!user) {
+                const randomName = wordlist[Math.floor(Math.random() * wordlistLength)] + Math.floor((Math.random() * 1000) + 1);
                 const newUser = {
                     uid: decodedToken?.uid,
                     email: decodedToken?.email,
                     createdAt: Date.now(),
                     updatedAt: Date.now(),
-                    username: decodedToken?.uid,
-                    fullname: decodedToken?.name ?? "",
+                    username: randomName, //decodedToken?.uid,
+                    fullname: decodedToken?.name,
                     bio: "",
                     avatar: decodedToken?.picture,
                     profileVisible: false,
+                    provider: decodedToken?.firebase?.sign_in_provider ?? "",
                 }
                 await usersCollection.insertOne({ ...newUser });
                 res.status(200).send({ success: true, data: { ...newUser } });
 
             } else {
+                if (!user?.provider) {
+                    await usersCollection.updateOne({ uid: decodedToken.uid }, { $set: { provider: decodedToken?.firebase?.sign_in_provider } });
+                }
                 res.status(200).send({
                     success: true,
                     data: {
@@ -56,6 +63,7 @@ export default async function handler(req, res) {
                         avatar: user.avatar,
                         profileVisible: user.profileVisible,
                         email: user.email,
+                        provider: user?.provider ?? "",
                     },
                     uid: user.uid
                 });

@@ -35,7 +35,7 @@ const FieldCard = ({ card, onDelete, isOwner, onEdit, style }) => {
         <Card bordered css={{ width: "100%", }} shadow={false}>
             <Grid.Container>
                 <Grid xs={8} sm={8}>
-                    <Text h4 css={{ wordBreak: "break-all" }}>
+                    <Text h4 css={{ wordBreak: "break-word" }}>
                         {card.title}
                     </Text>
                 </Grid>

@@ -70,7 +70,7 @@ export function reportWebVitals({ id, name, label, value }) {
   }
 }
 
-const MyApp = ({ Component, pageProps }) => {
+const Notal = ({ Component, pageProps }) => {
   const router = useRouter();
 
   useEffect(() => {
@@ -115,4 +115,4 @@ const MyApp = ({ Component, pageProps }) => {
     </NextThemesProvider>)
 }
 
-export default MyApp
+export default Notal;

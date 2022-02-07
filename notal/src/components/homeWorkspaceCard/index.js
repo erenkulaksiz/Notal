@@ -19,7 +19,7 @@ const HomeWorkspaceCard = ({ workspace, onStarClick, onDeleteClick }) => {
                     <Row css={{ fd: "column" }}>
                         <Link href="/workspace/[pid]" as={`/workspace/${workspace._id}`}>
                             <ALink>
-                                <Text h3 color={"white"}>{workspace.title}</Text>
+                                <Text h4 color={"white"}>{workspace.title}</Text>
                             </ALink>
                         </Link>
                         {workspace.desc && <Link href="/workspace/[pid]" as={`/workspace/${workspace._id}`}>

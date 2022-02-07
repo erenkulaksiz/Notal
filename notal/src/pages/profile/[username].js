@@ -41,6 +41,8 @@ const Profile = (props) => {
 
     const avatarInputRef = useRef();
 
+    console.log("props.profile", props.profile);
+
     //loading
     const [loadingProfile, setLoadingProfile] = useState(true);
 
@@ -107,7 +109,7 @@ const Profile = (props) => {
             return;
         }
 
-        if (editProfile.fullname != props.validate?.data?.fullname
+        if (editProfile?.fullname != props.validate?.data?.fullname
             || editProfile.username != props.validate?.data?.username
             || editProfile.bio != props.validate?.data?.bio
             || editProfile.visibility != props.validate?.data?.profileVisible
@@ -220,7 +222,7 @@ const Profile = (props) => {
                         color="primary"
                         labelLeft={<UserIcon height={24} width={24} style={{ fill: "currentColor" }} />}
                         placeholder='Fullname'
-                        value={editProfile.fullname}
+                        value={editProfile.fullname ?? ""}
                         bordered
                         fullWidth
                         onChange={e => setEditProfile({ ...editProfile, fullname: e.target.value })}
@@ -239,7 +241,7 @@ const Profile = (props) => {
                         color="primary"
                         labelLeft={<AtIcon height={24} width={24} style={{ fill: "currentColor" }} />}
                         placeholder='Username'
-                        value={editProfile.username}
+                        value={editProfile.username ?? ""}
                         bordered
                         fullWidth
                         css={{ mt: 16 }}
@@ -323,7 +325,7 @@ const Profile = (props) => {
             </Grid.Container>
             <Spacer y={1} />
 
-            {props.profile?.data?.workspaces != "user-profile-private" ? editingProfile ? null : props.profile?.data?.workspaces.length > 0 && <Card bordered>
+            {(props.profile?.data?.workspaces != "user-profile-private" && props.profile?.data?.workspaces != "auth-error") ? editingProfile ? null : props.profile?.data?.workspaces.length > 0 && <Card bordered>
                 <Grid.Container gap={1}>
                     <Grid xs={12}>
                         <Avatar
@@ -335,8 +337,8 @@ const Profile = (props) => {
                     </Grid>
                     <Grid xs={12}>
                         <Grid.Container gap={1} css={{ padding: 0 }}>
-                            {props.profile?.data?.workspaces && props.profile?.data?.workspaces != "user-profile-private" ?
-                                props.profile.data.workspaces.map(workspace => <ProfileWorkspaceCard key={workspace._id} workspace={workspace} />)
+                            {props.profile?.data?.workspaces ?
+                                props.profile?.data?.workspaces?.map(workspace => <ProfileWorkspaceCard key={workspace._id} workspace={workspace} />)
                                 : <Text>This user has no workspaces</Text>}
                         </Grid.Container>
                     </Grid>

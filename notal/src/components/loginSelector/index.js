@@ -1,4 +1,4 @@
-import { Button, Text, Grid, Switch, Tooltip, Row, useTheme } from '@nextui-org/react';
+import { Button, Text, Grid, Tooltip, Row } from '@nextui-org/react';
 
 import {
     EmailIcon,
@@ -7,8 +7,6 @@ import {
 } from '../../icons';
 
 const LoginSelector = ({ onLoginWithEmail, onLoginWithGithub, onLoginWithGoogle, oauthError }) => {
-    const { isDark } = useTheme();
-
     return (<>
         <Grid xs={12} alignItems="center" justify="center">
             <Text h3>Sign in using...</Text>
@@ -35,7 +33,7 @@ const LoginSelector = ({ onLoginWithEmail, onLoginWithGithub, onLoginWithGoogle,
             </Tooltip>
         </Grid>
         <Row style={{ justifyContent: "center" }}>
-            {oauthError != false && <Text color={"$error"}>{oauthError}</Text>}
+            {oauthError != false && <Text color={"$error"} css={{ textAlign: "center" }}>{oauthError}</Text>}
         </Row>
     </>)
 }

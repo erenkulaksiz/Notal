@@ -43,6 +43,10 @@ const Login = (props) => {
         const login = await auth.login.google();
         if (login?.authError?.errorCode == "auth/account-exists-with-different-credential") {
             setOauthError(`This account exist with different credential. Please try another method.`);
+            return;
+        } else if (login?.authError?.errorCode == "auth/user-disabled") {
+            setOauthError(`Your account has been disabled. Sorry for the inconvenience.`);
+            return;
         }
     }
 
@@ -50,6 +54,10 @@ const Login = (props) => {
         const login = await auth.login.github();
         if (login?.authError?.errorCode == "auth/account-exists-with-different-credential") {
             setOauthError(`This account exist with different credential. Please try another method.`);
+            return;
+        } else if (login?.authError?.errorCode == "auth/user-disabled") {
+            setOauthError(`Your account has been disabled. Sorry for the inconvenience.`);
+            return;
         }
     }
 

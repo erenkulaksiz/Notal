@@ -177,7 +177,7 @@ const Home = (props) => {
                                     onClick={() => setNewWorkspaceVisible(true)}
                                 >
                                     <Image src={addworkspacebanner} style={{ zIndex: 50 }} width={64} height={64} placeholder="blur" objectFit='contain' priority={true} />
-                                    <Text h6 css={{ color: "$accents4" }}>You have no workspaces.</Text>
+                                    <Text h6 css={{ color: "$accents4" }}>No workspaces found.</Text>
                                 </Card>
                             </Grid>}
                         <Grid xs={12} sm={4} lg={2}>

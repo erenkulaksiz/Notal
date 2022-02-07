@@ -7,7 +7,6 @@ const LandingFeaturesCard = ({ feature }) => {
         <Card css={{ bf: "saturate(180%) blur(10px)", bg: isDark ? "#ffffff20" : "#ffffff70" }}>
             <Row style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Avatar
-                    squared
                     icon={feature.icon}
                 />
                 <Text h4 css={{ ml: 8 }}>
