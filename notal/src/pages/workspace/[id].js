@@ -5,14 +5,14 @@ import { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import Head from 'next/head';
 
-import useAuth from '../../hooks/auth';
+import useAuth from '@hooks/auth';
 
 import {
     CheckToken,
     GetWorkspace,
     ValidateToken,
     WorkboxInit
-} from '../../utils';
+} from '@utils';
 
 // Components
 import {
@@ -30,7 +30,7 @@ import {
     Workspace404,
     WorkspaceAddField,
     WorkspaceNav,
-} from '../../components';
+} from '@components';
 
 const Workspace = (props) => {
     const auth = useAuth();
@@ -257,7 +257,7 @@ const Workspace = (props) => {
                 <div style={{ display: "flex", width: "100%", flexDirection: "column", paddingTop: 8, justifyContent: "center", alignContent: "center" }}>
                     {!loadingWorkspace && <Grid.Container gap={1} css={{ flexWrap: "nowrap", alignItems: "flex-start", justifyContent: "flex-start", overflowX: "auto" }}>
                         {(_workspace?.fields && _workspace?.fields?.length != 0) ? _workspace?.fields.map(field => {
-                            return (<Field
+                            return (<Grid css={{ minWidth: 420, maxWidth: 450, }}><Field
                                 field={field}
                                 key={field._id}
                                 onAddCard={() => setAddCardModal({ ...addCardModal, visible: true, field: field._id })}
@@ -266,7 +266,8 @@ const Workspace = (props) => {
                                 onEditCard={({ card, fieldId }) => setEditCardModal({ visible: true, card, fieldId })}
                                 onEditClick={() => setEditField({ ...editField, visible: true, title: field.title, id: field._id })}
                                 isOwner={isOwner}
-                            />)
+                            />
+                            </Grid>)
                         }) : <AddFieldBanner isOwner={isOwner} />}
 
                         {isOwner && <>

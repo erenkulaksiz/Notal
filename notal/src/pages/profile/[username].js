@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 import Head from 'next/head';
 import React, { useEffect, useState, useRef } from 'react';
 
-import useAuth from '../../hooks/auth';
+import useAuth from '@hooks/auth';
 
 import {
     EditIcon,
@@ -15,14 +15,14 @@ import {
     DashboardIcon,
     LinkIcon,
     LockOutlineIcon
-} from '../../icons';
+} from '@icons';
 
 import {
     CheckToken,
     GetProfile,
     ValidateToken,
     WorkboxInit
-} from '../../utils';
+} from '@utils';
 
 import {
     AcceptCookies,
@@ -32,16 +32,13 @@ import {
     ProfileBio,
     ProfileDetails,
     ProfileWorkspaceCard
-} from '../../components';
+} from '@components';
 
 const Profile = (props) => {
     const auth = useAuth();
     const router = useRouter();
-    const { isDark } = useTheme();
 
     const avatarInputRef = useRef();
-
-    console.log("props.profile", props.profile);
 
     //loading
     const [loadingProfile, setLoadingProfile] = useState(true);

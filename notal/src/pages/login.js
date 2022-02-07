@@ -4,17 +4,16 @@ import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import Head from 'next/head';
 
-
-import { withPublic } from '../hooks/route';
-import { WorkboxInit } from '../utils';
-import AuthService from '../service/AuthService';
-import useAuth from '../hooks/auth';
+import { withPublic } from '@hooks/route';
+import { WorkboxInit } from '@utils';
+import AuthService from '@service/AuthService';
+import useAuth from '@hooks/auth';
 
 // Icons
 import {
     BackIcon,
     CheckOutlineIcon
-} from '../icons';
+} from '@icons';
 
 // Components
 import {
@@ -22,7 +21,7 @@ import {
     EmailLogin,
     ForgotPassword,
     LoginSelector
-} from '../components';
+} from '@components';
 
 const Login = (props) => {
     const router = useRouter();

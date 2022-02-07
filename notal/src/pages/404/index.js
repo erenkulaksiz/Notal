@@ -4,9 +4,9 @@ import { Button, Container, Text, Card } from '@nextui-org/react';
 import {
     BackIcon,
     HomeFilledIcon
-} from '../../icons';
+} from '@icons';
 
-import useAuth from '../../hooks/auth';
+import useAuth from '@hooks/auth';
 
 const Page404 = () => {
     const router = useRouter();
