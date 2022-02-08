@@ -55,9 +55,10 @@ const Navbar = ({ user }) => {
     const { isDark } = useTheme();
     const auth = useAuth();
     const router = useRouter();
-    const loggedIn = !!Cookies.get('auth');
+    const client = (typeof window === 'undefined') ? false : true;
 
     const [modalVisible, setModalVisible] = useState(false);
+
     /*
     const StyledDetails = styled("details", {
         position: "relative",
@@ -87,10 +88,25 @@ const Navbar = ({ user }) => {
         zIndex: 999,
     });
     */
+
+    const ThemeSwitch = () => {
+        if (!client) return null;
+        if (user) return null;
+        return (<Switch
+            color="primary"
+            initialChecked={isDark}
+            onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
+            iconOn={<LightIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+            iconOff={<DarkIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+            css={{ mr: 12 }}
+            size="sm"
+        />)
+    }
+
     return (<Header isDark={isDark}>
         <Grid.Container justify="center">
             <Grid xs={6} sm={4} alignItems='center'>
-                <Link href={loggedIn ? "/home" : "/login"} passHref>
+                <Link href={user ? "/home" : "/login"} passHref>
                     <ALink>
                         <img
                             src={isDark ? "/icon_white.png" : "/icon_galactic.png"}
@@ -104,16 +120,8 @@ const Navbar = ({ user }) => {
 
             </Grid>
             <Grid xs={6} sm={4} justify='flex-end' alignItems='center'>
-                {!loggedIn && <Switch
-                    color="primary"
-                    initialChecked={isDark}
-                    onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
-                    iconOn={<LightIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-                    iconOff={<DarkIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-                    css={{ mr: 12 }}
-                    size="sm"
-                />}
-                {loggedIn ? <Details>
+                <ThemeSwitch />
+                {user ? <Details>
                     <summary style={{
                         userSelect: "none",
                         "&::WebkitDetailsMarket": {

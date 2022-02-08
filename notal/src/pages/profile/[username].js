@@ -40,9 +40,6 @@ const Profile = (props) => {
 
     const avatarInputRef = useRef();
 
-    //loading
-    const [loadingProfile, setLoadingProfile] = useState(true);
-
     const [editingProfile, setEditingProfile] = useState(false);
     const [editProfile, setEditProfile] = useState(null);
     const [editErrors, setEditErrors] = useState({ fullname: false, username: false, bio: false });
@@ -81,8 +78,7 @@ const Profile = (props) => {
     }, [auth.authUser]);
 
     useEffect(() => {
-        if ((props.profile?.success == true) || (props.profile?.success == false && props.profile?.error == "cant-find-user")) {
-            setLoadingProfile(false);
+        if (props.profile?.success) {
             setEditProfile({
                 fullname: props.validate?.data?.fullname,
                 username: props.validate?.data?.username,
@@ -200,10 +196,7 @@ const Profile = (props) => {
         </Head>
         <Navbar user={props.validate?.data} />
         <Spacer y={2} />
-        {loadingProfile ? <Card css={{ p: 12, dflex: "center" }}>
-            <Loading />
-            <Text css={{ mt: 24, fs: "1.4em" }}>Loading Profile...</Text>
-        </Card> : props.profile?.success == false && props.profile?.error == "cant-find-user" ? <Container sm css={{ dflex: "center", ac: "center", ai: "center", fd: "column" }}>
+        {props.profile?.success == false && props.profile?.error == "cant-find-user" ? <Container sm css={{ dflex: "center", ac: "center", ai: "center", fd: "column" }}>
             <Profile404 />
         </Container> : <Container sm>
             <Grid.Container gap={1}>
@@ -252,7 +245,7 @@ const Profile = (props) => {
 
                     {editErrors.username != false && <Text color={"$error"}>{editErrors.username}</Text>}
 
-                    {((auth?.authUser?.uid == props.profile?.data?.uid) && !editingProfile) && <Button
+                    {((props?.validate?.uid == props.profile?.data?.uid) && !editingProfile) && <Button
                         size={"lg"}
                         css={{ mt: 16, mw: 300 }}
                         icon={<EditIcon height={24} width={24} fill={"currentColor"} />}
@@ -280,8 +273,8 @@ const Profile = (props) => {
                 {(props.profile?.data?.bio || editingProfile) && <ProfileBio
                     onBioChange={(e) => setEditProfile({ ...editProfile, bio: e.target.value })}
                     bio={props.profile?.data?.bio}
-                    bioText={editProfile.bio}
-                    visibility={editProfile.visibility}
+                    bioText={editProfile?.bio}
+                    visibility={editProfile?.visibility}
                     onVisibilityChange={(e) => setEditProfile({ ...editProfile, visibility: e.target.checked })}
                     editingProfile={editingProfile}
                 />}

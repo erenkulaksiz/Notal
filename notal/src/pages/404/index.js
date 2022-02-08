@@ -7,12 +7,16 @@ import {
 } from '@icons';
 
 import useAuth from '@hooks/auth';
+import Head from 'next/head';
 
 const Page404 = () => {
     const router = useRouter();
     const auth = useAuth();
 
     return (<Container xs css={{ dflex: "center", ac: "center", ai: "center", fd: "column" }}>
+        <Head>
+            <title>404 - Not Found</title>
+        </Head>
         <Card css={{ textAlign: "center", dflex: "center", py: 32 }}>
             <img
                 src="https://i.pinimg.com/originals/ee/d0/d0/eed0d023bdf444d37050e27d46364f0b.png"

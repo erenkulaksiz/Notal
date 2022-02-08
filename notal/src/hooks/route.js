@@ -11,10 +11,11 @@ import { Loading, Container, Text } from '@nextui-org/react';
 export function withPublic(Component) {
     return function WithPublic(props) {
         const auth = useAuth();
-        const router = useRouter();
+        const client = (typeof window === 'undefined') ? false : true;
+        const router = client && useRouter();
 
-        if (auth.authUser) {
-            router.replace("/home");
+        if (props.validate?.success) {
+            client && router.replace("/home");
             return <Container css={{ dflex: "center", ac: "center", ai: "center", fd: "column" }}>
                 <Loading type="gradient" />
                 <Text css={{ mt: 16, fs: "1.2em" }}>Loading...</Text>
@@ -32,10 +33,11 @@ export function withPublic(Component) {
 export function withAuth(Component) {
     return function WithAuth(props) {
         const auth = useAuth();
-        const router = useRouter();
+        const client = (typeof window === 'undefined') ? false : true;
+        const router = client && useRouter();
 
-        if (!auth.authUser) {
-            router.replace("/login");
+        if (!props.validate?.success) {
+            client && router.replace("/login");
             return <Container css={{ dflex: "center", ac: "center", ai: "center", fd: "column" }}>
                 <Loading type="gradient" />
                 <Text css={{ mt: 16, fs: "1.2em" }}>Loading...</Text>

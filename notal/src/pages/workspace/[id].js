@@ -53,7 +53,7 @@ const Workspace = (props) => {
     const [loadingWorkspace, setLoadingWorkspace] = useState(true);
     const [_workspace, _setWorkspace] = useState(null);
 
-    const isOwner = (_workspace ? _workspace?.owner == auth.authUser?.uid : false);
+    const isOwner = (_workspace ? _workspace?.owner == props?.validate?.uid : false);
 
     useEffect(() => {
         console.log("props workspace: ", props);
@@ -251,7 +251,6 @@ const Workspace = (props) => {
                             avatar: _workspace.avatar ?? "",
                         }}
                         loading={savingWorkspace}
-                        authLoading={auth.authLoading}
                     />}
                 </div>
 

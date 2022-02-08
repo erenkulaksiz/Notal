@@ -33,6 +33,7 @@ import {
     ValidateToken,
     WorkboxInit
 } from '@utils';
+import { withAuth } from '@hooks/route';
 
 const Home = (props) => {
     const auth = useAuth();
@@ -164,7 +165,7 @@ const Home = (props) => {
                             <Text h3>{workspaceViewing == "favorites" ? "Favorite Workspaces" : workspaceViewing == "privateWorkspaces" ? "Private Workspaces" : "Your Workspaces"}</Text>
                         </Grid>
                         {workspace.getWorkspacesWithFilter(_workspaces).length > 0 ?
-                            workspace.getWorkspacesWithFilter(_workspaces).map(workspaceItem => <Grid xs={12} sm={4} lg={2} key={workspaceItem._id}><HomeWorkspaceCard
+                            workspace.getWorkspacesWithFilter(_workspaces).map((workspaceItem, index) => <Grid xs={12} sm={4} lg={2} key={workspaceItem._id ?? index}><HomeWorkspaceCard
                                 workspace={workspaceItem}
                                 onDeleteClick={() => setDeleteModal({ ...deleteModal, visible: true, workspace: workspaceItem._id })}
                                 onStarClick={() => workspace.star({ id: workspaceItem._id })}
@@ -233,7 +234,7 @@ const Home = (props) => {
     )
 }
 
-export default Home;
+export default withAuth(Home);
 
 export async function getServerSideProps(ctx) {
     const { req, res, query } = ctx;
@@ -244,14 +245,6 @@ export async function getServerSideProps(ctx) {
         const authCookie = req.cookies.auth;
 
         validate = await ValidateToken({ token: authCookie });
-        if (!validate?.success) {
-            return {
-                redirect: {
-                    permanent: false,
-                    destination: "/login"
-                }
-            }
-        }
         workspaces = await GetWorkspaces({ uid: validate?.data?.uid, token: authCookie });
     }
     return { props: { validate, workspaces } }

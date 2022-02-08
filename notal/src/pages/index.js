@@ -312,11 +312,11 @@ const Landing = (props) => {
                 }}
             />
         }
-    </Container >
+    </Container>
     )
 }
 
-export default Landing;
+export default withPublic(Landing);
 
 export async function getServerSideProps(ctx) {
     const { req, res, query } = ctx;
@@ -325,14 +325,6 @@ export async function getServerSideProps(ctx) {
     if (req) {
         const authCookie = req.cookies.auth;
         validate = await ValidateToken({ token: authCookie });
-        if (validate?.success) {
-            return {
-                redirect: {
-                    permanent: false,
-                    destination: "/home"
-                }
-            }
-        }
     }
     return { props: { validate } }
 }
