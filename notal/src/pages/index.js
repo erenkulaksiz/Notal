@@ -1,6 +1,5 @@
 import { Button, Spacer, Container, Text, Card, useTheme, Row, Link as ALink, Grid } from '@nextui-org/react';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import { useEffect } from 'react';
 import Cookies from 'js-cookie';
 import Head from 'next/head';
@@ -33,7 +32,8 @@ import {
     ValidateToken,
     WorkboxInit,
 } from '@utils';
-import Image from 'next/image';
+
+//import Image from 'next/image';
 
 const ImageContainer = styled.div`
     width: 100%;
@@ -42,6 +42,15 @@ const ImageContainer = styled.div`
     //opacity: ${props => props.isDark ? 0.4 : 0.9};
     background-color: black;
 `;
+
+/*
+const StyledImageContainer = styled("details", {
+    width: "100%",
+    height: 700,
+    position: "absolute",
+    backgroundColor: "black",
+});
+*/
 
 const Features = [
     {
@@ -85,7 +94,7 @@ const Landing = (props) => {
 
     return (<Container xl css={{ position: "relative", padding: 0, width: "100%", height: "100%", overflowX: "hidden" }}>
         <Head>
-            <title>Home · Notal</title>
+            <title>Notal</title>
             <meta name='twitter:description' content='Take your notes to next level with Notal' />
             <meta property='og:description' content='Take your notes to next level with Notal' />
             <meta name='description' content='Take your notes to next level with Notal' />

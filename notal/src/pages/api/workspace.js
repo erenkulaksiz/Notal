@@ -76,7 +76,7 @@ export default async function handler(req, res) {
                         res.status(200).send({ success: true, data: workspaces });
                     }
                 }).catch(error => {
-                    res.status(400).json({ success: false, error });
+                    res.status(400).json({ success: false, error: { code: error.code } });
                     return; // dont run code below
                 });
             } else {

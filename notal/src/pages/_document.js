@@ -1,6 +1,21 @@
-import { Html, Head, Main, NextScript } from 'next/document'
+import Document, { Html, Head, Main, NextScript } from 'next/document';
 
-export default function Document() {
+export default function Notal() {
+
+    const getInitialProps = async (ctx) => {
+        const initialProps = await Document.getInitialProps(ctx);
+        //const styledJSXStyles = flush();
+
+        return {
+            ...initialProps,
+            styles: (
+                <>
+                    {initialProps.styles}
+                </>
+            )
+        };
+    }
+
     return (
         <Html lang='en'>
             <Head>

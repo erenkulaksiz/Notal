@@ -14,7 +14,7 @@ export function withPublic(Component) {
         const client = (typeof window === 'undefined') ? false : true;
         const router = client && useRouter();
 
-        if (props.validate?.success) {
+        if (props.validate?.success || auth?.authUser) {
             client && router.replace("/home");
             return <Container css={{ dflex: "center", ac: "center", ai: "center", fd: "column" }}>
                 <Loading type="gradient" />

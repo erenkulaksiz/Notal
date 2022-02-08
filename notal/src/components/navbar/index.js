@@ -4,7 +4,6 @@ import { useTheme as useNextTheme } from 'next-themes';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { Button, Text, Grid, Card, Link as ALink, Switch, Avatar, useTheme, Row, Modal, Input, Tooltip } from '@nextui-org/react';
-import Cookies from 'js-cookie';
 
 import {
     UserIcon,
@@ -48,7 +47,6 @@ const Header = styled.nav`
     top: 0px;
     z-index: 999;
 `;
-
 
 const Navbar = ({ user }) => {
     const { setTheme } = useNextTheme();
@@ -132,8 +130,7 @@ const Navbar = ({ user }) => {
                     </summary>
                     <Card css={{ zIndex: 2, position: "absolute", right: 0, top: "100%", width: "auto", boxShadow: "$lg" }}>
                         <Row css={{ mt: 0, justifyContent: "flex-end", }}>
-                            {auth?.authUser && <div style={{ position: "absolute", right: 0, top: 0, display: "flex", flexDirection: "row" }}>
-                                <Text css={{ mr: 8, color: "$accents3" }}>v{process.env.NEXT_PUBLIC_APP_VERSION}</Text>
+                            {auth?.authUser && <div style={{ position: "absolute", right: 0, top: 0, display: "flex", flexDirection: "column" }}>
                                 <Switch
                                     color="primary"
                                     initialChecked={isDark}
@@ -141,7 +138,9 @@ const Navbar = ({ user }) => {
                                     iconOn={<LightIcon height={24} width={24} style={{ fill: "currentColor" }} />}
                                     iconOff={<DarkIcon height={24} width={24} style={{ fill: "currentColor" }} />}
                                     size="sm"
-                                /></div>}
+                                />
+                                <Text css={{ mr: 8, color: "$accents3" }}>v{process.env.NEXT_PUBLIC_APP_VERSION}</Text>
+                            </div>}
                         </Row>
                         <Text h4 css={{ mt: 8 }}>{user?.fullname || "@" + user?.username}</Text>
                         <Text span>{user?.email}</Text>

@@ -147,6 +147,8 @@ const Home = (props) => {
 
         <Navbar user={props.validate?.data} />
 
+        {console.log("authUser", auth?.authUser)}
+
         <Grid.Container gap={2}>
             <Grid xs={12}>
                 <Card css={{ jc: "center" }}>
@@ -245,6 +247,7 @@ export async function getServerSideProps(ctx) {
         const authCookie = req.cookies.auth;
 
         validate = await ValidateToken({ token: authCookie });
+        console.log("validate:", validate);
         workspaces = await GetWorkspaces({ uid: validate?.data?.uid, token: authCookie });
     }
     return { props: { validate, workspaces } }
