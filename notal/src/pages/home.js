@@ -25,7 +25,7 @@ import {
     Navbar,
 } from '@components';
 
-import { withAuth } from '@hooks/route';
+import useAuth from '@hooks/auth';
 
 import {
     CheckToken,
@@ -35,9 +35,8 @@ import {
 } from '@utils';
 
 const Home = (props) => {
-    //const auth = useAuth();
+    const auth = useAuth();
     const router = useRouter();
-    const { auth } = props;
 
     // View/Filter
     const [workspaceViewing, setWorkspaceViewing] = useState("workspaces");
@@ -89,13 +88,15 @@ const Home = (props) => {
 
     const workspace = {
         create: async ({ title, desc, starred }) => {
+            const newWorkspaces = _workspaces;
+            newWorkspaces.push({ title, desc, starred, createdAt: Date.now(), workspaceVisible: false });
+            _setWorkspaces([...newWorkspaces]);
+
             const data = await auth.workspace.createWorkspace({ title, desc, starred, workspaceVisible: false });
 
-            console.log("data: ", data);
-
-            if (data?.success) {
-                router.replace(router.asPath);
-            }
+            const authCookie = Cookies.get("auth");
+            const workspaces = await GetWorkspaces({ uid: props.validate?.uid, token: authCookie });
+            _setWorkspaces([...workspaces.data]);
         },
         delete: async ({ id }) => {
             setDeleteModal({ visible: false, workspace: -1 }); // set visiblity to false and id to -1
@@ -232,7 +233,7 @@ const Home = (props) => {
     )
 }
 
-export default withAuth(Home);
+export default Home;
 
 export async function getServerSideProps(ctx) {
     const { req, res, query } = ctx;
@@ -243,6 +244,14 @@ export async function getServerSideProps(ctx) {
         const authCookie = req.cookies.auth;
 
         validate = await ValidateToken({ token: authCookie });
+        if (!validate?.success) {
+            return {
+                redirect: {
+                    permanent: false,
+                    destination: "/login"
+                }
+            }
+        }
         workspaces = await GetWorkspaces({ uid: validate?.data?.uid, token: authCookie });
     }
     return { props: { validate, workspaces } }

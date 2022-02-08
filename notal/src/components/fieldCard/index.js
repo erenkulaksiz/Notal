@@ -43,7 +43,7 @@ const FieldCard = ({ card, onDelete, isOwner, onEdit, style }) => {
                     {card?.tag?.title && <CardTag border={tagColor}>
                         <Text span css={{ fs: "0.85em", color: tagColor }}>{card?.tag?.title}</Text>
                     </CardTag>}
-                    <Checkbox size="xs" checked={card?.checked} css={{ mr: 8 }} disabled />
+                    {card?.checked && <Checkbox size="xs" checked={card?.checked} css={{ mr: 8 }} />}
                     {card.color && <div style={{ marginRight: 14, marginBottom: 10, position: "relative" }}>
                         <CardColor color={card.color} />
                     </div>}

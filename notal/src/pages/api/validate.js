@@ -39,9 +39,9 @@ export default async function handler(req, res) {
                     createdAt: Date.now(),
                     updatedAt: Date.now(),
                     username: randomName, //decodedToken?.uid,
-                    fullname: decodedToken?.name,
+                    fullname: decodedToken?.name ?? "",
                     bio: "",
-                    avatar: decodedToken?.picture,
+                    avatar: decodedToken?.picture ?? "",
                     profileVisible: false,
                     provider: decodedToken?.firebase?.sign_in_provider ?? "",
                 }

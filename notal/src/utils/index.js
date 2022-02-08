@@ -47,9 +47,7 @@ export const ValidateToken = async ({ token }) => {
         .then(response => response.json())
         .catch(error => {
             return { success: false, error: { code: "validation-error", errorMessage: error } }
-        });;
-
-    console.log("validate res:", data);
+        });
 
     if (data.success) {
         return { ...data };
@@ -72,13 +70,6 @@ export const GetWorkspace = async ({ id, token }) => {
 }
 
 export const GetWorkspaces = async ({ uid, token }) => {
-    /*
-    If theres no uid present, fetch the token's workspaces instead
-    if (!uid) {
-        return { success: false }
-    }
-    */
-
     const data = await fetch(`${server}/api/workspace`, {
         'Content-Type': 'application/json',
         method: "POST",

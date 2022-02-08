@@ -184,43 +184,81 @@ const Landing = (props) => {
                     <Text b css={{ fs: "1.2em", color: "$gray500" }}>Fields can have all sorts of data from image, cards, links to bookmarks. You can drag drop items around to change their field.</Text>
                 </Grid>
                 <Grid xs={12}>
-                    <Grid.Container gap={1}>
-                        <Grid xs={12} sm={6} md={4}>
+                    <Grid.Container gap={1} css={{ alignItems: "flex-start" }}>
+                        <Grid xs={12} sm={4} md={4}>
                             <Field
+                                isOwner={true}
+                                onEditCard={() => { }}
+                                onDeleteCard={() => { }}
+                                onDeleteField={() => { }}
                                 field={{
-                                    title: "TODO",
+                                    title: "Bugs",
                                     cards: [{
-                                        title: "#TODO: Add more stuff to landing page.",
-                                        desc: "Add cards with descriptions, also fix the dark mode bug.",
-                                        color: "#FF0000"
+                                        "title": "Full height field",
+                                        "desc": "Full height fields overflow screen and scroll bar should be on fields, not the container",
+                                        "color": "#a30b0b",
+                                    },
+                                    {
+                                        "title": "Load times of images",
+                                        "desc": "Placeholder of workspaces is loading slow.",
+                                        "color": "#a30b0b",
+                                    },
+                                    {
+                                        "title": "Mobile version",
+                                        "desc": "Fix workspace title and workspaceNav collapse to each other",
+                                        "color": "currentColor",
+                                    },
+                                    {
+                                        "title": "Card color",
+                                        "desc": "If card color 'None' selected, currentColor is applied to cardColor",
+                                        "color": "#a30b0b",
                                     }]
                                 }} />
                         </Grid>
-                        <Grid xs={12} sm={6} md={4}>
+                        <Grid xs={12} sm={4} md={4}>
                             <Field
+                                isOwner={true}
+                                onEditCard={() => { }}
+                                onDeleteCard={() => { }}
+                                onDeleteField={() => { }}
                                 field={{
                                     title: "Do Later",
                                     cards: [{
-                                        title: "#LATER: Refactor index.js codes.",
-                                        desc: "Also change image for the landing page.",
-                                        color: "#D28519",
-                                        tag: {
-                                            title: "Important"
-                                        }
+                                        "title": "Database",
+                                        "desc": "Merge database from Firebase to MongoDB.",
+                                        "color": "#10AC63",
+                                    },
+                                    {
+                                        "title": "Cards",
+                                        "desc": "Editing a card now will show create and update time of that card on 'card details' section.",
+                                        "color": "#10AC63",
+                                    },
+                                    {
+                                        "title": "Cards",
+                                        "desc": "While adding and editing a card, description field is now a textarea instead of text input. Now you can enter longer descriptions!",
+                                        "color": "#10AC63",
+                                    },
+                                    {
+                                        "title": "Placeholders",
+                                        "desc": "Empty workspace and empty home now show 'add workspace' placeholder with image instead of showing blank space.",
+                                        "color": "#10AC63",
                                     }]
                                 }}
                             />
                         </Grid>
-                        <Grid xs={12} sm={6} md={4}>
+                        <Grid xs={12} sm={4} md={4}>
                             <Field
+                                onEditCard={() => { }}
+                                onDeleteCard={() => { }}
+                                onDeleteField={() => { }}
+                                isOwner={true}
                                 field={{
                                     title: "Done",
                                     cards: [{
-                                        title: "#DONE: Refactor index.js codes.",
-                                        desc: "Also change image for the landing page.",
-                                        color: "#10AC63",
-                                        tag: "dsaaskj",
-                                        checked: true,
+                                        "title": "Card title breaks if too long",
+                                        "desc": "Card title was breaking if title was too long, but its fixed.",
+                                        "color": "#10AC63",
+                                        "checked": "true"
                                     }]
                                 }}
                             />
@@ -238,7 +276,7 @@ const Landing = (props) => {
                     />*/}
                 </Grid>
             </Grid.Container>
-            <Spacer y={12} />
+            <Spacer y={6} />
             <Row css={{ fd: "column" }}>
                 <Text h1 css={{
                     color: isDark ? "$white" : "$black",
@@ -248,7 +286,7 @@ const Landing = (props) => {
                     },
                     position: "relative",
                     zIndex: "$1"
-                }}>And yet, theres more to
+                }}>{"And yet, there's more to"}
                     <Text span css={{ color: "$primary" }}> come.</Text>
                 </Text>
                 <Text b css={{ fs: "1.2em", color: "$gray500" }}>Wait for 24 March, 2022 v1.0.0 release.</Text>
@@ -259,7 +297,7 @@ const Landing = (props) => {
                     </Button>
                 </ALink>
             </Row>
-            <Spacer y={16} />
+            <Spacer y={6} />
             <div style={{ width: 740, height: 740, position: "absolute", zIndex: 1, left: -400, top: 150, opacity: isDark ? 0.2 : 0.3, backgroundImage: "url(./landing_bg_2.png)", backgroundRepeat: "no-repeat", background: "contain" }} />
             <div style={{ width: 740, height: 740, position: "absolute", zIndex: 1, right: -300, top: -20, opacity: isDark ? 0.2 : 0.1, backgroundImage: "url(./landing_bg_3.png)", backgroundRepeat: "no-repeat", background: "contain", }} />
         </Container>
@@ -278,7 +316,7 @@ const Landing = (props) => {
     )
 }
 
-export default withPublic(Landing);
+export default Landing;
 
 export async function getServerSideProps(ctx) {
     const { req, res, query } = ctx;
@@ -287,6 +325,14 @@ export async function getServerSideProps(ctx) {
     if (req) {
         const authCookie = req.cookies.auth;
         validate = await ValidateToken({ token: authCookie });
+        if (validate?.success) {
+            return {
+                redirect: {
+                    permanent: false,
+                    destination: "/home"
+                }
+            }
+        }
     }
     return { props: { validate } }
 }

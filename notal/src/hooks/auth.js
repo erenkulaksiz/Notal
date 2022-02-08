@@ -1,9 +1,12 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import AuthService from "../service/AuthService";
+import { getAuth, onIdTokenChanged, onAuthStateChanged } from "firebase/auth";
+import Cookie from 'js-cookie';
 
 const authContext = createContext();
 
 import { server } from '../config';
+import Cookies from "js-cookie";
 
 export default function useAuth() {
     return useContext(authContext);
@@ -12,12 +15,44 @@ export default function useAuth() {
 export function AuthProvider(props) {
     const [user, setUser] = useState(null);
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    // #TODO: cache setUser
+    const auth = getAuth();
 
-    /*useEffect(() => {
-        console.log("userAuthProvider:", user);
-    }, [user]);*/
+    useEffect(() => {
+
+        /*const tokenCheck = onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                setUser(null);
+                cookie.remove("auth");
+                setLoading(false);
+            } else {
+                const token = await user.getIdToken();
+                setLoading(false);
+                setUser(user);
+                cookie.set("auth", token, { expires: 1 });
+            }
+        });*/
+
+        const tokenChange = onIdTokenChanged(auth, async (user) => {
+            if (!user) {
+                setUser(null);
+                Cookie.remove("auth");
+                setLoading(false);
+            } else {
+                const token = await user.getIdToken();
+                setUser(user);
+                Cookie.set("auth", token, { expires: 1 });
+                setLoading(false);
+            }
+        });
+
+        return () => {
+            tokenChange();
+            //tokenCheck();
+        }
+        //eslint-disable-next-line
+    }, []);
 
     const login = {
         google: async () => {
@@ -84,6 +119,7 @@ export function AuthProvider(props) {
         },
         logout: async () => {
             await AuthService.logout();
+            Cookies.remove("auth");
             setUser(null);
         },
         getIdToken: async () => {
@@ -141,7 +177,7 @@ export function AuthProvider(props) {
         }
     }
 
-    const value = { authUser: user, authError: error, setUser, login, users, workspace, };
+    const value = { authUser: user, authError: error, setUser, login, users, workspace, authLoading: loading };
 
     return <authContext.Provider value={value} {...props} />
 }

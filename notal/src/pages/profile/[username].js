@@ -50,6 +50,10 @@ const Profile = (props) => {
     const [editingLinks, setEditingLinks] = useState(false);
 
     useEffect(() => {
+        console.log("!!!props!!!!", props);
+    }, [props]);
+
+    useEffect(() => {
         // reload page when logout
         console.log("Reload! /pages/profile/[username].js");
         setTimeout(() => {
@@ -227,9 +231,9 @@ const Profile = (props) => {
                         clearable
                     /> : <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                         <Text h3 style={{ alignItems: "center" }} >
-                            {props.profile.data?.fullname ? props.profile.data?.fullname : `@${props.profile.data?.username}`}
+                            {props.profile?.data?.fullname ? props.profile?.data?.fullname : `@${props.profile?.data?.username}`}
                         </Text>
-                        {props.profile.data?.profileVisible || <LockOutlineIcon height={24} width={24} style={{ fill: "currentColor", marginLeft: 8 }} />}
+                        {props.profile?.data?.profileVisible || <LockOutlineIcon height={24} width={24} style={{ fill: "currentColor", marginLeft: 8 }} />}
                     </div>}
 
                     {editErrors.fullname != false && <Text color={"$error"}>{editErrors.fullname}</Text>}
@@ -244,7 +248,7 @@ const Profile = (props) => {
                         css={{ mt: 16 }}
                         onChange={e => setEditProfile({ ...editProfile, username: e.target.value.replace(/[^\w\s]/gi, "").replace(/\s/g, '').toLowerCase() })}
                         maxLength={20}
-                    /> : props.profile.data.fullname && <Text css={{ fs: "1.2em", fontWeight: "600" }}>@{props.profile.data.username}</Text>}
+                    /> : props.profile?.data?.fullname && <Text css={{ fs: "1.2em", fontWeight: "600" }}>@{props.profile?.data?.username}</Text>}
 
                     {editErrors.username != false && <Text color={"$error"}>{editErrors.username}</Text>}
 
@@ -384,7 +388,7 @@ export async function getServerSideProps(ctx) {
         const authCookie = req.cookies.auth;
 
         validate = await ValidateToken({ token: authCookie });
-        profile = await GetProfile({ username: queryUsername, token: authCookie })
+        profile = await GetProfile({ username: queryUsername, token: authCookie });
     }
     return { props: { validate, profile } }
 }

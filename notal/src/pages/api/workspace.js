@@ -58,8 +58,6 @@ export default async function handler(req, res) {
                 const bearerToken = bearer?.split(' ')[1];
 
                 await admin.auth().verifyIdToken(bearerToken).then(async (decodedToken) => {
-                    console.log("decodedToken workspace: ", decodedToken);
-
                     const user = await usersCollection.findOne({ uid: decodedToken.user_id });
 
                     if (uid) { // if no uid present, find workspaces based on decodedtoken
@@ -99,7 +97,6 @@ export default async function handler(req, res) {
                 } else {
                     if (workspace.workspaceVisible) {
                         const user = await usersCollection.findOne({ "uid": workspace.owner });
-                        console.log("user: ", user);
                         if (user) {
                             res.status(200).send({
                                 success: true,

@@ -4,6 +4,7 @@ import { useTheme as useNextTheme } from 'next-themes';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { Button, Text, Grid, Card, Link as ALink, Switch, Avatar, useTheme, Row, Modal, Input, Tooltip } from '@nextui-org/react';
+import Cookies from 'js-cookie';
 
 import {
     UserIcon,
@@ -48,18 +49,48 @@ const Header = styled.nav`
     z-index: 999;
 `;
 
+
 const Navbar = ({ user }) => {
     const { setTheme } = useNextTheme();
     const { isDark } = useTheme();
     const auth = useAuth();
     const router = useRouter();
+    const loggedIn = !!Cookies.get('auth');
 
     const [modalVisible, setModalVisible] = useState(false);
+    /*
+    const StyledDetails = styled("details", {
+        position: "relative",
+        display: "inline-block",
+        backgroundColor: "transparent",
+        "&[open] > summary:before": {
+            position: "fixed",
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            zIndex: 1,
+            display: "block",
+            cursor: "default",
+            content: " ",
+        }
+    });
 
+    const StyledHeader = styled("div", {
+        //backgroundColor: this.props.isDark ? "black" : "white",
+        overflow: "visible",
+        borderRadius: 0,
+        padding: 12,
+        paddingTop: 18,
+        position: "sticky",
+        top: 0,
+        zIndex: 999,
+    });
+    */
     return (<Header isDark={isDark}>
         <Grid.Container justify="center">
             <Grid xs={6} sm={4} alignItems='center'>
-                <Link href={auth?.authUser ? "/home" : "/login"} passHref>
+                <Link href={loggedIn ? "/home" : "/login"} passHref>
                     <ALink>
                         <img
                             src={isDark ? "/icon_white.png" : "/icon_galactic.png"}
@@ -73,7 +104,7 @@ const Navbar = ({ user }) => {
 
             </Grid>
             <Grid xs={6} sm={4} justify='flex-end' alignItems='center'>
-                {!auth?.authUser && <Switch
+                {!loggedIn && <Switch
                     color="primary"
                     initialChecked={isDark}
                     onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
@@ -82,7 +113,7 @@ const Navbar = ({ user }) => {
                     css={{ mr: 12 }}
                     size="sm"
                 />}
-                {auth?.authUser ? <Details>
+                {loggedIn ? <Details>
                     <summary style={{
                         userSelect: "none",
                         "&::WebkitDetailsMarket": {

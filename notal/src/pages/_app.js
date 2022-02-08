@@ -4,7 +4,6 @@ import '../app/firebaseApp';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { NextUIProvider, createTheme } from '@nextui-org/react';
 import { AuthProvider } from '../hooks/auth';
-import AuthStateChanged from '../layout/AuthStateChanged';
 import { useRouter } from 'next/router';
 import ProgressBar from "@badrap/bar-of-progress";
 
@@ -107,9 +106,7 @@ const Notal = ({ Component, pageProps }) => {
     >
       <NextUIProvider>
         <AuthProvider>
-          <AuthStateChanged>
-            <Component {...pageProps} />
-          </AuthStateChanged>
+          <Component {...pageProps} />
         </AuthProvider>
       </NextUIProvider>
     </NextThemesProvider>)

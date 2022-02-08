@@ -1,5 +1,5 @@
 //import { useState } from 'react';
-import { Button, Text, Grid, Card, useTheme, Row, Tooltip, Avatar, Link as ALink } from '@nextui-org/react';
+import { Button, Text, Grid, Card, useTheme, Row, Tooltip, Avatar, Link as ALink, Loading } from '@nextui-org/react';
 import Link from 'next/link';
 
 import {
@@ -16,7 +16,7 @@ import {
     VisibleOffIcon
 } from '../../icons';
 
-const WorkspaceNav = ({ title, desc, starred, onFavClick, onDeleteClick, onEditWorkspace, isOwner, user, onVisibleClick, visible, loading }) => {
+const WorkspaceNav = ({ title, desc, starred, onFavClick, onDeleteClick, onEditWorkspace, isOwner, user, onVisibleClick, visible, loading, authLoading }) => {
     const { isDark } = useTheme();
 
     return (<Card css={{ bgBlur: isDark ? "#000000" : "#ffffff" }} shadow={false}>
@@ -45,7 +45,7 @@ const WorkspaceNav = ({ title, desc, starred, onFavClick, onDeleteClick, onEditW
                     </Row>
                 </Tooltip>}
             </Grid>
-            {isOwner ? <Grid xs={7} sm={4} justify="flex-end">
+            {authLoading ? <Loading type="gradient" /> : isOwner ? <Grid xs={7} sm={4} justify="flex-end">
                 <WorkspaceLoading loading={loading} />
                 <Tooltip
                     content={starred == true ? "Remove from favorites" : "Add to favorites"}

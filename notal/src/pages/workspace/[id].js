@@ -219,9 +219,9 @@ const Workspace = (props) => {
         },
     }
 
-    return (<Container fluid css={{ position: "relative", padding: 0, overflowX: "hidden" }}>
+    return (<Container xl css={{ position: "relative", padding: 0, overflowX: "hidden" }}>
         <Head>
-            <title>{_workspace?.title ?? "Not Found"}</title>
+            <title>{loadingWorkspace ? "Loading..." : _workspace?.title ?? "Not Found"}</title>
             <meta name='twitter:description' content='Take your notes to next level with Notal' />
             <meta property='og:description' content='Take your notes to next level with Notal' />
             <meta name='description' content='Take your notes to next level with Notal' />
@@ -251,6 +251,7 @@ const Workspace = (props) => {
                             avatar: _workspace.avatar ?? "",
                         }}
                         loading={savingWorkspace}
+                        authLoading={auth.authLoading}
                     />}
                 </div>
 
