@@ -69,6 +69,7 @@ const Home = (props) => {
     useEffect(() => {
         console.log("props home: ", props);
 
+        /*
         (async () => {
             const token = await auth.users.getIdToken();
             const res = await CheckToken({ token, props });
@@ -76,6 +77,7 @@ const Home = (props) => {
                 router.replace(router.asPath);
             }
         })();
+        */
 
         WorkboxInit();
     }, []);

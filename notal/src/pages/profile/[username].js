@@ -60,6 +60,7 @@ const Profile = (props) => {
 
     useEffect(() => {
         console.log("props on profile: ", props);
+        /*
         (async () => {
             const token = await auth.users.getIdToken();
             const res = await CheckToken({ token, props });
@@ -67,7 +68,7 @@ const Profile = (props) => {
                 router.replace(router.asPath);
             }
         })();
-
+        */
         WorkboxInit();
     }, []);
 

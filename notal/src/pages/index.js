@@ -1,9 +1,9 @@
-import { Button, Spacer, Container, Text, Card, useTheme, Row, Link as ALink, Grid } from '@nextui-org/react';
+import { styled, Button, Spacer, Container, Text, Card, useTheme, Row, Link as ALink, Grid } from '@nextui-org/react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import Cookies from 'js-cookie';
 import Head from 'next/head';
-import styled from 'styled-components';
+//import styled from 'styled-components';
 
 import {
     PeopleIcon,
@@ -35,6 +35,7 @@ import {
 
 //import Image from 'next/image';
 
+/*
 const ImageContainer = styled.div`
     width: 100%;
     height: 700px;
@@ -42,15 +43,14 @@ const ImageContainer = styled.div`
     //opacity: ${props => props.isDark ? 0.4 : 0.9};
     background-color: black;
 `;
+*/
 
-/*
-const StyledImageContainer = styled("details", {
+const StyledImageContainer = styled("div", {
     width: "100%",
     height: 700,
     position: "absolute",
     backgroundColor: "black",
 });
-*/
 
 const Features = [
     {
@@ -81,6 +81,7 @@ const Landing = (props) => {
     const { isDark } = useTheme();
 
     useEffect(() => {
+        /*
         (async () => {
             const token = await auth.users.getIdToken();
             const res = await CheckToken({ token, props });
@@ -88,7 +89,8 @@ const Landing = (props) => {
                 router.replace(router.asPath);
             }
         })();
-
+        */
+        console.log("home props->", props);
         WorkboxInit();
     }, []);
 
@@ -100,11 +102,11 @@ const Landing = (props) => {
             <meta name='description' content='Take your notes to next level with Notal' />
         </Head>
         <Navbar user={props.validate?.data} />
-        <ImageContainer isDark={isDark}>
+        <StyledImageContainer isDark={isDark}>
             <div style={{ position: "absolute", width: "100%", height: "100%", backgroundImage: isDark ? "linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 55%, rgba(0,0,0,0.2) 100%)" : "linear-gradient(0deg, rgba(255,255,255,1) 10%, rgba(0,0,0,0) 62%)" }} />
             <div style={{ position: "absolute", width: "100%", height: "100%", background: isDark ? "black" : "white", opacity: isDark ? .5 : .2 }} />
             <img src="/landing_bg_banner_1.png" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-        </ImageContainer>
+        </StyledImageContainer>
         <Container md css={{ position: "relative" }}>
             <Spacer y={6} />
             <Grid.Container gap={2} css={{ zIndex: "$1", position: "relative" }}>

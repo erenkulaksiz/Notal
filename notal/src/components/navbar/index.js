@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import styled from 'styled-components'
+//import styled from 'styled-components'
 import { useTheme as useNextTheme } from 'next-themes';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { Button, Text, Grid, Card, Link as ALink, Switch, Avatar, useTheme, Row, Modal, Input, Tooltip } from '@nextui-org/react';
+import { styled, Button, Text, Grid, Card, Link as ALink, Switch, Avatar, useTheme, Row, Modal, Input, Tooltip } from '@nextui-org/react';
 
 import {
     UserIcon,
@@ -19,6 +19,7 @@ import {
 
 import useAuth from '../../hooks/auth';
 
+/*
 const Details = styled.details`
     position: relative;
     display: inline-block;
@@ -47,6 +48,7 @@ const Header = styled.nav`
     top: 0px;
     z-index: 999;
 `;
+*/
 
 const Navbar = ({ user }) => {
     const { setTheme } = useNextTheme();
@@ -57,7 +59,6 @@ const Navbar = ({ user }) => {
 
     const [modalVisible, setModalVisible] = useState(false);
 
-    /*
     const StyledDetails = styled("details", {
         position: "relative",
         display: "inline-block",
@@ -85,23 +86,8 @@ const Navbar = ({ user }) => {
         top: 0,
         zIndex: 999,
     });
-    */
 
-    const ThemeSwitch = () => {
-        if (!client) return null;
-        if (user) return null;
-        return (<Switch
-            color="primary"
-            initialChecked={isDark}
-            onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
-            iconOn={<LightIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-            iconOff={<DarkIcon height={24} width={24} style={{ fill: "currentColor" }} />}
-            css={{ mr: 12 }}
-            size="sm"
-        />)
-    }
-
-    return (<Header isDark={isDark}>
+    return (<StyledHeader isDark={isDark} style={{ backgroundColor: isDark ? "black" : "white" }}>
         <Grid.Container justify="center">
             <Grid xs={6} sm={4} alignItems='center'>
                 <Link href={user ? "/home" : "/login"} passHref>
@@ -118,8 +104,16 @@ const Navbar = ({ user }) => {
 
             </Grid>
             <Grid xs={6} sm={4} justify='flex-end' alignItems='center'>
-                <ThemeSwitch />
-                {user ? <Details>
+                {!user && <Switch
+                    color="primary"
+                    initialChecked={isDark}
+                    onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
+                    iconOn={<LightIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+                    iconOff={<DarkIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+                    css={{ mr: 12 }}
+                    size="sm"
+                />}
+                {user ? <StyledDetails>
                     <summary style={{
                         userSelect: "none",
                         "&::WebkitDetailsMarket": {
@@ -169,7 +163,7 @@ const Navbar = ({ user }) => {
                             Sign Out
                         </Button>
                     </Card>
-                </Details> : <>
+                </StyledDetails> : <>
                     <Button
                         onClick={() => setModalVisible(true)}
                         css={{ minWidth: 20, "@sm": { minWidth: 100 }, height: "80%" }}
@@ -189,7 +183,7 @@ const Navbar = ({ user }) => {
                 router.replace(router.asPath);
             }}
         />
-    </Header>)
+    </StyledHeader>)
 }
 
 export default Navbar;
