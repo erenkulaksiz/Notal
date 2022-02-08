@@ -57,6 +57,8 @@ const Navbar = ({ user }) => {
     const router = useRouter();
     const client = (typeof window === 'undefined') ? false : true;
 
+    if (client) console.log("isDark: ", isDark);
+
     const [modalVisible, setModalVisible] = useState(false);
 
     const StyledDetails = styled("details", {
@@ -77,18 +79,19 @@ const Navbar = ({ user }) => {
     });
 
     const StyledHeader = styled("div", {
-        //backgroundColor: this.props.isDark ? "black" : "white",
         overflow: "visible",
         borderRadius: 0,
         padding: 12,
         paddingTop: 18,
         position: "sticky",
         top: 0,
+        height: 70,
         zIndex: 999,
+        background: isDark ? "black" : "white",
     });
 
-    return (<StyledHeader isDark={isDark} style={{ backgroundColor: isDark ? "black" : "white" }}>
-        <Grid.Container justify="center">
+    return (<StyledHeader isDark={isDark}>
+        <Grid.Container justify="center" css={{ height: "100%" }}>
             <Grid xs={6} sm={4} alignItems='center'>
                 <Link href={user ? "/home" : "/login"} passHref>
                     <ALink>
