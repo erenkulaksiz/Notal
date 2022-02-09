@@ -139,6 +139,9 @@ const Home = (props) => {
         }
     }
 
+
+    console.log("Render!");
+
     return (<Container xl css={{ position: "relative", padding: 0, overflowX: "hidden" }}>
         <Head>
             <title>Home · Notal</title>
@@ -148,8 +151,6 @@ const Home = (props) => {
         </Head>
 
         <Navbar user={props.validate?.data} />
-
-        {console.log("authUser", auth?.authUser)}
 
         <Grid.Container gap={2}>
             <Grid xs={12}>
