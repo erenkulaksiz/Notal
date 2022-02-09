@@ -1,30 +1,10 @@
-import { Button, Text, Grid, Checkbox, Tooltip, Card, useTheme, Row } from '@nextui-org/react';
-import styled from 'styled-components';
+import { Button, Text, Grid, Checkbox, Tooltip, Card, useTheme } from '@nextui-org/react';
 
 import {
     DeleteIcon,
     EditIcon,
     MoreIcon
 } from '../../icons';
-
-const CardColor = styled.div`
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    background-color: ${props => props.color};
-    z-index: 5;
-    border-radius: 100%;
-`;
-
-const CardTag = styled.div`
-    z-index: 5;
-    right: 30px;
-    padding-left: 4px;
-    padding-right: 4px;
-    margin-right: 4px;
-    border-radius: 8px;
-    border: 2px solid ${props => props.border};
-`;
 
 const FieldCard = ({ card, onDelete, isOwner, onEdit, style }) => {
     const tagColor = "#baa30f";
@@ -40,12 +20,12 @@ const FieldCard = ({ card, onDelete, isOwner, onEdit, style }) => {
                     </Text>
                 </Grid>
                 <Grid xs={4} sm={4} justify='flex-end' alignItems='center'>
-                    {card?.tag?.title && <CardTag border={tagColor}>
+                    {card?.tag?.title && <div className="card-tag" style={{ border: `2px solid ${tagColor}` }}>
                         <Text span css={{ fs: "0.85em", color: tagColor }}>{card?.tag?.title}</Text>
-                    </CardTag>}
+                    </div>}
                     {card?.checked && <Checkbox size="xs" checked={card?.checked} css={{ mr: 8 }} />}
                     {card.color && <div style={{ marginRight: 14, marginBottom: 10, position: "relative" }}>
-                        <CardColor color={card.color} />
+                        <div className="card-color" style={{ backgroundColor: card.color }} />
                     </div>}
                     {isOwner && <Tooltip
                         css={{ pointerEvents: "none" }}
@@ -70,7 +50,24 @@ const FieldCard = ({ card, onDelete, isOwner, onEdit, style }) => {
                 </Grid>
             </Grid.Container>
         </Card>
-    </Grid >)
+        <style jsx>{`
+            .card-tag {
+                z-index: 5;
+                right: 30px;
+                padding-left: 4px;
+                padding-right: 4px;
+                margin-right: 4px;
+                border-radius: 8px;
+            }
+            .card-color {
+                position: absolute;
+                width: 8px;
+                height: 8px;
+                z-index: 5;
+                border-radius: 100%;
+            }
+        `}</style>
+    </Grid>)
 }
 
 export default FieldCard;

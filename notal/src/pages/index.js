@@ -85,8 +85,8 @@ const Landing = (props) => {
         </Head>
         <Navbar user={props.validate?.data} />
         <div className="notal-image-container">
-            <div style={{ position: "absolute", width: "100%", height: "100%", zIndex: 1, backgroundImage: isDark ? "linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 55%, rgba(0,0,0,0.2) 100%)" : "linear-gradient(0deg, rgba(255,255,255,1) 10%, rgba(0,0,0,0) 62%)" }} />
-            <div style={{ position: "absolute", width: "100%", height: "100%", zIndex: 2, background: isDark ? "black" : "white", opacity: isDark ? .5 : .2 }} />
+            <div className="notal-image-wrapper-1" />
+            <div className="notal-image-wrapper-2" />
             <div style={{ opacity: isDark ? 0.4 : 0.9 }}>
                 <Image
                     src="/landing_bg_banner_1.png"
@@ -311,17 +311,42 @@ const Landing = (props) => {
                 }}
             />
         }
-        <style jsx>{`
+        <style jsx global>{`
+            html[class="dark-theme"] {
+                --niw-1-wrapper: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 55%, rgba(0,0,0,0.2) 100%);
+                --niw-2-wrapper-bg: black;
+                --niw-2-wrapper-op: .5;
+            }
+            html[class="light-theme"]{
+                --niw-1-wrapper: linear-gradient(0deg, rgba(255,255,255,1) 10%, rgba(0,0,0,0) 62%);
+                --niw-2-wrapper-bg: white;
+                --niw-2-wrapper-op: .2;
+            }
             .notal-image-container{
                 width: 100%;
                 height: 700px;
                 position: absolute;
                 background-color: black;
             }
+            .notal-image-wrapper-1{
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                z-index: 1;
+                background-image: var(--niw-1-wrapper)
+            }
+            .notal-image-wrapper-2{
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                z-index: 2;
+                background: var(--niw-2-wrapper-bg);
+                opacity: var(--niw-2-wrapper-op);
+            }
         `}</style>
     </Container>
     )
-}
+}// //backgroundImage: isDark ? "linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 55%, rgba(0,0,0,0.2) 100%)" : "linear-gradient(0deg, rgba(255,255,255,1) 10%, rgba(0,0,0,0) 62%)" }}
 
 export default withPublic(Landing);
 

@@ -28,8 +28,6 @@ const Navbar = ({ user }) => {
 
     const [modalVisible, setModalVisible] = useState(false);
 
-    client && console.log("isDark navbar: ", isDark);
-
     return (
         <>
             <nav style={{ backgroundColor: client && (isDark ? "black" : "white") }}>
@@ -50,7 +48,7 @@ const Navbar = ({ user }) => {
 
                     </Grid>
                     <Grid xs={6} sm={4} justify='flex-end' alignItems='center'>
-                        {(!user && client && !auth.authLoading) && <Switch
+                        {(!user && !auth.authLoading) && <Switch
                             color="primary"
                             initialChecked={isDark}
                             onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}

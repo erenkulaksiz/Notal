@@ -1,20 +1,9 @@
 import { Loading, Row, Text, useTheme } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-import styled from "styled-components";
 
 import {
     CheckIcon,
 } from '../../icons';
-
-const StyledContainer = styled.div`
-    display: flex;
-    align-items: center;
-    border: 2px solid ${props => props.isDark ? "#110E0B" : "#C1C1C1"};
-    padding: 4px;
-    padding-right: 8px;
-    padding-left: 8px;
-    border-radius: 8px;
-`;
 
 const WorkspaceLoading = ({ loading }) => {
     const { isDark } = useTheme();
@@ -42,12 +31,22 @@ const WorkspaceLoading = ({ loading }) => {
     }
 
     return (<Row css={{ alignItems: "center", justifyContent: "flex-end", paddingRight: 12 }}>
-        <StyledContainer isDark={isDark}>
+        <div className="notal-loading-container" style={{ border: `2px solid ${isDark ? "#575757" : "#9e9e9e"}`, color: isDark ? "#575757" : "#9e9e9e" }}>
             {showLoading && <Loading size={"xs"} />}
             {showLoaded && <CheckIcon size={24} fill="currentColor" />}
-            {showLoading && <Text css={{ ml: 4 }} b>Saving...</Text>}
-            {showLoaded && <Text css={{ ml: 4 }} b>Saved!</Text>}
-        </StyledContainer>
+            {showLoading && <Text css={{ ml: 6, color: "CurrentColor" }} b>Saving...</Text>}
+            {showLoaded && <Text css={{ ml: 6, color: "CurrentColor" }} b>Saved!</Text>}
+        </div>
+        <style jsx global>{`
+            .notal-loading-container {
+                display: flex;
+                align-items: center;
+                padding: 4px;
+                padding-right: 8px;
+                padding-left: 8px;
+                border-radius: 8px;
+            }
+        `}</style>
     </Row>)
 }
 
