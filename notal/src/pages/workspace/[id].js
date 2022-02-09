@@ -57,15 +57,6 @@ const Workspace = (props) => {
 
     useEffect(() => {
         console.log("props workspace: ", props);
-
-        (async () => {
-            const token = await auth.users.getIdToken();
-            const res = await CheckToken({ token, props });
-            if (!res) {
-                router.replace(router.asPath);
-            }
-        })();
-
         WorkboxInit();
     }, []);
 
@@ -158,10 +149,10 @@ const Workspace = (props) => {
                 console.error("error on delete workspace: ", data.error);
             }
         },
-        addCardToField: async ({ fieldId, title, desc, color }) => {
+        addCardToField: async ({ fieldId, title, desc, color, tag }) => {
             setSavingWorkspace(true);
             const newFields = _workspace;
-            newFields.fields[_workspace.fields.findIndex(el => el._id == fieldId)].cards?.push({ title, desc, color, createdAt: Date.now() });
+            newFields.fields[_workspace.fields.findIndex(el => el._id == fieldId)].cards?.push({ title, desc, color, createdAt: Date.now(), tag });
             _setWorkspace(newFields);
 
             const data = await auth.workspace.field.addCard({
@@ -169,7 +160,8 @@ const Workspace = (props) => {
                 workspaceId: _workspace._id,
                 title,
                 desc,
-                color
+                color,
+                tag
             });
 
             console.log("addCardToField res: ", data);
@@ -289,9 +281,9 @@ const Workspace = (props) => {
             <AddCardModal
                 visible={addCardModal.visible}
                 onClose={() => setAddCardModal({ ...addCardModal, visible: false, field: "" })}
-                onAdd={({ title, desc, color }) => {
+                onAdd={({ title, desc, color, tag }) => {
+                    handle.addCardToField({ fieldId: addCardModal.field, title, desc, color, tag });
                     setAddCardModal({ visible: false, field: "" });
-                    handle.addCardToField({ fieldId: addCardModal.field, title, desc, color });
                 }}
             />
             <DeleteWorkspaceModal

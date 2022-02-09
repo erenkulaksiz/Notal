@@ -26,7 +26,7 @@ export default async function handler(req, res) {
 
     const body = JSON.parse(req.body);
 
-    const { uid, title, desc, action, starred, id, workspaceId, color, fieldId, filterBy, swapType, cardId, toFieldId, toCardId, workspaceVisible } = body ?? "";
+    const { uid, title, desc, action, starred, id, workspaceId, color, fieldId, filterBy, swapType, cardId, toFieldId, toCardId, workspaceVisible, tag } = body ?? "";
 
     const workspaceAction = {
         create: async () => {
@@ -258,6 +258,10 @@ export default async function handler(req, res) {
                                 color,
                                 createdAt: Date.now(),
                                 updatedAt: Date.now(),
+                                tag: {
+                                    tag: tag.tag,
+                                    tagColor: tag.tagColor,
+                                },
                                 _id: ObjectId(),
                             }
                         }

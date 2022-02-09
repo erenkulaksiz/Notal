@@ -34,14 +34,16 @@ const Navbar = ({ user }) => {
                 <Grid.Container justify="center" css={{ height: "100%" }}>
                     <Grid xs={6} sm={4} alignItems='center'>
                         <Link href={user ? "/home" : "/login"} passHref>
-                            <Image
-                                src={isDark ? "/icon_white.png" : "/icon_galactic.png"}
-                                alt="Logo of Notal"
-                                width={160}
-                                height={40}
-                                objectFit='contain'
-                                loading="eager"
-                            />
+                            <ALink style={{ cursor: "pointer" }}>
+                                <Image
+                                    src={isDark ? "/icon_white.png" : "/icon_galactic.png"}
+                                    alt="Logo of Notal"
+                                    width={160}
+                                    height={40}
+                                    objectFit='contain'
+                                    loading="eager"
+                                />
+                            </ALink>
                         </Link>
                     </Grid>
                     <Grid xs={0} sm={4} justify='center' alignItems='center'>
@@ -138,6 +140,7 @@ const Navbar = ({ user }) => {
                 position: sticky;
                 top: 0px;
                 z-index: 999;
+                background-color: var(--niw-2-wrapper-bg);
             }
             details {
                 position: relative;

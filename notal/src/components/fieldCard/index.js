@@ -7,7 +7,7 @@ import {
 } from '../../icons';
 
 const FieldCard = ({ card, onDelete, isOwner, onEdit, style }) => {
-    const tagColor = "#baa30f";
+    const { tag } = card;
 
     const { isDark } = useTheme();
 
@@ -20,8 +20,8 @@ const FieldCard = ({ card, onDelete, isOwner, onEdit, style }) => {
                     </Text>
                 </Grid>
                 <Grid xs={4} sm={4} justify='flex-end' alignItems='center'>
-                    {card?.tag?.title && <div className="card-tag" style={{ border: `2px solid ${tagColor}` }}>
-                        <Text span css={{ fs: "0.85em", color: tagColor }}>{card?.tag?.title}</Text>
+                    {card?.tag?.tag && <div className="card-tag" style={{ border: `2px solid ${card?.tag?.tagColor}` }}>
+                        <Text span css={{ fs: "0.8em", color: card?.tag?.tagColor }}>{tag?.tag}</Text>
                     </div>}
                     {card?.checked && <Checkbox size="xs" checked={card?.checked} css={{ mr: 8 }} />}
                     {card.color && <div style={{ marginRight: 14, marginBottom: 10, position: "relative" }}>
@@ -52,8 +52,12 @@ const FieldCard = ({ card, onDelete, isOwner, onEdit, style }) => {
         </Card>
         <style jsx>{`
             .card-tag {
+                display: flex;
+                align-items: center;
                 z-index: 5;
                 right: 30px;
+                padding-top: 2px;
+                padding-bottom: 2px;
                 padding-left: 4px;
                 padding-right: 4px;
                 margin-right: 4px;

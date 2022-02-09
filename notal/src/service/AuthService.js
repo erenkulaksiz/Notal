@@ -100,46 +100,6 @@ const AuthService = {
             return { error: { errorCode: "auth/username-contains-space" } }
         }
 
-        /*
-        return await get(query(ref(db, "paacodes"), orderByChild("code"), equalTo(paac), limitToFirst(1))).then(async (snapshot) => {
-            if (snapshot.exists()) {
-                const data = snapshot.val()[Object.keys(snapshot.val())[0]];
-
-                return await get(query(ref(db, "users"), orderByChild("username"), equalTo(username))).then((snapshot) => {
-                    if (snapshot.exists()) {
-                        console.log("val: ", snapshot.val());
-                        return { error: { errorCode: "auth/username-already-in-use", errorMessage: "This username is already taken." } }
-                    } else {
-                        if (data.valid) {
-                            console.log("user doesnt exist, creating");
-                            return createUserWithEmailAndPassword(auth, email, password)
-                                .then(async (userCredential) => {
-                                    // on register, save fullname to real time database
-                                    const user = userCredential.user;
-                                    await set(ref(db, `users/${user.uid}`), {
-                                        fullname,
-                                        username,
-                                        email,
-                                        createdAt: Date.now(),
-                                        updatedAt: Date.now(),
-                                        paac: data.code,
-                                    });
-                                    return { user }
-                                })
-                                .catch((error) => {
-                                    const errorCode = error.code;
-                                    const errorMessage = error.message;
-                                    return { error: { errorCode, errorMessage } }
-                                });
-                        } else {
-                            return { error: { errorCode: "paac/invalid-code" } }
-                        }
-                    }
-                });
-            } else {
-                return { error: { errorCode: "paac/invalid-code" } }
-            }
-        })*/
         return null
     },
     uploadAvatar: async ({ avatar, uid }) => {
@@ -262,14 +222,14 @@ const AuthService = {
             return { error: data?.error }
         }
     },
-    addCard: async ({ id, workspaceId, title, desc, color }) => {
+    addCard: async ({ id, workspaceId, title, desc, color, tag }) => {
         // id field id
         const auth = getAuth();
 
         const data = await fetch(`${server}/api/workspace`, {
             'Content-Type': 'application/json',
             method: "POST",
-            body: JSON.stringify({ id, action: "ADDCARD", uid: auth?.currentUser?.uid, workspaceId, title, desc, color }),
+            body: JSON.stringify({ id, action: "ADDCARD", uid: auth?.currentUser?.uid, workspaceId, title, desc, color, tag }),
         }).then(response => response.json());
 
         if (data?.success) {

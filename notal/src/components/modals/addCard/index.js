@@ -4,18 +4,17 @@ import { Button, Text, Modal, Input, Row, Textarea, } from '@nextui-org/react';
 import {
     FieldCard,
     ColorSelect
-} from '../../';
+} from '@components';
 
 import {
     AddIcon,
     CrossIcon,
     CheckIcon
-} from '../../../icons';
+} from '@icons';
 
 import {
     CardColors
-} from '../../../utils';
-
+} from '@utils/constants';
 
 const AddCardModal = ({ visible, onClose, onAdd }) => {
     const [title, setTitle] = useState("");
@@ -31,7 +30,7 @@ const AddCardModal = ({ visible, onClose, onAdd }) => {
             return;
         }
         setTitleError("");
-        onAdd({ title, desc, color: color.code });
+        onAdd({ title, desc, color: color.code, tag: { tag, tagColor: "#baa30f" } });
         close();
     }
 
@@ -59,7 +58,7 @@ const AddCardModal = ({ visible, onClose, onAdd }) => {
         </Modal.Header>
         <Modal.Body css={{ overflow: "visible" }}>
             <FieldCard
-                card={{ title: title != "" ? title : "Enter a title...", desc, color: color.code, tag: { title: tag != "" ? tag : "tag" } }}
+                card={{ title: title != "" ? title : "Enter a title...", desc, color: color.code, tag: { tag, tagColor: "#baa30f" } }}
                 isOwner={false}
             />
             <Row css={{ fd: "column", m: 0, mb: 8 }}>
@@ -88,7 +87,7 @@ const AddCardModal = ({ visible, onClose, onAdd }) => {
                 <Text css={{ color: "$gray700", fontWeight: "500", ml: 4 }}>Card Color (Optional)</Text>
                 <ColorSelect
                     content={CardColors} // will show card colors here
-                    onSelect={({ element }) => setColor({ code: element.code, name: element.name, showName: element.showName })}
+                    onSelect={({ element }) => setColor({ code: element.name == "" ? "" : element.code, name: element.name == "" ? "" : element.name, showName: element.showName })}
                     selected={color}
                 />
             </Row>

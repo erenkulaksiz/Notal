@@ -4,7 +4,7 @@ import styled from "styled-components";
 import {
     ArrowDownIcon,
     CheckIcon
-} from '../../icons';
+} from '@icons';
 
 const CardColor = styled.div`
     position: absolute;

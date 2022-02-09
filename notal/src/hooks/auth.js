@@ -164,9 +164,9 @@ export function AuthProvider(props) {
             editCard: async ({ id, workspaceId, fieldId, title, desc, color }) => {
                 return await AuthService.editCard({ id, workspaceId, fieldId, title, desc, color });
             },
-            addCard: async ({ id, workspaceId, title, desc, color }) => {
+            addCard: async ({ id, workspaceId, title, desc, color, tag }) => {
                 // id as field id
-                return await AuthService.addCard({ id, workspaceId, title, desc, color });
+                return await AuthService.addCard({ id, workspaceId, title, desc, color, tag });
             },
             removeCard: async ({ id, workspaceId, fieldId }) => {
                 return await AuthService.removeCard({ id, workspaceId, fieldId });
