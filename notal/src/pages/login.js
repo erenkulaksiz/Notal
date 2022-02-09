@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 import Head from 'next/head';
 
 import { withPublic } from '@hooks/route';
-import { WorkboxInit } from '@utils';
+import { ValidateToken, WorkboxInit } from '@utils';
 import AuthService from '@service/AuthService';
 import useAuth from '@hooks/auth';
 
@@ -177,3 +177,16 @@ const Login = (props) => {
 }
 
 export default withPublic(Login);
+
+export async function getServerSideProps(ctx) {
+    const { req, res, query } = ctx;
+    let validate = {};
+    let workspaces = {};
+
+    if (req) {
+        const authCookie = req.cookies.auth;
+
+        validate = await ValidateToken({ token: authCookie });
+    }
+    return { props: { validate, workspaces } }
+}

@@ -31,7 +31,9 @@ const lightTheme = createTheme({
       "$red400": '#570606',
     },
     space: {},
-    fonts: {},
+    fonts: {
+      sans: "'Roboto', sans-serif;",
+    },
     shadows: {
       xl: 'rgba(0, 0, 0, 0.20) 0px 22px 70px 4px'
     }
@@ -49,7 +51,9 @@ const darkTheme = createTheme({
       border: '$accents2',
     },
     space: {},
-    fonts: {},
+    fonts: {
+      sans: "'Roboto', sans-serif;",
+    },
     shadows: {
       xl: 'rgba(0, 0, 0, 0.20) 0px 22px 70px 4px'
     }

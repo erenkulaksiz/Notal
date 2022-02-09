@@ -1,13 +1,9 @@
-const path = require('path')
-const withSass = require('@zeit/next-sass');
-const withPWA = require('next-pwa')
+const path = require('path');
+const withPWA = require('next-pwa');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true'
-})
+});
 
-module.exports = withSass({
-  cssModules: true
-})
 module.exports = withBundleAnalyzer(withPWA({
   pwa: {
     dest: 'public',
@@ -27,5 +23,5 @@ module.exports = withBundleAnalyzer(withPWA({
   },
   sassOptions: {
     includePaths: [path.join(__dirname, 'styles')],
-  },
+  }
 }))

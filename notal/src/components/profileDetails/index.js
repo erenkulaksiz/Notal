@@ -49,11 +49,7 @@ const ProfileDetails = ({ links, createdAt }) => {
             <Row css={{ justifyContent: "flex-end", pt: 8, pb: 0, fill: "$gray500", "@mdMax": { justifyContent: "center", pt: 12, pb: 12, }, alignItems: "flex-start" }}>
                 <CakeIcon height={24} width={24} style={{ transform: "scale(0.8)" }} />
                 <Text css={{ ml: 4, fs: "1em", color: "$gray500", fontWeight: "600" }}>
-                    {`Joined 
-                    ${new Date(createdAt).getDate()} 
-                    ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][new Date(createdAt).getMonth()]},
-                    ${new Date(createdAt).getFullYear()}
-                    `}
+                    {`Joined  ${new Date(createdAt).getDate()} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][new Date(createdAt).getMonth()]}, ${new Date(createdAt).getFullYear()}`}
                 </Text>
             </Row>
         </Grid>

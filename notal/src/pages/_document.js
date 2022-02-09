@@ -1,9 +1,26 @@
-import { Html, Head, Main, NextScript } from 'next/document'
+import Document, { Html, Head, Main, NextScript } from 'next/document';
+import { CssBaseline } from '@nextui-org/react';
 
-export default function Document() {
+export default function Notal() {
+
+    const getInitialProps = async (ctx) => {
+        const initialProps = await Document.getInitialProps(ctx);
+        //const styledJSXStyles = flush();
+
+        return {
+            ...initialProps,
+            styles: (
+                <>
+                    {initialProps.styles}
+                </>
+            )
+        };
+    }
+
     return (
         <Html lang='en'>
             <Head>
+                {CssBaseline.flush()}
                 <meta charSet="UTF-8" />
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />

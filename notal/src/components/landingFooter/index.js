@@ -1,23 +1,16 @@
-import { Spacer, Text, Card, useTheme, Row, Link as ALink, Grid } from '@nextui-org/react';
+import { Spacer, Text, useTheme, Row, Link as ALink, Grid } from '@nextui-org/react';
 import Link from 'next/link';
 import PoweredByVercel from 'powered-by-vercel';
-import styled from 'styled-components';
 
 import {
     CodeIcon,
     HeartIcon
 } from '../../icons';
 
-const Footer = styled.footer`
-    background-image: ${props => props.isDark ? "linear-gradient(0deg, rgba(25,25,25,1) 0%, rgba(11,11,11,1) 49%, rgba(0,0,0,0) 100%);" : "linear-gradient(0deg, rgba(139,139,139,1) 0%, rgba(139,139,139,0.3449754901960784) 60%, rgba(139,139,139,0) 100%)"};
-    padding-top: 24px;
-    padding-bottom: 24px;
-`;
-
 const LandingFooter = () => {
     const { isDark } = useTheme();
 
-    return (<Footer isDark={isDark}>
+    return (<><footer style={{ backgroundImage: isDark ? "linear-gradient(0deg, rgba(25,25,25,1) 0%, rgba(11,11,11,1) 49%, rgba(0,0,0,0) 100%)" : "linear-gradient(0deg, rgba(139,139,139,1) 0%, rgba(139,139,139,0.3449754901960784) 60%, rgba(139,139,139,0) 100%)" }}>
         <Grid.Container>
             <Grid xs={2} md={4}></Grid>
             <Grid xs={8} md={4}>
@@ -37,7 +30,14 @@ const LandingFooter = () => {
                 <PoweredByVercel utmSource="notal" />
             </Grid>
         </Grid.Container>
-    </Footer>)
+    </footer>
+        <style jsx>{`
+            footer{
+                padding-top: 24px;
+                padding-bottom: 24px;
+            }
+        `}</style>
+    </>)
 }
 
 export default LandingFooter;

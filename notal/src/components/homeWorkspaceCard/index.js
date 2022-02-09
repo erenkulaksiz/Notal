@@ -13,7 +13,7 @@ const HomeWorkspaceCard = ({ workspace, onStarClick, onDeleteClick }) => {
         <Grid.Container>
             <Grid xs={10} css={{ fd: "column" }} justify='flex-end'>
                 {!workspace?.workspaceVisible && <Tooltip content="This workspace is set to private." css={{ pointerEvents: "none" }}>
-                    <VisibleOffIcon height={24} width={24} fill={"currentColor"} style={{ marginRight: 14 }} />
+                    <VisibleOffIcon height={24} width={24} fill={"currentColor"} />
                 </Tooltip>}
                 <Row css={{ fd: "column" }}>
                     <Link href="/workspace/[pid]" as={`/workspace/${workspace._id}`}>

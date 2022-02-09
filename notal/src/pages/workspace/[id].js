@@ -53,7 +53,7 @@ const Workspace = (props) => {
     const [loadingWorkspace, setLoadingWorkspace] = useState(true);
     const [_workspace, _setWorkspace] = useState(null);
 
-    const isOwner = (_workspace ? _workspace?.owner == auth.authUser?.uid : false);
+    const isOwner = (_workspace ? _workspace?.owner == props?.validate?.uid : false);
 
     useEffect(() => {
         console.log("props workspace: ", props);
@@ -233,25 +233,24 @@ const Workspace = (props) => {
             :
             <div style={{ display: "flex", flexDirection: "column", flexShrink: 0 }}>
                 <div style={{ paddingLeft: 12, paddingRight: 12, position: "sticky", top: 70, zIndex: 500 }}>
-                    {loadingWorkspace ? <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
+                    {loadingWorkspace ? <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: 400 }}>
                         <Loading />
                     </div> : <WorkspaceNav
-                        title={_workspace.title}
-                        desc={_workspace.desc}
-                        starred={_workspace.starred}
+                        title={_workspace?.title}
+                        desc={_workspace?.desc}
+                        starred={_workspace?.starred}
                         onFavClick={() => handle.starWorkspace()}
                         onVisibleClick={() => handle.editWorkspace({ workspaceVisible: _workspace?.workspaceVisible ? !_workspace?.workspaceVisible : true })}
                         onDeleteClick={() => setDeleteWorkspace(true)}
                         onEditWorkspace={() => setEditWorkspace(true)}
                         isOwner={isOwner}
-                        visible={_workspace.workspaceVisible} // workspace visible
+                        visible={_workspace?.workspaceVisible} // workspace visible
                         user={{
-                            username: _workspace.username,
-                            fullname: _workspace.fullname ?? "",
-                            avatar: _workspace.avatar ?? "",
+                            username: _workspace?.username,
+                            fullname: _workspace?.fullname ?? "",
+                            avatar: _workspace?.avatar ?? "",
                         }}
                         loading={savingWorkspace}
-                        authLoading={auth.authLoading}
                     />}
                 </div>
 
