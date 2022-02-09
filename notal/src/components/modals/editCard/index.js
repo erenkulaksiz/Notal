@@ -4,17 +4,17 @@ import { Button, Text, Modal, Input, Row, Textarea, Divider, Collapse } from '@n
 import {
     FieldCard,
     ColorSelect
-} from '../../';
+} from '@components';
 
 import {
     EditIcon,
     CrossIcon,
     CheckIcon,
-} from '../../../icons';
+} from '@icons';
 
 import {
     CardColors,
-} from '../../../utils';
+} from '@utils/constants';
 
 const EditCardModal = ({ visible, onClose, onEdit, card }) => {
     const [titleError, setTitleError] = useState("");
@@ -38,6 +38,7 @@ const EditCardModal = ({ visible, onClose, onEdit, card }) => {
         newCard.desc = editDesc;
         newCard.title = editTitle != "" ? editTitle : "Set Title";
         newCard.color = editColor.code;
+        //setEditColor({...editColor, name: "", showName: ""});
         _setCard({ ...newCard });
     }, [editTitle, editDesc, editColor]);
 
@@ -48,6 +49,7 @@ const EditCardModal = ({ visible, onClose, onEdit, card }) => {
         }
 
         onEdit({ title: editTitle, desc: editDesc, color: editColor.code, id: card._id });
+        close();
     }
 
     const close = () => {
@@ -55,7 +57,7 @@ const EditCardModal = ({ visible, onClose, onEdit, card }) => {
         setDescError("");
         setEditTitle(card.title);
         setEditDesc(card.desc);
-        setEditColor({ ...editColor, code: card.color, name: "" });
+        setEditColor({ ...editColor, code: card.color, name: "", showName: "" });
         onClose();
     }
 
@@ -105,7 +107,7 @@ const EditCardModal = ({ visible, onClose, onEdit, card }) => {
                 <Text css={{ color: "$gray700", fontWeight: "500", ml: 4 }}>Card Color (Optional)</Text>
                 <ColorSelect
                     content={CardColors} // will show card colors here
-                    onSelect={({ element }) => setEditColor({ code: element.code, name: element.name, showName: element.showName })}
+                    onSelect={({ element }) => setEditColor({ code: element.name == "" ? "" : element.code, name: element.name == "" ? "" : element.name, showName: element.showName })}
                     selected={editColor}
                 />
             </Row>

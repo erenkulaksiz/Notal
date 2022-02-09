@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
 import '../../styles/globals.css';
 import '../app/firebaseApp';
-import { ThemeProvider as NextThemesProvider } from 'next-themes';
-import { NextUIProvider, createTheme } from '@nextui-org/react';
 import { AuthProvider } from '../hooks/auth';
+import { NextUIProvider, createTheme } from '@nextui-org/react';
+import { ThemeProvider as NextThemesProvider } from 'next-themes';
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 import ProgressBar from "@badrap/bar-of-progress";
 
 const progress = new ProgressBar({
@@ -29,6 +30,8 @@ const lightTheme = createTheme({
       "$red600": '#800b0b',
       "$red500": '#690909',
       "$red400": '#570606',
+      textInvert: '$black',
+      textTitle: '$gray700',
     },
     space: {},
     fonts: {
@@ -49,6 +52,8 @@ const darkTheme = createTheme({
       gradient: 'linear-gradient(130deg, #036AE6 10%, #F1067F 160%)',
       textGradient: 'linear-gradient(110deg, #036AE6 20%, #F1067F 110%)',
       border: '$accents2',
+      textInvert: '$white',
+      textTitle: '$gray400',
     },
     space: {},
     fonts: {
@@ -108,6 +113,9 @@ const Notal = ({ Component, pageProps }) => {
         dark: darkTheme.className
       }}
     >
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+      </Head>
       <NextUIProvider>
         <AuthProvider>
           <Component {...pageProps} />

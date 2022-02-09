@@ -51,30 +51,14 @@ const Profile = (props) => {
     }, [props]);
 
     useEffect(() => {
-        // reload page when logout
-        console.log("Reload! /pages/profile/[username].js");
-        setTimeout(() => {
-            router.replace(router.asPath);
-        }, 1000);
-    }, [auth.authUser]);
-
-    useEffect(() => {
         console.log("props on profile: ", props);
-        /*
-        (async () => {
-            const token = await auth.users.getIdToken();
-            const res = await CheckToken({ token, props });
-            if (!res) {
-                router.replace(router.asPath);
-            }
-        })();
-        */
         WorkboxInit();
     }, []);
 
     useEffect(() => {
         if (!auth.authUser) {
             setEditingProfile(false);
+            router.replace(router.asPath);
         }
     }, [auth.authUser]);
 

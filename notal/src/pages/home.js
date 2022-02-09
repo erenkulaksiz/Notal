@@ -67,18 +67,6 @@ const Home = (props) => {
     }, [workspaceViewing]);
 
     useEffect(() => {
-        console.log("props home: ", props);
-
-        /*
-        (async () => {
-            const token = await auth.users.getIdToken();
-            const res = await CheckToken({ token, props });
-            if (!res) {
-                router.replace(router.asPath);
-            }
-        })();
-        */
-
         WorkboxInit();
     }, []);
 

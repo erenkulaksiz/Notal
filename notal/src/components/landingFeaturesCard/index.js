@@ -4,7 +4,7 @@ const LandingFeaturesCard = ({ feature }) => {
     const { isDark } = useTheme();
 
     return (<Grid xs={12} sm={6} md={3}>
-        <Card css={{ bf: "saturate(180%) blur(10px)", bg: isDark ? "#ffffff20" : "#ffffff70" }}>
+        <Card css={{ bf: "saturate(140%) blur(4px)", bg: isDark ? "#ffffff10" : "#ffffff50" }}>
             <Row style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Avatar
                     icon={feature.icon}

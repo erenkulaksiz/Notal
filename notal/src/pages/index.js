@@ -1,18 +1,14 @@
-import { Button, Spacer, Container, Text, Card, useTheme, Row, Link as ALink, Grid } from '@nextui-org/react';
+import { Button, Spacer, Container, Text, Card, useTheme, Row, Link as ALink, Grid, Tooltip } from '@nextui-org/react';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import Head from 'next/head';
 import Image from 'next/image';
 //import styled from 'styled-components';
 
 import {
-    PeopleIcon,
-    ShareIcon,
-    UserIcon,
-    WarningIcon,
-    AddIcon,
-    TwitterIcon
+    TwitterIcon,
+    SyncIcon
 } from '@icons';
 
 import {
@@ -22,7 +18,8 @@ import {
     Navbar,
     FieldCard,
     HomeWorkspaceCard,
-    Field
+    Field,
+    AddCardModal,
 } from '@components';
 
 import useAuth from '@hooks/auth';
@@ -34,45 +31,21 @@ import {
     WorkboxInit,
 } from '@utils';
 
-const Features = [
-    {
-        title: "Create Workspace",
-        desc: "You can create workspace and add fields, cards & images.",
-        icon: <AddIcon size={20} fill="currentColor" />
-    },
-    {
-        title: "Personalize your profile",
-        desc: "You can customize your profile how you'd like, change your bio, add social links and more.",
-        icon: <UserIcon size={20} fill="currentColor" />
-    },
-    {
-        title: "Share Bookmarks & Workspaces",
-        desc: "You can share your bookmarks and workspaces with a link, you can also set their visibility to private.",
-        icon: <ShareIcon size={20} fill="currentColor" />
-    },
-    {
-        title: "Create Teams",
-        desc: "You can invite whoever you want to your team. You can create bookmarks & workspaces inside teams and work together with your teammates!",
-        icon: <PeopleIcon size={20} fill="currentColor" />
-    },
-]
+import {
+    Features,
+    Fields,
+    Workspaces,
+} from '@utils/constants';
 
 const Landing = (props) => {
-    const auth = useAuth();
     const router = useRouter();
     const { isDark } = useTheme();
+    const [_fields, _setFields] = useState([...JSON.parse(JSON.stringify(Fields))]);
+    const [_workspaces, _setWorkspaces] = useState([...Workspaces]);
+    const [addCardModal, setAddCardModal] = useState({ visible: false, field: "" });
+    const [_fieldsChanged, _setFieldsChanged] = useState(false);
 
     useEffect(() => {
-        /*
-        (async () => {
-            const token = await auth.users.getIdToken();
-            const res = await CheckToken({ token, props });
-            if (!res) {
-                router.replace(router.asPath);
-            }
-        })();
-        */
-        console.log("home props->", props);
         WorkboxInit();
     }, []);
 
@@ -87,7 +60,7 @@ const Landing = (props) => {
         <div className="notal-image-container">
             <div className="notal-image-wrapper-1" />
             <div className="notal-image-wrapper-2" />
-            <div style={{ opacity: isDark ? 0.4 : 0.9 }}>
+            <div style={{ opacity: isDark ? 0.6 : 0.9 }}>
                 <Image
                     src="/landing_bg_banner_1.png"
                     layout="fill"
@@ -96,22 +69,13 @@ const Landing = (props) => {
             </div>
         </div>
         <Container md css={{ position: "relative" }}>
-            <Spacer y={6} />
+            <Spacer y={12} />
             <Grid.Container gap={2} css={{ zIndex: "$1", position: "relative" }}>
-                <Grid xs={12}>
-                    <Card css={{ fill: "$warning", width: "50%", "@mdMax": { width: "100%" } }}>
-                        <Row>
-                            <WarningIcon size={20} style={{ transform: "scale(0.8)" }} />
-                            <Text h5 css={{ color: "$warningDark", ml: 4 }}>Alpha Warning</Text>
-                        </Row>
-                        <Text b>This project is currently in private alpha and not for public access.</Text>
-                    </Card>
-                </Grid>
                 <Grid xs={12} css={{ fd: "column" }} >
                     <Row>
                         <Text h1 css={{
-                            color: isDark ? "$white" : "$black",
-                            textShadow: "0 40px 80px rgba(20, 20, 20, 0.8)",
+                            color: "$textInvert",
+                            textShadow: "0 2px 80px rgba(144, 144, 144, 0.8)",
                             fs: "2em",
                             "@xs": {
                                 fs: "2em",
@@ -122,7 +86,7 @@ const Landing = (props) => {
                         }}>Organize & Plan your <Text span css={{ bg: "$gradient", backgroundImage: "$textGradient", "-webkit-background-clip": 'text', "-webkit-text-fill-color": 'transparent' }}>next</Text> project with Notal 🚀</Text>
                     </Row>
                     <Row>
-                        <Text b css={{ fs: "1.2em", color: isDark ? "$gray400" : "$gray900" }}>{`Developer's solution from an developer. Keep focus on your project, not on your planning.`}</Text>
+                        <Text b css={{ fs: "1.2em", color: "$textTitle" }}>{`Developer's solution from an developer. Keep focus on your project, not on your planning.`}</Text>
                     </Row>
                     <Spacer y={1} />
                     <Row>
@@ -132,7 +96,7 @@ const Landing = (props) => {
                     </Row>
                 </Grid>
             </Grid.Container>
-            <Spacer y={6} />
+            <Spacer y={2} />
             <Grid.Container gap={2} css={{ zIndex: "$1", position: "relative" }}>
                 {Features.map((feature, index) => <LandingFeaturesCard key={index} feature={feature} />)}
             </Grid.Container>
@@ -150,19 +114,35 @@ const Landing = (props) => {
                     }}>Create
                         <Text span css={{ color: "$primary" }}> workspaces.</Text>
                     </Text>
-                    <Text b css={{ fs: "1.2em", color: "$gray500" }}>You can add images, cards and fields to workspaces. You can also customize your workspaces by adding images to background, changing workspace thumbnail and more.</Text>
+                    <Text b css={{ fs: "1.2em", color: "$gray500" }}>You can add images, cards and fields to workspaces. You can also customize your workspaces and more.</Text>
                 </Grid>
                 <Grid xs={12} sm={7}>
-                    <Grid.Container gap={1}>
-                        <Grid xs={12} sm={4}>
-                            <HomeWorkspaceCard workspace={{ title: "Notal Roadmap", workspaceVisible: true, _id: "61fe5d1e999f4cd55e0f3de0" }} />
-                        </Grid>
-                        <Grid xs={12} sm={4}>
-                            <HomeWorkspaceCard workspace={{ title: "My first workspace.", desc: "Hello world!", }} />
-                        </Grid>
-                        <Grid xs={12} sm={4}>
-                            <HomeWorkspaceCard workspace={{ title: "My first workspace.", desc: "Hello world!", }} />
-                        </Grid>
+                    <Grid.Container gap={1} css={{ position: "relative" }}>
+                        {_workspaces && _workspaces?.map((workspace, index) => (<Grid xs={12} sm={4} key={index}>
+                            <HomeWorkspaceCard
+                                workspace={workspace}
+                                onStarClick={() => {
+                                    const newWorkspaces = _workspaces;
+                                    const workspaceIndex = newWorkspaces.findIndex(el => el._id == workspace._id);
+                                    newWorkspaces[workspaceIndex].starred = !newWorkspaces[workspaceIndex].starred;
+                                    _setWorkspaces([...newWorkspaces]);
+                                }}
+                                onDeleteClick={() => {
+                                    if (workspace.deleteAble) {
+                                        const newWorkspaces = _workspaces;
+                                        const workspaceIndex = newWorkspaces.findIndex(el => el._id == workspace._id);
+                                        newWorkspaces.splice(workspaceIndex, 1);
+                                        _setWorkspaces([...newWorkspaces]);
+                                    }
+                                }} />
+                        </Grid>))}
+                        {_workspaces?.length != Workspaces.length && <Grid xs={12} sm={4}>
+                            <Tooltip content="Undo Workspace Changes" css={{ pointerEvents: "none" }}>
+                                <Button css={{ minWidth: 40 }} onClick={() => _setWorkspaces([...Workspaces])}>
+                                    <SyncIcon size={24} fill="currentColor" />
+                                </Button>
+                            </Tooltip>
+                        </Grid>}
                     </Grid.Container>
                 </Grid>
             </Grid.Container>
@@ -182,97 +162,52 @@ const Landing = (props) => {
                     </Text>
                     <Text b css={{ fs: "1.2em", color: "$gray500" }}>Fields can have all sorts of data from image, cards, links to bookmarks. You can drag drop items around to change their field.</Text>
                 </Grid>
-                <Grid xs={12}>
+                <Grid xs={12} css={{ position: "relative" }}>
                     <Grid.Container gap={1} css={{ alignItems: "flex-start" }}>
-                        <Grid xs={12} sm={4} md={4}>
+                        {_fields.map((field, index) => (<Grid xs={12} sm={4} md={4} key={index}>
                             <Field
                                 isOwner={true}
-                                onEditCard={() => { }}
-                                onDeleteCard={() => { }}
-                                onDeleteField={() => { }}
-                                field={{
-                                    title: "Bugs",
-                                    cards: [{
-                                        "title": "Full height field",
-                                        "desc": "Full height fields overflow screen and scroll bar should be on fields, not the container",
-                                        "color": "#a30b0b",
-                                    },
-                                    {
-                                        "title": "Load times of images",
-                                        "desc": "Placeholder of workspaces is loading slow.",
-                                        "color": "#a30b0b",
-                                    },
-                                    {
-                                        "title": "Mobile version",
-                                        "desc": "Fix workspace title and workspaceNav collapse to each other",
-                                        "color": "currentColor",
-                                    },
-                                    {
-                                        "title": "Card color",
-                                        "desc": "If card color 'None' selected, currentColor is applied to cardColor",
-                                        "color": "#a30b0b",
-                                    }]
-                                }} />
-                        </Grid>
-                        <Grid xs={12} sm={4} md={4}>
-                            <Field
-                                isOwner={true}
-                                onEditCard={() => { }}
-                                onDeleteCard={() => { }}
-                                onDeleteField={() => { }}
-                                field={{
-                                    title: "Do Later",
-                                    cards: [{
-                                        "title": "Database",
-                                        "desc": "Merge database from Firebase to MongoDB.",
-                                        "color": "#10AC63",
-                                    },
-                                    {
-                                        "title": "Cards",
-                                        "desc": "Editing a card now will show create and update time of that card on 'card details' section.",
-                                        "color": "#10AC63",
-                                    },
-                                    {
-                                        "title": "Cards",
-                                        "desc": "While adding and editing a card, description field is now a textarea instead of text input. Now you can enter longer descriptions!",
-                                        "color": "#10AC63",
-                                    },
-                                    {
-                                        "title": "Placeholders",
-                                        "desc": "Empty workspace and empty home now show 'add workspace' placeholder with image instead of showing blank space.",
-                                        "color": "#10AC63",
-                                    }]
+                                onAddCard={() => {
+                                    const fieldIndex = _fields.findIndex(el => el.id == field.id);
+                                    const _tfield = _fields[fieldIndex];
+                                    if (_tfield.cards.length < 6) {
+                                        setAddCardModal({ visible: true, field: field.id });
+                                    }
                                 }}
-                            />
-                        </Grid>
-                        <Grid xs={12} sm={4} md={4}>
-                            <Field
                                 onEditCard={() => { }}
-                                onDeleteCard={() => { }}
-                                onDeleteField={() => { }}
-                                isOwner={true}
-                                field={{
-                                    title: "Done",
-                                    cards: [{
-                                        "title": "Card title breaks if too long",
-                                        "desc": "Card title was breaking if title was too long, but its fixed.",
-                                        "color": "#10AC63",
-                                        "checked": "true"
-                                    }]
+                                onDeleteCard={({ id }) => {
+                                    const newFields = _fields;
+                                    const fieldIndex = newFields.findIndex(el => el.id == field.id);
+                                    const cardIndex = newFields[fieldIndex].cards.findIndex(el => el._id == id);
+                                    if (newFields[fieldIndex].cards.length > 1) {
+                                        newFields[fieldIndex].cards.splice(cardIndex, 1);
+                                        _setFields([...newFields]);
+                                        _setFieldsChanged(true);
+                                    }
                                 }}
-                            />
+                                onDeleteField={() => {
+                                    if (_fields.length != 1) {
+                                        const newFields = _fields;
+                                        const fieldIndex = newFields.findIndex(el => el.id == field.id);
+                                        newFields.splice(fieldIndex, 1);
+                                        _setFields([...newFields]);
+                                        _setFieldsChanged(true);
+                                    }
+                                }}
+                                field={field} />
+                        </Grid>))}
+                        <Grid xs={12}>
+                            {_fieldsChanged && <Tooltip content="Undo Field Changes" css={{ pointerEvents: "none" }}>
+                                <Button css={{ minWidth: 40, }} onClick={() => {
+                                    _setFields([...JSON.parse(JSON.stringify(Fields))]);
+                                    console.log("Fields: ", Fields);
+                                    _setFieldsChanged(false);
+                                }}>
+                                    <SyncIcon size={24} fill="currentColor" />
+                                </Button>
+                            </Tooltip>}
                         </Grid>
                     </Grid.Container>
-                    {/*<FieldCard
-                        card={{
-                            title: "#TODO: Add more stuff to landing page.",
-                            desc: "Add cards with descriptions, also fix the dark mode bug.",
-                            color: "#FF0000"
-                        }}
-                        isOwner={true}
-                        onDelete={() => { }}
-                        onEdit={() => { }}
-                    />*/}
                 </Grid>
             </Grid.Container>
             <Spacer y={6} />
@@ -297,10 +232,21 @@ const Landing = (props) => {
                 </ALink>
             </Row>
             <Spacer y={6} />
-            <div style={{ width: 740, height: 740, position: "absolute", zIndex: 3, left: -400, top: 150, opacity: isDark ? 0.2 : 0.3, backgroundImage: "url(./landing_bg_2.png)", backgroundRepeat: "no-repeat", background: "contain" }} />
+            <div style={{ width: 740, height: 740, position: "absolute", zIndex: 3, left: -400, top: 50, opacity: isDark ? 0.2 : 0.3, backgroundImage: "url(./landing_bg_2.png)", backgroundRepeat: "no-repeat", background: "contain" }} />
             <div style={{ width: 740, height: 740, position: "absolute", zIndex: 3, right: -300, top: -20, opacity: isDark ? 0.2 : 0.1, backgroundImage: "url(./landing_bg_3.png)", backgroundRepeat: "no-repeat", background: "contain", }} />
         </Container>
         <LandingFooter />
+        <AddCardModal
+            visible={addCardModal.visible}
+            onClose={() => setAddCardModal({ ...addCardModal, visible: false, field: "" })}
+            onAdd={({ title, desc, color }) => {
+                const newFields = _fields;
+                const fieldIndex = newFields.findIndex(el => el.id == addCardModal.field);
+                newFields[fieldIndex].cards.push({ title, desc, color, _id: Date.now() });
+                setAddCardModal({ visible: false, field: "" });
+                _setFieldsChanged(true);
+            }}
+        />
         {
             Cookies.get('cookies') != "true" && <AcceptCookies
                 style={{ position: "fixed" }}
@@ -315,12 +261,12 @@ const Landing = (props) => {
             html[class="dark-theme"] {
                 --niw-1-wrapper: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 55%, rgba(0,0,0,0.2) 100%);
                 --niw-2-wrapper-bg: black;
-                --niw-2-wrapper-op: .5;
+                --niw-2-wrapper-op: .2;
             }
             html[class="light-theme"]{
                 --niw-1-wrapper: linear-gradient(0deg, rgba(255,255,255,1) 10%, rgba(0,0,0,0) 62%);
                 --niw-2-wrapper-bg: white;
-                --niw-2-wrapper-op: .2;
+                --niw-2-wrapper-op: .6;
             }
             .notal-image-container{
                 width: 100%;
@@ -333,7 +279,7 @@ const Landing = (props) => {
                 width: 100%;
                 height: 100%;
                 z-index: 1;
-                background-image: var(--niw-1-wrapper)
+                background-image: var(--niw-1-wrapper);
             }
             .notal-image-wrapper-2{
                 position: absolute;
