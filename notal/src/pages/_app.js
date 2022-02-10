@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import ProgressBar from "@badrap/bar-of-progress";
+import { DragDropContext } from 'react-beautiful-dnd';
 
 const progress = new ProgressBar({
   size: 3,
@@ -118,7 +119,9 @@ const Notal = ({ Component, pageProps }) => {
       </Head>
       <NextUIProvider>
         <AuthProvider>
-          <Component {...pageProps} />
+          <DragDropContext>
+            <Component {...pageProps} />
+          </DragDropContext>
         </AuthProvider>
       </NextUIProvider>
     </NextThemesProvider>)

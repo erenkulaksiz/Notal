@@ -239,10 +239,10 @@ const Landing = (props) => {
         <AddCardModal
             visible={addCardModal.visible}
             onClose={() => setAddCardModal({ ...addCardModal, visible: false, field: "" })}
-            onAdd={({ title, desc, color }) => {
+            onAdd={({ title, desc, color, tag }) => {
                 const newFields = _fields;
                 const fieldIndex = newFields.findIndex(el => el.id == addCardModal.field);
-                newFields[fieldIndex].cards.push({ title, desc, color, _id: Date.now() });
+                newFields[fieldIndex].cards.push({ title, desc, color, _id: Date.now(), tag });
                 setAddCardModal({ visible: false, field: "" });
                 _setFieldsChanged(true);
             }}
@@ -292,9 +292,9 @@ const Landing = (props) => {
         `}</style>
     </Container>
     )
-}// //backgroundImage: isDark ? "linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 55%, rgba(0,0,0,0.2) 100%)" : "linear-gradient(0deg, rgba(255,255,255,1) 10%, rgba(0,0,0,0) 62%)" }}
+}
 
-export default withPublic(Landing);
+export default Landing;
 
 export async function getServerSideProps(ctx) {
     const { req, res, query } = ctx;

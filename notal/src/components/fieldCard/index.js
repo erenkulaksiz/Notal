@@ -6,12 +6,12 @@ import {
     MoreIcon
 } from '../../icons';
 
-const FieldCard = ({ card, onDelete, isOwner, onEdit, style }) => {
+const FieldCard = ({ card, onDelete, isOwner, onEdit, style, }) => {
     const { tag } = card;
 
     const { isDark } = useTheme();
 
-    return (<Grid xs={12} css={{ mt: 8, ...style }} key={card._id}>
+    return (<Grid xs={12} css={{ mt: 8, ...style }}>
         <Card bordered css={{ width: "100%", }} shadow={false}>
             <Grid.Container>
                 <Grid xs={8} sm={8}>

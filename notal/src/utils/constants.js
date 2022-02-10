@@ -86,7 +86,7 @@ export const Fields = [{
     {
         "title": "Mobile version",
         "desc": "Fix workspace title and workspaceNav collapse to each other",
-        "color": "currentColor",
+        "color": "",
         "_id": 3
     },
     {
@@ -142,6 +142,6 @@ export const Fields = [{
 
 export const Workspaces = [
     { title: "Notal Roadmap", workspaceVisible: true, _id: "61fe5d1e999f4cd55e0f3de0", deleteAble: false, starred: false },
-    { title: "My first workspace.", desc: "Hello world!", _id: "2", deleteAble: true, starred: false },
-    { title: "My first workspace.", desc: "Hello world!", _id: "3", workspaceVisible: true, deleteAble: true, starred: false }
+    { title: "My first workspace.", desc: "About penguins!", _id: "2", deleteAble: true, starred: false },
+    { title: "My second workspace.", desc: "Lorem ipsum dolor amet.", _id: "3", workspaceVisible: true, deleteAble: true, starred: false }
 ]

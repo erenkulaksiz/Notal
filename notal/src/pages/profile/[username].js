@@ -147,6 +147,11 @@ const Profile = (props) => {
 
     const onAvatarEditChange = async (e) => {
         if (e.target.files[0]) {
+            const file = Math.round((e.target.files[0].size / 1024));
+            if (file >= 4096) {
+                alert("maximum upload size is 4mb");
+                return;
+            }
             if (e.target.files[0].type == "image/jpeg" || e.target.files[0].type == "image/png" || e.target.files[0].type == "image/jpg") {
                 setEditAvatarLoading(true);
                 const res = await auth.users.uploadAvatar({ avatar: e.target.files[0], uid: auth?.authUser?.uid });
