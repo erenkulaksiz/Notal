@@ -53,7 +53,7 @@ const Field = ({ field, onAddCard, onDeleteField, onDeleteCard, onEditClick, onE
                 onDelete={({ id }) => onDeleteCard({ id })}
                 onEdit={() => onEditCard({ card, fieldId: field._id })}
                 isOwner={isOwner}
-
+                key={card._id}
             />
             )}
 
