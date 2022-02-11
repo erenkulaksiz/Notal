@@ -36,6 +36,13 @@ const Login = (props) => {
 
     useEffect(() => {
         WorkboxInit();
+        (async () => {
+            const token = await auth.users.getIdToken();
+            const res = await CheckToken({ token: token.res, props });
+            if (!res) {
+                setTimeout(() => router.replace(router.asPath), 1000);
+            }
+        })();
     }, []);
 
     const onLoginWithGoogle = async () => {

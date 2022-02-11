@@ -1,9 +1,10 @@
-import cookie from "js-cookie";
+import Cookie from "js-cookie";
 import { server } from '../config';
 
 export const CheckToken = async ({ token, props }) => {
     //console.log("jwtyi kontrol edicem bi canım");
-    //console.log("prsss", props.validate?.error);
+    console.log("ERRORS CHECKTOKEN", props.validate?.error);
+
     if (props.validate?.error == "auth/id-token-expired"
         || props.validate?.error == "auth/argument-error"
         || props.validate?.error == "validation-error") {
@@ -19,7 +20,8 @@ export const CheckToken = async ({ token, props }) => {
             });
             */
             //console.log("data validate: ", dataValidate);
-            await cookie.set("auth", token.res, { expires: 1 });
+            console.log("new Token: ", token);
+            await Cookie.set("auth", token, { expires: 1 });
             return false
         } catch (err) {
             console.error(err);
@@ -36,7 +38,7 @@ export const CheckToken = async ({ token, props }) => {
 
 export const ValidateToken = async ({ token }) => {
     if (!token) {
-        return { error: "no-token" }
+        return { error: "no-token", success: false }
     }
 
     const data = await fetch(`${server}/api/validate`, {
@@ -52,7 +54,8 @@ export const ValidateToken = async ({ token }) => {
     if (data.success) {
         return { ...data };
     }
-    return { error: data?.error?.code }
+    console.log("err validate token:", data);
+    return { error: data.error.code ? data.error.code : data.error, success: false }
 }
 
 export const GetWorkspace = async ({ id, token }) => {

@@ -24,15 +24,17 @@ const lightTheme = createTheme({
       primaryDark: '$green600',
       gradient: 'linear-gradient(130deg, #036AE6 10%, #F1067F 160%)',
       textGradient: 'linear-gradient(110deg, #036AE6 20%, #F1067F 110%)',
-
+      /*
       "$red900": '#ff0000',
       "$red800": '#d10808',
       "$red700": '#a30b0b',
       "$red600": '#800b0b',
       "$red500": '#690909',
       "$red400": '#570606',
+      */
       textInvert: '$black',
       textTitle: '$gray700',
+      customBorder: '#dedede',
     },
     space: {},
     fonts: {
@@ -55,6 +57,7 @@ const darkTheme = createTheme({
       border: '$accents2',
       textInvert: '$white',
       textTitle: '$gray400',
+      customBorder: '#1f1f1f',
     },
     space: {},
     fonts: {

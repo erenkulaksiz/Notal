@@ -1,10 +1,11 @@
-import { Avatar, Card, Container, Grid, Loading, Spacer, Text } from '@nextui-org/react';
+import { Avatar, Card, Container, Grid, Loading, Spacer, Text, Row, Button } from '@nextui-org/react';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import Head from 'next/head';
 import Image from 'next/image';
 //import Confetti from 'react-confetti'; // :)
+import styled from 'styled-components';
 
 import addworkspacebanner from '../../public/addfieldbanner.png';
 
@@ -33,11 +34,22 @@ import {
     ValidateToken,
     WorkboxInit
 } from '@utils';
+
 import { withAuth } from '@hooks/route';
+
+const StyledNavLeft = styled.a`
+    width: 100%;
+    height: 44px;
+    background-color: red;
+    margin-bottom: 8px;
+`
 
 const Home = (props) => {
     const auth = useAuth();
     const router = useRouter();
+    const client = (typeof window === 'undefined') ? false : true;
+
+    const [homeViewing, setHomeViewing] = useState("workspaces");
 
     // View/Filter
     const [workspaceViewing, setWorkspaceViewing] = useState("workspaces");
@@ -68,6 +80,13 @@ const Home = (props) => {
 
     useEffect(() => {
         WorkboxInit();
+        (async () => {
+            const token = await auth.users.getIdToken();
+            const res = await CheckToken({ token: token.res, props });
+            if (!res) {
+                setTimeout(() => router.replace(router.asPath), 1000);
+            }
+        })();
     }, []);
 
     useEffect(() => {
@@ -127,9 +146,6 @@ const Home = (props) => {
         }
     }
 
-
-    console.log("Render!");
-
     return (<Container xl css={{ position: "relative", padding: 0, overflowX: "hidden" }}>
         <Head>
             <title>Home · Notal</title>
@@ -140,68 +156,81 @@ const Home = (props) => {
 
         <Navbar user={props.validate?.data} />
 
-        <Grid.Container gap={2}>
-            <Grid xs={12}>
-                <Card css={{ jc: "center" }}>
-                    {loadingWorkspaces ? <Card css={{ p: 12, dflex: "center" }}>
-                        <Loading />
-                        <Text css={{ mt: 24, fs: "1.4em" }}>Loading Workspaces...</Text>
-                    </Card> : <Grid.Container gap={1}>
-                        <HomeNav viewing={workspaceViewing} onViewChange={(viewingName) => setWorkspaceViewing(viewingName)} />
-                        <Spacer y={1} />
-                        <Grid xs={12}>
-                            <Avatar
-                                squared
-                                icon={workspaceViewing == "favorites" ? <StarFilledIcon size={20} fill="currentColor" /> : workspaceViewing == "privateWorkspaces" ? <VisibleOffIcon width={20} height={20} fill="currentColor" /> : <DashboardIcon size={20} fill="currentColor" />}
-                            />
-                            <Spacer x={0.5} />
-                            <Text h3>{workspaceViewing == "favorites" ? "Favorite Workspaces" : workspaceViewing == "privateWorkspaces" ? "Private Workspaces" : "Your Workspaces"}</Text>
-                        </Grid>
-                        {workspace.getWorkspacesWithFilter(_workspaces).length > 0 ?
-                            workspace.getWorkspacesWithFilter(_workspaces).map((workspaceItem, index) => <Grid xs={12} sm={4} lg={2} key={workspaceItem._id ?? index}><HomeWorkspaceCard
-                                workspace={workspaceItem}
-                                onDeleteClick={() => setDeleteModal({ ...deleteModal, visible: true, workspace: workspaceItem._id })}
-                                onStarClick={() => workspace.star({ id: workspaceItem._id })}
-                            /></Grid>) : <Grid xs={12} sm={4} lg={2}>
+        <div style={{ display: "flex", flexDirection: "row", flex: 1, backgroundColor: "Orange" }}>
+            <div style={{ display: "flex", minWidth: 280, flexDirection: "column", backgroundColor: "blue", height: "100%", paddingTop: 12, marginRight: 16 }}>
+                <StyledNavLeft>
+                    asdasd
+                </StyledNavLeft>
+                <StyledNavLeft>
+                    asdasd
+                </StyledNavLeft>
+            </div>
+            <Grid.Container gap={2} css={{ pl: 0 }}>
+                <Grid xs={12}>
+                    <Card css={{ jc: "center", borderRadius: 0, height: "100%" }}>
+                        {loadingWorkspaces ? <Card css={{ p: 12, dflex: "center" }}>
+                            <Loading />
+                            <Text css={{ mt: 24, fs: "1.4em" }}>Loading Workspaces...</Text>
+                        </Card> : <Grid.Container gap={1}>
+                            <HomeNav viewing={workspaceViewing} onViewChange={(viewingName) => setWorkspaceViewing(viewingName)} />
+                            <Spacer y={1} />
+                            <Grid xs={12}>
+                                <Avatar
+                                    squared
+                                    icon={workspaceViewing == "favorites" ? <StarFilledIcon size={20} fill="currentColor" /> : workspaceViewing == "privateWorkspaces" ? <VisibleOffIcon width={20} height={20} fill="currentColor" /> : <DashboardIcon size={20} fill="currentColor" />}
+                                />
+                                <Spacer x={0.5} />
+                                <Text h3>{workspaceViewing == "favorites" ? "Favorite Workspaces" : workspaceViewing == "privateWorkspaces" ? "Private Workspaces" : "Your Workspaces"}</Text>
+                            </Grid>
+                            {workspace.getWorkspacesWithFilter(_workspaces).length > 0 ?
+                                workspace.getWorkspacesWithFilter(_workspaces).map((workspaceItem, index) => <Grid xs={12} sm={4} lg={2} key={workspaceItem._id ?? index}>
+                                    <HomeWorkspaceCard
+                                        workspace={workspaceItem}
+                                        onDeleteClick={() => setDeleteModal({ ...deleteModal, visible: true, workspace: workspaceItem._id })}
+                                        onStarClick={() => workspace.star({ id: workspaceItem._id })}
+                                    />
+                                </Grid>) : <Grid xs={12} sm={4} lg={2}>
+                                    <Card
+                                        bordered
+                                        shadow={false}
+                                        css={{ dflex: "center", height: 140, borderColor: "$accents4" }}
+                                        onClick={() => setNewWorkspaceVisible(true)}
+                                    >
+                                        <Image src={addworkspacebanner} style={{ zIndex: 50 }} width={64} height={64} placeholder="blur" objectFit='contain' priority={true} />
+                                        <Text h6 css={{ color: "$accents4" }}>No workspaces found.</Text>
+                                    </Card>
+                                </Grid>}
+                            <Grid xs={12} sm={4} lg={2}>
                                 <Card
                                     bordered
-                                    shadow={false}
-                                    css={{ dflex: "center", height: 140, borderColor: "$accents4" }}
+                                    css={{ borderColor: "$primary", dflex: "center", color: "$primary", height: 140, }}
+                                    clickable
                                     onClick={() => setNewWorkspaceVisible(true)}
                                 >
-                                    <Image src={addworkspacebanner} style={{ zIndex: 50 }} width={64} height={64} placeholder="blur" objectFit='contain' priority={true} />
-                                    <Text h6 css={{ color: "$accents4" }}>No workspaces found.</Text>
+                                    <AddIcon height={24} width={24} style={{ fill: "currentColor" }} />
+                                    Add Workspace
                                 </Card>
-                            </Grid>}
-                        <Grid xs={12} sm={4} lg={2}>
-                            <Card
-                                bordered
-                                css={{ borderColor: "$primary", dflex: "center", color: "$primary", height: 140, }}
-                                clickable
-                                onClick={() => setNewWorkspaceVisible(true)}
-                            >
-                                <AddIcon height={24} width={24} style={{ fill: "currentColor" }} />
-                                Add Workspace
-                            </Card>
-                        </Grid>
-                    </Grid.Container>}
-                </Card>
-            </Grid>
-            <Grid xs={12}>
-                <Card>
-                    <Grid.Container>
-                        <Grid xs={12}>
-                            <Avatar
-                                squared
-                                icon={<BookmarkIcon size={20} fill="currentColor" />}
-                            />
-                            <Spacer x={0.5} />
-                            <Text h3>Bookmarks</Text>
-                        </Grid>
-                    </Grid.Container>
-                </Card>
-            </Grid>
-        </Grid.Container>
+                            </Grid>
+                        </Grid.Container>}
+                    </Card>
+                </Grid>
+                {/*<Grid xs={12}>
+                    <Card>
+                        <Grid.Container>
+                            <Grid xs={12}>
+                                <Avatar
+                                    squared
+                                    icon={<BookmarkIcon size={20} fill="currentColor" />}
+                                />
+                                <Spacer x={0.5} />
+                                <Text h3>Bookmarks</Text>
+                            </Grid>
+                        </Grid.Container>
+                    </Card>
+                            </Grid>*/}
+            </Grid.Container>
+        </div>
+
         <DeleteWorkspaceModal
             visible={deleteModal.visible}
             onClose={() => setDeleteModal({ ...deleteModal, visible: false })}

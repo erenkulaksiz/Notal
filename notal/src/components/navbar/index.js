@@ -24,7 +24,6 @@ const Navbar = ({ user }) => {
     const { isDark } = useTheme();
     const auth = useAuth();
     const router = useRouter();
-    const client = (typeof window === 'undefined') ? false : true;
 
     const [modalVisible, setModalVisible] = useState(false);
 

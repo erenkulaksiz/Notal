@@ -19,10 +19,10 @@ export default async function handler(req, res) {
         return
     }
 
-    const { token } = JSON.parse(req.body);
+    const token = JSON.parse(req.body).token || "";
 
     if (!token) {
-        res.status(400).send({ success: false })
+        res.status(400).send({ success: false, error: "no-token" })
         return
     }
     try {
@@ -69,10 +69,12 @@ export default async function handler(req, res) {
                 });
             }
         }).catch(error => {
-            res.status(400).json({ success: false, error: error });
+            console.log("TOken failure!", error)
+            res.status(400).json({ success: false, error: "auth/argument-error" });
             return; // dont run code below
         });
     } catch (error) {
-        res.status(200).send({ success: false, error: new Error(error).message });
+        console.log("error validating, err:", error);
+        res.status(200).send({ success: false, error });
     }
 }

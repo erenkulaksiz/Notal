@@ -1,4 +1,4 @@
-import { Button, Text, Grid, Card, Tooltip, useTheme } from '@nextui-org/react';
+import { Button, Text, Grid, Card, Tooltip, useTheme, css } from '@nextui-org/react';
 
 import {
     DeleteIcon,
@@ -10,13 +10,13 @@ import {
 
 import FieldCard from '../fieldCard';
 
-const Field = ({ field, onAddCard, onDeleteField, onDeleteCard, onEditClick, onEditCard, isOwner, width }) => {
+const Field = ({ field, onAddCard, onDeleteField, onDeleteCard, onEditClick, onEditCard, isOwner }) => {
     const { isDark } = useTheme();
 
-    return (<Card css={{ boxShadow: "$sm" }} bordered={!isDark}>
+    return (<Card css={{ boxShadow: "$sm", borderRadius: 0, borderColor: "$customBorder" }} bordered>
         <Grid.Container>
             <Grid xs={12} css={{ position: "sticky", top: 0, zIndex: "$3" }}>
-                <Card bordered shadow={false}>
+                <Card shadow={false} css={{ borderRadius: 0 }}>
                     <Grid.Container>
                         <Grid xs={isOwner ? 6 : 12} sm={isOwner ? 6 : 12}>
                             <Text h4>
@@ -38,7 +38,8 @@ const Field = ({ field, onAddCard, onDeleteField, onDeleteCard, onEditClick, onE
                                         <Button size="sm" css={{ minWidth: 44, }} onClick={onEditClick}>
                                             <EditIcon size={24} fill={"currentColor"} />
                                         </Button>
-                                    </div>}>
+                                    </div>
+                                }>
                                 <Button size="sm" css={{ minWidth: 44, "&:hover": { bg: isDark ? "$gray800" : "$gray200" } }} light>
                                     <MoreIcon size={24} fill={"currentColor"} />
                                 </Button>
@@ -59,7 +60,7 @@ const Field = ({ field, onAddCard, onDeleteField, onDeleteCard, onEditClick, onE
 
             {isOwner && <Grid xs={12} css={{ mt: 8 }}>
                 <Card
-                    css={{ dflex: "center", borderColor: "$primary", color: "$primary", bg: "transparent" }}
+                    css={{ dflex: "center", borderColor: "$primary", color: "$primary", bg: "transparent", borderRadius: 0 }}
                     bordered
                     clickable
                     onClick={onAddCard}
@@ -72,7 +73,7 @@ const Field = ({ field, onAddCard, onDeleteField, onDeleteCard, onEditClick, onE
                 </Card>
             </Grid>}
         </Grid.Container>
-    </Card>)
+    </Card >)
 }
 
 export default Field;

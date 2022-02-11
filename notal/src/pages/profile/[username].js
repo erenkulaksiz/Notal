@@ -37,7 +37,6 @@ import {
 const Profile = (props) => {
     const auth = useAuth();
     const router = useRouter();
-
     const avatarInputRef = useRef();
 
     const [editingProfile, setEditingProfile] = useState(false);
@@ -47,12 +46,15 @@ const Profile = (props) => {
     const [editingLinks, setEditingLinks] = useState(false);
 
     useEffect(() => {
-        console.log("!!!props!!!!", props);
-    }, [props]);
-
-    useEffect(() => {
         console.log("props on profile: ", props);
         WorkboxInit();
+        (async () => {
+            const token = await auth.users.getIdToken();
+            const res = await CheckToken({ token: token.res, props });
+            if (!res) {
+                setTimeout(() => router.replace(router.asPath), 1000);
+            }
+        })();
     }, []);
 
     useEffect(() => {
@@ -371,6 +373,7 @@ export async function getServerSideProps(ctx) {
         const authCookie = req.cookies.auth;
 
         validate = await ValidateToken({ token: authCookie });
+        console.log("validate: ", validate);
         profile = await GetProfile({ username: queryUsername, token: authCookie });
     }
     return { props: { validate, profile } }

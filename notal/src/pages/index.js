@@ -6,6 +6,8 @@ import Head from 'next/head';
 import Image from 'next/image';
 //import styled from 'styled-components';
 
+import useAuth from '@hooks/auth';
+
 import {
     TwitterIcon,
     SyncIcon
@@ -22,9 +24,6 @@ import {
     AddCardModal,
 } from '@components';
 
-import useAuth from '@hooks/auth';
-import { withPublic } from '@hooks/route';
-
 import {
     CheckToken,
     ValidateToken,
@@ -37,8 +36,10 @@ import {
     Workspaces,
 } from '@utils/constants';
 
+
 const Landing = (props) => {
     const router = useRouter();
+    const auth = useAuth();
     const { isDark } = useTheme();
     const [_fields, _setFields] = useState([...JSON.parse(JSON.stringify(Fields))]);
     const [_workspaces, _setWorkspaces] = useState([...Workspaces]);
@@ -47,6 +48,13 @@ const Landing = (props) => {
 
     useEffect(() => {
         WorkboxInit();
+        (async () => {
+            const token = await auth.users.getIdToken();
+            const res = await CheckToken({ token: token.res, props });
+            if (!res) {
+                setTimeout(() => router.replace(router.asPath), 1000);
+            }
+        })();
     }, []);
 
     return (<Container xl css={{ position: "relative", padding: 0, width: "100%", height: "100%", overflowX: "hidden" }}>
@@ -223,13 +231,13 @@ const Landing = (props) => {
                 }}>{"And yet, there's more to"}
                     <Text span css={{ color: "$primary" }}> come.</Text>
                 </Text>
-                <Text b css={{ fs: "1.2em", color: "$gray500" }}>Wait for 24 March, 2022 v1.0.0 release.</Text>
-                <Spacer y={1} />
+                <Text b css={{ fs: "1.2em", color: "$gray500" }}>I will release v1.0.0 stable release on 24 March, 2022.</Text>
+                {/*<Spacer y={1} />
                 <ALink href="https://twitter.com/notalapp" target="_blank">
                     <Button css={{ minWidth: 180 }} onClick={() => router.push("/login")} icon={<TwitterIcon width={24} height={24} color="currentColor" />} rounded>
                         Follow Us
                     </Button>
-                </ALink>
+                </ALink>*/}
             </Row>
             <Spacer y={6} />
             <div style={{ width: 740, height: 740, position: "absolute", zIndex: 3, left: -400, top: 50, opacity: isDark ? 0.2 : 0.3, backgroundImage: "url(./landing_bg_2.png)", backgroundRepeat: "no-repeat", background: "contain" }} />

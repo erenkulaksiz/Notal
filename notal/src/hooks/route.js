@@ -25,7 +25,7 @@ export function withPublic(Component) {
                 <Text css={{ mt: 16, fs: "1.2em" }}>Loading...</Text>
             </Container>
         }
-        return <Component auth={auth} {...props} />
+        return <Component {...props} />
     }
 }
 
@@ -36,7 +36,7 @@ export function withPublic(Component) {
  */
 export function withAuth(Component) {
     return function WithAuth(props) {
-        const auth = useAuth();
+        //const auth = useAuth();
         const client = (typeof window === 'undefined') ? false : true;
         const router = client && useRouter();
 
@@ -51,6 +51,6 @@ export function withAuth(Component) {
             </Container>
         }
 
-        return <Component auth={auth} {...props} />
+        return <Component {...props} />
     }
 }

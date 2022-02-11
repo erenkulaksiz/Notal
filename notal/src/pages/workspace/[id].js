@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 import Head from 'next/head';
 
 import useAuth from '@hooks/auth';
+import { withCheckuser } from '@hooks/checkuser';
 
 import {
     CheckToken,
@@ -58,6 +59,13 @@ const Workspace = (props) => {
     useEffect(() => {
         console.log("props workspace: ", props);
         WorkboxInit();
+        (async () => {
+            const token = await auth.users.getIdToken();
+            const res = await CheckToken({ token: token.res, props });
+            if (!res) {
+                setTimeout(() => router.replace(router.asPath), 1000);
+            }
+        })();
     }, []);
 
     useEffect(() => {
@@ -352,6 +360,7 @@ export async function getServerSideProps(ctx) {
         const authCookie = req.cookies.auth;
 
         validate = await ValidateToken({ token: authCookie });
+        console.log("validate:", validate);
         workspace = await GetWorkspace({ id: queryId, token: authCookie });
     }
     return { props: { validate, workspace } }
