@@ -1,17 +1,51 @@
+import { useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 
-import { Features } from '@utils/constants';
-import { Navbar } from '@components';
+import useAuth from '@hooks/auth';
 
-export default function Home() {
+import {
+  Navbar,
+  LandingFeatureCard
+} from '@components';
+
+import {
+  CheckToken,
+  ValidateToken,
+  WorkboxInit
+} from '@utils';
+
+import {
+  Features
+} from '@utils/constants';
+
+const Landing = (props) => {
+  const router = useRouter();
+  const auth = useAuth();
+
+  useEffect(() => {
+    WorkboxInit();
+    (async () => {
+      const token = await auth.users.getIdToken();
+      const res = await CheckToken({ token: token.res, props });
+      if (!res) {
+        setTimeout(() => router.replace(router.asPath), 1000);
+      }
+    })();
+    console.log("props landing: ", props);
+  }, []);
+
   return (
-    <div className="mx-auto min-h-screen flex flex-col transition-colors">
+    <div className="mx-auto min-h-screen flex flex-col">
       <Head>
         <title>Notal</title>
+        <meta name='twitter:description' content='Take your notes to next level with Notal' />
+        <meta property='og:description' content='Take your notes to next level with Notal' />
+        <meta name='description' content='Take your notes to next level with Notal' />
       </Head>
 
-      <Navbar />
+      <Navbar user={props?.validate?.data} />
 
       <main className="flex flex-1 flex-col items-center dark:bg-black bg-white relative overflow-hidden">
         <div className="absolute w-full z-0">
@@ -38,24 +72,7 @@ export default function Home() {
             </button>
           </div>
           <div className="mt-16 flex-row grid gap-4 h-auto grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 z-10 relative">
-            {Features.map((feature, index) => {
-              return (
-                <div
-                  className="backdrop-blur dark:bg-white/5 bg-white/25 dark:text-white text-black p-4 py-3 flex-col rounded-xl"
-                  key={index}
-                >
-                  <div className="flex flex-row pb-2">
-                    <div className="p-2 backdrop-blur self-start rounded-full mr-2">
-                      {feature.icon}
-                    </div>
-                    <h2 className="text-xl font-bold text-black dark:text-white flex items-center">
-                      {feature.title}
-                    </h2>
-                  </div>
-                  <span className="text-white mt-12 text-current">{feature.desc}</span>
-                </div>
-              );
-            })}
+            {Features.map((feature, index) => <LandingFeatureCard feature={feature} key={index} />)}
             <div className="bg-landing_bg_2 opacity-25 absolute w-[800px] h-[800px] -left-[300px] -bottom-[300px] bg-no-repeat bg-contain -z-50"></div>
             <div className="bg-landing_bg_3 opacity-20 absolute w-[800px] h-[800px] -right-[350px] -bottom-[300px] bg-no-repeat bg-contain -z-50"></div>
           </div>
@@ -63,4 +80,17 @@ export default function Home() {
       </main>
     </div>
   )
+}
+
+export default Landing;
+
+export async function getServerSideProps(ctx) {
+  const { req, res, query } = ctx;
+  let validate = {};
+
+  if (req) {
+    const authCookie = req.cookies.auth;
+    validate = await ValidateToken({ token: authCookie });
+  }
+  return { props: { validate } }
 }

@@ -47,17 +47,17 @@ export const CardColors = [
 
 export const Features = [
     {
-        title: "Create Workspace",
+        title: "Create",
         desc: "You can create workspace and add fields, cards & images.",
         icon: <AddIcon size={20} fill="currentColor" />
     },
     {
-        title: "Personalize your profile",
+        title: "Personalize",
         desc: "You can customize your profile how you'd like, change your bio, add social links and more.",
         icon: <UserIcon size={20} fill="currentColor" />
     },
     {
-        title: "Share Bookmarks & Workspaces",
+        title: "Share",
         desc: "You can share your bookmarks and workspaces with a link, you can also set their visibility to private.",
         icon: <ShareIcon size={20} fill="currentColor" />
     },
