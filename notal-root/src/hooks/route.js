@@ -2,7 +2,6 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import React from 'react';
 import useAuth from './auth';
-import { Loading, Container, Text } from '@nextui-org/react';
 
 /**
  * Checks if user logined, returns to home if logined.
@@ -17,13 +16,14 @@ export function withPublic(Component) {
 
         if (props.validate?.success || auth?.authUser) {
             client && router.replace("/home");
-            return <Container css={{ dflex: "center", ac: "center", ai: "center", fd: "column" }}>
+            return <div>
                 <Head>
                     <title>Loading...</title>
                 </Head>
-                <Loading type="gradient" />
-                <Text css={{ mt: 16, fs: "1.2em" }}>Loading...</Text>
-            </Container>
+                <div>
+                    loading...
+                </div>
+            </div>
         }
         return <Component {...props} />
     }
@@ -42,13 +42,14 @@ export function withAuth(Component) {
 
         if (!props.validate?.success) {
             client && router.replace("/login");
-            return <Container css={{ dflex: "center", ac: "center", ai: "center", fd: "column" }}>
+            return <div>
                 <Head>
                     <title>Loading...</title>
                 </Head>
-                <Loading type="gradient" />
-                <Text css={{ mt: 16, fs: "1.2em" }}>Loading...</Text>
-            </Container>
+                <div>
+                    loading...
+                </div>
+            </div>
         }
 
         return <Component {...props} />

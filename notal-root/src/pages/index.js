@@ -37,7 +37,7 @@ const Landing = (props) => {
   }, []);
 
   return (
-    <div className="mx-auto min-h-screen flex flex-col">
+    <div className="mx-auto min-h-screen flex flex-col transition-colors duration-100">
       <Head>
         <title>Notal</title>
         <meta name='twitter:description' content='Take your notes to next level with Notal' />
@@ -72,7 +72,9 @@ const Landing = (props) => {
             </button>
           </div>
           <div className="mt-16 flex-row grid gap-4 h-auto grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 z-10 relative">
+
             {Features.map((feature, index) => <LandingFeatureCard feature={feature} key={index} />)}
+
             <div className="bg-landing_bg_2 opacity-25 absolute w-[800px] h-[800px] -left-[300px] -bottom-[300px] bg-no-repeat bg-contain -z-50"></div>
             <div className="bg-landing_bg_3 opacity-20 absolute w-[800px] h-[800px] -right-[350px] -bottom-[300px] bg-no-repeat bg-contain -z-50"></div>
           </div>

@@ -28,15 +28,15 @@ const Navbar = ({ user }) => {
                         />
                     </div>
                 </summary>
-                <div className="p-4 absolute top-full rounded-lg right-0 dark:bg-[#110D0A] bg-white shadow-xl w-60 z-50">
+                <div className="p-4 absolute top-full rounded-lg right-0 dark:bg-neutral-900/50 filter backdrop-blur-md bg-white/50 shadow-xl w-60 z-50">
                     {client && <Switch
                         onChange={e => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
                         value={resolvedTheme == "dark"}
                         className="mb-2"
                         icon={resolvedTheme == "dark" ? <LightIcon size={24} fill="black" style={{ transform: "scale(0.7)" }} /> : <DarkIcon size={24} fill="black" style={{ transform: "scale(0.7)" }} />}
                     />}
-                    <h2 className="text-current font-bold text-xl">{user.fullname ? user.fullname : "@" + user.username}</h2>
-                    <h4 className="text-current text-md">{user.email}</h4>
+                    <h2 className="text-current font-bold text-xl">{user?.fullname ? user?.fullname : "@" + user?.username}</h2>
+                    <h4 className="text-current text-md">{user?.email}</h4>
                     <Button className="w-full mt-2" icon={<UserIcon size={24} fill="white" />} gradient>
                         <span>Profile</span>
                     </Button>

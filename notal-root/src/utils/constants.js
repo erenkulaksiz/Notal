@@ -3,6 +3,10 @@ import {
     ShareIcon,
     UserIcon,
     AddIcon,
+    BookmarkOutlineIcon,
+    BookmarkFilledIcon,
+    DashboardOutlineIcon,
+    DashboardFilledIcon,
 } from '@icons';
 
 export const CardColors = [
@@ -145,3 +149,20 @@ export const Workspaces = [
     { title: "My first workspace.", desc: "About penguins!", _id: "2", deleteAble: true, starred: false },
     { title: "My second workspace.", desc: "Lorem ipsum dolor amet.", _id: "3", workspaceVisible: true, deleteAble: true, starred: false }
 ]
+
+export const HomeRoutes = [{
+    id: "workspaces",
+    name: "Workspaces",
+    icon: {
+        default: <DashboardOutlineIcon size={24} fill="currentColor" style={{ transform: "scale(0.8)" }} />,
+        selected: <DashboardFilledIcon size={24} fill="currentColor" style={{ transform: "scale(0.8)" }} />
+    }
+},
+{
+    id: "bookmarks",
+    name: "Bookmarks",
+    icon: {
+        default: <BookmarkOutlineIcon size={24} fill="currentColor" style={{ transform: "scale(0.8)" }} />,
+        selected: <BookmarkFilledIcon size={24} fill="currentColor" style={{ transform: "scale(0.8)" }} />
+    }
+}]
