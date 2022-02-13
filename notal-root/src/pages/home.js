@@ -17,7 +17,7 @@ import {
 
 import {
     Navbar,
-    HomeNavItem,
+    SidebarItem,
     HomeNavWorkspaces,
     HomeNavBookmarks,
 } from '@components';
@@ -112,37 +112,23 @@ const Home = (props) => {
 
         <main className="flex flex-1 flex-row bg-white dark:bg-neutral-900">
             <motion.div
-                animate={navCollapse ? "collapse" : "open"}
+                initial={{ width: "14rem" }}
+                animate={navCollapse ? { width: "2.6rem" } : ""}
                 transition={{ type: "tween", stiffness: 50 }}
-                variants={{
-                    collapse: {
-                        width: "2.8rem"
-                    },
-                    open: {
-                        width: "14rem"
-                    }
-                }}
             >
                 <nav className="h-full bg-white dark:bg-neutral-800 flex flex-col">
                     <div className="w-full h-10 flex justify-end">
-                        <button className="p-2 bg-white dark:bg-neutral-800 hover:bg-neutral-200 transition-colors ease-in-out" onClick={() => setNavCollapse(!navCollapse)}>
+                        <button className="p-2 bg-white dark:bg-neutral-800 hover:dark:bg-neutral-900 hover:bg-neutral-200 transition-colors ease-in-out" onClick={() => setNavCollapse(!navCollapse)}>
                             <motion.div
-                                animate={navCollapse ? "collapse" : "open"}
+                                initial={{ rotate: 0 }}
+                                animate={navCollapse ? { rotate: 180 } : ""}
                                 transition={{ type: "tween", stiffness: 50 }}
-                                variants={{
-                                    collapse: {
-                                        rotate: 180
-                                    },
-                                    open: {
-                                        rotate: 0
-                                    }
-                                }}
                             >
                                 <BackIcon size={24} fill={"currentColor"} />
                             </motion.div>
                         </button>
                     </div>
-                    {HomeRoutes.map((nav, index) => <HomeNavItem nav={nav} key={index} onClick={() => setHomeViewing(nav.id)} current={homeViewing} navCollapse={navCollapse} />)}
+                    {HomeRoutes.map((nav, index) => <SidebarItem nav={nav} key={index} onClick={() => setHomeViewing(nav.id)} current={homeViewing} navCollapse={navCollapse} />)}
                 </nav>
             </motion.div>
             {!loadingWorkspaces && <NavSelector nav={homeViewing} workspaces={props?.workspaces?.data} onAddWorkspace={() => setNewWorkspaceVisible(true)} />}

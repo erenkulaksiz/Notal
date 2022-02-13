@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { motion } from "framer-motion";
 
 import useAuth from '@hooks/auth';
 
@@ -71,13 +72,19 @@ const Landing = (props) => {
               Discover More
             </button>
           </div>
-          <div className="mt-16 flex-row grid gap-4 h-auto grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 z-10 relative">
+          <motion.div
+            initial={{ y: -30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ type: "tween", stiffness: 100, duration: 0.8, ease: "easeInOut" }}
+          >
+            <div className="mt-16 flex-row grid gap-4 h-auto grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 z-10 relative">
 
-            {Features.map((feature, index) => <LandingFeatureCard feature={feature} key={index} />)}
+              {Features.map((feature, index) => <LandingFeatureCard feature={feature} key={index} />)}
 
-            <div className="bg-landing_bg_2 opacity-25 absolute w-[800px] h-[800px] -left-[300px] -bottom-[300px] bg-no-repeat bg-contain -z-50"></div>
-            <div className="bg-landing_bg_3 opacity-20 absolute w-[800px] h-[800px] -right-[350px] -bottom-[300px] bg-no-repeat bg-contain -z-50"></div>
-          </div>
+              <div className="bg-landing_bg_2 opacity-25 absolute w-[800px] h-[800px] -left-[300px] -bottom-[300px] bg-no-repeat bg-contain -z-50"></div>
+              <div className="bg-landing_bg_3 opacity-20 absolute w-[800px] h-[800px] -right-[350px] -bottom-[300px] bg-no-repeat bg-contain -z-50"></div>
+            </div>
+          </motion.div>
         </div>
       </main>
     </div>
