@@ -1,16 +1,22 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 
 import {
     Button,
     HomeWorkspaceCard,
+    Modal,
 } from '@components';
 
 import {
     DashboardFilledIcon,
-    AddIcon
+    AddIcon,
+    CrossIcon,
+    CheckIcon
 } from '@icons';
 
-const HomeNavWorkspaces = ({ workspaces, onAddWorkspace }) => {
+const HomeNavWorkspaces = ({ workspaces }) => {
+
+    const [newWorkspaceModal, setNewWorkspaceModal] = useState(false);
 
     return (<div className="flex flex-1 px-8 py-4 flex-col overflow-x-auto">
         <div className="w-full flex flex-row items-center">
@@ -37,17 +43,43 @@ const HomeNavWorkspaces = ({ workspaces, onAddWorkspace }) => {
             </div>}
             <motion.div
                 variants={{
-                    hidden: { y: -30, opacity: 0 },
+                    hidden: { y: -20, opacity: 0 },
                     show: { y: 0, opacity: 1 }
                 }}
                 transition={{ type: "tween", stiffness: 70 }}
             >
-                <a onClick={onAddWorkspace} href="#" className="w-full h-32 rounded-lg bg-transprent border-2 dark:border-blue-500 border-blue-700 p-3 flex justify-center items-center flex-col text-lg text-blue-700 dark:text-blue-500 cursor-pointer active:scale-95 transition-all ease-in-out">
+                <a onClick={() => setNewWorkspaceModal(true)} href="#" className="w-full h-32 rounded-lg bg-transprent border-2 dark:border-blue-500 border-blue-700 p-3 flex justify-center items-center flex-col text-lg text-blue-700 dark:text-blue-500 cursor-pointer active:scale-95 transition-all ease-in-out">
                     <AddIcon size={24} fill="currentColor" />
                     Add Workspace
                 </a>
             </motion.div>
         </motion.div>
+        <Modal open={newWorkspaceModal} onClose={() => setNewWorkspaceModal(false)}>
+            <Modal.Title>
+                <AddIcon size={24} fill="currentColor" />
+                <span className="text-xl font-medium">Add Workspace</span>
+            </Modal.Title>
+            <Modal.Body>
+                content
+            </Modal.Body>
+            <Modal.Footer className="justify-between">
+                <Button
+                    className="w-[48%] bg-red-800 hover:bg-red-700 active:bg-red-800"
+                    icon={<CrossIcon size={24} fill="currentColor" />}
+                    size="lg"
+                    onClick={() => setNewWorkspaceModal(false)}
+                >
+                    Cancel
+                </Button>
+                <Button
+                    className="w-[48%]"
+                    icon={<CheckIcon size={24} fill="currentColor" />}
+                    size="lg"
+                >
+                    Add Workspace
+                </Button>
+            </Modal.Footer>
+        </Modal>
     </div>)
 }
 
