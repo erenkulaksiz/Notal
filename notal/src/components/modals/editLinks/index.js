@@ -88,8 +88,8 @@ const EditLinksModal = ({ visible, onClose, onEdit, links }) => {
                     color="primary"
                     placeholder="Website"
                     value={website}
-                    onChange={(e) => setWebsite(e.target.value.toLowerCase())}
-                    maxLength={25}
+                    onChange={(e) => setWebsite(e.target.value.toLowerCase().replace("http://", "").replace("https://", ""))}
+                    maxLength={40}
                 />
                 {websiteError != false && <Text color={"$error"}>{websiteError}</Text>}
             </Row>

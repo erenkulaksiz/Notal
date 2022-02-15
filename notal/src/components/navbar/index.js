@@ -24,13 +24,12 @@ const Navbar = ({ user }) => {
     const { isDark } = useTheme();
     const auth = useAuth();
     const router = useRouter();
-    const client = (typeof window === 'undefined') ? false : true;
 
     const [modalVisible, setModalVisible] = useState(false);
 
     return (
         <>
-            <nav style={{ backgroundColor: client && (isDark ? "black" : "white") }}>
+            <nav className='notal-navigation'>
                 <Grid.Container justify="center" css={{ height: "100%" }}>
                     <Grid xs={6} sm={4} alignItems='center'>
                         <Link href={user ? "/home" : "/login"} passHref>
@@ -50,7 +49,7 @@ const Navbar = ({ user }) => {
 
                     </Grid>
                     <Grid xs={6} sm={4} justify='flex-end' alignItems='center'>
-                        {(!user && !auth.authLoading) && <Switch
+                        {(!auth.authUser && !auth.authLoading) && <Switch
                             color="primary"
                             initialChecked={isDark}
                             onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
@@ -59,7 +58,7 @@ const Navbar = ({ user }) => {
                             css={{ mr: 12 }}
                             size="sm"
                         />}
-                        {user ? <details>
+                        {(!auth.authLoading && auth?.authUser) || user ? <details>
                             <summary style={{
                                 userSelect: "none",
                                 "&::WebkitDetailsMarket": {
@@ -69,8 +68,8 @@ const Navbar = ({ user }) => {
                                 <Avatar size="md" color="gradient" bordered src={user?.avatar} referrerPolicy='no-refferer' icon={<UserIcon height={24} width={24} style={{ fill: "white" }} />} pointer />
                             </summary>
                             <Card css={{ zIndex: 2, position: "absolute", right: 0, top: "100%", width: "auto", boxShadow: "$lg" }}>
-                                <Row css={{ mt: 0, justifyContent: "flex-end", }}>
-                                    {auth?.authUser && <div style={{ position: "absolute", right: 0, top: 0, display: "flex", flexDirection: "column" }}>
+                                <Row css={{ mt: 0, justifyContent: "flex-start", }}>
+                                    {auth?.authUser && <div style={{ display: "flex", flexDirection: "row" }}>
                                         <Switch
                                             color="primary"
                                             initialChecked={isDark}
@@ -79,7 +78,7 @@ const Navbar = ({ user }) => {
                                             iconOff={<DarkIcon height={24} width={24} style={{ fill: "currentColor" }} />}
                                             size="sm"
                                         />
-                                        <Text css={{ mr: 8, color: "$accents3" }}>v{process.env.NEXT_PUBLIC_APP_VERSION}</Text>
+                                        <Text css={{ ml: 8, color: "$accents3" }}>v{process.env.NEXT_PUBLIC_APP_VERSION}</Text>
                                     </div>}
                                 </Row>
                                 <Text h4 css={{ mt: 8 }}>{user?.fullname || "@" + user?.username}</Text>
@@ -132,7 +131,7 @@ const Navbar = ({ user }) => {
 
             </nav>
             <style jsx>{`
-            nav {
+            .notal-navigation {
                 overflow: visible;
                 border-radius: 0;
                 padding: 12px;

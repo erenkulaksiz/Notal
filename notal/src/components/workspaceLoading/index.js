@@ -30,7 +30,7 @@ const WorkspaceLoading = ({ loading }) => {
         return null;
     }
 
-    return (<Row css={{ alignItems: "center", justifyContent: "flex-end", paddingRight: 12 }}>
+    return (<div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", paddingRight: 12 }}>
         <div className="notal-loading-container" style={{ border: `2px solid ${isDark ? "#575757" : "#9e9e9e"}`, color: isDark ? "#575757" : "#9e9e9e" }}>
             {showLoading && <Loading size={"xs"} />}
             {showLoaded && <CheckIcon size={24} fill="currentColor" />}
@@ -47,7 +47,7 @@ const WorkspaceLoading = ({ loading }) => {
                 border-radius: 8px;
             }
         `}</style>
-    </Row>)
+    </div>)
 }
 
 export default WorkspaceLoading;

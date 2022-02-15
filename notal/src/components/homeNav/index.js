@@ -8,7 +8,7 @@ import {
 
 const HomeNav = ({ viewing, onViewChange }) => {
     return (<Grid.Container gap={1}>
-        <Grid xs={12} sm={4} md={2}>
+        <Grid xs={12} sm={4} md={3}>
             <Button
                 icon={<DashboardIcon height={24} width={24} style={{ fill: "currentColor" }} />}
                 onClick={() => onViewChange("workspaces")}
@@ -19,7 +19,7 @@ const HomeNav = ({ viewing, onViewChange }) => {
                 Workspaces
             </Button>
         </Grid>
-        <Grid xs={12} sm={4} md={2}>
+        <Grid xs={12} sm={4} md={3}>
             <Button
                 icon={<StarFilledIcon height={24} width={24} style={{ fill: "currentColor" }} />}
                 onClick={() => onViewChange("favorites")}
@@ -30,7 +30,7 @@ const HomeNav = ({ viewing, onViewChange }) => {
                 Favorites
             </Button>
         </Grid>
-        <Grid xs={12} sm={4} md={2}>
+        <Grid xs={12} sm={4} md={3}>
             <Button
                 icon={<VisibleOffIcon height={24} width={24} style={{ fill: "currentColor" }} />}
                 onClick={() => onViewChange("privateWorkspaces")}

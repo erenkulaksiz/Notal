@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 
-import { withAuth, withPublic } from '@hooks/route';
+import { withAuth } from '@hooks/route';
+import { withCheckuser } from '@hooks/checkuser';
 import { WorkboxInit, ValidateToken } from '@utils';
 import useAuth from '@hooks/auth';
 
