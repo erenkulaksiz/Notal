@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-<<<<<<< HEAD
 import { useTheme } from 'next-themes';
 import Link from "next/link";
 
@@ -15,17 +14,6 @@ const Navbar = ({ user }) => {
     const [modalVisible, setModalVisible] = useState(false);
 
     return (<nav className="p-3 dark:bg-black bg-white flex flex-row sticky top-0 z-40 drop-shadow-lg">
-=======
-import { UserIcon, LogoutIcon, DarkIcon, LightIcon } from "@icons";
-import { Button, Switch } from "@components";
-import { useTheme } from 'next-themes';
-
-const Navbar = ({ user }) => {
-    const { resolvedTheme, setTheme } = useTheme();
-    const client = (typeof window === 'undefined') ? false : true;
-
-    return (<nav className="p-3 dark:bg-black bg-white flex flex-row sticky top-0 z-40">
->>>>>>> ba0167692b76c262def2b9f049e2a1a554f815d2
         <div className="w-1/2">
             {typeof resolvedTheme != "undefined" && <img
                 src={resolvedTheme == "dark" ? "./icon_white.png" : "./icon_galactic.png"}
@@ -33,7 +21,6 @@ const Navbar = ({ user }) => {
             />}
         </div>
         <div className="w-1/2 flex items-center justify-end">
-<<<<<<< HEAD
             {(!auth.authUser && !auth.authLoading && client) && <Switch
                 onChange={e => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
                 value={resolvedTheme == "dark"}
@@ -41,9 +28,6 @@ const Navbar = ({ user }) => {
                 className="mr-2"
             />}
             {(!auth.authLoading && auth?.authUser) || user ? <details className="relative inline-block bg-transparent">
-=======
-            <details className="relative inline-block bg-transparent">
->>>>>>> ba0167692b76c262def2b9f049e2a1a554f815d2
                 <summary
                     style={{
                         userSelect: "none",
@@ -72,14 +56,10 @@ const Navbar = ({ user }) => {
                         <span>Sign Out</span>
                     </Button>
                 </div>
-<<<<<<< HEAD
             </details> : <Button className="w-14 sm:w-32" size="sm" onClick={() => setModalVisible(true)}>
                 <LoginIcon size={24} fill="currentColor" style={{ display: "flex", transform: "scale(0.8)" }} />
                 <span className="hidden sm:flex">Sign Up/In</span>
             </Button>}
-=======
-            </details>
->>>>>>> ba0167692b76c262def2b9f049e2a1a554f815d2
             <style jsx>{`
             details[open] > summary:before {
                 position: fixed;
@@ -94,13 +74,10 @@ const Navbar = ({ user }) => {
             }
         `}</style>
         </div>
-<<<<<<< HEAD
         <LoginModal
             open={modalVisible}
             onClose={() => setModalVisible(false)}
         />
-=======
->>>>>>> ba0167692b76c262def2b9f049e2a1a554f815d2
     </nav>)
 }
 

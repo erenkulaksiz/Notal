@@ -3,11 +3,7 @@ const Switch = ({ onChange, value, icon, className }) => {
     return (<div className={`${className} flex`}>
         <input type="checkbox" checked={value} onChange={onChange} className="hidden" role="switch" id="switch" />
         <label htmlFor="switch" className="h-full w-10 cursor-pointer">
-<<<<<<< HEAD
             <div className={`w-full h-6 ${value ? "bg-green-700" : "dark:bg-neutral-600 bg-neutral-200"} transition-all ease-in-out rounded-full flex items-center ${value ? "justify-end" : "justify-start"}`}>
-=======
-            <div className={`w-9 h-6 ${value ? "bg-green-700" : "dark:bg-neutral-600 bg-neutral-200"} transition-all ease-in-out rounded-full flex items-center ${value ? "justify-end" : "justify-start"}`}>
->>>>>>> ba0167692b76c262def2b9f049e2a1a554f815d2
                 <div className={`w-4 h-4 ${value ? "mr-1" : "ml-1"} rounded-full text-black dark:text-white bg-white dark:bg-black`}>
                     {icon}
                 </div>

@@ -6,12 +6,7 @@ const LandingFeatureCard = ({ feature }) => {
             hidden: { y: -50, opacity: 0 },
             show: { y: 0, opacity: 1 }
         }}
-<<<<<<< HEAD
         className="dark:bg-white/5 bg-white/40 dark:text-white text-black p-4 py-3 flex-col rounded-xl drop-shadow-xl"
-=======
-        transition={{ type: "spring", stiffness: 800, duration: 0.5, damping: 25 }}
-        className="dark:bg-white/5 bg-white/25 dark:text-white text-black p-4 py-3 flex-col rounded-xl"
->>>>>>> ba0167692b76c262def2b9f049e2a1a554f815d2
     >
         <div className="flex flex-row pb-2">
             <div className="p-2 self-start rounded-full mr-2">
