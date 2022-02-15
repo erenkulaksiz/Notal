@@ -7,7 +7,7 @@ const Navbar = ({ user }) => {
     const { resolvedTheme, setTheme } = useTheme();
     const client = (typeof window === 'undefined') ? false : true;
 
-    return (<nav className="p-3 dark:bg-black bg-white flex flex-row sticky top-0 z-50">
+    return (<nav className="p-3 dark:bg-black bg-white flex flex-row sticky top-0 z-40">
         <div className="w-1/2">
             {typeof resolvedTheme != "undefined" && <img
                 src={resolvedTheme == "dark" ? "./icon_white.png" : "./icon_galactic.png"}

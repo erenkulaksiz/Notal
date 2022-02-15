@@ -73,9 +73,16 @@ const Landing = (props) => {
             </button>
           </div>
           <motion.div
-            initial={{ y: -30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ type: "tween", stiffness: 100, duration: 0.8, ease: "easeInOut" }}
+            variants={{
+              show: {
+                transition: {
+                  staggerChildren: 0.1,
+                }
+              }
+            }}
+            initial="hidden"
+            animate="show"
+            transition={{ type: "spring", stiffness: 200, duration: 0.5, ease: "easeInOut" }}
           >
             <div className="mt-16 flex-row grid gap-4 h-auto grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 z-10 relative">
 

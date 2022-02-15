@@ -9,7 +9,7 @@ const Portal = ({ children, parent, className }) => {
         // work out target in the DOM based on parent prop
         const target = parent && parent.appendChild ? parent : document.body;
         // Default classes
-        const classList = ["modal-container"];
+        const classList = ["portal-container", "z-50"];
         // If className prop is present add each class the classList
         if (className) className.split(" ").forEach((item) => classList.push(item));
         classList.forEach((item) => el.classList.add(item));

@@ -46,7 +46,7 @@ const HomeNavWorkspaces = ({ workspaces }) => {
                     hidden: { y: -20, opacity: 0 },
                     show: { y: 0, opacity: 1 }
                 }}
-                transition={{ type: "tween", stiffness: 70 }}
+                transition={{ type: "spring", stiffness: 800, duration: 0.02, damping: 25 }}
             >
                 <a onClick={() => setNewWorkspaceModal(true)} href="#" className="w-full h-32 rounded-lg bg-transprent border-2 dark:border-blue-500 border-blue-700 p-3 flex justify-center items-center flex-col text-lg text-blue-700 dark:text-blue-500 cursor-pointer active:scale-95 transition-all ease-in-out">
                     <AddIcon size={24} fill="currentColor" />
