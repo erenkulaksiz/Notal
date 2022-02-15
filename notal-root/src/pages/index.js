@@ -8,9 +8,13 @@ import useAuth from '@hooks/auth';
 
 import {
   Navbar,
+<<<<<<< HEAD
   LandingFeatureCard,
   Button,
   LandingFooter
+=======
+  LandingFeatureCard
+>>>>>>> ba0167692b76c262def2b9f049e2a1a554f815d2
 } from '@components';
 
 import {
@@ -58,7 +62,11 @@ const Landing = (props) => {
             className="object-cover w-full h-[800px] z-0 dark:opacity-30 opacity-70"
           />
         </div>
+<<<<<<< HEAD
         <div className="sm:container px-8 pt-48 z-10">
+=======
+        <div className="sm:container px-8 pt-72 z-10">
+>>>>>>> ba0167692b76c262def2b9f049e2a1a554f815d2
           <div className="relative z-50">
             <h1 className="text-black dark:text-white sm:text-5xl text-4xl font-bold font-sans z-20">
               Organize & Plan your{' '}
@@ -70,9 +78,15 @@ const Landing = (props) => {
             <h5 className="dark:text-neutral-500 text-neutral-600 mt-4 text-lg font-semibold">
               {"Developer's solution from an developer. Keep focus on your project, not on your planning."}
             </h5>
+<<<<<<< HEAD
             <Button rounded className="w-32 mt-4" size="lg">
               Discover More
             </Button>
+=======
+            <button className="p-6 relative bg-blue-600 hover:bg-blue-500 active:bg-blue-700 active:scale-95 transition-all ease-in-out rounded-full py-2 text-md mt-4 text-white font-semibold">
+              Discover More
+            </button>
+>>>>>>> ba0167692b76c262def2b9f049e2a1a554f815d2
           </div>
           <motion.div
             variants={{
@@ -84,7 +98,11 @@ const Landing = (props) => {
             }}
             initial="hidden"
             animate="show"
+<<<<<<< HEAD
             transition={{ type: "spring", stiffness: 200, duration: 500, ease: "easeInOut" }}
+=======
+            transition={{ type: "spring", stiffness: 200, duration: 0.5, ease: "easeInOut" }}
+>>>>>>> ba0167692b76c262def2b9f049e2a1a554f815d2
           >
             <div className="mt-16 flex-row grid gap-4 h-auto grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 z-10 relative">
 
@@ -94,8 +112,11 @@ const Landing = (props) => {
               <div className="bg-landing_bg_3 opacity-20 absolute w-[800px] h-[800px] -right-[350px] -bottom-[300px] bg-no-repeat bg-contain -z-50"></div>
             </div>
           </motion.div>
+<<<<<<< HEAD
 
           <LandingFooter />
+=======
+>>>>>>> ba0167692b76c262def2b9f049e2a1a554f815d2
         </div>
       </main>
     </div>
