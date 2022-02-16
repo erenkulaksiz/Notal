@@ -1,19 +1,27 @@
 import { useState, useEffect } from "react";
 import { useTheme } from 'next-themes';
 import Link from "next/link";
+import { useRouter } from "next/router";
 
-import { UserIcon, LogoutIcon, DarkIcon, LightIcon, LoginIcon } from "@icons";
-import { Button, LoginModal, Modal, Switch } from "@components";
+import {
+    UserIcon,
+    LogoutIcon,
+    DarkIcon,
+    LightIcon,
+    LoginIcon
+} from "@icons";
+import { Button, LoginModal, Switch } from "@components";
 import useAuth from "@hooks/auth";
 
 const Navbar = ({ user }) => {
     const { resolvedTheme, setTheme } = useTheme();
+    const router = useRouter();
     const auth = useAuth();
     const client = (typeof window === 'undefined') ? false : true;
 
     const [modalVisible, setModalVisible] = useState(false);
 
-    return (<nav className="p-3 dark:bg-black bg-white flex flex-row sticky top-0 z-40 drop-shadow-lg">
+    return (<nav className="p-3 dark:bg-black bg-white flex flex-row sticky top-0 z-50">
         <div className="w-1/2">
             {typeof resolvedTheme != "undefined" && <img
                 src={resolvedTheme == "dark" ? "./icon_white.png" : "./icon_galactic.png"}
@@ -40,7 +48,7 @@ const Navbar = ({ user }) => {
                         />
                     </div>
                 </summary>
-                <div className="p-4 absolute top-full rounded-lg right-0 dark:bg-neutral-900/50 filter backdrop-blur-md bg-white/50 shadow-xl w-60 z-50">
+                <div className="p-4 absolute top-full rounded-lg right-0 dark:bg-neutral-900/50 filter backdrop-blur-md bg-white/50 shadow-2xl w-60 z-50">
                     {client && <Switch
                         onChange={e => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
                         value={resolvedTheme == "dark"}
@@ -52,7 +60,12 @@ const Navbar = ({ user }) => {
                     <Button className="w-full mt-2" icon={<UserIcon size={24} fill="white" />} gradient>
                         <span>Profile</span>
                     </Button>
-                    <Button className="w-full mt-2" icon={<LogoutIcon size={24} fill="white" />} gradient>
+                    <Button className="w-full mt-2" icon={<LogoutIcon size={24} fill="white" />} gradient
+                        onClick={async () => {
+                            await auth.users.logout();
+                            router.replace(router.asPath);
+                        }}
+                    >
                         <span>Sign Out</span>
                     </Button>
                 </div>
@@ -67,7 +80,7 @@ const Navbar = ({ user }) => {
                 right: 0;
                 bottom: 0;
                 left: 0;
-                z-index: 1;
+                z-index: 40;
                 display: block;
                 cursor: default;
                 content: " ";
@@ -77,6 +90,10 @@ const Navbar = ({ user }) => {
         <LoginModal
             open={modalVisible}
             onClose={() => setModalVisible(false)}
+            onLoginSuccess={() => {
+                setModalVisible(false);
+                router.replace(router.asPath);
+            }}
         />
     </nav>)
 }

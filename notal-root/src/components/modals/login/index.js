@@ -1,16 +1,55 @@
-import { Modal, Button } from "@components";
+import { useState } from "react";
+import { Modal, LoginSelector } from "@components";
 
-const LoginModal = ({ open, onClose }) => {
+import useAuth from "@hooks/auth";
+//import AuthService from "@service/AuthService";
+
+const LoginModal = ({ open, onClose, onLoginSuccess }) => {
+    const auth = useAuth();
+    const [oauthError, setOauthError] = useState("");
+
+    const onLoginWithGoogle = async () => {
+        console.log("trying to login with google");
+        const login = await auth.login.google();
+        if (login?.authError?.errorCode == "auth/account-exists-with-different-credential") {
+            setOauthError(`This account exist with different credential. Please try another method.`);
+            return;
+        } else if (login?.authError?.errorCode == "auth/user-disabled") {
+            setOauthError(`Your account has been disabled. Sorry for the inconvenience.`);
+            return;
+        }
+        onLoginSuccess();
+    }
+
+    const onLoginWithGithub = async () => {
+        const login = await auth.login.github();
+        console.log("github login errors:", login.authError);
+        if (login?.authError?.errorCode == "auth/account-exists-with-different-credential") {
+            setOauthError(`This account exist with different credential. Please try another method.`);
+            return;
+        } else if (login?.authError?.errorCode == "auth/user-disabled") {
+            setOauthError(`Your account has been disabled. Sorry for the inconvenience.`);
+            return;
+        }
+        onLoginSuccess();
+    }
+
     return (<Modal
         open={open}
         onClose={onClose}
-        className="w-[96%] sm:w-[460px]"
+        className="w-[96%] sm:w-[400px]"
         blur
     >
-        asdasd
-        <Button onClick={onClose} size="sm">
-            close
-        </Button>
+        <Modal.Title>
+            <span className="text-2xl font-bold">Sign in/up using...</span>
+        </Modal.Title>
+        <Modal.Body className="p-4">
+            <LoginSelector
+                onLoginWithGithub={onLoginWithGithub}
+                onLoginWithGoogle={onLoginWithGoogle}
+                oauthError={oauthError}
+            />
+        </Modal.Body>
     </Modal>)
 }
 

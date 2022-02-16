@@ -12,7 +12,7 @@ const Content = ({ children, blur, className }) => {
             show: { opacity: 1, scale: 1 }
         }}
         transition={{ type: "spring", stiffness: 700, duration: 50, damping: 25 }}
-        onClick={e => e.stopPropagation()} className={`${className ? className + " " : ""}z-50 relative box-border flex flex-col min-h-min shadow-2xl p-4 ${blur ? "backdrop-brightness-75 " : "bg-neutral-900 "}rounded-lg overflow-hidden`}
+        onClick={e => e.stopPropagation()} className={`${className ? className + " " : ""}z-50 relative box-border flex flex-col min-h-min shadow-2xl p-4 ${blur ? "backdrop-brightness-75 dark:bg-black/50 bg-white " : "bg-neutral-900 "}rounded-lg overflow-hidden`}
     >
         {children}
     </motion.div>)

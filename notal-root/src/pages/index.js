@@ -10,7 +10,7 @@ import {
   Navbar,
   LandingFeatureCard,
   Button,
-  LandingFooter
+  Footer
 } from '@components';
 
 import {
@@ -60,7 +60,7 @@ const Landing = (props) => {
         </div>
         <div className="sm:container px-8 pt-48 z-10">
           <div className="relative z-50">
-            <h1 className="text-black dark:text-white sm:text-5xl text-4xl font-bold font-sans z-20">
+            <h1 className="text-black dark:text-white sm:text-5xl text-4xl font-bold font-sans">
               Organize & Plan your{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600">
                 next
@@ -70,7 +70,7 @@ const Landing = (props) => {
             <h5 className="dark:text-neutral-500 text-neutral-600 mt-4 text-lg font-semibold">
               {"Developer's solution from an developer. Keep focus on your project, not on your planning."}
             </h5>
-            <Button rounded className="w-32 mt-4" size="lg">
+            <Button rounded className="w-32 mt-4">
               Discover More
             </Button>
           </div>
@@ -85,17 +85,14 @@ const Landing = (props) => {
             initial="hidden"
             animate="show"
             transition={{ type: "spring", stiffness: 200, duration: 500, ease: "easeInOut" }}
+            className="mt-16 flex-row grid gap-4 h-auto grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 relative"
           >
-            <div className="mt-16 flex-row grid gap-4 h-auto grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 z-10 relative">
+            {Features.map((feature, index) => <LandingFeatureCard feature={feature} key={index} />)}
 
-              {Features.map((feature, index) => <LandingFeatureCard feature={feature} key={index} />)}
-
-              <div className="bg-landing_bg_2 opacity-25 absolute w-[800px] h-[800px] -left-[300px] -bottom-[300px] bg-no-repeat bg-contain -z-50"></div>
-              <div className="bg-landing_bg_3 opacity-20 absolute w-[800px] h-[800px] -right-[350px] -bottom-[300px] bg-no-repeat bg-contain -z-50"></div>
-            </div>
+            <div className="bg-landing_bg_2 opacity-25 absolute w-[800px] h-[800px] -left-[300px] -bottom-[300px] bg-no-repeat bg-contain -z-50"></div>
+            <div className="bg-landing_bg_3 opacity-20 absolute w-[800px] h-[800px] -right-[350px] -bottom-[300px] bg-no-repeat bg-contain -z-50"></div>
           </motion.div>
-
-          <LandingFooter />
+          <Footer />
         </div>
       </main>
     </div>

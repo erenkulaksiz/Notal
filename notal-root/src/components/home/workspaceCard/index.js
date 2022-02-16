@@ -13,10 +13,10 @@ import {
 const HomeWorkspaceCard = ({ workspace, index }) => {
     return (<motion.div
         variants={{
-            hidden: { y: -30, opacity: 0 },
+            hidden: { y: -50, opacity: 0 },
             show: { y: 0, opacity: 1 }
         }}
-        transition={{ type: "tween", stiffness: 70 }}
+        transition={{ type: "spring", stiffness: 400, duration: 0.02, damping: 25 }}
         className="w-full h-32 rounded-lg bg-gradient-to-br from-blue-500 to-[#6d02ab] p-3 flex flex-col justify-end"
     >
         <div className="flex flex-row justify-between">
