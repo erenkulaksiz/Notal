@@ -12,7 +12,7 @@ const Content = ({ children, blur, className }) => {
             show: { opacity: 1, scale: 1 }
         }}
         transition={{ type: "spring", stiffness: 700, duration: 50, damping: 25 }}
-        onClick={e => e.stopPropagation()} className={`${className ? className + " " : ""}z-50 relative box-border flex flex-col min-h-min shadow-2xl p-4 ${blur ? "backdrop-brightness-75 dark:bg-black/50 bg-white " : "bg-neutral-900 "}rounded-lg overflow-hidden`}
+        onClick={e => e.stopPropagation()} className={`${className ? className + " " : ""}z-50 relative box-border flex flex-col min-h-min shadow-2xl p-2 ${blur ? "backdrop-brightness-75 dark:bg-black/50 bg-white " : "dark:bg-neutral-900 bg-white "}rounded-lg overflow-hidden`}
     >
         {children}
     </motion.div>)
@@ -64,7 +64,15 @@ const Footer = ({ children, className }) => {
 const Modal = ({ children, open, blur, onClose, className }) => {
     const [show, setShow] = useState(false);
 
-    useEffect(() => open && setShow(true), [open]);
+    useEffect(() => {
+        if (open) {
+            document.body.style.overflow = 'hidden';
+            setShow(true)
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [open]);
 
     return (<ModalPortal>
         {show && <Backdrop blur={blur} onClose={onClose} open={open} setShow={setShow}>

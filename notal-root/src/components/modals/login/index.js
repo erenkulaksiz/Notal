@@ -41,7 +41,7 @@ const LoginModal = ({ open, onClose, onLoginSuccess }) => {
         blur
     >
         <Modal.Title>
-            <span className="text-2xl font-bold">Sign in/up using...</span>
+            <span className="text-2xl font-bold">Sign up/in using...</span>
         </Modal.Title>
         <Modal.Body className="p-4">
             <LoginSelector

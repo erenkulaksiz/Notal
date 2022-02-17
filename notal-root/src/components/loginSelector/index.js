@@ -7,7 +7,7 @@ import {
 } from '@icons';
 
 const LoginSelector = ({ onLoginWithEmail, onLoginWithGithub, onLoginWithGoogle, oauthError }) => {
-    return (<div className="w-full grid gap-4">
+    return (<div className="w-full grid gap-2">
         <Button onClick={onLoginWithGithub} size="lg" className="w-full" gradient icon={<GithubIcon size={24} fill="currentColor" />}>
             Github
         </Button>

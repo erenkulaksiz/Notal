@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 
 import {
+    AddWorkspaceModal,
     Button,
     HomeWorkspaceCard,
     Modal,
@@ -36,7 +37,7 @@ const HomeNavWorkspaces = ({ workspaces }) => {
             }}
             initial="hidden"
             animate="show"
-            className="mt-4 dark:bg-neutral-800 bg-neutral-100 rounded-lg p-4 h-full grid gap-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-6 items-start auto-rows-max"
+            className="mt-4 dark:bg-neutral-800 bg-neutral-100 rounded-lg p-4 h-full grid gap-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-4 items-start auto-rows-max"
         >
             {workspaces ? workspaces.map((workspace, index) => <HomeWorkspaceCard workspace={workspace} key={index} index={index} />) : <div>
                 no workspaces
@@ -54,30 +55,10 @@ const HomeNavWorkspaces = ({ workspaces }) => {
                 </a>
             </motion.div>
         </motion.div>
-        <Modal open={newWorkspaceModal} onClose={() => setNewWorkspaceModal(false)} className="w-[96%] sm:w-[400px]">
-            <Modal.Title>
-                <AddIcon size={24} fill="currentColor" />
-                <span className="text-xl font-medium">Add Workspace</span>
-            </Modal.Title>
-            <Modal.Body>
-                content
-            </Modal.Body>
-            <Modal.Footer className="justify-between">
-                <Button
-                    className="w-[48%] bg-red-800 hover:bg-red-700 active:bg-red-800"
-                    icon={<CrossIcon size={24} fill="currentColor" />}
-                    onClick={() => setNewWorkspaceModal(false)}
-                >
-                    Cancel
-                </Button>
-                <Button
-                    className="w-[48%]"
-                    icon={<CheckIcon size={24} fill="currentColor" />}
-                >
-                    Add Workspace
-                </Button>
-            </Modal.Footer>
-        </Modal>
+        <AddWorkspaceModal
+            open={newWorkspaceModal}
+            onClose={() => setNewWorkspaceModal(false)}
+        />
     </div>)
 }
 

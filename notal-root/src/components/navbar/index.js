@@ -23,10 +23,14 @@ const Navbar = ({ user }) => {
 
     return (<nav className="p-3 dark:bg-black bg-white flex flex-row sticky top-0 z-50">
         <div className="w-1/2">
-            {typeof resolvedTheme != "undefined" && <img
-                src={resolvedTheme == "dark" ? "./icon_white.png" : "./icon_galactic.png"}
-                className="object-contain max-h-max w-40"
-            />}
+            {typeof resolvedTheme != "undefined" && <Link href={auth?.authUser ? "/home" : "/"} passHref>
+                <a>
+                    <img
+                        src={resolvedTheme == "dark" ? "./icon_white.png" : "./icon_galactic.png"}
+                        className="object-contain max-h-max w-40"
+                    />
+                </a>
+            </Link>}
         </div>
         <div className="w-1/2 flex items-center justify-end">
             {(!auth.authUser && !auth.authLoading && client) && <Switch

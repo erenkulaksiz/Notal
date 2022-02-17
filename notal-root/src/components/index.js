@@ -13,3 +13,4 @@ export { default as SidebarItem } from "./home/sidebar/sidebarItem";
 export { default as Switch } from "./switch";
 // Modals
 export { default as LoginModal } from './modals/login';
+export { default as AddWorkspaceModal } from './modals/addWorkspace';
