@@ -5,13 +5,45 @@ import {
     CrossIcon
 } from '@icons';
 
+// #TODO: animation bool not working on childrens
+
+const ChildrenAnim = {
+    hidden: {
+        opacity: 0.4,
+        y: -15,
+        transition: {
+            type: "spring", stiffness: 800, damping: 35, duration: 25
+        }
+    },
+    show: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            type: "spring", stiffness: 800, damping: 35, duration: 25
+        }
+    }
+}
+
 const Content = ({ children, blur, className }) => {
     return (<motion.div
         variants={{
-            hidden: { opacity: 0, scale: 0.8 },
-            show: { opacity: 1, scale: 1 }
+            hidden: {
+                opacity: 0,
+                scale: 0.8,
+                transition: {
+                    staggerChildren: 0.06,
+                    type: "spring", stiffness: 800, damping: 50, duration: 50
+                },
+            },
+            show: {
+                opacity: 1,
+                scale: 1,
+                transition: {
+                    staggerChildren: 0.06,
+                    type: "spring", stiffness: 800, damping: 25, duration: 50
+                },
+            }
         }}
-        transition={{ type: "spring", stiffness: 700, duration: 50, damping: 25 }}
         onClick={e => e.stopPropagation()}
         className={`${className ? className + " " : ""}z-50 relative box-border flex flex-col min-h-min shadow-2xl p-2 ${blur ? "backdrop-brightness-75 dark:bg-black/50 bg-white " : "dark:bg-neutral-900 bg-white "}rounded-lg overflow-hidden`}
     >
@@ -25,15 +57,13 @@ const Backdrop = ({ children, blur, onClose, open, setShow }) => {
             show: {
                 display: "flex",
                 opacity: 1,
-                transition: {
-                    staggerChildren: 0.1,
-                },
             },
             hidden: {
                 opacity: 0,
-                transitionEnd: { display: "none" }
+                transitionEnd: { display: "none" },
             }
         }}
+        transition={{ type: "spring", stiffness: 400, duration: 0.02, damping: 25 }}
         initial="hidden"
         animate={open ? "show" : "hidden"}
         onAnimationComplete={() => !open && setShow(false)}
@@ -43,25 +73,46 @@ const Backdrop = ({ children, blur, onClose, open, setShow }) => {
     </motion.div>)
 }
 
-const Title = ({ children, className }) => {
-    return (<div className={`${className ? className + " " : ""}w-full h-12 justify-center flex items-center`}>
+const Title = ({ children, className, animate = false }) => {
+    return (<motion.div
+        className={`${className ? className + " " : ""}w-full h-12 justify-center flex items-center`}
+        variants={animate && ChildrenAnim}
+    >
         {children}
-    </div>)
+    </motion.div>)
 }
 
-const Body = ({ children, className }) => {
-    return (<div className={`${className ? className + " " : ""}w-full h-auto flex items-start flex-col`}>
+const Body = ({ children, className, animate = false }) => {
+    return (<motion.div
+        variants={{
+            show: {
+                transition: {
+                    staggerChildren: 0.06,
+                }
+            },
+            hidden: {
+                transition: {
+                    staggerChildren: 0.06,
+                }
+            }
+        }}
+        className={`${className ? className + " " : ""}w-full h-auto flex items-start flex-col`}
+        variants={animate && ChildrenAnim}
+    >
         {children}
-    </div>)
+    </motion.div>)
 }
 
-const Footer = ({ children, className }) => {
-    return (<div className={`${className ? className + " " : ""}w-full h-12 justify-center flex items-center`}>
+const Footer = ({ children, className, animate = false }) => {
+    return (<motion.div
+        className={`${className ? className + " " : ""}w-full h-12 justify-center flex items-center`}
+        variants={animate && ChildrenAnim}
+    >
         {children}
-    </div>)
+    </motion.div >)
 }
 
-const Modal = ({ children, open, blur, onClose, className }) => {
+const Modal = ({ children, open, blur, onClose, className, animate = false }) => {
     const [show, setShow] = useState(false);
 
     useEffect(() => {
@@ -74,9 +125,9 @@ const Modal = ({ children, open, blur, onClose, className }) => {
         };
     }, [open]);
 
-    return (show ? <ModalPortal>
+    return (show && <ModalPortal>
         <Backdrop blur={blur} onClose={onClose} open={open} setShow={setShow}>
-            <Content blur={blur} className={className}>
+            <Content blur={blur} className={className} animate={animate}>
                 <div className="absolute right-2 top-2">
                     <button onClick={onClose} className="fill-neutral-600 hover:fill-neutral-700">
                         <CrossIcon size={24} />
@@ -85,7 +136,7 @@ const Modal = ({ children, open, blur, onClose, className }) => {
                 {children}
             </Content>
         </Backdrop>
-    </ModalPortal> : null)
+    </ModalPortal>)
 }
 
 Modal.Title = Title;

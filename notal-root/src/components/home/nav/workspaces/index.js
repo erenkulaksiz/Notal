@@ -38,7 +38,7 @@ const HomeNavWorkspaces = ({ workspaces }) => {
             }}
             initial="hidden"
             animate="show"
-            className="mt-4 dark:bg-neutral-800 bg-neutral-100 rounded-xl shadow-xl p-4 h-full grid gap-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-4 items-start auto-rows-max"
+            className="mt-4 dark:bg-neutral-800 bg-neutral-100 rounded-xl shadow-xl p-4 h-full grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 items-start auto-rows-max"
         >
             {workspaces ? workspaces.map((workspace, index) => <HomeWorkspaceCard workspace={workspace} key={index} index={index} />) : <div>
                 no workspaces
@@ -50,13 +50,10 @@ const HomeNavWorkspaces = ({ workspaces }) => {
                 }}
                 transition={{ type: "spring", stiffness: 400, duration: 0.02, damping: 25 }}
             >
-                <Tooltip content="Add workspace">
-
-                    <a onClick={() => setNewWorkspaceModal(true)} href="#" className="w-full h-32 rounded-xl bg-transprent border-2 dark:border-blue-500 border-blue-700 p-3 flex justify-center items-center flex-col text-lg text-blue-700 dark:text-blue-500 cursor-pointer active:scale-95 transition-all ease-in-out">
-                        <AddIcon size={24} fill="currentColor" />
-                        Add Workspace
-                    </a>
-                </Tooltip>
+                <a onClick={() => setNewWorkspaceModal(true)} href="#" className="w-full h-32 rounded-xl bg-transprent border-2 dark:border-blue-500 border-blue-700 p-3 flex justify-center items-center flex-col text-lg text-blue-700 dark:text-blue-500 cursor-pointer active:scale-95 transition-all ease-in-out">
+                    <AddIcon size={24} fill="currentColor" />
+                    Add Workspace
+                </a>
             </motion.div>
         </motion.div>
         <AddWorkspaceModal

@@ -65,7 +65,7 @@ page_path: window.location.pathname,
                     }}
                 />
             </Head>
-            <body>
+            <body className="selection:bg-pink-600/40 selection:dark:bg-pink-800/40">
                 <Main />
                 <NextScript />
             </body>

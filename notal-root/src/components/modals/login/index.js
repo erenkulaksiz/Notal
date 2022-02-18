@@ -37,13 +37,13 @@ const LoginModal = ({ open, onClose, onLoginSuccess }) => {
     return (<Modal
         open={open}
         onClose={onClose}
-        className="w-[96%] sm:w-[400px]"
+        className="w-[90%] sm:w-[400px]"
         blur
     >
-        <Modal.Title>
+        <Modal.Title animate>
             <span className="text-2xl font-bold">Sign up/in using...</span>
         </Modal.Title>
-        <Modal.Body className="p-4">
+        <Modal.Body className="p-4" animate>
             <LoginSelector
                 onLoginWithGithub={onLoginWithGithub}
                 onLoginWithGoogle={onLoginWithGoogle}
