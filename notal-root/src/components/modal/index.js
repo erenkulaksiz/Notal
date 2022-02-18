@@ -12,7 +12,8 @@ const Content = ({ children, blur, className }) => {
             show: { opacity: 1, scale: 1 }
         }}
         transition={{ type: "spring", stiffness: 700, duration: 50, damping: 25 }}
-        onClick={e => e.stopPropagation()} className={`${className ? className + " " : ""}z-50 relative box-border flex flex-col min-h-min shadow-2xl p-2 ${blur ? "backdrop-brightness-75 dark:bg-black/50 bg-white " : "dark:bg-neutral-900 bg-white "}rounded-lg overflow-hidden`}
+        onClick={e => e.stopPropagation()}
+        className={`${className ? className + " " : ""}z-50 relative box-border flex flex-col min-h-min shadow-2xl p-2 ${blur ? "backdrop-brightness-75 dark:bg-black/50 bg-white " : "dark:bg-neutral-900 bg-white "}rounded-lg overflow-hidden`}
     >
         {children}
     </motion.div>)
@@ -35,7 +36,6 @@ const Backdrop = ({ children, blur, onClose, open, setShow }) => {
         }}
         initial="hidden"
         animate={open ? "show" : "hidden"}
-        transition={{}}
         onAnimationComplete={() => !open && setShow(false)}
         className={`fixed top-0 right-0 bottom-0 left-0 ${blur ? "bg-black/50 backdrop-blur-sm" : "bg-black/60"} flex items-center justify-center z-50`} onClick={onClose}
     >
@@ -50,7 +50,7 @@ const Title = ({ children, className }) => {
 }
 
 const Body = ({ children, className }) => {
-    return (<div className={`${className ? className + " " : ""}w-full h-auto flex items-start`}>
+    return (<div className={`${className ? className + " " : ""}w-full h-auto flex items-start flex-col`}>
         {children}
     </div>)
 }
@@ -74,8 +74,8 @@ const Modal = ({ children, open, blur, onClose, className }) => {
         };
     }, [open]);
 
-    return (<ModalPortal>
-        {show && <Backdrop blur={blur} onClose={onClose} open={open} setShow={setShow}>
+    return (show ? <ModalPortal>
+        <Backdrop blur={blur} onClose={onClose} open={open} setShow={setShow}>
             <Content blur={blur} className={className}>
                 <div className="absolute right-2 top-2">
                     <button onClick={onClose} className="fill-neutral-600 hover:fill-neutral-700">
@@ -84,8 +84,8 @@ const Modal = ({ children, open, blur, onClose, className }) => {
                 </div>
                 {children}
             </Content>
-        </Backdrop>}
-    </ModalPortal>)
+        </Backdrop>
+    </ModalPortal> : null)
 }
 
 Modal.Title = Title;

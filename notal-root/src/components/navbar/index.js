@@ -22,9 +22,9 @@ const Navbar = ({ user }) => {
     const [modalVisible, setModalVisible] = useState(false);
 
     return (<nav className="p-3 dark:bg-black bg-white flex flex-row sticky top-0 z-50">
-        <div className="w-1/2">
+        <div className="w-1/2 flex items-start">
             {typeof resolvedTheme != "undefined" && <Link href={auth?.authUser ? "/home" : "/"} passHref>
-                <a>
+                <a className="w-auto">
                     <img
                         src={resolvedTheme == "dark" ? "./icon_white.png" : "./icon_galactic.png"}
                         className="object-contain max-h-max w-40"

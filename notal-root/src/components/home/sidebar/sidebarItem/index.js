@@ -6,7 +6,7 @@ const HomeSidebarItem = ({ nav, onClick, current, navCollapse }) => {
             {current == nav.id ? nav.icon.selected : nav.icon.default}
         </div>
         <motion.span
-            initial={{ opacity: 1 }}
+            initial={{ opacity: 1, display: "flex" }}
             animate={navCollapse ? {
                 opacity: 0,
                 transitionEnd: { display: "none" }
