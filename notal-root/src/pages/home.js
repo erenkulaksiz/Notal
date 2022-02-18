@@ -17,9 +17,9 @@ import {
 
 import {
     Navbar,
-    SidebarItem,
     HomeNavWorkspaces,
     HomeNavBookmarks,
+    HomeSidebar
 } from '@components';
 
 import useAuth from '@hooks/auth';
@@ -31,10 +31,6 @@ import {
     ValidateToken,
     WorkboxInit
 } from '@utils';
-
-import {
-    HomeRoutes
-} from '@utils/constants';
 
 const NavSelector = ({ nav, workspaces, onAddWorkspace }) => {
     switch (nav) {
@@ -110,27 +106,13 @@ const Home = (props) => {
 
         <Navbar user={props?.validate?.data} />
 
-        <main className="flex flex-1 flex-row bg-white dark:bg-neutral-900">
-            <motion.div
-                initial={{ width: "14rem" }}
-                animate={navCollapse ? { width: "2.6rem" } : ""}
-                transition={{ type: "tween", stiffness: 50 }}
-            >
-                <nav className="h-full bg-white dark:bg-neutral-800 flex flex-col">
-                    <div className="w-full h-10 flex justify-end">
-                        <button className="p-2 bg-white dark:bg-neutral-800 hover:dark:bg-neutral-900 hover:bg-neutral-200 transition-colors ease-in-out" onClick={() => setNavCollapse(!navCollapse)}>
-                            <motion.div
-                                initial={{ rotate: 0 }}
-                                animate={navCollapse ? { rotate: 180 } : ""}
-                                transition={{ type: "tween", stiffness: 50 }}
-                            >
-                                <BackIcon size={24} fill={"currentColor"} />
-                            </motion.div>
-                        </button>
-                    </div>
-                    {HomeRoutes.map((nav, index) => <SidebarItem nav={nav} key={index} onClick={() => setHomeViewing(nav.id)} current={homeViewing} navCollapse={navCollapse} />)}
-                </nav>
-            </motion.div>
+        <main className="flex flex-row flex-1 bg-white dark:bg-neutral-900">
+            <HomeSidebar
+                navCollapse={navCollapse}
+                current={homeViewing}
+                onViewingChange={({ nav }) => setHomeViewing(nav.id)}
+                onCollapse={() => setNavCollapse(prev => !prev)}
+            />
             {!loadingWorkspaces && <NavSelector nav={homeViewing} workspaces={props?.workspaces?.data} onAddWorkspace={() => setNewWorkspaceVisible(true)} />}
         </main>
     </div>)

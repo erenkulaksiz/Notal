@@ -7,9 +7,7 @@ import {
     GoogleIcon
 } from '@icons';
 
-//#TODO: make this work, button stagger anims
-
-const ButtonVariations = {
+const buttonVariants = {
     hidden: {
         y: -15,
         transition: {
@@ -25,23 +23,34 @@ const ButtonVariations = {
 }
 
 const LoginSelector = ({ onLoginWithEmail, onLoginWithGithub, onLoginWithGoogle, oauthError }) => {
-    return (<div className="w-full grid gap-2">
-        <motion.div variants={ButtonVariations}>
+    return (<motion.div initial="hidden" animate="show" variants={{
+        hidden: {
+            transition: {
+                staggerChildren: 0.1
+            }
+        },
+        show: {
+            transition: {
+                staggerChildren: 0.1
+            }
+        }
+    }}
+        className="w-full grid gap-2">
+        <motion.div variants={buttonVariants}>
             <Button onClick={onLoginWithGithub} size="lg" className="w-full text-xl" gradient icon={<GithubIcon size={24} fill="currentColor" />}>
                 Github
             </Button>
         </motion.div>
-        <motion.div variants={ButtonVariations}>
+        <motion.div variants={buttonVariants}>
             <Button onClick={onLoginWithGoogle} size="lg" className="w-full text-xl" gradient icon={<GoogleIcon width={24} height={24} fill="currentColor" />}>
                 Google
             </Button>
         </motion.div>
-
         {/*<Button size="lg" className="w-full" gradient>
             Email
         </Button>*/}
         {oauthError && <span>{oauthError}</span>}
-    </div>)
+    </motion.div>)
 }
 
 export default LoginSelector;

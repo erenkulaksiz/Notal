@@ -12,7 +12,7 @@ import {
 } from "@icons";
 
 const AddWorkspaceModal = ({ open, onClose, }) => {
-    return (<Modal open={open} onClose={onClose} className="w-[90%] sm:w-[400px] p-4 py-2 pt-4">
+    return (<Modal open={open} onClose={onClose} className="w-[90%] sm:w-[400px] p-4">
         <Modal.Title animate>
             <AddIcon size={24} fill="currentColor" />
             <span className="text-xl font-medium"> Add Workspace</span>

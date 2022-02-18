@@ -11,9 +11,7 @@ import {
 
 import {
     DashboardFilledIcon,
-    AddIcon,
-    CrossIcon,
-    CheckIcon
+    AddIcon
 } from '@icons';
 
 const HomeNavWorkspaces = ({ workspaces }) => {
