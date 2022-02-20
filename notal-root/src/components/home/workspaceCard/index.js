@@ -10,6 +10,7 @@ import {
 import {
     StarOutlineIcon,
     DeleteIcon,
+    VisibleOffIcon,
 } from '@icons';
 
 const HomeWorkspaceCard = ({ workspace, index }) => {
@@ -28,8 +29,11 @@ const HomeWorkspaceCard = ({ workspace, index }) => {
             className="w-full h-32 shadow-xl rounded-xl bg-gradient-to-br from-blue-500 to-[#6d02ab] p-3 flex flex-col justify-end"
         >
             <div className="flex flex-row justify-between">
-                <div className="flex justify-end text-xl flex-col text-white max-w-[calc(100%-60px)]">
-                    <Link href="/workspace/[pid]" as={`/workspace/${workspace._id}`} passHref>
+                <div className="flex items-start justify-end text-xl flex-col text-white max-w-[calc(100%-60px)]">
+                    <Tooltip content="Private workspace">
+                        <VisibleOffIcon width={24} height={24} fill="white" />
+                    </Tooltip>
+                    <Link href="/workspace/[id]" as={`/workspace/${workspace._id}`} passHref>
                         <a className="flex-col flex">
                             <span className="font-medium text-ellipsis overflow-hidden whitespace-nowrap">
                                 {workspace.title}

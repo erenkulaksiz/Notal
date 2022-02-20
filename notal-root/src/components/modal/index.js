@@ -10,21 +10,19 @@ import Footer from './footer';
 import Backdrop from './backdrop';
 import Content from './content';
 
-// #TODO: animation bool not working on childrens
-
 export const ChildrenAnim = {
     hidden: {
-        opacity: 0.4,
-        y: -15,
+        opacity: 0,
+        y: -20,
         transition: {
-            type: "spring", stiffness: 800, damping: 35, duration: 25
+            type: "spring", stiffness: 800, damping: 30
         }
     },
     show: {
         opacity: 1,
         y: 0,
         transition: {
-            type: "spring", stiffness: 800, damping: 35, duration: 25
+            type: "spring", stiffness: 800, damping: 30
         }
     }
 }
@@ -35,7 +33,7 @@ const Modal = ({ children, open, blur, onClose, className, animate = false }) =>
     useEffect(() => {
         if (open) {
             document.body.style.overflow = 'hidden';
-            setShow(true)
+            setShow(true);
         }
         return () => {
             document.body.style.overflow = 'unset';

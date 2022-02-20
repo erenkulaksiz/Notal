@@ -2,24 +2,10 @@ import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import Head from 'next/head';
-import Image from 'next/image';
-import { motion } from "framer-motion";
-
-import addworkspacebanner from '../../public/addfieldbanner.png';
-
-import {
-    AddIcon,
-    StarFilledIcon,
-    VisibleOffIcon,
-    DashboardFilledIcon,
-    BackIcon
-} from '@icons';
-
 import {
     Navbar,
-    HomeNavWorkspaces,
-    HomeNavBookmarks,
-    HomeSidebar
+    HomeSidebar,
+    NavSelector
 } from '@components';
 
 import useAuth from '@hooks/auth';
@@ -31,16 +17,6 @@ import {
     ValidateToken,
     WorkboxInit
 } from '@utils';
-
-const NavSelector = ({ nav, workspaces, onAddWorkspace }) => {
-    switch (nav) {
-        case "workspaces":
-            return <HomeNavWorkspaces workspaces={workspaces} onAddWorkspace={onAddWorkspace} />
-
-        case "bookmarks":
-            return <HomeNavBookmarks />
-    }
-}
 
 const Home = (props) => {
     const auth = useAuth();
@@ -78,18 +54,6 @@ const Home = (props) => {
     }, [workspaceViewing]);
 
     useEffect(() => {
-        console.log("home props: ", props);
-        WorkboxInit();
-        (async () => {
-            const token = await auth.users.getIdToken();
-            const res = await CheckToken({ token: token.res, props });
-            if (!res) {
-                setTimeout(() => router.replace(router.asPath), 1000);
-            }
-        })();
-    }, []);
-
-    useEffect(() => {
         if (props.workspaces?.success == true) {
             _setWorkspaces(props.workspaces.data);
             setLoadingWorkspaces(false);
@@ -113,7 +77,11 @@ const Home = (props) => {
                 onViewingChange={({ nav }) => setHomeViewing(nav.id)}
                 onCollapse={() => setNavCollapse(prev => !prev)}
             />
-            {!loadingWorkspaces && <NavSelector nav={homeViewing} workspaces={props?.workspaces?.data} onAddWorkspace={() => setNewWorkspaceVisible(true)} />}
+            {!loadingWorkspaces && <NavSelector
+                nav={homeViewing}
+                workspaces={props?.workspaces?.data}
+                onAddWorkspace={() => setNewWorkspaceVisible(true)}
+            />}
         </main>
     </div>)
 }

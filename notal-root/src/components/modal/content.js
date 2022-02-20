@@ -9,7 +9,7 @@ const Content = ({ children, blur, className }) => {
                 scale: 0.8,
                 transition: {
                     staggerChildren: 0.04,
-                    type: "spring", stiffness: 800, damping: 50, duration: 50
+                    type: "spring", stiffness: 800, damping: 70, duration: 50
                 },
             },
             show: {
@@ -17,12 +17,12 @@ const Content = ({ children, blur, className }) => {
                 scale: 1,
                 transition: {
                     staggerChildren: 0.04,
-                    type: "spring", stiffness: 800, damping: 25, duration: 50
+                    type: "spring", stiffness: 800, damping: 70, duration: 50
                 },
             }
         }}
         onClick={e => e.stopPropagation()}
-        className={`${className ? className + " " : ""}z-50 relative box-border flex flex-col min-h-min shadow-2xl p-2 ${blur ? "backdrop-brightness-75 dark:bg-black/50 bg-white " : "dark:bg-neutral-900 bg-white "}rounded-lg overflow-hidden`}
+        className={`${className ? className + " " : ""}z-50 relative box-border flex flex-col min-h-min shadow-2xl p-2 ${blur ? "backdrop-brightness-75 dark:bg-black/50 bg-white " : "dark:bg-neutral-900 bg-white "}rounded-xl overflow-hidden`}
     >
         {children}
     </motion.div>)

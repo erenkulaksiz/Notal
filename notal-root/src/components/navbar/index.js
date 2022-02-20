@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useTheme } from 'next-themes';
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { motion } from "framer-motion";
 
 import {
     UserIcon,
@@ -52,6 +53,7 @@ const Navbar = ({ user }) => {
                         />
                     </div>
                 </summary>
+
                 <div className="p-4 absolute top-full rounded-lg right-0 dark:bg-neutral-900/50 filter backdrop-blur-md bg-white/50 shadow-2xl w-60 z-50">
                     {client && <Switch
                         onChange={e => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
@@ -73,7 +75,7 @@ const Navbar = ({ user }) => {
                         <span>Sign Out</span>
                     </Button>
                 </div>
-            </details> : <Button className="w-14 sm:w-32" size="sm" onClick={() => setModalVisible(true)}>
+            </details> : <Button clßassName="w-14 sm:w-32" size="sm" onClick={() => setModalVisible(true)}>
                 <LoginIcon size={24} fill="currentColor" style={{ display: "flex", transform: "scale(0.8)" }} />
                 <span className="hidden sm:flex">Sign Up/In</span>
             </Button>}

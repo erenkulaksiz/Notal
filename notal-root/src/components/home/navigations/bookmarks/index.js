@@ -10,7 +10,7 @@ const HomeNavBookmarks = () => {
             </div>
             <h1 className="text-2xl font-bold">Your Bookmarks</h1>
         </div>
-        <div className="mt-4 dark:bg-neutral-800 bg-neutral-100 rounded-lg p-4 h-full">
+        <div className="mt-4 flex flex-1">
             {"<3"}
         </div>
     </div>)

@@ -20,7 +20,7 @@ const LandingFooter = () => {
                     <span>with</span>
                     <HeartIcon size={24} className="fill-red-500" style={{ transform: "scale(0.8)" }} />
                     <span>by</span>
-                    <a href="https://github.com/erenkulaksiz" target="_blank" className="ml-1">
+                    <a href="https://github.com/erenkulaksiz" target="_blank" rel="noreferrer" className="ml-1">
                         @Eren Kulaksiz
                     </a>
                 </span>
@@ -36,7 +36,7 @@ const LandingFooter = () => {
         </div>
         <div className="w-full mt-10 flex flex-row justify-between">
             <div className="flex items-center">
-                <a href="https://twitter.com/notalapp" target="_blank">
+                <a href="https://twitter.com/notalapp" target="_blank" rel="noreferrer">
                     <TwitterIcon width={18} height={18} style={{ color: "currentColor" }} />
                 </a>
             </div>

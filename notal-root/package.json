@@ -13,8 +13,9 @@
   },
   "dependencies": {
     "@badrap/bar-of-progress": "^0.1.2",
-    "@next/bundle-analyzer": "^12.0.10",
+    "@next/bundle-analyzer": "^12.1.0",
     "critters": "^0.0.16",
+    "cross-env": "^7.0.3",
     "firebase": "^9.6.6",
     "firebase-admin": "^10.0.2",
     "framer-motion": "^6.2.6",

@@ -27,17 +27,7 @@ const Landing = (props) => {
   const router = useRouter();
   const auth = useAuth();
 
-  useEffect(() => {
-    WorkboxInit();
-    (async () => {
-      const token = await auth.users.getIdToken();
-      const res = await CheckToken({ token: token.res, props });
-      if (!res) {
-        setTimeout(() => router.replace(router.asPath), 1000);
-      }
-    })();
-    console.log("props landing: ", props);
-  }, []);
+  console.log("auth: ", auth);
 
   return (
     <div className="mx-auto min-h-screen flex flex-col transition-colors duration-100">
@@ -78,13 +68,13 @@ const Landing = (props) => {
             variants={{
               show: {
                 transition: {
-                  staggerChildren: 0.1,
+                  staggerChildren: 0.15,
                 }
               }
             }}
             initial="hidden"
             animate="show"
-            transition={{ type: "spring", stiffness: 200, duration: 500, ease: "easeInOut" }}
+            transition={{ type: "spring", stiffness: 600, damping: 100 }}
             className="mt-16 flex-row grid gap-4 h-auto grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 relative"
           >
             {Features.map((feature, index) => <LandingFeatureCard feature={feature} key={index} />)}

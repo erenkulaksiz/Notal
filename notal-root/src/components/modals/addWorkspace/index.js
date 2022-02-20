@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import {
     Modal,
     Button,
@@ -12,16 +14,18 @@ import {
 } from "@icons";
 
 const AddWorkspaceModal = ({ open, onClose, }) => {
-    return (<Modal open={open} onClose={onClose} className="w-[90%] sm:w-[400px] p-4">
+    const [newWorkspace, setNewWorkspace] = useState({ title: "", desc: "", starred: false })
+
+    return (<Modal open={open} onClose={onClose} className="w-[90%] sm:w-[400px] p-4 px-5">
         <Modal.Title animate>
             <AddIcon size={24} fill="currentColor" />
-            <span className="text-xl font-medium"> Add Workspace</span>
+            <span className="text-lg font-medium"> Add Workspace</span>
         </Modal.Title >
         <Modal.Body className="grid grid-cols-1 gap-2 pb-2" animate>
             <Input fullWidth placeholder="Workspace Title" />
             <Input fullWidth placeholder="Workspace Description" />
             <div className="py-4">
-                <Checkbox />
+                <Checkbox content="Add to favorites" value={newWorkspace.starred} onChange={(e) => setNewWorkspace({ ...newWorkspace, starred: !newWorkspace.starred })} />
             </div>
         </Modal.Body>
         <Modal.Footer className="justify-between" animate>

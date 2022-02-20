@@ -3,6 +3,7 @@ export { default as Button } from "./button";
 export { default as HomeNavBookmarks } from "./home/navigations/bookmarks";
 export { default as HomeNavWorkspaces } from "./home/navigations/workspaces";
 export { default as HomeWorkspaceCard } from "./home/workspaceCard";
+export { default as NavSelector } from "./home/navSelector";
 export { default as LandingFeatureCard } from "./landing/featureCard";
 export { default as Footer } from "./footer";
 export { default as LoginSelector } from "./loginSelector";

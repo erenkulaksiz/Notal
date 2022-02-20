@@ -36,7 +36,7 @@ const HomeNavWorkspaces = ({ workspaces }) => {
             }}
             initial="hidden"
             animate="show"
-            className="mt-4 dark:bg-neutral-800 bg-neutral-100 rounded-xl shadow-xl p-4 h-full grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 items-start auto-rows-max"
+            className="mt-4 h-full grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 items-start auto-rows-max"
         >
             {workspaces ? workspaces.map((workspace, index) => <HomeWorkspaceCard workspace={workspace} key={index} index={index} />) : <div>
                 no workspaces
