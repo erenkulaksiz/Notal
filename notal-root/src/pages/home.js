@@ -40,6 +40,18 @@ const Home = (props) => {
     const [loadingWorkspaces, setLoadingWorkspaces] = useState(true);
 
     useEffect(() => {
+        console.log("home props: ", props);
+        WorkboxInit();
+        (async () => {
+            const token = await auth.users.getIdToken();
+            const res = await CheckToken({ token: token.res, props });
+            if (!res) {
+                setTimeout(() => router.replace(router.asPath), 1000);
+            }
+        })();
+    }, []);
+
+    useEffect(() => {
         switch (workspaceViewing) {
             case "favorites":
                 setFilter("favorites");

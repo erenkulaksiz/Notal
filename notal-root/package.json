@@ -9,7 +9,9 @@
     "lint": "next lint",
     "analyze": "cross-env ANALYZE=true next build",
     "analyze:server": "cross-env BUNDLE_ANALYZE=server next build",
-    "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build"
+    "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build",
+    "sb": "start-storybook -p 6006",
+    "sb:build": "build-storybook"
   },
   "dependencies": {
     "@badrap/bar-of-progress": "^0.1.2",
@@ -18,7 +20,7 @@
     "cross-env": "^7.0.3",
     "firebase": "^9.6.6",
     "firebase-admin": "^10.0.2",
-    "framer-motion": "^6.2.6",
+    "framer-motion": "^6.2.7",
     "js-cookie": "^3.0.1",
     "mongodb": "^4.3.1",
     "next": "12.0.10",
@@ -36,6 +38,6 @@
     "eslint": "8.8.0",
     "eslint-config-next": "12.0.10",
     "postcss-preset-env": "^7.3.1",
-    "tailwindcss": "^3.0.22"
+    "tailwindcss": "^3.0.23"
   }
 }

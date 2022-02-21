@@ -27,7 +27,17 @@ const Landing = (props) => {
   const router = useRouter();
   const auth = useAuth();
 
-  console.log("auth: ", auth);
+  useEffect(() => {
+    console.log("home props: ", props);
+    WorkboxInit();
+    (async () => {
+      const token = await auth.users.getIdToken();
+      const res = await CheckToken({ token: token.res, props });
+      if (!res) {
+        setTimeout(() => router.replace(router.asPath), 1000);
+      }
+    })();
+  }, []);
 
   return (
     <div className="mx-auto min-h-screen flex flex-col transition-colors duration-100">

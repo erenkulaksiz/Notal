@@ -20,7 +20,7 @@ const Tooltip = ({ children, content, hideArrow = false }) => {
         onMouseEnter={() => setVisible(true)}
         onMouseLeave={() => setVisible(false)}
         ref={containerRef}
-        className="relative flex justify-center items-center"
+        className="relative flex justify-center items-center z-50"
     >
         {children}
 

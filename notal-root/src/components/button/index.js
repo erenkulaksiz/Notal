@@ -41,7 +41,7 @@ const Button = ({ children, className, icon, gradient = false, light = false, si
     });
 
     const classes = allClass({ // gather all classes
-        defaultClasses: "hover:opacity-80 active:opacity-100 flex flex-row items-center p-4 py-2 relative active:scale-95 transition-all duration-75 text-white font-semibold text-sm",
+        defaultClasses: "z-10 hover:opacity-80 active:opacity-100 flex flex-row items-center p-4 py-2 relative active:scale-95 transition-all duration-75 text-white font-semibold text-sm",
         extraClasses: className,
         conditions: [sizeClass, type, gradientClass, roundedClass]
     });

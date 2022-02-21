@@ -4,8 +4,7 @@ import ReactDOM from "react-dom";
 const ModalPortal = ({ children, parent, className }) => {
     const client = (typeof window === 'undefined') ? false : true;
     // Create div to contain everything
-    if (!client) return null; // check for client or server
-    const el = React.useMemo(() => document.createElement("div"), []);
+    const el = React.useMemo(() => client && document.createElement("div"), []);
     // On mount function
     React.useEffect(() => {
         // work out target in the DOM based on parent prop

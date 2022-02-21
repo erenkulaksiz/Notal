@@ -16,9 +16,8 @@ import {
 const HomeWorkspaceCard = ({ workspace, index }) => {
     return (<motion.div
         transition={{ type: "spring", stiffness: 400, duration: 0.02, damping: 25 }}
-        initial
-        whileHover={{ y: -5, boxShadow: "4px 4px 0 rgba(0, 0, 0, 0.2)", scale: 1.01 }}
-        className="rounded-xl"
+        whileHover={{ y: -5, boxShadow: "4px 4px 0 rgba(0, 0, 0, 0.2)", scale: 1.01, zIndex: 20 }}
+        className="rounded-xl z-10"
     >
         <motion.div
             variants={{
@@ -30,9 +29,9 @@ const HomeWorkspaceCard = ({ workspace, index }) => {
         >
             <div className="flex flex-row justify-between">
                 <div className="flex items-start justify-end text-xl flex-col text-white max-w-[calc(100%-60px)]">
-                    <Tooltip content="Private workspace">
+                    {!workspace.workspaceVisible && <Tooltip content="Private workspace">
                         <VisibleOffIcon width={24} height={24} fill="white" />
-                    </Tooltip>
+                    </Tooltip>}
                     <Link href="/workspace/[id]" as={`/workspace/${workspace._id}`} passHref>
                         <a className="flex-col flex">
                             <span className="font-medium text-ellipsis overflow-hidden whitespace-nowrap">

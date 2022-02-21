@@ -21,8 +21,5 @@ module.exports = withBundleAnalyzer(withPWA({
 
     return config
   },
-  sassOptions: {
-    includePaths: [path.join(__dirname, 'styles')],
-  },
-  experimental: { optimizeCss: true }
-}))
+  experimental: { optimizeCss: true },
+}));
