@@ -13,7 +13,7 @@ const TooltipPortal = ({ children, parent, className }) => {
         const classList = ["notal-tooltips"];
         // If className prop is present add each class the classList
         if (className) className.split(" ").forEach((item) => classList.push(item));
-        classList.forEach((item) => el.classList.add(item));
+        classList.filter(Boolean).forEach((item) => el.classList.add(item));
         // Append element to dom
         target.appendChild(el);
         // On unmount function

@@ -7,5 +7,6 @@
   body {
     @apply font-sans;
     @apply selection:bg-pink-700/50 selection:dark:bg-pink-900/50;
+    @apply subpixel-antialiased;
   }
 }

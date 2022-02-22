@@ -17,7 +17,7 @@ import {
 const HomeWorkspaceCard = ({ workspace, onStar, onDelete }) => {
     return (
         <motion.div
-            whileHover={{ y: -5, boxShadow: "4px 4px 0 rgba(0, 0, 0, 0.2)", scale: 1.01, zIndex: 20 }}
+            whileHover={{ y: -5, boxShadow: "4px 4px 0 rgba(0, 0, 0, 0.2)", scale: 1.01, zIndex: 50 }}
             transition={{ type: "spring", stiffness: 400, duration: 0.02, damping: 25 }}
             style={{ zIndex: 10 }}
             className="rounded-xl"
@@ -27,6 +27,9 @@ const HomeWorkspaceCard = ({ workspace, onStar, onDelete }) => {
                     hidden: { y: -25, opacity: 0 },
                     show: { y: 0, opacity: 1 },
                 }}
+                exit={{ y: -25, opacity: 0 }}
+                key={workspace._id}
+                transition={{ type: "spring", stiffness: 400, duration: 0.02, damping: 25 }}
                 className="w-full h-32 shadow-xl rounded-xl bg-gradient-to-br from-blue-500 to-[#6d02ab] p-3 flex flex-col justify-end"
             >
                 <div className="flex flex-row justify-between">

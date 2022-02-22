@@ -9,7 +9,8 @@ import { GetWorkspaces } from "@utils";
 import {
     AddWorkspaceModal,
     HomeWorkspaceCard,
-    AddWorkspaceButton
+    AddWorkspaceButton,
+    DeleteWorkspaceModal
 } from '@components';
 
 import {
@@ -102,15 +103,18 @@ const HomeNavWorkspaces = ({ workspaces, validate }) => {
             }}
             initial="hidden"
             animate="show"
-            className="mt-4 grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 items-start auto-rows-max"
+            className="relative pb-4 mt-4 grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 items-start auto-rows-max"
         >
-            {_workspaces.map((element, index) => <HomeWorkspaceCard
-                workspace={element}
-                key={index}
-                index={index}
-                onStar={() => workspace.star({ id: element._id })}
-                onDelete={() => setDeleteModal({ ...deleteModal, visible: true, workspace: element._id })}
-            />)}
+            <AnimatePresence>
+                {_workspaces.map((element, index) => <HomeWorkspaceCard
+                    workspace={element}
+                    key={index}
+                    index={index}
+                    onStar={() => workspace.star({ id: element._id })}
+                    onDelete={() => setDeleteModal({ ...deleteModal, visible: true, workspace: element._id })}
+                />)}
+            </AnimatePresence>
+
             <AddWorkspaceButton onClick={() => setNewWorkspaceModal(true)} />
         </motion.div>}
 
@@ -118,6 +122,14 @@ const HomeNavWorkspaces = ({ workspaces, validate }) => {
             loading workspaces...
         </div>}
 
+        <DeleteWorkspaceModal
+            open={deleteModal.visible}
+            onClose={() => setDeleteModal({ ...deleteModal, visible: false })}
+            onDelete={() => {
+                setDeleteModal({ ...deleteModal, visible: false });
+                workspace.delete({ id: deleteModal.workspace });
+            }}
+        />
         <AddWorkspaceModal
             open={newWorkspaceModal}
             onClose={() => setNewWorkspaceModal(false)}

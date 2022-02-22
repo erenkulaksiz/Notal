@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 
 import { BackIcon } from "@icons";
-import { HomeSidebarItem } from "@components";
+import { HomeSidebarItem, Tooltip } from "@components";
 
 import {
     HomeRoutes
@@ -12,7 +12,7 @@ const HomeSidebar = ({ navCollapse, current, onViewingChange, onCollapse }) => {
         initial={{ width: "14rem" }}
         animate={navCollapse ? { width: "2.6rem" } : ""}
         transition={{ type: "spring", damping: 50, stiffness: 500 }}
-        className="flex flex-col bg-white dark:bg-neutral-800/90"
+        className="flex flex-col bg-white dark:bg-neutral-800/90 sticky top-0 z-40"
     >
         <div className="w-full h-10 flex justify-end">
             <button
@@ -29,7 +29,18 @@ const HomeSidebar = ({ navCollapse, current, onViewingChange, onCollapse }) => {
                 </motion.div>
             </button>
         </div>
-        {HomeRoutes.map((nav, index) => <HomeSidebarItem nav={nav} key={index} onClick={() => onViewingChange({ nav })} current={current} navCollapse={navCollapse} />)}
+        {HomeRoutes.map((nav, index) => <Tooltip
+            key={index}
+            content={navCollapse ? nav.name : ""}
+            direction="right"
+        >
+            <HomeSidebarItem
+                nav={nav}
+                onClick={() => onViewingChange({ nav })}
+                current={current}
+                navCollapse={navCollapse}
+            />
+        </Tooltip>)}
     </motion.nav>)
 }
 

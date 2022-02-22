@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import Head from 'next/head';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { motion } from "framer-motion";
 
@@ -10,7 +9,8 @@ import {
   Navbar,
   LandingFeatureCard,
   Button,
-  Footer
+  Footer,
+  PathTransition
 } from '@components';
 
 import {
@@ -50,7 +50,7 @@ const Landing = (props) => {
 
       <Navbar user={props?.validate?.data} />
 
-      <main className="flex flex-1 flex-col items-center dark:bg-black bg-white relative overflow-hidden">
+      <PathTransition className="flex flex-1 flex-col items-center dark:bg-black bg-white relative overflow-hidden">
         <div className="absolute w-full z-0">
           <div className="absolute bg-gradient-to-t dark:from-black from-white w-full h-[800px] z-10" />
           <img
@@ -58,7 +58,7 @@ const Landing = (props) => {
             className="object-cover w-full h-[800px] z-0 dark:opacity-30 opacity-70"
           />
         </div>
-        <div className="sm:container px-8 pt-48 z-10">
+        <div className="container sm:container px-8 pt-48 z-10">
           <div className="relative z-50">
             <h1 className="text-black dark:text-white sm:text-5xl text-4xl font-bold font-sans">
               Organize & Plan your{' '}
@@ -94,7 +94,7 @@ const Landing = (props) => {
           </motion.div>
           <Footer />
         </div>
-      </main>
+      </PathTransition>
     </div>
   )
 }

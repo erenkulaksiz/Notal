@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import ProgressBar from "@badrap/bar-of-progress";
+import { AnimatePresence } from "framer-motion";
 
 const progress = new ProgressBar({
   size: 3,
@@ -62,7 +63,9 @@ const Notal = ({ Component, pageProps }) => {
         />
       </Head>
       <AuthProvider>
-        <Component {...pageProps} />
+        <AnimatePresence>
+          <Component {...pageProps} />
+        </AnimatePresence>
       </AuthProvider>
     </ThemeProvider>
   );

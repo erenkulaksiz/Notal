@@ -18,6 +18,7 @@ export { default as Switch } from "./switch";
 export { default as Input } from "./input";
 export { default as Checkbox } from "./checkbox";
 export { default as AddWorkspaceButton } from "./home/addWorkspaceBtn";
+export { default as PathTransition } from "./pathTransition";
 // Modals
 export { default as LoginModal } from "./modals/login";
 export { default as AddWorkspaceModal } from "./modals/addWorkspace";

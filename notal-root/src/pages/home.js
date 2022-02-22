@@ -5,7 +5,8 @@ import Head from 'next/head';
 import {
     Navbar,
     HomeSidebar,
-    NavSelector
+    NavSelector,
+    PathTransition
 } from '@components';
 
 import useAuth from '@hooks/auth';
@@ -39,7 +40,7 @@ const Home = (props) => {
         })();
     }, []);
 
-    return (<div className="mx-auto min-h-screen flex flex-col transition-colors duration-100 overflow-hidden">
+    return (<div className="mx-auto max-h-screen min-h-screen flex flex-col transition-colors duration-100">
         <Head>
             <title>Home · Notal</title>
             <meta name='twitter:description' content='Take your notes to next level with Notal' />
@@ -49,7 +50,7 @@ const Home = (props) => {
 
         <Navbar user={props?.validate?.data} />
 
-        <main className="flex flex-row flex-1 bg-white dark:bg-neutral-900">
+        <PathTransition className="flex flex-row flex-1 bg-white dark:bg-neutral-900 overflow-y-auto overflow-x-hidden">
             <HomeSidebar
                 navCollapse={navCollapse}
                 current={homeViewing}
@@ -61,7 +62,7 @@ const Home = (props) => {
                 workspaces={props?.workspaces?.data}
                 validate={props?.validate?.data}
             />
-        </main>
+        </PathTransition>
     </div>)
 }
 

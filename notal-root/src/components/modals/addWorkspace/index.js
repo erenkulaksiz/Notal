@@ -61,7 +61,7 @@ const AddWorkspaceModal = ({ open, onClose, onAdd }) => {
                 Add Workspace
             </Button>
         </Modal.Footer>
-    </Modal >)
+    </Modal>)
 }
 
 export default AddWorkspaceModal;
