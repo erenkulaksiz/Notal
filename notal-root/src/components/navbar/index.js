@@ -52,7 +52,7 @@ const Navbar = ({ user }) => {
                         />
                     </div>
                 </summary>
-                <div className="p-4 absolute top-full rounded-lg right-0 dark:bg-neutral-900/50 filter backdrop-blur-md bg-white/50 shadow-2xl w-60 z-50">
+                <div className="p-4 absolute top-full rounded-lg right-0 dark:bg-neutral-900/70 filter backdrop-blur-sm bg-white/70 shadow-2xl w-60 z-50">
                     {client && <Switch
                         onChange={e => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
                         value={resolvedTheme == "dark"}
@@ -61,10 +61,10 @@ const Navbar = ({ user }) => {
                     />}
                     <h2 className="text-current font-bold text-xl">{user?.fullname ? user?.fullname : "@" + user?.username}</h2>
                     <h4 className="text-current text-md">{user?.email}</h4>
-                    <Button className="w-full mt-2" icon={<UserIcon size={24} fill="white" />} gradient>
+                    <Button fullWidth className="mt-2" icon={<UserIcon size={24} fill="white" />} gradient>
                         <span>Profile</span>
                     </Button>
-                    <Button className="w-full mt-2" icon={<LogoutIcon size={24} fill="white" />} gradient
+                    <Button fullWidth className="mt-2" icon={<LogoutIcon size={24} fill="white" />} gradient
                         onClick={async () => {
                             await auth.users.logout();
                             router.replace(router.asPath);
@@ -73,7 +73,7 @@ const Navbar = ({ user }) => {
                         <span>Sign Out</span>
                     </Button>
                 </div>
-            </details> : <Button clßassName="w-14 sm:w-32" size="sm" onClick={() => setModalVisible(true)}>
+            </details> : <Button gradient className="w-14 sm:w-32" size="sm" onClick={() => setModalVisible(true)}>
                 <LoginIcon size={24} fill="currentColor" style={{ display: "flex", transform: "scale(0.8)" }} />
                 <span className="hidden sm:flex">Sign Up/In</span>
             </Button>}
@@ -91,14 +91,14 @@ const Navbar = ({ user }) => {
             }
         `}</style>
         </div>
-        <LoginModal
+        {!auth.authUser && <LoginModal
             open={modalVisible}
             onClose={() => setModalVisible(false)}
             onLoginSuccess={() => {
                 setModalVisible(false);
                 router.replace(router.asPath);
             }}
-        />
+        />}
     </nav>)
 }
 

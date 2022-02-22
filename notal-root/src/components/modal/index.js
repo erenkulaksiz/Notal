@@ -27,7 +27,7 @@ export const ChildrenAnim = {
     }
 }
 
-const Modal = ({ children, open, blur, onClose, className, animate = false }) => {
+const Modal = ({ children, open, blur, onClose, className, animate = false, closeBtn = true }) => {
     const [show, setShow] = useState(false);
 
     useEffect(() => {
@@ -43,11 +43,11 @@ const Modal = ({ children, open, blur, onClose, className, animate = false }) =>
     return (show && <ModalPortal>
         <Backdrop blur={blur} onClose={onClose} open={open} setShow={setShow}>
             <Content blur={blur} className={className} animate={animate}>
-                <div className="absolute right-2 top-2">
-                    <button onClick={onClose} className="fill-neutral-600 hover:fill-neutral-700">
+                {closeBtn && <div className="absolute right-2 top-2">
+                    <button onClick={onClose} className="fill-neutral-600 hover:fill-neutral-700 rounded-lg">
                         <CrossIcon size={24} />
                     </button>
-                </div>
+                </div>}
                 {children}
             </Content>
         </Backdrop>

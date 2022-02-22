@@ -1,24 +1,90 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import Cookies from "js-cookie";
+
+import useAuth from "@hooks/auth";
+
+import { GetWorkspaces } from "@utils";
 
 import {
     AddWorkspaceModal,
-    Button,
     HomeWorkspaceCard,
-    Modal,
-    Tooltip
+    AddWorkspaceButton
 } from '@components';
 
 import {
-    DashboardFilledIcon,
-    AddIcon
+    DashboardFilledIcon
 } from '@icons';
 
-const HomeNavWorkspaces = ({ workspaces }) => {
-
+const HomeNavWorkspaces = ({ workspaces, validate }) => {
+    const auth = useAuth();
+    // Modals
     const [newWorkspaceModal, setNewWorkspaceModal] = useState(false);
+    const [deleteModal, setDeleteModal] = useState({ workspace: -1, visible: false });
 
-    return (<div className="flex flex-1 px-8 py-4 flex-col overflow-x-auto">
+    const [loadingWorkspaces, setLoadingWorkspaces] = useState(true);
+    const [filter, setFilter] = useState(null);
+    const [_workspaces, _setWorkspaces] = useState([]);
+
+    useEffect(() => {
+        if (workspaces) {
+            _setWorkspaces(workspaces);
+            setLoadingWorkspaces(false);
+            console.log("set workspaces:", workspaces);
+        }
+    }, [workspaces]);
+
+    const workspace = {
+        create: async ({ title, desc, starred }) => {
+            const newWorkspaces = _workspaces;
+            newWorkspaces.push({ title, desc, starred, createdAt: Date.now(), workspaceVisible: false });
+            _setWorkspaces([...newWorkspaces]);
+
+            const data = await auth.workspace.createWorkspace({ title, desc, starred, workspaceVisible: false });
+
+            const authCookie = Cookies.get("auth");
+            const workspaces = await GetWorkspaces({ uid: validate?.uid, token: authCookie });
+            _setWorkspaces([...workspaces.data]);
+        },
+        delete: async ({ id }) => {
+            setDeleteModal({ visible: false, workspace: -1 }); // set visiblity to false and id to -1
+
+            const newWorkspaces = _workspaces;
+            newWorkspaces.splice(_workspaces.findIndex(el => el._id == id), 1);
+            _setWorkspaces([...newWorkspaces]);
+
+            const data = await auth.workspace.deleteWorkspace({ id });
+        },
+        star: async ({ id }) => {
+            const newWorkspaces = _workspaces;
+            const workspaceIndex = newWorkspaces.findIndex(el => el._id == id)
+            newWorkspaces[workspaceIndex].starred = !newWorkspaces[workspaceIndex].starred;
+            _setWorkspaces([...newWorkspaces]);
+
+            const data = await auth.workspace.starWorkspace({ id });
+            if (data?.error) console.error("error on star workspace: ", data.error);
+        },
+        closeModal: () => {
+            setNewWorkspaceVisible(false);
+            setNewWorkspaceErr({ ...newWorkspace, desc: false, title: false });
+            setNewWorkspace({ ...newWorkspace, title: "", desc: "", starred: "" });
+        },
+        getWorkspacesWithFilter: (workspaces) => {
+            switch (filter) {
+                case "favorites":
+                    if (workspaces) return workspaces.filter(el => el.starred == true);
+                    else return []
+                case "privateWorkspaces":
+                    if (workspaces) return workspaces.filter(el => !!el?.workspaceVisible == false);
+                    else return []
+                default:
+                    if (workspaces) return workspaces;
+                    else return []
+            }
+        }
+    }
+
+    return (<div className="flex flex-1 px-8 py-4 flex-col">
         <div className="w-full flex flex-row items-center">
             <div className="p-2 dark:bg-neutral-800 bg-neutral-100 mr-3 rounded-lg">
                 <DashboardFilledIcon size={24} fill="currentColor" />
@@ -26,37 +92,36 @@ const HomeNavWorkspaces = ({ workspaces }) => {
             <h1 className="text-2xl font-bold">Your Workspaces</h1>
         </div>
 
-        <motion.div
+        {!loadingWorkspaces && <motion.div
             variants={{
                 show: {
                     transition: {
-                        staggerChildren: 0.05,
+                        staggerChildren: 0.03,
                     }
                 }
             }}
             initial="hidden"
             animate="show"
-            className="mt-4 h-full grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 items-start auto-rows-max"
+            className="mt-4 grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 items-start auto-rows-max"
         >
-            {workspaces ? workspaces.map((workspace, index) => <HomeWorkspaceCard workspace={workspace} key={index} index={index} />) : <div>
-                no workspaces
-            </div>}
-            <motion.div
-                variants={{
-                    hidden: { y: -50, opacity: 0 },
-                    show: { y: 0, opacity: 1 }
-                }}
-                transition={{ type: "spring", stiffness: 400, duration: 0.02, damping: 25 }}
-            >
-                <a onClick={() => setNewWorkspaceModal(true)} href="#" className="w-full h-32 rounded-xl bg-transprent border-2 dark:border-blue-500 border-blue-700 p-3 flex justify-center items-center flex-col text-lg text-blue-700 dark:text-blue-500 cursor-pointer active:scale-95 transition-all ease-in-out">
-                    <AddIcon size={24} fill="currentColor" />
-                    Add Workspace
-                </a>
-            </motion.div>
-        </motion.div>
+            {_workspaces.map((element, index) => <HomeWorkspaceCard
+                workspace={element}
+                key={index}
+                index={index}
+                onStar={() => workspace.star({ id: element._id })}
+                onDelete={() => setDeleteModal({ ...deleteModal, visible: true, workspace: element._id })}
+            />)}
+            <AddWorkspaceButton onClick={() => setNewWorkspaceModal(true)} />
+        </motion.div>}
+
+        {loadingWorkspaces && <div>
+            loading workspaces...
+        </div>}
+
         <AddWorkspaceModal
             open={newWorkspaceModal}
             onClose={() => setNewWorkspaceModal(false)}
+            onAdd={({ title, desc, starred }) => workspace.create({ title, desc, starred })}
         />
     </div>)
 }

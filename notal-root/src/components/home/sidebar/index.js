@@ -12,7 +12,7 @@ const HomeSidebar = ({ navCollapse, current, onViewingChange, onCollapse }) => {
         initial={{ width: "14rem" }}
         animate={navCollapse ? { width: "2.6rem" } : ""}
         transition={{ type: "spring", damping: 50, stiffness: 500 }}
-        className="flex flex-col bg-white dark:bg-neutral-800"
+        className="flex flex-col bg-white dark:bg-neutral-800/90"
     >
         <div className="w-full h-10 flex justify-end">
             <button

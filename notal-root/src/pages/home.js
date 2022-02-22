@@ -27,18 +27,6 @@ const Home = (props) => {
     // View/Filter
     const [homeViewing, setHomeViewing] = useState("workspaces");
 
-    const [workspaceViewing, setWorkspaceViewing] = useState("workspaces");
-    const [filter, setFilter] = useState(null);
-
-    // Delete Modal
-    const [deleteModal, setDeleteModal] = useState({ workspace: -1, visible: false });
-
-    // Add Workspace Modal
-    const [newWorkspaceVisible, setNewWorkspaceVisible] = useState(false);
-
-    const [_workspaces, _setWorkspaces] = useState([]);
-    const [loadingWorkspaces, setLoadingWorkspaces] = useState(true);
-
     useEffect(() => {
         console.log("home props: ", props);
         WorkboxInit();
@@ -51,28 +39,7 @@ const Home = (props) => {
         })();
     }, []);
 
-    useEffect(() => {
-        switch (workspaceViewing) {
-            case "favorites":
-                setFilter("favorites");
-                break;
-            case "privateWorkspaces":
-                setFilter("privateWorkspaces");
-                break;
-            default:
-                setFilter(null);
-                break;
-        }
-    }, [workspaceViewing]);
-
-    useEffect(() => {
-        if (props.workspaces?.success == true) {
-            _setWorkspaces(props.workspaces.data);
-            setLoadingWorkspaces(false);
-        }
-    }, [props.workspaces]);
-
-    return (<div className="mx-auto min-h-screen flex flex-col transition-colors duration-100">
+    return (<div className="mx-auto min-h-screen flex flex-col transition-colors duration-100 overflow-hidden">
         <Head>
             <title>Home · Notal</title>
             <meta name='twitter:description' content='Take your notes to next level with Notal' />
@@ -89,11 +56,11 @@ const Home = (props) => {
                 onViewingChange={({ nav }) => setHomeViewing(nav.id)}
                 onCollapse={() => setNavCollapse(prev => !prev)}
             />
-            {!loadingWorkspaces && <NavSelector
+            <NavSelector
                 nav={homeViewing}
                 workspaces={props?.workspaces?.data}
-                onAddWorkspace={() => setNewWorkspaceVisible(true)}
-            />}
+                validate={props?.validate?.data}
+            />
         </main>
     </div>)
 }

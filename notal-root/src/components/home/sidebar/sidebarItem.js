@@ -14,13 +14,23 @@ const HomeSidebarItem = ({ nav, onClick, current, navCollapse }) => {
                     transitionEnd: { display: "none" }
                 } : ""}
                 transition={{ type: "tween", stiffness: 50 }}
-                className={`${current == nav.id ? "font-medium" : "font-normal"}`}
+                className={`${current == nav.id ? "font-bold " : "font-normal "}`}
             >
                 {nav.name}
             </motion.span>
         </div>
-        <div className="z-10 absolute left-1.5 top-1 right-1 bottom-1 rounded " />
-        {selected && <motion.div transition={{ type: "spring", duration: 0.5 }} layoutId="sidenavback" className="z-10 absolute left-1.5 top-1 right-1 bottom-1 rounded dark:bg-neutral-700 bg-neutral-200" />}
+        {!selected &&
+            <div
+                className="z-10 absolute left-1.5 top-1 right-1 bottom-1 rounded dark:group-hover:bg-neutral-700/50 group-hover:bg-neutral-200/50"
+            />
+        }
+        {selected &&
+            <motion.div
+                transition={{ type: "spring", duration: 0.5 }}
+                layoutId="sidenavback"
+                className="z-10 absolute left-1.5 top-1 right-1 bottom-1 rounded dark:bg-neutral-700 bg-neutral-200"
+            />
+        }
     </a>)
 }
 

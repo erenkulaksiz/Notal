@@ -1,11 +1,26 @@
-import { useState, useEffect } from "react";
-
 import {
     conditionalClass,
     allClass
 } from '@utils/conditionalClass';
 
-const Button = ({ children, className, icon, gradient = false, light = false, size = "md", onClick, rounded = false }) => {
+const Button = ({
+    children,
+    className,
+    icon,
+    onClick,
+    gradient = false,
+    light = false,
+    size = "md",
+    rounded = false,
+    fullWidth = false
+}) => {
+    const widthClass = conditionalClass({
+        keys: {
+            default: "w-auto",
+            fullWidth: "w-full",
+        },
+        selected: fullWidth && "fullWidth"
+    });
 
     const roundedClass = conditionalClass({
         keys: {
@@ -13,15 +28,14 @@ const Button = ({ children, className, icon, gradient = false, light = false, si
             rounded: "rounded-full"
         },
         selected: rounded && "rounded"
-    })
+    });
 
     const gradientClass = conditionalClass({
         keys: {
-            default: "",
             gradient: "bg-gradient-to-r from-sky-600 to-violet-700"
         },
         selected: gradient && "gradient"
-    })
+    });
 
     const sizeClass = conditionalClass({
         keys: {
@@ -31,6 +45,13 @@ const Button = ({ children, className, icon, gradient = false, light = false, si
         },
         selected: size
     });
+
+    const ringClass = conditionalClass({
+        keys: {
+            ring: "outline-none focus:outline-2 focus:outline-blue-500/50"
+        },
+        selected: !light && "ring"
+    })
 
     const type = conditionalClass({
         keys: {
@@ -43,7 +64,7 @@ const Button = ({ children, className, icon, gradient = false, light = false, si
     const classes = allClass({ // gather all classes
         defaultClasses: "z-10 hover:opacity-80 active:opacity-100 flex flex-row items-center p-4 py-2 relative active:scale-95 transition-all duration-75 text-white font-semibold text-sm",
         extraClasses: className,
-        conditions: [sizeClass, type, gradientClass, roundedClass]
+        conditions: [sizeClass, type, gradientClass, roundedClass, widthClass, ringClass]
     });
 
     const iconSpace = conditionalClass({

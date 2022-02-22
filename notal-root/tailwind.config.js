@@ -1,3 +1,5 @@
+const defaultTheme = require('tailwindcss/defaultTheme');
+
 module.exports = {
   mode: 'jit',
   darkMode: 'class',
@@ -10,11 +12,11 @@ module.exports = {
       backgroundImage: theme => ({
         "landing_bg_2": "url('../public/landing_bg_2.png')",
         "landing_bg_3": "url('../public/landing_bg_3.png')",
-      })
+      }),
+      fontFamily: {
+        sans: ['Roboto', ...defaultTheme.fontFamily.sans]
+      }
     },
-    fontFamily: {
-      'sans': ['Roboto']
-    }
   },
   plugins: [],
 }
