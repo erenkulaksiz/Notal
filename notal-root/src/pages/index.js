@@ -10,7 +10,8 @@ import {
   LandingFeatureCard,
   Button,
   Footer,
-  PathTransition
+  PathTransition,
+  AcceptCookies
 } from '@components';
 
 import {
@@ -58,7 +59,7 @@ const Landing = (props) => {
             className="object-cover w-full h-[800px] z-0 dark:opacity-30 opacity-70"
           />
         </div>
-        <div className="container sm:container px-8 pt-48 z-10">
+        <div className="sm:container px-3 lg:px-32 pt-48 z-10">
           <div className="relative z-50">
             <h1 className="text-black dark:text-white sm:text-5xl text-4xl font-bold font-sans">
               Organize & Plan your{' '}
@@ -95,6 +96,8 @@ const Landing = (props) => {
           <Footer />
         </div>
       </PathTransition>
+
+      <AcceptCookies />
     </div>
   )
 }

@@ -27,8 +27,15 @@ const LandingFooter = () => {
             </div>
             <div className="flex flex-col">
                 <span className="uppercase dark:text-neutral-400 font-bold">Pages</span>
-                <a href="#" className="uppercase mt-2 text-sm cursor-pointer hover:opacity-80 transition-opacity ease-in-out">Home</a>
-                <a href="#" className="uppercase mt-2 text-sm cursor-pointer hover:opacity-80 transition-opacity ease-in-out">Tutorial</a>
+                <a href="#" className="uppercase mt-2 text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
+                    Home
+                </a>
+                <a href="#" className="uppercase mt-2 text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
+                    Tutorial
+                </a>
+                <a href="#" className="uppercase mt-2 text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
+                    Behind The Scenes
+                </a>
             </div>
             <div className="flex flex-col">
                 <span className="uppercase dark:text-neutral-400 font-bold">Legal</span>

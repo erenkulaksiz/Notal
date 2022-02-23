@@ -6,7 +6,8 @@ import {
     Navbar,
     HomeSidebar,
     NavSelector,
-    PathTransition
+    PathTransition,
+    AcceptCookies
 } from '@components';
 
 import useAuth from '@hooks/auth';
@@ -63,6 +64,8 @@ const Home = (props) => {
                 validate={props?.validate?.data}
             />
         </PathTransition>
+
+        <AcceptCookies />
     </div>)
 }
 
