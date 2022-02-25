@@ -59,21 +59,16 @@ const BuildComponent = ({
     const builtClass = [...allClasses.filter(Boolean)];
 
     if (conditionalClasses.length != 0) {
-        conditionalClasses.map((element, index) => {
-            selectedClasses.map((selectedElement, selectedIndex) => {
-                if (index == selectedIndex) {
-                    // [{...}][i] == [...][i]
-                    if (element[selectedElement]) {
-                        builtClass.push(element[selectedElement]);
-                    } else {
-                        if (element.default) {
-                            builtClass.push(element.default);
-                        } else {
-                            // dont do anything!!
-                        }
-                    }
+        selectedClasses.map((element, index) => {
+            if (conditionalClasses[index][element]) {
+                builtClass.push(conditionalClasses[index][element]);
+            } else {
+                if (conditionalClasses[index].default) {
+                    builtClass.push(conditionalClasses[index].default);
+                } else {
+                    // do nothing!
                 }
-            });
+            }
         });
     }
 
