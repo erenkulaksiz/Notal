@@ -5,10 +5,7 @@ import {
     TooltipPortal
 } from '@components';
 
-import {
-    conditionalClass,
-    allClass
-} from '@utils/conditionalClass';
+import BuildComponent from '@utils/buildComponent';
 
 const Tooltip = ({
     children,
@@ -45,48 +42,49 @@ const Tooltip = ({
         }
     }
 
-    const sideClasses = conditionalClass({
-        keys: {
-            up: "top-0",
-            right: "right-0"
-        },
-        selected: direction
+    const BuildPortal = BuildComponent({
+        name: "Tooltip Portal",
+        defaultClasses: "pointer-events-none absolute z-50",
+        conditionalClasses: [
+            {
+                up: "bottom-[calc(100%+5px)]",
+                right: "left-[calc(100%)]"
+            }
+        ],
+        selectedClasses: [
+            direction,
+        ]
     });
 
-    const portalSideClasses = conditionalClass({
-        keys: {
-            up: "bottom-[calc(100%+5px)]",
-            right: "left-[calc(100%)]"
-        },
-        selected: direction,
-    });
-
-    const arrowClasses = conditionalClass({
-        keys: {
-            up: "-bottom-1",
-            right: "-left-1",
-        },
-        selected: direction
-    })
-
-    const containerClasses = allClass({
-        defaultClasses: "relative flex justify-center items-center w-auto"
-    });
-
-    const portalClasses = allClass({
-        defaultClasses: "pointer-events-none absolute",
-        conditions: [portalSideClasses]
-    });
-
-    const tooltipContainerClasses = allClass({
-        defaultClasses: "relative bg-neutral-100 dark:bg-neutral-900 whitespace-nowrap px-3 py-1 flex items-center justify-center rounded-xl text-sm shadow-xl text-black dark:text-white",
-        conditions: [sideClasses]
-    });
-
-    const tooltipArrowContainerClasses = allClass({
+    const BuildArrow = BuildComponent({
+        name: "Tooltip Arrow",
         defaultClasses: "w-2 -z-10 h-2 bg-neutral-100 dark:bg-neutral-900 absolute rotate-45",
-        conditions: [arrowClasses]
-    })
+        conditionalClasses: [
+            {
+                up: "-bottom-1",
+                right: "-left-1"
+            }
+        ],
+        selectedClasses: [
+            direction,
+        ]
+    });
+
+    const BuildTooltipContainer = BuildComponent({
+        name: "Tooltip Container",
+        defaultClasses: "relative bg-neutral-100 dark:bg-neutral-900 whitespace-nowrap px-3 py-1 flex items-center justify-center rounded-xl text-sm shadow-xl text-black dark:text-white",
+        conditionalClasses: [
+            {
+                up: "top-0",
+                right: "right-0",
+                left: "left-0",
+                bottom: "bottom-0",
+            }
+        ],
+        selectedClasses: [
+            direction,
+        ]
+    });
 
     useEffect(() => {
         if (visible) {
@@ -97,24 +95,26 @@ const Tooltip = ({
     return (<div
         onMouseEnter={() => setVisible(true)}
         onMouseLeave={() => setVisible(false)}
+        onFocus={() => setVisible(true)}
+        onBlur={() => setVisible(false)}
         ref={containerRef}
-        className={containerClasses}
+        className="relative flex justify-center items-center w-auto"
     >
         {children}
         {(show && content) && <TooltipPortal
             parent={containerRef.current}
-            className={portalClasses}>
+            className={BuildPortal.classes}>
             <motion.div
                 initial="hidden"
                 animate={visible ? "show" : "hidden"}
                 variants={sideVariation()}
                 transition={{ type: "spring", stiffness: 400, duration: 0.02, damping: 25 }} // bottom-[calc(100%+45px)] 
-                className={tooltipContainerClasses}
+                className={BuildTooltipContainer.classes}
                 style={{ zIndex: 100 }}
                 onAnimationComplete={() => !visible && setShow(false)}
             >
                 {content}
-                {!hideArrow && <div className={tooltipArrowContainerClasses} />}
+                {!hideArrow && <div className={BuildArrow.classes} />}
             </motion.div>
         </TooltipPortal>}
     </div>)

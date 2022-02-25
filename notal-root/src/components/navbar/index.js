@@ -21,7 +21,8 @@ const Navbar = ({ user }) => {
 
     const [modalVisible, setModalVisible] = useState(false);
 
-    return (<nav className="p-3 dark:bg-black bg-white flex flex-row sticky top-0 z-50">
+    return (<nav className="p-3 flex flex-row sticky top-0 z-50">
+        <div className="absolute top-0 bottom-0 right-0 left-0 dark:bg-black/70 bg-white/70 backdrop-blur-md -z-10 shadow-lg" />
         <div className="w-1/2 flex items-start">
             {typeof resolvedTheme != "undefined" && <Link href={auth?.authUser ? "/home" : "/"} passHref>
                 <a className="w-auto">
@@ -52,7 +53,7 @@ const Navbar = ({ user }) => {
                         />
                     </div>
                 </summary>
-                <div className="p-4 absolute top-full rounded-lg right-0 dark:bg-neutral-900/70 filter backdrop-blur-sm bg-white/70 shadow-2xl w-60 z-50">
+                <div className="p-4 absolute top-full rounded-lg right-0 dark:bg-neutral-900/70 filter backdrop-blur-sm bg-white/70 shadow-2xl w-60" style={{ zIndex: 999 }}>
                     {client && <Switch
                         onChange={e => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
                         value={resolvedTheme == "dark"}

@@ -3,12 +3,12 @@ import {
     HomeNavBookmarks,
 } from '@components';
 
-const NavSelector = ({ nav, workspaces, validate }) => {
+const NavSelector = ({ nav, ...props }) => {
     switch (nav) {
         case "workspaces":
-            return <HomeNavWorkspaces workspaces={workspaces} validate={validate} />
+            return <HomeNavWorkspaces {...props} />
         case "bookmarks":
-            return <HomeNavBookmarks />
+            return <HomeNavBookmarks {...props} />
         default:
             return <div>no route found</div>
     }

@@ -14,13 +14,14 @@ import {
     StarFilledIcon,
 } from '@icons';
 
-const HomeWorkspaceCard = ({ workspace, onStar, onDelete }) => {
+const HomeWorkspaceCard = ({ workspace, onStar, onDelete, index }) => {
     return (
         <motion.div
-            whileHover={{ y: -5, boxShadow: "4px 4px 0 rgba(0, 0, 0, 0.2)", scale: 1.01, zIndex: 50 }}
+            whileHover={{ y: -5, boxShadow: "4px 4px 0 rgba(0, 0, 0, 0.2)", scale: 1.01, zIndex: 30 }}
             transition={{ type: "spring", stiffness: 400, duration: 0.02, damping: 25 }}
             style={{ zIndex: 10 }}
             className="rounded-xl"
+            key={index}
         >
             <motion.div
                 variants={{

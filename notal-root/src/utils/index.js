@@ -3,7 +3,6 @@ import { server } from '../config';
 
 export const CheckToken = async ({ token, props }) => {
     //console.log("jwtyi kontrol edicem bi canım");
-    console.log("ERRORS CHECKTOKEN", props.validate?.error);
 
     if (props.validate?.error == "auth/id-token-expired"
         || props.validate?.error == "auth/argument-error"
@@ -20,7 +19,6 @@ export const CheckToken = async ({ token, props }) => {
             });
             */
             //console.log("data validate: ", dataValidate);
-            console.log("new Token: ", token);
             await Cookie.set("auth", token, { expires: 1 });
             return false
         } catch (err) {

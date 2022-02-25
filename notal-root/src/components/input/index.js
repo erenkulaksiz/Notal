@@ -1,7 +1,4 @@
-import {
-    conditionalClass,
-    allClass
-} from '@utils/conditionalClass';
+import BuildComponent from "@utils/buildComponent";
 
 const Input = ({
     onChange,
@@ -15,51 +12,52 @@ const Input = ({
     icon
 }) => {
 
-    const iconClasses = conditionalClass({
-        keys: {
-            icon: "absolute pl-8"
-        },
-        selected: icon && "icon",
-    })
-
-    const roundedClass = conditionalClass({
-        keys: {
-            default: "rounded-xl",
-            rounded: "rounded-full"
-        },
-        selected: rounded && "rounded"
-    });
-
-    const widthClass = conditionalClass({
-        keys: {
-            fullWidth: "w-full",
-        },
-        selected: fullWidth && "fullWidth"
-    });
-
-    const inputClasses = allClass({ // gather all classes
-        defaultClasses: "outline-none focus:outline-2 focus:outline-blue-500/50 w-full h-full px-4 border-2 border-neutral-200 dark:border-neutral-700 dark:bg-neutral-900 placeholder:text-neutral-400 placeholder:text-sm",
-        extraClasses: className,
-        conditions: [roundedClass, iconClasses]
-    });
-
-    const heightClass = conditionalClass({
-        keys: {
-            default: "h-11",
-            custom: height
-        },
-        selected: height && "custom"
-    })
-
-    const containerClasses = allClass({
+    const BuildInputContainer = BuildComponent({
+        name: "Input Container",
         defaultClasses: "h-11 flex flex-row relative items-center",
         extraClasses: containerClassName,
-        conditions: [widthClass, heightClass, roundedClass],
-    })
+        conditionalClasses: [
+            {
+                true: "rounded-xl",
+            },
+            {
+                default: "h-11",
+                custom: height,
+            },
+            {
+                false: "rounded-xl",
+                true: "rounded-full",
+            },
+        ],
+        selectedClasses: [
+            fullWidth,
+            height && "custom",
+            rounded
+        ]
+    });
 
-    return (<div className={containerClasses}>
+    const BuildInput = BuildComponent({
+        name: "Input",
+        defaultClasses: "outline-none focus:outline-2 focus:outline-blue-500/50 w-full h-full px-4 border-2 border-neutral-200 dark:border-neutral-700 dark:bg-neutral-900 placeholder:text-neutral-400 placeholder:text-sm",
+        extraClasses: className,
+        conditionalClasses: [
+            {
+                false: "rounded-xl",
+                true: "rounded-full",
+            },
+            {
+                true: "absolute pl-8"
+            }
+        ],
+        selectedClasses: [
+            rounded,
+            icon && true
+        ]
+    });
+
+    return (<div className={BuildInputContainer.classes}>
         {icon && <span className="z-20 absolute left-2 fill-inherit" style={{ transform: "scale(0.8)" }}>{icon}</span>}
-        <input value={value} type="text" onChange={onChange} className={inputClasses} placeholder={placeholder} />
+        <input value={value} type="text" onChange={onChange} className={BuildInput.classes} placeholder={placeholder} />
     </div>)
 }
 

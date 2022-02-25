@@ -10,7 +10,8 @@ import {
     AddWorkspaceModal,
     HomeWorkspaceCard,
     AddWorkspaceButton,
-    DeleteWorkspaceModal
+    DeleteWorkspaceModal,
+    Select
 } from '@components';
 
 import {
@@ -28,10 +29,10 @@ const HomeNavWorkspaces = ({ workspaces, validate }) => {
     const [_workspaces, _setWorkspaces] = useState([]);
 
     useEffect(() => {
+        console.log("workspaces: ", workspaces);
         if (workspaces) {
-            _setWorkspaces(workspaces);
+            _setWorkspaces(workspaces.data);
             setLoadingWorkspaces(false);
-            console.log("set workspaces:", workspaces);
         }
     }, [workspaces]);
 
@@ -65,11 +66,13 @@ const HomeNavWorkspaces = ({ workspaces, validate }) => {
             const data = await auth.workspace.starWorkspace({ id });
             if (data?.error) console.error("error on star workspace: ", data.error);
         },
+        /*
         closeModal: () => {
             setNewWorkspaceVisible(false);
             setNewWorkspaceErr({ ...newWorkspace, desc: false, title: false });
             setNewWorkspace({ ...newWorkspace, title: "", desc: "", starred: "" });
         },
+        */
         getWorkspacesWithFilter: (workspaces) => {
             switch (filter) {
                 case "favorites":
@@ -86,27 +89,42 @@ const HomeNavWorkspaces = ({ workspaces, validate }) => {
     }
 
     return (<div className="flex flex-1 px-8 py-4 flex-col">
-        <div className="w-full flex flex-row items-center">
-            <div className="p-2 dark:bg-neutral-800 bg-neutral-100 mr-3 rounded-lg">
-                <DashboardFilledIcon size={24} fill="currentColor" />
+        <div className="w-full flex-row items-center flex flex-wrap">
+            <div className="flex flex-row">
+                <div className="flex items-center justify-center w-10 h-10 p-2 dark:bg-neutral-800 bg-neutral-100 mr-3 rounded-lg">
+                    <DashboardFilledIcon size={24} fill="currentColor" />
+                </div>
+                <h1 className="flex items-center text-2xl font-bold">Your Workspaces</h1>
             </div>
-            <h1 className="text-2xl font-bold">Your Workspaces</h1>
+            <div className="flex flex-1 justify-end items-center">
+                <div className="w-full sm:w-40">
+                    <Select
+                        onChange={e => setFilter(e.target.value)}
+                        options={[{
+                            id: null,
+                            text: "All Workspaces"
+                        },
+                        {
+                            id: "favorites",
+                            text: "Favorites"
+                        },
+                        {
+                            id: "privateWorkspaces",
+                            text: "Private Workspaces"
+                        }]}
+                    />
+                </div>
+            </div>
         </div>
 
         {!loadingWorkspaces && <motion.div
-            variants={{
-                show: {
-                    transition: {
-                        staggerChildren: 0.03,
-                    }
-                }
-            }}
             initial="hidden"
             animate="show"
+            transition={{ staggerChildren: 0.03 }}
             className="relative pb-4 mt-4 grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 items-start auto-rows-max"
         >
             <AnimatePresence>
-                {_workspaces.map((element, index) => <HomeWorkspaceCard
+                {workspace.getWorkspacesWithFilter(_workspaces).map((element, index) => <HomeWorkspaceCard
                     workspace={element}
                     key={index}
                     index={index}
@@ -114,7 +132,6 @@ const HomeNavWorkspaces = ({ workspaces, validate }) => {
                     onDelete={() => setDeleteModal({ ...deleteModal, visible: true, workspace: element._id })}
                 />)}
             </AnimatePresence>
-
             <AddWorkspaceButton onClick={() => setNewWorkspaceModal(true)} />
         </motion.div>}
 

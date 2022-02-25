@@ -6,7 +6,6 @@ import {
     Navbar,
     HomeSidebar,
     NavSelector,
-    PathTransition,
     AcceptCookies
 } from '@components';
 
@@ -51,7 +50,7 @@ const Home = (props) => {
 
         <Navbar user={props?.validate?.data} />
 
-        <PathTransition className="flex flex-row flex-1 bg-white dark:bg-neutral-900 overflow-y-auto overflow-x-hidden">
+        <div className="flex flex-row flex-1 bg-white dark:bg-neutral-900 overflow-y-auto overflow-x-hidden">
             <HomeSidebar
                 navCollapse={navCollapse}
                 current={homeViewing}
@@ -60,10 +59,9 @@ const Home = (props) => {
             />
             <NavSelector
                 nav={homeViewing}
-                workspaces={props?.workspaces?.data}
-                validate={props?.validate?.data}
+                {...props}
             />
-        </PathTransition>
+        </div>
 
         <AcceptCookies />
     </div>)

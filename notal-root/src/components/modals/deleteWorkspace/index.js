@@ -15,7 +15,7 @@ const DeleteWorkspaceModal = ({ open, onClose, onDelete }) => {
             <DeleteIcon size={24} fill="currentColor" />
             <span className="text-lg font-medium"> Delete Workspace</span>
         </Modal.Title>
-        <Modal.Body className="grid grid-cols-1 gap-2 pt-5 pb-5" animate>
+        <Modal.Body className="pt-2 pb-5" animate>
             <h1 className="text-lg text-center">
                 Are you sure want to delete this workspace?
             </h1>
