@@ -55,10 +55,10 @@ const Landing = (props) => {
           <div className="absolute bg-gradient-to-t dark:from-black from-white w-full h-[800px] z-10" />
           <img
             src="./landing_bg_banner_1.png"
-            className="object-cover w-full h-[800px] z-0 dark:opacity-30 opacity-70"
+            className="object-cover w-full h-[800px] z-0 dark:opacity-30 opacity-40"
           />
         </div>
-        <div className="sm:container px-8 md:px-16 lg:px-2 xl:px-32 pt-40 z-10">
+        <div className="sm:container px-8 md:px-1 lg:px-2 xl:px-32 pt-40 z-10">
           <div className="relative z-50">
             <h1 className="text-black drop-shadow-xl dark:text-white sm:text-5xl text-4xl font-bold font-sans">
               Organize & Plan your{' '}
@@ -67,7 +67,7 @@ const Landing = (props) => {
               </span>{' '}
               project with Notal 🚀
             </h1>
-            <h5 className="dark:text-neutral-500 text-neutral-800 drop-shadow-lg mt-4 text-lg font-semibold">
+            <h5 className="dark:text-neutral-400 text-gray-600 drop-shadow-lg mt-4 text-lg font-semibold">
               {"Developer's solution from an developer. Keep focus on your project, not on your planning."}
             </h5>
             <Button rounded className="w-32 mt-4">
