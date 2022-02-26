@@ -8,12 +8,13 @@ import {
     LogoutIcon,
     DarkIcon,
     LightIcon,
-    LoginIcon
+    LoginIcon,
+    HomeFilledIcon
 } from "@icons";
 import { Button, LoginModal, Switch } from "@components";
 import useAuth from "@hooks/auth";
 
-const Navbar = ({ user }) => {
+const Navbar = ({ user, showHomeButton = false }) => {
     const { resolvedTheme, setTheme } = useTheme();
     const router = useRouter();
     const auth = useAuth();
@@ -22,7 +23,7 @@ const Navbar = ({ user }) => {
     const [modalVisible, setModalVisible] = useState(false);
 
     return (<nav className="p-3 flex flex-row sticky top-0 z-50">
-        <div className="absolute top-0 bottom-0 right-0 left-0 dark:bg-black/70 bg-white/70 backdrop-blur-md -z-10 shadow-lg" />
+        <div className="absolute top-0 bottom-0 right-0 left-0 dark:bg-black/70 bg-white/70 backdrop-blur-md -z-10 shadow-md" />
         <div className="w-1/2 flex items-start">
             {typeof resolvedTheme != "undefined" && <Link href={auth?.authUser ? "/home" : "/"} passHref>
                 <a className="w-auto">
@@ -34,6 +35,18 @@ const Navbar = ({ user }) => {
             </Link>}
         </div>
         <div className="w-1/2 flex items-center justify-end">
+            {(showHomeButton && auth.authUser) && <Link href="/home">
+                <Button
+                    light
+                    size="sm"
+                    className="mr-2"
+                >
+                    <span className="w-full justify-end flex items-center">
+                        <HomeFilledIcon size={24} fill="currentColor" style={{ transform: "scale(0.8)" }} />
+                        Home
+                    </span>
+                </Button>
+            </Link>}
             {(!auth.authUser && !auth.authLoading && client) && <Switch
                 onChange={e => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
                 value={resolvedTheme == "dark"}

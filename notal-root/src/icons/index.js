@@ -57,3 +57,5 @@ export { default as VisibleIcon } from "../../public/icons/visible.svg";
 export { default as VisibleOffIcon } from "../../public/icons/visible_off.svg";
 export { default as WarningIcon } from "../../public/icons/warning.svg";
 export { default as WebsiteIcon } from "../../public/icons/website.svg";
+
+export { default as AddWorkspaceBannerImage } from "../../public/addfieldbanner.png";

@@ -48,7 +48,7 @@ const Landing = (props) => {
         <meta name='description' content='Take your notes to next level with Notal' />
       </Head>
 
-      <Navbar user={props?.validate?.data} />
+      <Navbar user={props?.validate?.data} showHomeButton />
 
       <div className="flex flex-1 flex-col items-center dark:bg-black bg-white relative overflow-hidden">
         <div className="absolute w-full z-0">

@@ -7,15 +7,16 @@ import useAuth from "@hooks/auth";
 import { GetWorkspaces } from "@utils";
 
 import {
-    AddWorkspaceModal,
-    HomeWorkspaceCard,
+    AddWorkspaceBanner,
     AddWorkspaceButton,
+    AddWorkspaceModal,
     DeleteWorkspaceModal,
+    HomeWorkspaceCard,
     Select
 } from '@components';
 
 import {
-    DashboardFilledIcon
+    DashboardFilledIcon, FilterIcon
 } from '@icons';
 
 const HomeNavWorkspaces = ({ workspaces, validate }) => {
@@ -90,14 +91,20 @@ const HomeNavWorkspaces = ({ workspaces, validate }) => {
 
     return (<div className="flex flex-1 px-8 py-4 flex-col">
         <div className="w-full flex-row items-center flex flex-wrap">
-            <div className="flex flex-row">
-                <div className="flex items-center justify-center w-10 h-10 p-2 dark:bg-neutral-800 bg-neutral-100 mr-3 rounded-lg">
-                    <DashboardFilledIcon size={24} fill="currentColor" />
+            <div className="flex flex-row h-10 items-center">
+                <div className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 p-2 dark:bg-neutral-800 bg-neutral-100 mr-3 rounded-lg">
+                    <div className="hidden md:flex">
+                        <DashboardFilledIcon size={24} fill="currentColor" />
+                    </div>
+                    <div className="flex md:hidden">
+                        <DashboardFilledIcon size={24} fill="currentColor" style={{ transform: "scale(0.8)" }} />
+                    </div>
                 </div>
-                <h1 className="flex items-center text-2xl font-bold">Your Workspaces</h1>
+                <h1 className="flex items-center text-lg md:text-2xl font-bold">Workspaces</h1>
             </div>
             <div className="flex flex-1 justify-end items-center">
-                <div className="w-full sm:w-40">
+                <div className="w-full sm:w-48 flex flex-row items-center">
+                    <FilterIcon size={24} fill="currentColor" className="mr-4" />
                     <Select
                         onChange={e => setFilter(e.target.value)}
                         options={[{
@@ -110,7 +117,7 @@ const HomeNavWorkspaces = ({ workspaces, validate }) => {
                         },
                         {
                             id: "privateWorkspaces",
-                            text: "Private Workspaces"
+                            text: "Private"
                         }]}
                     />
                 </div>
@@ -132,12 +139,19 @@ const HomeNavWorkspaces = ({ workspaces, validate }) => {
                     onDelete={() => setDeleteModal({ ...deleteModal, visible: true, workspace: element._id })}
                 />)}
             </AnimatePresence>
+
             <AddWorkspaceButton onClick={() => setNewWorkspaceModal(true)} />
         </motion.div>}
 
         {loadingWorkspaces && <div>
             loading workspaces...
         </div>}
+
+        {(!loadingWorkspaces && workspace.getWorkspacesWithFilter(_workspaces).length == 0) && (
+            <div className="w-full h-full relative">
+                <AddWorkspaceBanner />
+            </div>
+        )}
 
         <DeleteWorkspaceModal
             open={deleteModal.visible}
