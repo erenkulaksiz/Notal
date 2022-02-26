@@ -12,7 +12,7 @@ const AcceptCookies = ({ className }) => {
 
     const onAccept = () => {
         Cookies.set('cookies', 'true');
-        router.replace(router.asPath);
+        setTimeout(() => router.replace(router.asPath), 500);
     }
 
     return (<div className="fixed bottom-4 left-4 flex flex-col items-start w-64 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-md p-4 rounded-xl drop-shadow-2xl" style={{ zIndex: 500 }}>

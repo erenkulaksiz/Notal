@@ -46,7 +46,7 @@ const Tooltip = ({
 
     const BuildPortal = BuildComponent({
         name: "Tooltip Portal",
-        defaultClasses: "absolute z-50 bg-blue-200",
+        defaultClasses: "absolute z-50",
         conditionalClasses: [
             {
                 up: "bottom-[calc(100%+5px)]",

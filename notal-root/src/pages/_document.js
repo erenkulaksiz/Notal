@@ -37,6 +37,7 @@ const Notal = (props) => {
                 <meta name='apple-mobile-web-app-title' content='Notal' />
                 <meta name='format-detection' content='telephone=no' />
                 <meta name='mobile-web-app-capable' content='yes' />
+                <link rel="apple-touch-icon" href="https://notal.app/apple-touch-icon.png"></link>
 
                 <link rel='icon' type='image/png' sizes='32x32' href='/favicon-32x32.png' />
                 <link rel='icon' type='image/png' sizes='16x16' href='/favicon-16x16.png' />
@@ -53,6 +54,8 @@ const Notal = (props) => {
                 <meta property='og:site_name' content='Notal' />
                 <meta property='og:url' content='https://notal.app' />
                 <meta property='og:image' content='https://notal.app/icon_big.png' />
+
+                <meta property="theme-color" content="#292524" />
 
                 <script
                     async

@@ -28,7 +28,7 @@ const Navbar = ({ user, showHomeButton = false }) => {
             {typeof resolvedTheme != "undefined" && <Link href={auth?.authUser ? "/home" : "/"} passHref>
                 <a className="w-auto">
                     <img
-                        src={resolvedTheme == "dark" ? "./icon_white.png" : "./icon_galactic.png"}
+                        src={resolvedTheme == "dark" ? "/icon_white.png" : "/icon_galactic.png"}
                         className="object-contain max-h-max w-40"
                     />
                 </a>
@@ -61,7 +61,7 @@ const Navbar = ({ user, showHomeButton = false }) => {
                     }}>
                     <div className="p-[2px] w-10 h-10 rounded-full cursor-pointer bg-gradient-to-tr from-blue-700 to-pink-700">
                         <img
-                            src="https://firebasestorage.googleapis.com/v0/b/notal-1df19.appspot.com/o/avatars%2FcAoPPPr3BDR9RxUu6NAxb3aryq82?alt=media&token=d4682df3-9944-40b9-a899-435f11beb5ee"
+                            src={user?.avatar}
                             className="w-10 h-9 rounded-full border-[2px] dark:border-black border-white"
                         />
                     </div>
