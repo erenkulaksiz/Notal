@@ -12,7 +12,8 @@ import {
     AddWorkspaceModal,
     DeleteWorkspaceModal,
     HomeWorkspaceCard,
-    Select
+    Select,
+    Tooltip
 } from '@components';
 
 import {
@@ -103,23 +104,25 @@ const HomeNavWorkspaces = ({ workspaces, validate }) => {
                 <h1 className="flex items-center text-lg md:text-2xl font-bold">Workspaces</h1>
             </div>
             <div className="flex flex-1 justify-end items-center">
-                <div className="w-full sm:w-48 flex flex-row items-center">
+                <div className="w-full sm:w-48 flex flex-row items-center justify-end">
                     <FilterIcon size={24} fill="currentColor" className="mr-4" />
-                    <Select
-                        onChange={e => setFilter(e.target.value)}
-                        options={[{
-                            id: null,
-                            text: "All Workspaces"
-                        },
-                        {
-                            id: "favorites",
-                            text: "Favorites"
-                        },
-                        {
-                            id: "privateWorkspaces",
-                            text: "Private"
-                        }]}
-                    />
+                    <Tooltip content="Filter Workspaces" direction="bottom">
+                        <Select
+                            onChange={e => setFilter(e.target.value)}
+                            options={[{
+                                id: null,
+                                text: "All Workspaces"
+                            },
+                            {
+                                id: "favorites",
+                                text: "Favorites"
+                            },
+                            {
+                                id: "privateWorkspaces",
+                                text: "Private"
+                            }]}
+                        />
+                    </Tooltip>
                 </div>
             </div>
         </div>

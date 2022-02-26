@@ -35,13 +35,13 @@ const Navbar = ({ user, showHomeButton = false }) => {
             </Link>}
         </div>
         <div className="w-1/2 flex items-center justify-end">
-            {(showHomeButton && auth.authUser) && <Link href="/home">
+            {(showHomeButton && (auth.authUser || user)) && <Link href="/home">
                 <Button
                     light
                     size="sm"
                     className="mr-2"
                 >
-                    <span className="w-full justify-end flex items-center">
+                    <span className="w-full justify-end flex items-center dark:text-white text-black">
                         <HomeFilledIcon size={24} fill="currentColor" style={{ transform: "scale(0.8)" }} />
                         Home
                     </span>
@@ -67,12 +67,14 @@ const Navbar = ({ user, showHomeButton = false }) => {
                     </div>
                 </summary>
                 <div className="p-4 absolute top-full rounded-lg right-0 dark:bg-neutral-900/70 filter backdrop-blur-sm bg-white/70 shadow-2xl w-60" style={{ zIndex: 999 }}>
-                    {client && <Switch
-                        onChange={e => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-                        value={resolvedTheme == "dark"}
-                        className="mb-2"
-                        icon={resolvedTheme == "dark" ? <LightIcon size={24} fill="black" style={{ transform: "scale(0.7)" }} /> : <DarkIcon size={24} fill="black" style={{ transform: "scale(0.7)" }} />}
-                    />}
+                    {client && <div className="flex flex-row items-center">
+                        <Switch
+                            onChange={e => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+                            value={resolvedTheme == "dark"}
+                            icon={resolvedTheme == "dark" ? <LightIcon size={24} fill="black" style={{ transform: "scale(0.7)" }} /> : <DarkIcon size={24} fill="black" style={{ transform: "scale(0.7)" }} />}
+                        />
+                        <span className="ml-2 text-xs dark:text-neutral-600 text-neutral-300">v{process.env.NEXT_PUBLIC_APP_VERSION}</span>
+                    </div>}
                     <h2 className="text-current font-bold text-xl">{user?.fullname ? user?.fullname : "@" + user?.username}</h2>
                     <h4 className="text-current text-md">{user?.email}</h4>
                     <Button fullWidth className="mt-2" icon={<UserIcon size={24} fill="white" />} gradient>

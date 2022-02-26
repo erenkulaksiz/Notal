@@ -12,6 +12,8 @@ const Tooltip = ({
     content,
     hideArrow = false,
     direction = "up",
+    animated = true,
+    blockContent = true, // block pointer events
 }) => {
     const [show, setShow] = useState(false);
     const [visible, setVisible] = useState(false);
@@ -44,15 +46,21 @@ const Tooltip = ({
 
     const BuildPortal = BuildComponent({
         name: "Tooltip Portal",
-        defaultClasses: "pointer-events-none absolute z-50",
+        defaultClasses: "absolute z-50 bg-blue-200",
         conditionalClasses: [
             {
                 up: "bottom-[calc(100%+5px)]",
-                right: "left-[calc(100%)]"
+                right: "left-[calc(100%+5px)]",
+                left: "right-[calc(100%)+5px]",
+                bottom: "top-[calc(100%)]"
+            },
+            {
+                true: "pointer-events-none"
             }
         ],
         selectedClasses: [
             direction,
+            blockContent
         ]
     });
 
@@ -62,7 +70,9 @@ const Tooltip = ({
         conditionalClasses: [
             {
                 up: "-bottom-1",
-                right: "-left-1"
+                right: "-left-1",
+                left: "-right-1",
+                bottom: "-top-1",
             }
         ],
         selectedClasses: [
@@ -108,7 +118,7 @@ const Tooltip = ({
                 initial="hidden"
                 animate={visible ? "show" : "hidden"}
                 variants={sideVariation()}
-                transition={{ type: "spring", stiffness: 400, duration: 0.02, damping: 25 }} // bottom-[calc(100%+45px)] 
+                transition={{ type: animated ? "spring" : "none", stiffness: 400, duration: 0.02, damping: 25 }} // bottom-[calc(100%+45px)] 
                 className={BuildTooltipContainer.classes}
                 style={{ zIndex: 100 }}
                 onAnimationComplete={() => !visible && setShow(false)}
