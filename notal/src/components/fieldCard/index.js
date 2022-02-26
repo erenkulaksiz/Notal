@@ -1,18 +1,18 @@
-import { Button, Text, Grid, Checkbox, Tooltip, Card, useTheme } from '@nextui-org/react';
+import { Button, Text, Grid, Checkbox, Tooltip, Card, useTheme, css } from '@nextui-org/react';
 
 import {
     DeleteIcon,
     EditIcon,
     MoreIcon
-} from '../../icons';
+} from '@icons';
 
-const FieldCard = ({ card, onDelete, isOwner, onEdit, style }) => {
+const FieldCard = ({ card, onDelete, isOwner, onEdit, style, }) => {
     const { tag } = card;
 
     const { isDark } = useTheme();
 
-    return (<Grid xs={12} css={{ mt: 8, ...style }} key={card._id}>
-        <Card bordered css={{ width: "100%", }} shadow={false}>
+    return (<Grid xs={12} css={{ mt: 8, ...style }}>
+        <Card bordered css={{ width: "100%", borderRadius: 0, borderColor: "$customBorder" }} shadow={false}>
             <Grid.Container>
                 <Grid xs={8} sm={8}>
                     <Text h4 css={{ wordBreak: "break-word" }}>

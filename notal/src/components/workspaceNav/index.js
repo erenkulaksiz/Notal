@@ -46,31 +46,41 @@ const WorkspaceNav = ({ title, desc, starred, onFavClick, onDeleteClick, onEditW
                 </Tooltip>}
             </Grid>
             {isOwner ? <Grid xs={7} sm={4} justify="flex-end">
-                <WorkspaceLoading loading={loading} />
-                <Tooltip
-                    content={starred == true ? "Remove from favorites" : "Add to favorites"}
-                    css={{ pointerEvents: "none" }}
-                >
-                    <Button css={{ bg: "$gradient", height: 60, minWidth: 60, mr: 8 }} onClick={onFavClick}>
-                        {starred ? <StarFilledIcon style={{ fill: "#dbb700" }} /> : <StarOutlineIcon fill={"currentColor"} />}
-                    </Button>
-                </Tooltip>
-                <Tooltip
-                    content="Change visibility"
-                    css={{ pointerEvents: "none" }}
-                >
-                    <Button css={{ bg: "$gradient", height: 60, minWidth: 60, mr: 8 }} onClick={onVisibleClick}>
-                        {visible ? <VisibleIcon width={18} fill={"currentColor"} /> : <VisibleOffIcon width={18} fill={"currentColor"} />}
-                    </Button>
-                </Tooltip>
-                <Tooltip
-                    content="Delete"
-                    css={{ pointerEvents: "none" }}
-                >
-                    <Button css={{ bg: "$gradient", height: 60, minWidth: 60 }} onClick={onDeleteClick}>
-                        <DeleteIcon size={24} fill={"currentColor"} />
-                    </Button>
-                </Tooltip>
+                <Grid.Container justify='flex-end' alignItems='center' gap={0.4} css={{ pb: 0 }}>
+                    <Grid>
+                        <WorkspaceLoading loading={loading} />
+                    </Grid>
+                    <Grid>
+                        <Tooltip
+                            content={starred == true ? "Remove from favorites" : "Add to favorites"}
+                            css={{ pointerEvents: "none" }}
+                        >
+                            <Button css={{ bg: "$gradient", height: 60 }} auto onClick={onFavClick}>
+                                {starred ? <StarFilledIcon style={{ fill: "#dbb700" }} /> : <StarOutlineIcon fill={"currentColor"} />}
+                            </Button>
+                        </Tooltip>
+                    </Grid>
+                    <Grid>
+                        <Tooltip
+                            content="Change visibility"
+                            css={{ pointerEvents: "none" }}
+                        >
+                            <Button css={{ bg: "$gradient", height: 60 }} auto onClick={onVisibleClick}>
+                                {visible ? <VisibleIcon width={24} fill={"currentColor"} /> : <VisibleOffIcon width={24} fill={"currentColor"} />}
+                            </Button>
+                        </Tooltip>
+                    </Grid>
+                    <Grid>
+                        <Tooltip
+                            content="Delete"
+                            css={{ pointerEvents: "none" }}
+                        >
+                            <Button css={{ bg: "$gradient", height: 60 }} auto onClick={onDeleteClick}>
+                                <DeleteIcon size={24} fill={"currentColor"} />
+                            </Button>
+                        </Tooltip>
+                    </Grid>
+                </Grid.Container>
             </Grid> : <Grid xs={7} sm={4} justify="flex-end">
                 <Link href={`/profile/${user?.username}`} passHref>
                     <ALink>
