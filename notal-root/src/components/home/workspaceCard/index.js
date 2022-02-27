@@ -24,11 +24,12 @@ const HomeWorkspaceCard = ({ workspace, onStar, onDelete, index }) => {
             key={index}
         >
             <motion.div
-                variants={{
+                /*variants={{
                     hidden: { y: -25, opacity: 0 },
                     show: { y: 0, opacity: 1 },
                 }}
                 exit={{ y: -25, opacity: 0 }}
+                */
                 key={workspace._id}
                 transition={{ type: "spring", stiffness: 400, duration: 0.02, damping: 25 }}
                 className="w-full h-32 shadow-xl rounded-xl bg-gradient-to-br from-blue-500 to-[#6d02ab] p-3 flex flex-col justify-end"

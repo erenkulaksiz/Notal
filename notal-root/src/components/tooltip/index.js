@@ -59,7 +59,7 @@ const Tooltip = ({
                 up: "bottom-[calc(100%+5px)]",
                 right: "left-[calc(100%+5px)]",
                 left: "right-[calc(100%)+5px]",
-                bottom: "top-[calc(100%)]"
+                bottom: "top-[calc(100%+5px)]"
             },
             {
                 true: "pointer-events-none"
@@ -73,7 +73,7 @@ const Tooltip = ({
 
     const BuildArrow = BuildComponent({
         name: "Tooltip Arrow",
-        defaultClasses: "w-2 -z-10 h-2 bg-neutral-100 dark:bg-neutral-900 absolute rotate-45",
+        defaultClasses: "w-2 -z-10 h-2 bg-neutral-100 dark:bg-neutral-800 absolute rotate-45",
         conditionalClasses: [
             {
                 up: "-bottom-1",
@@ -89,7 +89,7 @@ const Tooltip = ({
 
     const BuildTooltipContainer = BuildComponent({
         name: "Tooltip Container",
-        defaultClasses: "z-50 relative bg-neutral-100 dark:bg-neutral-900 whitespace-nowrap px-3 py-1 flex items-center justify-center rounded-xl text-sm shadow-xl text-black dark:text-white",
+        defaultClasses: "z-50 relative bg-neutral-100 dark:bg-neutral-800 whitespace-nowrap px-3 py-1 flex items-center justify-center rounded-xl text-sm shadow-xl text-black dark:text-white",
         conditionalClasses: [
             {
                 up: "top-0",

@@ -13,7 +13,8 @@ import {
     DeleteWorkspaceModal,
     HomeWorkspaceCard,
     Select,
-    Tooltip
+    Tooltip,
+    HomeNavTitle,
 } from '@components';
 
 import {
@@ -48,6 +49,7 @@ const HomeNavWorkspaces = ({ workspaces, validate }) => {
 
             const authCookie = Cookies.get("auth");
             const workspaces = await GetWorkspaces({ uid: validate?.uid, token: authCookie });
+            console.log("Got all workspaces: ", workspaces);
             _setWorkspaces([...workspaces.data]);
         },
         delete: async ({ id }) => {
@@ -92,17 +94,9 @@ const HomeNavWorkspaces = ({ workspaces, validate }) => {
 
     return (<div className="flex flex-1 px-8 py-4 flex-col">
         <div className="w-full grid gap-2 flex-row items-center flex-wrap grid-cols-1 sm:grid-cols-2">
-            <div className="flex flex-row h-10 items-center">
-                <div className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 p-2 dark:bg-neutral-800 bg-neutral-100 mr-3 rounded-lg">
-                    <div className="hidden md:flex">
-                        <DashboardFilledIcon size={24} fill="currentColor" />
-                    </div>
-                    <div className="flex md:hidden">
-                        <DashboardFilledIcon size={24} fill="currentColor" style={{ transform: "scale(0.8)" }} />
-                    </div>
-                </div>
-                <h1 className="flex items-center text-lg md:text-2xl font-bold">Workspaces</h1>
-            </div>
+            <HomeNavTitle title="Workspaces">
+                <DashboardFilledIcon size={24} fill="currentColor" />
+            </HomeNavTitle>
             <div>
                 <div className="w-full flex flex-row items-center justify-end">
                     <FilterIcon size={24} fill="currentColor" className="mr-4" />

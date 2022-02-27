@@ -6,6 +6,7 @@ export { default as Checkbox } from "./checkbox";
 export { default as Footer } from "./footer";
 export { default as HomeNavBookmarks } from "./home/navigations/bookmarks";
 export { default as HomeNavWorkspaces } from "./home/navigations/workspaces";
+export { default as HomeNavTitle } from "./home/navigations/title";
 export { default as HomeSidebar } from "./home/sidebar";
 export { default as HomeSidebarItem } from "./home/sidebar/sidebarItem";
 export { default as HomeWorkspaceCard } from "./home/workspaceCard";
