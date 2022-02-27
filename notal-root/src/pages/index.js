@@ -56,6 +56,7 @@ const Landing = (props) => {
           <img
             src="./landing_bg_banner_1.png"
             className="object-cover w-full h-[800px] z-0 dark:opacity-30 opacity-40"
+            alt="Banner image of Notal"
           />
         </div>
         <div className="sm:container px-8 md:px-1 lg:px-2 xl:px-32 pt-40 z-10">

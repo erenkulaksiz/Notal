@@ -30,16 +30,18 @@ const Navbar = ({ user, showHomeButton = false }) => {
                     <img
                         src={resolvedTheme == "dark" ? "/icon_white.png" : "/icon_galactic.png"}
                         className="object-contain max-h-max w-40"
+                        alt="Logo of Notal"
                     />
                 </a>
             </Link>}
         </div>
         <div className="w-1/2 flex items-center justify-end">
-            {(showHomeButton && (auth.authUser || user)) && <Link href="/home">
+            {(showHomeButton && (auth.authUser || user)) && <Link href="/home" passHref>
                 <Button
                     light
                     size="sm"
                     className="mr-2"
+                    as="a"
                 >
                     <span className="w-full justify-end flex items-center dark:text-white text-black">
                         <HomeFilledIcon size={24} fill="currentColor" style={{ transform: "scale(0.8)" }} />

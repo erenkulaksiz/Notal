@@ -10,6 +10,7 @@ import BuildComponent from '@utils/buildComponent';
 const Tooltip = ({
     children,
     content,
+    allContainerClassName,
     hideArrow = false,
     direction = "up",
     animated = true,
@@ -43,6 +44,12 @@ const Tooltip = ({
                 }
         }
     }
+
+    const BuildAllContainer = BuildComponent({
+        name: "Tooltip All Container",
+        defaultClasses: "relative flex justify-center items-center",
+        extraClasses: allContainerClassName,
+    })
 
     const BuildPortal = BuildComponent({
         name: "Tooltip Portal",
@@ -105,10 +112,10 @@ const Tooltip = ({
     return (<div
         onMouseEnter={() => setVisible(true)}
         onMouseLeave={() => setVisible(false)}
-        onFocus={() => setVisible(true)}
+        //onFocus={() => setVisible(true)}
         onBlur={() => setVisible(false)}
         ref={containerRef}
-        className="relative flex justify-center items-center w-auto"
+        className={BuildAllContainer.classes}
     >
         {children}
         {(show && content) && <TooltipPortal

@@ -91,7 +91,7 @@ const HomeNavWorkspaces = ({ workspaces, validate }) => {
     }
 
     return (<div className="flex flex-1 px-8 py-4 flex-col">
-        <div className="w-full flex-row items-center flex flex-wrap">
+        <div className="w-full grid gap-2 flex-row items-center flex-wrap grid-cols-1 sm:grid-cols-2">
             <div className="flex flex-row h-10 items-center">
                 <div className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 p-2 dark:bg-neutral-800 bg-neutral-100 mr-3 rounded-lg">
                     <div className="hidden md:flex">
@@ -103,10 +103,13 @@ const HomeNavWorkspaces = ({ workspaces, validate }) => {
                 </div>
                 <h1 className="flex items-center text-lg md:text-2xl font-bold">Workspaces</h1>
             </div>
-            <div className="flex flex-1 justify-end items-center">
-                <div className="w-full sm:w-48 flex flex-row items-center justify-end">
+            <div>
+                <div className="w-full flex flex-row items-center justify-end">
                     <FilterIcon size={24} fill="currentColor" className="mr-4" />
-                    <Tooltip content="Filter Workspaces" direction="bottom">
+                    <Tooltip
+                        content="Filter Workspaces"
+                        direction="bottom"
+                        allContainerClassName="sm:w-64 w-full">
                         <Select
                             onChange={e => setFilter(e.target.value)}
                             options={[{
@@ -121,40 +124,47 @@ const HomeNavWorkspaces = ({ workspaces, validate }) => {
                                 id: "privateWorkspaces",
                                 text: "Private"
                             }]}
+                            className="w-full"
                         />
                     </Tooltip>
                 </div>
             </div>
         </div>
 
-        {!loadingWorkspaces && <motion.div
-            initial="hidden"
-            animate="show"
-            transition={{ staggerChildren: 0.03 }}
-            className="relative pb-4 mt-4 grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 items-start auto-rows-max"
-        >
-            <AnimatePresence>
-                {workspace.getWorkspacesWithFilter(_workspaces).map((element, index) => <HomeWorkspaceCard
-                    workspace={element}
-                    key={index}
-                    index={index}
-                    onStar={() => workspace.star({ id: element._id })}
-                    onDelete={() => setDeleteModal({ ...deleteModal, visible: true, workspace: element._id })}
-                />)}
-            </AnimatePresence>
+        {
+            !loadingWorkspaces && <motion.div
+                initial="hidden"
+                animate="show"
+                transition={{ staggerChildren: 0.03 }}
+                className="relative pb-4 mt-4 grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 items-start auto-rows-max"
+            >
+                <AnimatePresence>
+                    {workspace.getWorkspacesWithFilter(_workspaces).map((element, index) => <HomeWorkspaceCard
+                        workspace={element}
+                        key={index}
+                        index={index}
+                        onStar={() => workspace.star({ id: element._id })}
+                        onDelete={() => setDeleteModal({ ...deleteModal, visible: true, workspace: element._id })}
+                    />)}
+                </AnimatePresence>
 
-            <AddWorkspaceButton onClick={() => setNewWorkspaceModal(true)} />
-        </motion.div>}
+                <AddWorkspaceButton onClick={() => setNewWorkspaceModal(true)} />
+            </motion.div>
+        }
 
-        {loadingWorkspaces && <div>
-            loading workspaces...
-        </div>}
-
-        {(!loadingWorkspaces && workspace.getWorkspacesWithFilter(_workspaces).length == 0) && (
-            <div className="w-full h-full relative">
-                <AddWorkspaceBanner />
+        {
+            loadingWorkspaces && <div>
+                loading workspaces...
             </div>
-        )}
+        }
+
+        {
+            (!loadingWorkspaces && workspace.getWorkspacesWithFilter(_workspaces).length == 0) && (
+                <div className="w-full h-full relative">
+                    <AddWorkspaceBanner />
+                </div>
+            )
+        }
 
         <DeleteWorkspaceModal
             open={deleteModal.visible}
@@ -169,7 +179,7 @@ const HomeNavWorkspaces = ({ workspaces, validate }) => {
             onClose={() => setNewWorkspaceModal(false)}
             onAdd={({ title, desc, starred }) => workspace.create({ title, desc, starred })}
         />
-    </div>)
+    </div >)
 }
 
 export default HomeNavWorkspaces;

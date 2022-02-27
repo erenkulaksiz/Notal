@@ -4,6 +4,7 @@ import {
 } from '@utils/conditionalClass';
 
 import BuildComponent from '@utils/buildComponent';
+import React from 'react';
 
 const Button = ({
     children,
@@ -14,8 +15,11 @@ const Button = ({
     light = false,
     size = "md",
     rounded = false,
-    fullWidth = false
+    fullWidth = false,
+    as = "button",
+    ...props
 }) => {
+
     const iconSpace = conditionalClass({
         keys: {
             default: "left-4",
@@ -31,7 +35,7 @@ const Button = ({
 
     const BuildButton = BuildComponent({
         name: "Button",
-        defaultClasses: "z-10 hover:opacity-80 active:opacity-100 flex flex-row items-center p-4 py-2 relative active:scale-95 transition-all duration-75 text-white font-semibold text-sm",
+        defaultClasses: "cursor-pointer z-10 hover:opacity-80 active:opacity-100 flex flex-row items-center p-4 py-2 relative active:scale-95 transition-all duration-75 text-white font-semibold text-sm",
         extraClasses: className,
         conditionalClasses: [
             {
@@ -64,10 +68,12 @@ const Button = ({
         ]
     });
 
-    return (<button onClick={onClick} className={BuildButton.classes}>
+    const ButtonEl = ({ ...props }) => (React.createElement(as, props));
+
+    return (<ButtonEl onClick={onClick} className={BuildButton.classes} {...props}>
         {icon && <span className={iconClasses}>{icon}</span>}
         <span className="mx-auto flex flex-row items-center">{children}</span>
-    </button>)
+    </ButtonEl>)
 }
 
 export default Button;
