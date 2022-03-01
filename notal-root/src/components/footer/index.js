@@ -2,6 +2,9 @@ import Image from 'next/image';
 import { useTheme } from 'next-themes';
 import { CodeIcon, HeartIcon, TwitterIcon } from '@icons';
 
+import IconWhite from "@public/icon_white.webp";
+import IconGalactic from "@public/icon_galactic.webp";
+
 const LandingFooter = () => {
     const { resolvedTheme } = useTheme();
 
@@ -9,11 +12,14 @@ const LandingFooter = () => {
         <div className="h-0.5 dark:bg-neutral-700 bg-neutral-300 w-full rounded-full" />
         <div className="grid grid-cols-1 sm:grid-cols-3 mt-8 gap-8 sm:gap-4">
             <div className="flex flex-col">
-                {typeof resolvedTheme != "undefined" && <img
-                    src={resolvedTheme == "dark" ? "./icon_white.png" : "./icon_galactic.png"}
-                    alt="Logo of Notal"
-                    style={{ width: 80, height: 20, objectFit: "contain" }}
-                />}
+                {typeof resolvedTheme != "undefined" && <div className="w-32 h-8 object-contain">
+                    <Image
+                        src={resolvedTheme == "dark" ? IconWhite : IconGalactic}
+                        alt="Logo of Notal"
+                        priority
+                        placeholder="blur"
+                    />
+                </div>}
                 <span className="mt-4 text-sm dark:text-neutral-300 text-neutral-500">Create workspaces, manage your projects.</span>
                 <span className="flex flex-row text-xs items-center mt-2 dark:text-neutral-400 text-neutral-400">
                     <CodeIcon size={24} fill="currentColor" style={{ transform: "scale(0.8)" }} />

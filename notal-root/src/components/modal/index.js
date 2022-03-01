@@ -12,7 +12,7 @@ import Content from './content';
 
 export const ChildrenAnim = {
     hidden: {
-        opacity: 0,
+        opacity: 0.5,
         y: -20,
         transition: {
             type: "spring", stiffness: 800, damping: 30

@@ -74,7 +74,7 @@ page_path: window.location.pathname,
                     }}
                 />
             </CriticalCssHead>
-            <body>
+            <body className="bg-white dark:bg-black">
                 <Main />
                 <NextScript />
             </body>

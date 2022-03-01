@@ -4,8 +4,10 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Image from "next/image";
 
-import IconWhite from "@public/icon_white.png";
-import IconGalactic from "@public/icon_galactic.png";
+import IconWhite from "@public/icon_white.webp";
+import IconGalactic from "@public/icon_galactic.webp";
+
+import { isClient } from "@utils";
 
 import {
     UserIcon,
@@ -22,7 +24,6 @@ const Navbar = ({ user, showHomeButton = false }) => {
     const { resolvedTheme, setTheme } = useTheme();
     const router = useRouter();
     const auth = useAuth();
-    const client = (typeof window === 'undefined') ? false : true;
 
     const [modalVisible, setModalVisible] = useState(false);
 
@@ -56,7 +57,7 @@ const Navbar = ({ user, showHomeButton = false }) => {
                     </span>
                 </Button>
             </Link>}
-            {(!auth.authUser && !auth.authLoading && client) && <Switch
+            {(!auth.authUser && !auth.authLoading && isClient) && <Switch
                 onChange={e => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
                 value={resolvedTheme == "dark"}
                 icon={resolvedTheme == "dark" ? <LightIcon size={24} fill="black" style={{ transform: "scale(0.7)" }} /> : <DarkIcon size={24} fill="black" style={{ transform: "scale(0.7)" }} />}
@@ -76,7 +77,7 @@ const Navbar = ({ user, showHomeButton = false }) => {
                     </div>
                 </summary>
                 <div className="p-4 absolute top-full rounded-lg right-0 dark:bg-neutral-900/70 filter backdrop-blur-sm bg-white/70 shadow-2xl w-60" style={{ zIndex: 999 }}>
-                    {client && <div className="flex flex-row items-center">
+                    {isClient && <div className="flex flex-row items-center">
                         <Switch
                             onChange={e => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
                             value={resolvedTheme == "dark"}
@@ -86,10 +87,10 @@ const Navbar = ({ user, showHomeButton = false }) => {
                     </div>}
                     <h2 className="text-current font-bold text-xl">{user?.fullname ? user?.fullname : "@" + user?.username}</h2>
                     <h4 className="text-current text-md">{user?.email}</h4>
-                    <Button fullWidth className="mt-2" icon={<UserIcon size={24} fill="white" />} gradient>
+                    <Button fullWidth className="mt-2" icon={<UserIcon size={24} fill="white" />} gradient aria-label="Profile Button">
                         <span>Profile</span>
                     </Button>
-                    <Button fullWidth className="mt-2" icon={<LogoutIcon size={24} fill="white" />} gradient
+                    <Button fullWidth className="mt-2" icon={<LogoutIcon size={24} fill="white" />} gradient aria-label="Sign Out Button"
                         onClick={async () => {
                             await auth.users.logout();
                             router.replace(router.asPath);
@@ -98,7 +99,7 @@ const Navbar = ({ user, showHomeButton = false }) => {
                         <span>Sign Out</span>
                     </Button>
                 </div>
-            </details> : <Button gradient className="w-14 sm:w-32" size="sm" onClick={() => setModalVisible(true)}>
+            </details> : <Button gradient className="w-14 sm:w-32" size="sm" onClick={() => setModalVisible(true)} aria-label="Sign up or sign in button">
                 <LoginIcon size={24} fill="currentColor" style={{ display: "flex", transform: "scale(0.8)" }} />
                 <span className="hidden sm:flex">Sign Up/In</span>
             </Button>}

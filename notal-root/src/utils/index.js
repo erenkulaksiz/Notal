@@ -1,6 +1,8 @@
 import Cookie from "js-cookie";
 import { server } from '../config';
 
+export const isClient = (typeof window === 'undefined') ? false : true;
+
 export const CheckToken = async ({ token, props }) => {
     //console.log("jwtyi kontrol edicem bi canım");
 

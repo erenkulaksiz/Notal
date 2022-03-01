@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
+import { isClient } from "@utils";
+
 const ModalPortal = ({ children, parent, className }) => {
-    const client = (typeof window === 'undefined') ? false : true;
     // Create div to contain everything
-    const el = React.useMemo(() => client && document.createElement("div"), []);
+    const el = React.useMemo(() => isClient && document.createElement("div"), []);
     // On mount function
     React.useEffect(() => {
         // work out target in the DOM based on parent prop

@@ -4,11 +4,12 @@ import { useRouter } from "next/router";
 
 import { CheckIcon } from "@icons";
 
+import { isClient } from "@utils";
+
 const AcceptCookies = ({ className }) => {
     const router = useRouter();
-    const client = (typeof window === 'undefined') ? false : true;
 
-    if (Cookies.get('cookies') == "true" || !client) return null;
+    if (Cookies.get('cookies') == "true" || !isClient) return null;
 
     const onAccept = () => {
         Cookies.set('cookies', 'true');

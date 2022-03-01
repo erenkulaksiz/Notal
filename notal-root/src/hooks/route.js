@@ -1,6 +1,9 @@
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import React, { useEffect } from 'react';
+
+import { isClient } from '@utils';
+
 import useAuth from './auth';
 
 const Loading = <div>
@@ -20,11 +23,10 @@ const Loading = <div>
 export function withPublic(Component) {
     return function WithPublic(props) {
         const auth = useAuth();
-        const client = (typeof window === 'undefined') ? false : true;
-        const router = client && useRouter();
+        const router = isClient && useRouter();
 
         if (props.validate?.success || auth?.authUser) {
-            client && router.replace("/home");
+            isClient && router.replace("/home");
             return Loading;
         }
         return <Component {...props} />
@@ -39,8 +41,7 @@ export function withPublic(Component) {
 export function withAuth(Component) {
     return function WithAuth(props) {
         const auth = useAuth();
-        const client = (typeof window === 'undefined') ? false : true;
-        const router = client && useRouter();
+        const router = isClient && useRouter();
 
         if (props.validate.success) {
             return <Component {...props} />
@@ -49,7 +50,7 @@ export function withAuth(Component) {
                 return Loading;
             } else {
                 if (!auth.authUser) {
-                    client && router.replace("/");
+                    isClient && router.replace("/");
                     return Loading;
                 }
             }
