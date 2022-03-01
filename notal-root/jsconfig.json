@@ -7,7 +7,8 @@
       "@hooks/*": ["./hooks/*"],
       "@service/*": ["./service/*"],
       "@utils": ["./utils"],
-      "@utils/*": ["./utils/*"]
+      "@utils/*": ["./utils/*"],
+      "@public/*": ["../public/*"]
     }
   },
   "exclude": ["node_modules"]

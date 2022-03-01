@@ -2,6 +2,9 @@ import { useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { motion } from "framer-motion";
+import Image from 'next/image';
+
+import LandingBackground from '../../public/landing_bg_banner_1.webp';
 
 import useAuth from '@hooks/auth';
 
@@ -52,13 +55,19 @@ const Landing = (props) => {
 
       <div className="flex flex-1 flex-col items-center dark:bg-black bg-white relative overflow-hidden">
         <div className="absolute w-full z-0">
-          <div className="absolute bg-gradient-to-t dark:from-black from-white w-full h-[800px] z-10" />
-          <img
-            src="./landing_bg_banner_1.png"
-            className="object-cover w-full h-[800px] z-0 dark:opacity-30 opacity-40"
-            alt="Banner image of Notal"
-          />
+          <div className="absolute block bg-gradient-to-t dark:from-black from-white w-full h-[800px] z-10" />
+          <div className="relative z-0 dark:opacity-30 opacity-40 w-full h-[800px]">
+            <Image
+              src={LandingBackground}
+              alt="Banner image of Notal"
+              priority
+              placeholder="blur"
+              layout="fill"
+              objectFit="cover"
+            />
+          </div>
         </div>
+
         <div className="sm:container px-8 md:px-1 lg:px-2 xl:px-32 pt-40 z-10">
           <div className="relative z-50">
             <h1 className="text-black drop-shadow-xl dark:text-white sm:text-5xl text-4xl font-bold font-sans">
@@ -110,7 +119,10 @@ export async function getServerSideProps(ctx) {
 
   if (req) {
     const authCookie = req.cookies.auth;
-    validate = await ValidateToken({ token: authCookie });
+
+    [validate] = await Promise.all([
+      ValidateToken({ token: authCookie })
+    ]);
   }
   return { props: { validate } }
 }

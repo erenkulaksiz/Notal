@@ -13,6 +13,8 @@ const HomeSidebar = ({ navCollapse, current, onViewingChange, onCollapse }) => {
         animate={navCollapse ? { width: "2.6rem" } : ""}
         transition={{ type: "spring", damping: 50, stiffness: 500 }}
         className="flex flex-col bg-white dark:bg-neutral-800/90 sticky top-0 z-30"
+    //onMouseEnter={() => navCollapse && onCollapse()}
+    //onMouseLeave={() => navCollapse || onCollapse()}
     >
         <div className="w-full h-10 flex justify-end">
             <button

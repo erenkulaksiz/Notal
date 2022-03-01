@@ -77,9 +77,12 @@ export async function getServerSideProps(ctx) {
     if (req) {
         const authCookie = req.cookies.auth;
 
-        validate = await ValidateToken({ token: authCookie });
+        [validate, workspaces] = await Promise.all([
+            ValidateToken({ token: authCookie }),
+            GetWorkspaces({ uid: validate?.data?.uid, token: authCookie }),
+        ]);
+
         console.log("validate:", validate);
-        workspaces = await GetWorkspaces({ uid: validate?.data?.uid, token: authCookie });
     }
     return { props: { validate, workspaces } }
 }

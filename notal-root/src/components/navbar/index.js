@@ -1,7 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useTheme } from 'next-themes';
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Image from "next/image";
+
+import IconWhite from "@public/icon_white.png";
+import IconGalactic from "@public/icon_galactic.png";
 
 import {
     UserIcon,
@@ -27,16 +31,19 @@ const Navbar = ({ user, showHomeButton = false }) => {
         <div className="w-1/2 flex items-start">
             {typeof resolvedTheme != "undefined" && <Link href={auth?.authUser ? "/home" : "/"} passHref>
                 <a className="w-auto">
-                    <img
-                        src={resolvedTheme == "dark" ? "/icon_white.png" : "/icon_galactic.png"}
-                        className="object-contain max-h-max w-40"
-                        alt="Logo of Notal"
-                    />
+                    <div className="object-contain max-h-max w-40">
+                        <Image
+                            src={resolvedTheme == "dark" ? IconWhite : IconGalactic}
+                            alt="Logo of Notal"
+                            priority
+                            placeholder="blur"
+                        />
+                    </div>
                 </a>
             </Link>}
         </div>
         <div className="w-1/2 flex items-center justify-end">
-            {(showHomeButton && (auth.authUser || user)) && <Link href="/home" passHref>
+            {(showHomeButton && (auth.authUser/* || user*/)) && <Link href="/home" passHref>
                 <Button
                     light
                     size="sm"
@@ -113,8 +120,10 @@ const Navbar = ({ user, showHomeButton = false }) => {
             open={modalVisible}
             onClose={() => setModalVisible(false)}
             onLoginSuccess={() => {
-                setModalVisible(false);
-                router.replace(router.asPath);
+                setTimeout(() => {
+                    setModalVisible(false);
+                    router.replace(router.asPath);
+                }, 1000);
             }}
         />}
     </nav>)

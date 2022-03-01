@@ -31,6 +31,15 @@ const HomeNavWorkspaces = ({ workspaces, validate }) => {
     const [filter, setFilter] = useState(null);
     const [_workspaces, _setWorkspaces] = useState([]);
 
+    /*
+    const { data, error } = useSWR(['api/workspace', Cookies.get("auth")], fetchWorkspaces);
+
+    useEffect(() => {
+        console.log("useSWR data: ", data);
+        console.log("useSWR err: ", error);
+    }, [data, error]);
+    */
+
     useEffect(() => {
         console.log("workspaces: ", workspaces);
         if (workspaces) {
@@ -125,40 +134,34 @@ const HomeNavWorkspaces = ({ workspaces, validate }) => {
             </div>
         </div>
 
-        {
-            !loadingWorkspaces && <motion.div
-                initial="hidden"
-                animate="show"
-                transition={{ staggerChildren: 0.03 }}
-                className="relative pb-4 mt-4 grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 items-start auto-rows-max"
-            >
-                <AnimatePresence>
-                    {workspace.getWorkspacesWithFilter(_workspaces).map((element, index) => <HomeWorkspaceCard
-                        workspace={element}
-                        key={index}
-                        index={index}
-                        onStar={() => workspace.star({ id: element._id })}
-                        onDelete={() => setDeleteModal({ ...deleteModal, visible: true, workspace: element._id })}
-                    />)}
-                </AnimatePresence>
+        {!loadingWorkspaces && <motion.div
+            initial="hidden"
+            animate="show"
+            transition={{ staggerChildren: 0.03 }}
+            className="relative pb-4 mt-4 grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 items-start auto-rows-max"
+        >
+            <AnimatePresence>
+                {workspace.getWorkspacesWithFilter(_workspaces).map((element, index) => <HomeWorkspaceCard
+                    workspace={element}
+                    key={index}
+                    index={index}
+                    onStar={() => workspace.star({ id: element._id })}
+                    onDelete={() => setDeleteModal({ ...deleteModal, visible: true, workspace: element._id })}
+                />)}
+            </AnimatePresence>
 
-                <AddWorkspaceButton onClick={() => setNewWorkspaceModal(true)} />
-            </motion.div>
-        }
+            <AddWorkspaceButton onClick={() => setNewWorkspaceModal(true)} />
+        </motion.div>}
 
-        {
-            loadingWorkspaces && <div>
-                loading workspaces...
+        {loadingWorkspaces && <div>
+            loading workspaces...
+        </div>}
+
+        {(!loadingWorkspaces && workspace.getWorkspacesWithFilter(_workspaces).length == 0) && (
+            <div className="w-full h-full relative">
+                <AddWorkspaceBanner />
             </div>
-        }
-
-        {
-            (!loadingWorkspaces && workspace.getWorkspacesWithFilter(_workspaces).length == 0) && (
-                <div className="w-full h-full relative">
-                    <AddWorkspaceBanner />
-                </div>
-            )
-        }
+        )}
 
         <DeleteWorkspaceModal
             open={deleteModal.visible}
