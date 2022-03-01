@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
-import Cookies from 'js-cookie';
 import Head from 'next/head';
 import {
     Navbar,
@@ -77,12 +76,12 @@ export async function getServerSideProps(ctx) {
     if (req) {
         const authCookie = req.cookies.auth;
 
-        [validate, workspaces] = await Promise.all([
+        [validate, /*workspaces*/] = await Promise.all([
             ValidateToken({ token: authCookie }),
-            GetWorkspaces({ uid: validate?.data?.uid, token: authCookie }),
+            //GetWorkspaces({ uid: validate?.data?.uid, token: authCookie }),
         ]);
 
         console.log("validate:", validate);
     }
-    return { props: { validate, workspaces } }
+    return { props: { validate } }
 }

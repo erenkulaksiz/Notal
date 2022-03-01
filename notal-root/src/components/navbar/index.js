@@ -115,6 +115,18 @@ const Navbar = ({ user, showHomeButton = false }) => {
                 cursor: default;
                 content: " ";
             }
+            details > summary {
+                list-style: none;
+            }
+            details > summary::-webkit-details-marker {
+                display: none;
+            }
+            details > summary:first-of-type {
+                list-style-type: none;
+            }
+            details > summary::marker {
+                display: none;
+            }
         `}</style>
         </div>
         {!auth.authUser && <LoginModal

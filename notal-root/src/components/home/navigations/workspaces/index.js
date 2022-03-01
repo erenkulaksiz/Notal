@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Cookies from "js-cookie";
+import useSWR from "swr";
 
 import useAuth from "@hooks/auth";
 
 import { GetWorkspaces } from "@utils";
+
+import { fetchWorkspaces } from "@utils/fetcher";
 
 import {
     AddWorkspaceBanner,
@@ -21,7 +24,7 @@ import {
     DashboardFilledIcon, FilterIcon
 } from '@icons';
 
-const HomeNavWorkspaces = ({ workspaces, validate }) => {
+const HomeNavWorkspaces = ({ validate }) => {
     const auth = useAuth();
     // Modals
     const [newWorkspaceModal, setNewWorkspaceModal] = useState(false);
@@ -31,22 +34,15 @@ const HomeNavWorkspaces = ({ workspaces, validate }) => {
     const [filter, setFilter] = useState(null);
     const [_workspaces, _setWorkspaces] = useState([]);
 
-    /*
-    const { data, error } = useSWR(['api/workspace', Cookies.get("auth")], fetchWorkspaces);
+    const { data, error } = useSWR(['api/workspace', Cookies.get("auth")], (url, token) => fetchWorkspaces(url, token, validate.uid));
 
     useEffect(() => {
-        console.log("useSWR data: ", data);
-        console.log("useSWR err: ", error);
-    }, [data, error]);
-    */
-
-    useEffect(() => {
-        console.log("workspaces: ", workspaces);
-        if (workspaces) {
-            _setWorkspaces(workspaces.data);
+        console.log("swr err: ", error);
+        if (data?.success) {
+            _setWorkspaces(data.data);
             setLoadingWorkspaces(false);
         }
-    }, [workspaces]);
+    }, [data, error]);
 
     const workspace = {
         create: async ({ title, desc, starred }) => {

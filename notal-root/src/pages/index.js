@@ -80,7 +80,7 @@ const Landing = (props) => {
             <h5 className="dark:text-neutral-400 text-gray-600 drop-shadow-lg mt-4 text-lg font-semibold">
               {"Developer's solution from an developer. Keep focus on your project, not on your planning."}
             </h5>
-            <Button rounded className="w-32 mt-4">
+            <Button rounded className="w-32 mt-4" aria-label="Discover more button">
               Discover More
             </Button>
           </div>

@@ -11,7 +11,7 @@ const Offline = () => {
         <Head>
             <title>You are offline.</title>
         </Head>
-        <div className="flex flex-col justify-center items-center dark:bg-neutral-800 bg-neutral-200/50 shadow-xl p-8 rounded-xl">
+        <div className="flex flex-col justify-center items-center dark:bg-neutral-800 bg-neutral-200/50 shadow-xl p-8 px-16 rounded-xl">
             <h1 className="text-6xl font-bold text-center mt-4">[404]</h1>
             <h2 className="text-center text-lg font-semibold mt-4">You are offline.</h2>
             <Button
