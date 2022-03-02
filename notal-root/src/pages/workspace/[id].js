@@ -92,7 +92,7 @@ const Workspace = (props) => {
             </div>
             <div className="flex flex-1 flex-row overflow-y-auto pt-1 pl-1">
                 {!loadingWorkspace && _workspace?.data?.fields?.map((field, index) =>
-                    <WorkspaceField field={field} />
+                    <WorkspaceField field={field} key={field._id} />
                 )}
             </div>
         </div>
