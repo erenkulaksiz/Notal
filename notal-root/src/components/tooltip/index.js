@@ -122,7 +122,8 @@ const Tooltip = ({
         {children}
         {(show && content) && <TooltipPortal
             parent={containerRef.current}
-            className={BuildPortal.classes}>
+            className={BuildPortal.classes}
+        >
             <motion.div
                 initial="hidden"
                 animate={visible ? "show" : "hidden"}

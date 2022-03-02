@@ -3,6 +3,8 @@ import { getStorage, ref as stRef, uploadBytes, getDownloadURL } from "firebase/
 
 import { server } from "../config";
 
+import Router from "next/router";
+
 /**
  * AuthService for Notal
  *
@@ -26,6 +28,8 @@ const AuthService = {
 
                     window.gtag("event", "login", { login: "type:google/" + user.email });
 
+                    Router.replace(Router.asPath);
+
                     return { user, token }
                 }).catch((error) => {
                     const errorCode = error.code;
@@ -46,6 +50,8 @@ const AuthService = {
                     const user = result.user;
 
                     window.gtag("event", "login", { login: "type:github/" + user.email });
+
+                    Router.replace(Router.asPath);
 
                     return { user, token }
                 }).catch((error) => {

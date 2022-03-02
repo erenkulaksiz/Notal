@@ -14,7 +14,7 @@ const HomeSidebarItem = ({ nav, onClick, current, navCollapse }) => {
                     transitionEnd: { display: "none" }
                 } : ""}
                 transition={{ type: "tween", stiffness: 50 }}
-                className={`${current == nav.id ? "font-bold " : "font-normal "}`}
+                className={`${current == nav.id ? "font-bold " : "font-normal "}text-sm sm:text-[1em] flex items-center`}
             >
                 {nav.name}
             </motion.span>

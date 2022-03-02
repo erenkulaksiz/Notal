@@ -10,6 +10,7 @@ export { default as CheckIcon } from "../../public/icons/check.svg";
 export { default as CheckOutlineIcon } from "../../public/icons/check_outline.svg";
 export { default as CodeIcon } from "../../public/icons/code.svg";
 export { default as CrossIcon } from "../../public/icons/cross.svg";
+export { default as ChevronRightIcon } from "../../public/icons/chevron-right.svg";
 export { default as DarkIcon } from "../../public/icons/dark.svg";
 export { default as DashboardOutlineIcon } from "../../public/icons/dashboard_outline.svg";
 export { default as DashboardFilledIcon } from "../../public/icons/dashboard_filled.svg";

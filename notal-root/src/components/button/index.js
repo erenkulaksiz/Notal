@@ -35,7 +35,7 @@ const Button = ({
 
     const BuildButton = BuildComponent({
         name: "Button",
-        defaultClasses: "cursor-pointer z-10 hover:opacity-80 active:opacity-100 flex flex-row items-center p-4 py-2 relative active:scale-95 transition-all duration-75 text-white font-semibold text-sm",
+        defaultClasses: "cursor-pointer z-10 hover:opacity-80 active:opacity-80 flex flex-row items-center p-4 py-2 relative active:scale-95 transition-all duration-75 text-white font-semibold text-sm",
         extraClasses: className,
         conditionalClasses: [
             {
@@ -56,7 +56,7 @@ const Button = ({
             },
             {
                 false: "bg-blue-600 hover:bg-blue-500 active:bg-blue-700 outline-none focus:outline-2 focus:outline-blue-500/50",//also remove ring
-                true: "bg-transparent hover:bg-transparent active:bg-gray-800/50"
+                true: "bg-transparent hover:bg-transparent active:bg-neutral-800/50"
             }
         ],
         selectedClasses: [

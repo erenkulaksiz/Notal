@@ -34,14 +34,14 @@ const HomeWorkspaceCard = ({ workspace, onStar, onDelete, index, skeleton = fals
             exit={{ y: -25, opacity: 0 }}
             */
             //transition={{ type: "spring", stiffness: 400, duration: 0.02, damping: 25 }}
-            className="hover:scale-[102%] transition-all w-full h-32 shadow-xl rounded-xl bg-gradient-to-br from-blue-500 to-[#6d02ab] p-3 flex flex-col justify-end"
+            className="hover:z-50 hover:scale-[102%] transition-all w-full h-32 shadow-xl rounded-xl bg-gradient-to-br from-blue-500 to-[#6d02ab] p-3 flex flex-col justify-end"
         >
             <div className="flex flex-row justify-between">
                 <div className="flex items-start justify-end text-xl flex-col text-white max-w-[calc(100%-60px)]">
                     {!workspace.workspaceVisible && <Tooltip content="Private workspace">
                         <VisibleOffIcon width={24} height={24} fill="white" />
                     </Tooltip>}
-                    <Link href="/workspace/[id]" as={`/workspace/${workspace._id}`} passHref>
+                    <Link href="/workspace/[id]" as={`/workspace/${workspace._id || "not-found"}`} passHref>
                         <a className="flex-col flex">
                             <span className="font-medium text-ellipsis overflow-hidden whitespace-nowrap">
                                 {workspace.title}

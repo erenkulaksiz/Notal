@@ -1,10 +1,12 @@
-import { useEffect } from 'react';
-import Head from 'next/head';
-import { useRouter } from 'next/router';
+import { useEffect, useState } from "react";
+import Head from "next/head";
+import { useRouter } from "next/router";
 import { motion } from "framer-motion";
-import Image from 'next/image';
+import Image from "next/image";
+import useSWR from "swr";
+import Cookies from "js-cookie";
 
-import LandingBackground from '../../public/landing_bg_banner_1.webp';
+import LandingBackground from "../../public/landing_bg_banner_1.webp";
 
 import useAuth from '@hooks/auth';
 
@@ -26,9 +28,38 @@ import {
   Features
 } from '@utils/constants';
 
+import { fetchValidate } from "@utils/fetcher";
+
 const Landing = (props) => {
   const router = useRouter();
   const auth = useAuth();
+
+  /*
+  const [_validate, _setValidate] = useState(null);
+
+  const validateData = useSWR(
+    ["api/validate", Cookies.get("auth")],
+    (url, token) => fetchValidate({ url, token })
+  );
+
+  useEffect(() => {
+    if (props?.validate?.success) {
+      _setValidate(props?.validate);
+    }
+  }, [props.validate]);
+
+  useEffect(() => {
+    if (validateData.data) {
+      console.log("validate res: ", validateData.data);
+      if (!_validate) {
+        _setValidate(validateData.data);
+      }
+    }
+    if (validateData.error) {
+      console.error("Validate error swr: ", validateData);
+    }
+  }, [validateData]);
+  */
 
   useEffect(() => {
     console.log("home props: ", props);

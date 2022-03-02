@@ -64,7 +64,21 @@ export default async function handler(req, res) {
                         if (uid === user.uid || user?.role === "admin") {
                             try {
                                 const workspaces = await workspacesCollection.find({ owner: uid }).toArray();
-                                res.status(200).send({ success: true, data: workspaces.map(el => { return { _id: el._id, createdAt: el.createdAt, desc: el.desc, title: el.title, owner: el.owner, starred: el.starred, updatedAt: el.updatedAt, workspaceVisible: el.workspaceVisible } }) });
+                                res.status(200).send({
+                                    success: true,
+                                    data: workspaces.map(el => {
+                                        return {
+                                            _id: el._id,
+                                            createdAt: el.createdAt,
+                                            desc: el.desc,
+                                            title: el.title,
+                                            owner: el.owner,
+                                            starred: el.starred,
+                                            updatedAt: el.updatedAt,
+                                            workspaceVisible: el.workspaceVisible
+                                        }
+                                    })
+                                });
                             } catch (error) {
                                 res.status(200).send({ success: false, error: new Error(error).message });
                             }
@@ -73,7 +87,21 @@ export default async function handler(req, res) {
                         }
                     } else {
                         const workspaces = await workspacesCollection.find({ owner: decodedToken.uid }).toArray();
-                        res.status(200).send({ success: true, data: workspaces });
+                        res.status(200).send({
+                            success: true,
+                            data: workspaces.map(el => {
+                                return {
+                                    _id: el._id,
+                                    createdAt: el.createdAt,
+                                    desc: el.desc,
+                                    title: el.title,
+                                    owner: el.owner,
+                                    starred: el.starred,
+                                    updatedAt: el.updatedAt,
+                                    workspaceVisible: el.workspaceVisible
+                                }
+                            })
+                        });
                     }
                 }).catch(error => {
                     res.status(400).json({ success: false, error: { code: error.code } });
@@ -116,9 +144,7 @@ export default async function handler(req, res) {
                             const bearerToken = bearer?.split(' ')[1];
 
                             await admin.auth().verifyIdToken(bearerToken).then(async (decodedToken) => {
-
                                 const user = await usersCollection.findOne({ uid: decodedToken.user_id });
-
                                 if (workspace.owner === user.uid || user?.role === "admin") {
                                     try {
                                         res.status(200).send({

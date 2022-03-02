@@ -22,6 +22,7 @@ export { default as Switch } from "./switch";
 export { default as Tooltip } from "./tooltip";
 export { default as TooltipPortal } from "./portals/tooltip";
 export { default as AddWorkspaceBanner } from "./home/addWorkspaceBanner";
+export { default as WorkspaceField } from "./workspace/field";
 // Modals
 export { default as AddWorkspaceModal } from "./modals/addWorkspace";
 export { default as DeleteWorkspaceModal } from "./modals/deleteWorkspace";

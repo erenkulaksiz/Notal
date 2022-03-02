@@ -1,24 +1,33 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import useSWR from "swr";
+import Cookies from "js-cookie";
 
 import useAuth from "@hooks/auth";
 
 import {
     ValidateToken,
-    GetWorkspace,
     WorkboxInit,
     CheckToken
 } from "@utils";
 
 import {
     AcceptCookies,
-    Navbar
+    Navbar,
+    WorkspaceField
 } from "@components";
+
+import { fetchWorkspace } from "@utils/fetcher";
 
 const Workspace = (props) => {
     const auth = useAuth();
     const router = useRouter();
+
+    const workspaceData = useSWR(
+        ["api/fetchWorkspace/" + props.query],
+        () => fetchWorkspace({ token: Cookies.get("auth"), id: props.query })
+    );
 
     const [savingWorkspace, setSavingWorkspace] = useState(false);
 
@@ -35,7 +44,7 @@ const Workspace = (props) => {
 
     // Workspace
     const [loadingWorkspace, setLoadingWorkspace] = useState(true);
-    const [_workspace, _setWorkspace] = useState(null);
+    const [_workspace, _setWorkspace] = useState({});
 
     const isOwner = (_workspace ? _workspace?.owner == props?.validate?.uid : false);
 
@@ -52,21 +61,41 @@ const Workspace = (props) => {
     }, []);
 
     useEffect(() => {
-        if (props.workspace?.success == true) {
-            setLoadingWorkspace(false);
-            _setWorkspace(props.workspace?.data);
+        if (workspaceData.data) {
+            console.log("workspaceData: ", workspaceData.data);
+            if (workspaceData?.data?.error?.code == "auth/id-token-expired") {
+                router.replace(router.asPath);
+            } else {
+                _setWorkspace(workspaceData.data);
+                setLoadingWorkspace(false);
+                console.log("workspace:", workspaceData?.data);
+            }
         }
-    }, [props.workspace]);
+        if (workspaceData.error) {
+            console.error("Error with workspace: ", workspaceData.error);
+        }
+    }, [workspaceData]);
 
     return (<div className="mx-auto max-h-screen min-h-screen flex flex-col transition-colors duration-100">
         <Head>
-            <title>{loadingWorkspace ? "Loading..." : _workspace?.title ?? "Not Found"}</title>
+            <title>{loadingWorkspace ? "Loading..." : _workspace?.data?.title ?? "Not Found"}</title>
             <meta name='twitter:description' content='Take your notes to next level with Notal' />
             <meta property='og:description' content='Take your notes to next level with Notal' />
             <meta name='description' content='Take your notes to next level with Notal' />
         </Head>
 
         <Navbar user={props?.validate?.data} showHomeButton />
+
+        <div className="relative flex flex-row flex-1 bg-white dark:bg-neutral-900 overflow-y-auto overflow-x-hidden">
+            <div className="h-full sticky top-0 w-14 bg-red-900">
+                asd
+            </div>
+            <div className="flex flex-1 flex-row overflow-y-auto pt-1 pl-1">
+                {!loadingWorkspace && _workspace?.data?.fields?.map((field, index) =>
+                    <WorkspaceField field={field} />
+                )}
+            </div>
+        </div>
 
         <AcceptCookies />
     </div>)
@@ -77,22 +106,19 @@ export default Workspace;
 export async function getServerSideProps(ctx) {
     const { req, res, query } = ctx;
     let validate = {};
-    let workspace = {};
+    //let workspace = {};
 
     const queryId = query?.id;
 
     if (req) {
         const authCookie = req.cookies.auth;
 
-        validate = await ValidateToken({ token: authCookie });
-        workspace = await GetWorkspace({ id: queryId, token: authCookie });
-
-        [validate, workspace] = await Promise.all([
+        [validate, /*workspace*/] = await Promise.all([
             ValidateToken({ token: authCookie }),
-            GetWorkspace({ id: queryId, token: authCookie })
+            //GetWorkspace({ id: queryId, token: authCookie })
         ]);
 
         console.log("validate:", validate);
     }
-    return { props: { validate, workspace } }
+    return { props: { validate, /*workspace*/query: queryId } }
 }

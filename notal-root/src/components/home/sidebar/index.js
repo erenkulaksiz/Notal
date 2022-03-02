@@ -1,18 +1,29 @@
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 
-import { BackIcon } from "@icons";
+import { ChevronRightIcon } from "@icons";
 import { HomeSidebarItem, Tooltip } from "@components";
 
 import {
     HomeRoutes
 } from '@utils/constants';
+import BuildComponent from "@utils/buildComponent";
 
 const HomeSidebar = ({ navCollapse, current, onViewingChange, onCollapse }) => {
+    const BuildSidebar = BuildComponent({
+        name: "Home Sidebar Navigation",
+        defaultClasses: "flex shadow-xl flex-col bg-white dark:bg-neutral-800 z-30 top-0 sticky max-w-2xl",
+    })
+
     return (<motion.nav
-        initial={{ width: "14rem" }}
-        animate={navCollapse ? { width: "2.6rem" } : ""}
+        variants={{
+            open: { maxWidth: "14rem", width: "35%" },
+            close: { width: "2.6rem", minWidth: 0 }
+        }}
+        initial="open"
+        animate={navCollapse ? "close" : "open"}
         transition={{ type: "spring", damping: 50, stiffness: 500 }}
-        className="flex shadow-xl flex-col bg-white dark:bg-neutral-800 z-30 top-0 sticky max-w-2xl"
+        className={BuildSidebar.classes}
     //onMouseEnter={() => navCollapse && onCollapse()}
     //onMouseLeave={() => navCollapse || onCollapse()}
     >
@@ -24,10 +35,10 @@ const HomeSidebar = ({ navCollapse, current, onViewingChange, onCollapse }) => {
                 <motion.div
                     initial={{ rotate: 0 }}
                     animate={navCollapse ? { rotate: 180 } : ""}
-                    transition={{ type: "tween", stiffness: 50 }}
+                    transition={{ type: "spring", damping: 50, stiffness: 500 }}
                     className="dark:bg-neutral-800 rounded w-7 h-7 flex items-center justify-center hover:dark:bg-neutral-900 hover:bg-neutral-200 transition-colors ease-in-out"
                 >
-                    <BackIcon size={24} fill={"currentColor"} />
+                    <ChevronRightIcon size={24} fill={"currentColor"} style={{ transform: "rotate(-180deg)" }} />
                 </motion.div>
             </button>
         </div>
