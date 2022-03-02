@@ -39,7 +39,7 @@ const Home = (props) => {
         })();
     }, []);
 
-    return (<div className="mx-auto h-screen flex flex-col transition-colors duration-100">
+    return (<div className="mx-auto h-full flex flex-col transition-colors duration-100">
         <Head>
             <title>Home · Notal</title>
             <meta name='twitter:description' content='Take your notes to next level with Notal' />

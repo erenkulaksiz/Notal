@@ -112,7 +112,7 @@ const HomeNavWorkspaces = ({ validate }) => {
         */
     }
 
-    return (<div className="flex flex-1 px-8 py-4 flex-col">
+    return (<div className="flex flex-1 px-8 py-4 flex-col overflow-y-auto overflow-x-hidden">
         <div className="w-full grid gap-2 flex-row items-center flex-wrap grid-cols-1 sm:grid-cols-2">
             <HomeNavTitle title="Workspaces">
                 <DashboardFilledIcon size={24} fill="currentColor" />

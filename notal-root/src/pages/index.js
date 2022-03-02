@@ -43,7 +43,7 @@ const Landing = (props) => {
   }, []);
 
   return (
-    <div className="mx-auto min-h-screen flex flex-col transition-colors duration-100 dark:bg-black bg-white">
+    <div className="mx-auto flex flex-col transition-colors duration-100">
       <Head>
         <title>Notal</title>
         <meta name='twitter:description' content='Take your notes to next level with Notal' />
@@ -53,7 +53,7 @@ const Landing = (props) => {
 
       <Navbar user={props?.validate?.data} showHomeButton />
 
-      <div className="flex flex-1 flex-col items-center dark:bg-black bg-white relative overflow-hidden">
+      <div className="flex flex-1 flex-col items-center relative overflow-y-auto overflow-x-hidden">
         <div className="absolute w-full z-0">
           <div className="absolute block bg-gradient-to-t dark:from-black from-white w-full h-[800px] z-10" />
           <div className="relative z-0 dark:opacity-30 opacity-40 w-full h-[800px]">

@@ -15,10 +15,17 @@ const Tooltip = ({
     direction = "up",
     animated = true,
     blockContent = true, // block pointer events
+    closeAuto = true, // automatically close after time
 }) => {
     const [show, setShow] = useState(false);
     const [visible, setVisible] = useState(false);
     const containerRef = useRef();
+
+    useEffect(() => {
+        if (visible) {
+            setShow(true);
+        }
+    }, [visible]);
 
     const sideVariation = () => {
         switch (direction) {
@@ -103,16 +110,11 @@ const Tooltip = ({
         ]
     });
 
-    useEffect(() => {
-        if (visible) {
-            setShow(true)
-        }
-    }, [visible]);
-
     return (<div
         onMouseEnter={() => setVisible(true)}
         onMouseLeave={() => setVisible(false)}
         //onFocus={() => setVisible(true)}
+        onTouchEnd={() => setVisible(false)}
         onBlur={() => setVisible(false)}
         ref={containerRef}
         className={BuildAllContainer.classes}
@@ -127,7 +129,6 @@ const Tooltip = ({
                 variants={sideVariation()}
                 transition={{ type: animated ? "spring" : "none", stiffness: 400, duration: 0.02, damping: 25 }} // bottom-[calc(100%+45px)] 
                 className={BuildTooltipContainer.classes}
-                style={{ zIndex: 100 }}
                 onAnimationComplete={() => !visible && setShow(false)}
             >
                 {content}
