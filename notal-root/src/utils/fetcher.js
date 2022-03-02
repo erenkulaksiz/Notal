@@ -1,6 +1,6 @@
 import { server } from "config";
 
-export const fetchWorkspaces = (url, token, id) => fetch(`${server}/${url}`, {
+export const fetchWorkspaces = ({ url, token, id }) => fetch(`${server}/${url}`, {
     'Content-Type': 'application/json',
     method: "POST",
     headers: { 'Authorization': 'Bearer ' + token },

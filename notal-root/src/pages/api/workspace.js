@@ -172,7 +172,13 @@ export default async function handler(req, res) {
 
             try {
                 const workspace = await workspacesCollection.findOne({ "_id": ObjectId(id) })
-                await workspacesCollection.updateOne({ "_id": ObjectId(id) }, { $set: { starred: !workspace.starred } })
+                await workspacesCollection.updateOne({ "_id": ObjectId(id) },
+                    {
+                        $set: {
+                            starred: !workspace.starred,
+                            updatedAt: Date.now(),
+                        }
+                    })
                     .then(() => {
                         res.status(200).send({ success: true });
                     });

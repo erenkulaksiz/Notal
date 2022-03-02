@@ -53,7 +53,7 @@ const Tooltip = ({
 
     const BuildPortal = BuildComponent({
         name: "Tooltip Portal",
-        defaultClasses: "absolute z-50",
+        defaultClasses: "absolute",
         conditionalClasses: [
             {
                 up: "bottom-[calc(100%+5px)]",
@@ -73,12 +73,12 @@ const Tooltip = ({
 
     const BuildArrow = BuildComponent({
         name: "Tooltip Arrow",
-        defaultClasses: "w-2 -z-10 h-2 bg-neutral-100 dark:bg-neutral-800 absolute rotate-45",
+        defaultClasses: "w-2 -z-10 h-2 bg-white dark:bg-neutral-800 absolute rotate-45",
         conditionalClasses: [
             {
                 up: "-bottom-1",
-                right: "-left-1",
-                left: "-right-1",
+                right: "-left-0.5",
+                left: "-right-0.5",
                 bottom: "-top-1",
             }
         ],
@@ -89,7 +89,7 @@ const Tooltip = ({
 
     const BuildTooltipContainer = BuildComponent({
         name: "Tooltip Container",
-        defaultClasses: "z-50 relative bg-neutral-100 dark:bg-neutral-800 whitespace-nowrap px-3 py-1 flex items-center justify-center rounded-xl text-sm shadow-xl text-black dark:text-white",
+        defaultClasses: "shadow-xl z-50 relative bg-white dark:bg-neutral-800 whitespace-nowrap px-3 py-1 flex items-center justify-center rounded-xl text-sm shadow-xl text-black dark:text-white",
         conditionalClasses: [
             {
                 up: "top-0",

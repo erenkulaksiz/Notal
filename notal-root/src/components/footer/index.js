@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
 import { CodeIcon, HeartIcon, TwitterIcon } from '@icons';
+import Link from 'next/link';
 
 import IconWhite from "@public/icon_white.webp";
 import IconGalactic from "@public/icon_galactic.webp";
@@ -45,9 +46,11 @@ const LandingFooter = () => {
             </div>
             <div className="flex flex-col">
                 <span className="uppercase dark:text-neutral-400 font-bold">Legal</span>
-                <a href="#" className="uppercase mt-2 text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
-                    Cookies
-                </a>
+                <Link href="/cookies" passHref>
+                    <a className="uppercase mt-2 text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
+                        Cookies
+                    </a>
+                </Link>
                 <a href="#" className="uppercase mt-2 text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
                     Privacy Policy
                 </a>

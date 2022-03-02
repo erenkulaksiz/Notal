@@ -28,7 +28,7 @@ const Navbar = ({ user, showHomeButton = false }) => {
     const [modalVisible, setModalVisible] = useState(false);
 
     return (<nav className="p-3 flex flex-row sticky top-0 z-50">
-        <div className="absolute top-0 bottom-0 right-0 left-0 dark:bg-black/50 bg-white/50 backdrop-blur-md -z-10 shadow-md" />
+        <div className="absolute top-0 bottom-0 right-0 left-0 dark:bg-black/50 bg-white/50 backdrop-blur-md -z-10 shadow-none dark:shadow-md" />
         <div className="w-1/2 flex items-start">
             {typeof resolvedTheme != "undefined" && <Link href={auth?.authUser ? "/home" : "/"} passHref>
                 <a className="w-auto">
@@ -85,7 +85,7 @@ const Navbar = ({ user, showHomeButton = false }) => {
                         />
                         <span className="ml-2 text-xs dark:text-neutral-600 text-neutral-300">v{process.env.NEXT_PUBLIC_APP_VERSION}</span>
                     </div>}
-                    <h2 className="text-current font-bold text-xl">{user?.fullname ? user?.fullname : "@" + user?.username}</h2>
+                    <h2 className="text-current font-bold text-xl">{user?.fullname ? user?.fullname : user?.username ? "@" + user?.username : "..."}</h2>
                     <h4 className="text-current text-md">{user?.email}</h4>
                     <Button fullWidth className="mt-2" icon={<UserIcon size={24} fill="white" />} gradient aria-label="Profile Button">
                         <span>Profile</span>

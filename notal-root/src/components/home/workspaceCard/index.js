@@ -14,7 +14,17 @@ import {
     StarFilledIcon,
 } from '@icons';
 
-const HomeWorkspaceCard = ({ workspace, onStar, onDelete, index }) => {
+const HomeWorkspaceCard = ({ workspace, onStar, onDelete, index, skeleton = false }) => {
+
+    if (skeleton) {
+        return (<div className="w-full h-32 flex flex-col justify-end shadow-xl rounded-xl bg-neutral-200 dark:bg-neutral-800 overflow-hidden">
+            <div className="animate-pulse w-full h-18 px-4 pb-4">
+                <div className="w-[65%] h-6 bg-neutral-300 dark:bg-neutral-700" />
+                <div className="w-[80%] mt-2 h-4 bg-neutral-300 dark:bg-neutral-700" />
+            </div>
+        </div>)
+    }
+
     return (
         <motion.div
             /*variants={{
@@ -23,9 +33,8 @@ const HomeWorkspaceCard = ({ workspace, onStar, onDelete, index }) => {
             }}
             exit={{ y: -25, opacity: 0 }}
             */
-            key={workspace._id}
-            transition={{ type: "spring", stiffness: 400, duration: 0.02, damping: 25 }}
-            className="w-full h-32 shadow-xl rounded-xl bg-gradient-to-br from-blue-500 to-[#6d02ab] p-3 flex flex-col justify-end"
+            //transition={{ type: "spring", stiffness: 400, duration: 0.02, damping: 25 }}
+            className="hover:scale-[102%] transition-all w-full h-32 shadow-xl rounded-xl bg-gradient-to-br from-blue-500 to-[#6d02ab] p-3 flex flex-col justify-end"
         >
             <div className="flex flex-row justify-between">
                 <div className="flex items-start justify-end text-xl flex-col text-white max-w-[calc(100%-60px)]">
