@@ -5,11 +5,8 @@ import useSWR from "swr";
 import { useRouter } from "next/router";
 
 import useAuth from "@hooks/auth";
-
-import { GetWorkspaces } from "@utils";
-
 import { fetchWorkspaces } from "@utils/fetcher";
-
+import { CheckToken } from "@utils";
 import {
     AddWorkspaceBanner,
     AddWorkspaceButton,
@@ -19,13 +16,14 @@ import {
     Select,
     Tooltip,
     HomeNavTitle,
+    Loading,
 } from '@components';
-
 import {
     DashboardFilledIcon, FilterIcon
 } from '@icons';
+import { FilterWorkspaces } from "@utils/filterWorkspaces";
 
-const HomeNavWorkspaces = ({ validate }) => {
+const HomeNavWorkspaces = ({ validate, isValidating }) => {
     const auth = useAuth();
     const router = useRouter();
     // Modals
@@ -36,6 +34,7 @@ const HomeNavWorkspaces = ({ validate }) => {
     const [filter, setFilter] = useState(null);
     const [_workspaces, _setWorkspaces] = useState([]);
     const [_workspacesFiltered, _setWorkspacesFiltered] = useState([]);
+    const [_workspaceValidating, _setWorkspaceValidating] = useState(true);
 
     const workspacesData = useSWR(
         ['api/fetchWorkspaces'],
@@ -43,45 +42,33 @@ const HomeNavWorkspaces = ({ validate }) => {
     );
 
     useEffect(() => {
-        if (workspacesData?.data?.success) {
-            console.log("setWorkspaces: ", workspacesData?.data);
-
-            if (workspacesData?.data?.error?.code == "auth/id-token-expired") {
-                router.replace(router.asPath);
-            } else {
-                _setWorkspaces(workspacesData?.data?.data);
-                setLoadingWorkspaces(false);
+        (async () => {
+            if (workspacesData?.data?.success) {
+                if (workspacesData?.data?.error?.code == "auth/id-token-expired") {
+                    const token = await auth.users.getIdToken();
+                    const res = await CheckToken({ token: token.res, props });
+                    if (!res) {
+                        setTimeout(() => router.replace(router.asPath), 1000);
+                    }
+                } else {
+                    _setWorkspaces(workspacesData?.data?.data);
+                    setLoadingWorkspaces(false);
+                }
             }
-        }
-        if (workspacesData.error) {
-            console.error("swr err: ", workspacesData.error);
-        }
+            if (workspacesData.error) {
+                console.error("swr err: ", workspacesData.error);
+            }
+        })();
     }, [workspacesData]);
 
     useEffect(() => {
-        switch (filter) {
-            case "favorites":
-                if (_workspaces && !_workspaces?.error) _setWorkspacesFiltered([..._workspaces.filter(el => el.starred == true)]);
-                else return []
-                break;
-            case "privateWorkspaces":
-                if (_workspaces && !_workspaces?.error) _setWorkspacesFiltered([..._workspaces.filter(el => !!el?.workspaceVisible == false)]);
-                else return []
-                break;
-            case "createdAt":
-                if (_workspaces && !_workspaces?.error) _setWorkspacesFiltered([..._workspaces?.sort((a, b) => { return a?.createdAt - b?.createdAt })]);
-                else return []
-                break;
-            case "updatedAt":
-                if (_workspaces && !_workspaces?.error) _setWorkspacesFiltered([..._workspaces?.sort((a, b) => { return b?.updatedAt - a?.updatedAt })]);
-                else return []
-                break;
-            default:
-                console.log("workspace!!!!!!!s: ", _workspaces);
-                if (_workspaces && !_workspaces?.error) _setWorkspacesFiltered([..._workspaces?.sort((a, b) => { return a?.createdAt - b?.createdAt })]);
-                else return []
-                break;
-        }
+        _setWorkspaceValidating(workspacesData.isValidating);
+        isValidating(workspacesData.isValidating);
+    }, [workspacesData.isValidating]);
+
+    useEffect(() => {
+        !_workspaces?.error &&
+            _setWorkspacesFiltered([...FilterWorkspaces({ workspaces: _workspaces, filter })]);
     }, [filter, _workspaces]);
 
     const workspace = {
@@ -127,68 +114,66 @@ const HomeNavWorkspaces = ({ validate }) => {
     }
 
     return (<div className="flex flex-1 px-8 py-4 flex-col overflow-y-auto overflow-x-hidden">
-        <div className="w-full grid gap-2 flex-row items-center flex-wrap grid-cols-1 sm:grid-cols-2">
+        <div className="w-full grid gap-2 flex-row items-center flex-wrap grid-cols-1 sm:grid-cols-2 md:grid-cols-2">
             <HomeNavTitle title="Workspaces">
                 <DashboardFilledIcon size={24} fill="currentColor" />
             </HomeNavTitle>
-            <div>
-                <div className="w-full flex flex-row items-center justify-end">
-                    <FilterIcon size={24} fill="currentColor" className="mr-4" />
-                    <Tooltip
-                        content="Filter Workspaces"
-                        direction="bottom"
-                        allContainerClassName="sm:w-64 w-full"
-                    >
-                        <Select
-                            onChange={e => setFilter(e.target.value)}
-                            className="w-full"
-                            options={[{
-                                id: null,
-                                text: "All Workspaces"
-                            },
-                            {
-                                id: "favorites",
-                                text: "Favorites"
-                            },
-                            {
-                                id: "privateWorkspaces",
-                                text: "Private"
-                            },
-                            {
-                                id: "createdAt",
-                                text: "Create Time"
-                            },
-                            {
-                                id: "updatedAt",
-                                text: "Last Update Time"
-                            }
-                            ]}
-                        />
-                    </Tooltip>
-                </div>
+            <div className="flex-1 flex flex-row items-center justify-end">
+                {/*_workspaceValidating && <div className="flex sm:flex-row flex-col items-center justify-center p-1 bg-neutral-800 rounded-lg mr-4 px-3">
+                    <Loading size="md" />
+                    <span className="ml-2 text-sm">Loading...</span>
+</div>*/}
+                <FilterIcon size={24} fill="currentColor" className="mr-4" />
+                <Tooltip
+                    content="Filter Workspaces"
+                    direction="bottom"
+                    allContainerClassName="sm:w-64 w-full"
+                >
+                    <Select
+                        onChange={e => setFilter(e.target.value)}
+                        className="w-full"
+                        options={[{
+                            id: null,
+                            text: "All Workspaces"
+                        },
+                        {
+                            id: "favorites",
+                            text: "Favorites"
+                        },
+                        {
+                            id: "privateWorkspaces",
+                            text: "Private"
+                        },
+                        {
+                            id: "createdAt",
+                            text: "Create Time"
+                        },
+                        {
+                            id: "updatedAt",
+                            text: "Last Update Time"
+                        }
+                        ]}
+                    />
+                </Tooltip>
             </div>
         </div>
 
-        {!loadingWorkspaces ? <motion.div
+        <motion.div
             initial="hidden"
             animate="show"
             transition={{ staggerChildren: 0.03 }}
             className="relative pb-4 mt-4 grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 items-start auto-rows-max"
         >
-            {_workspacesFiltered.map((element, index) => <HomeWorkspaceCard
+            {!loadingWorkspaces && _workspacesFiltered.map((element, index) => <HomeWorkspaceCard
                 workspace={element}
                 key={index}
                 index={index}
                 onStar={() => workspace.star({ id: element._id })}
                 onDelete={() => setDeleteModal({ ...deleteModal, visible: true, workspace: element._id })}
             />)}
-            <AddWorkspaceButton onClick={() => setNewWorkspaceModal(true)} />
-        </motion.div> : <div className="relative pb-4 mt-4 grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 items-start auto-rows-max">
-            <HomeWorkspaceCard skeleton />
-            <HomeWorkspaceCard skeleton />
-            <HomeWorkspaceCard skeleton />
-        </div>}
-
+            {!loadingWorkspaces && <AddWorkspaceButton onClick={() => setNewWorkspaceModal(true)} />}
+            {loadingWorkspaces && [1, 2, 3].map((item) => <HomeWorkspaceCard skeleton key={item} />)}
+        </motion.div>
 
         {(!loadingWorkspaces && _workspacesFiltered.length == 0) && (
             <div className="w-full h-full relative">

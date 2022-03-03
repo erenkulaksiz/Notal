@@ -16,6 +16,7 @@ const Button = ({
     size = "md",
     rounded = false,
     fullWidth = false,
+    ring = true,
     as = "button",
     ...props
 }) => {
@@ -43,6 +44,7 @@ const Button = ({
                 true: "w-full"
             },
             {
+                default: rounded,
                 false: "rounded-xl",
                 true: "rounded-full"
             },
@@ -50,13 +52,19 @@ const Button = ({
                 true: "bg-gradient-to-r from-sky-600 to-violet-700"
             },
             {
+                default: size,
                 sm: "h-8",
                 lg: "h-12",
                 xl: "h-16",
             },
             {
-                false: "bg-blue-600 hover:bg-blue-500 active:bg-blue-700 outline-none focus:outline-2 focus:outline-blue-500/50",//also remove ring
-                true: "bg-transparent hover:bg-transparent active:bg-neutral-800/50"
+                default: light,
+                false: "bg-blue-600 hover:bg-blue-500 active:bg-blue-700 outline-none focus:outline-blue-500/50",//also remove ring
+                true: "bg-transparent hover:bg-transparent active:dark:bg-neutral-800/50 active:bg-neutral-200/50"
+            },
+            {
+                default: "focus:outline-2 " + ring,
+                true: "focus:outline-2",
             }
         ],
         selectedClasses: [
@@ -65,6 +73,7 @@ const Button = ({
             gradient,
             size,
             light,
+            ring,
         ]
     });
 

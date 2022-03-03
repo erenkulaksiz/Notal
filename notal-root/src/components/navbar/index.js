@@ -17,10 +17,15 @@ import {
     LoginIcon,
     HomeFilledIcon
 } from "@icons";
-import { Button, LoginModal, Switch } from "@components";
+import {
+    Button,
+    LoginModal,
+    Switch,
+    Loading,
+} from "@components";
 import useAuth from "@hooks/auth";
 
-const Navbar = ({ user, showHomeButton = false }) => {
+const Navbar = ({ user, showHomeButton = false, validating = false }) => {
     const { resolvedTheme, setTheme } = useTheme();
     const router = useRouter();
     const auth = useAuth();
@@ -44,6 +49,10 @@ const Navbar = ({ user, showHomeButton = false }) => {
             </Link>}
         </div>
         <div className="w-1/2 flex items-center justify-end">
+            {(validating) && <div className="flex flex-row items-center justify-center p-1 dark:bg-neutral-800 bg-neutral-100 shadow rounded-lg mr-2 px-3">
+                <Loading size="md" />
+                <span className="ml-2 text-sm">Loading...</span>
+            </div>}
             {(showHomeButton && (auth.authUser/* || user*/)) && <Link href="/home" passHref>
                 <Button
                     light

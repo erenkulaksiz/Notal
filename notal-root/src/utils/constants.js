@@ -1,3 +1,4 @@
+import { HomeNavBookmarks, HomeNavWorkspaces } from '@components';
 import {
     PeopleIcon,
     ShareIcon,
@@ -7,6 +8,12 @@ import {
     BookmarkFilledIcon,
     DashboardOutlineIcon,
     DashboardFilledIcon,
+    VisibleIcon,
+    VisibleOffIcon,
+    StarFilledIcon,
+    StarOutlineIcon,
+    SettingsIcon,
+    DeleteIcon,
 } from '@icons';
 
 export const CardColors = [
@@ -156,7 +163,8 @@ export const HomeRoutes = [{
     icon: {
         default: <DashboardOutlineIcon size={24} fill="currentColor" style={{ transform: "scale(0.8)" }} />,
         selected: <DashboardFilledIcon size={24} fill="currentColor" style={{ transform: "scale(0.8)" }} />
-    }
+    },
+    Component: ({ props, isValidating }) => <HomeNavWorkspaces {...props} isValidating={isValidating} />
 },
 {
     id: "bookmarks",
@@ -164,5 +172,48 @@ export const HomeRoutes = [{
     icon: {
         default: <BookmarkOutlineIcon size={24} fill="currentColor" style={{ transform: "scale(0.8)" }} />,
         selected: <BookmarkFilledIcon size={24} fill="currentColor" style={{ transform: "scale(0.8)" }} />
-    }
+    },
+    Component: (props) => <HomeNavBookmarks {...props} />
 }]
+
+export const WorkspaceButtons = [
+    {
+        id: "favorite",
+        multi: true,
+        name: {
+            true: "Add to favorites",
+            false: "Remove from favorites"
+        },
+        icon: {
+            true: <StarFilledIcon size={24} className="fill-yellow-500" />,
+            false: <StarOutlineIcon size={24} className="fill-neutral-900 dark:fill-white" />
+        }
+    },
+    {
+        id: "settings",
+        name: "Settings",
+        icon: <SettingsIcon size={24} color="currentColor" />
+    },
+    {
+        id: "visible",
+        multi: true,
+        name: {
+            true: "Set visiblity to private",
+            false: "Set visibility to public",
+        },
+        icon: {
+            true: <VisibleIcon width={20} height={20} className="dark:text-white text-black" />,
+            false: <VisibleOffIcon width={20} height={20} className="dark:text-white text-black" />
+        }
+    },
+    {
+        id: "delete",
+        name: "Delete workspace",
+        icon: <DeleteIcon size={24} color="currentColor" />,
+    },
+    {
+        id: "addfield",
+        name: "Add field to workspace",
+        icon: <AddIcon size={24} color="currentColor" />
+    }
+]

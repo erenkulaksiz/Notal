@@ -12,7 +12,7 @@ const Tooltip = ({
     content,
     allContainerClassName,
     hideArrow = false,
-    direction = "up",
+    direction = "top",
     animated = true,
     blockContent = true, // block pointer events
     closeAuto = true, // automatically close after time
@@ -29,7 +29,7 @@ const Tooltip = ({
 
     const sideVariation = () => {
         switch (direction) {
-            case "up":
+            case "top":
                 return {
                     hidden: { y: 10, opacity: 0, transitionEnd: { display: "none" } },
                     show: { y: 0, opacity: 1, display: "flex" }
@@ -63,7 +63,7 @@ const Tooltip = ({
         defaultClasses: "absolute",
         conditionalClasses: [
             {
-                up: "bottom-[calc(100%+5px)]",
+                top: "bottom-[calc(100%+5px)]",
                 right: "left-[calc(100%+5px)]",
                 left: "right-[calc(100%)+5px]",
                 bottom: "top-[calc(100%+5px)]"
@@ -83,7 +83,7 @@ const Tooltip = ({
         defaultClasses: "w-2 -z-10 h-2 bg-white dark:bg-neutral-800 absolute rotate-45",
         conditionalClasses: [
             {
-                up: "-bottom-1",
+                top: "-bottom-1",
                 right: "-left-0.5",
                 left: "-right-0.5",
                 bottom: "-top-1",
@@ -99,7 +99,7 @@ const Tooltip = ({
         defaultClasses: "shadow-xl z-50 relative bg-white dark:bg-neutral-800 whitespace-nowrap px-3 py-1 flex items-center justify-center rounded-xl text-sm shadow-xl text-black dark:text-white",
         conditionalClasses: [
             {
-                up: "top-0",
+                top: "top-0",
                 right: "right-0",
                 left: "left-0",
                 bottom: "bottom-0",

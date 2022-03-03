@@ -17,10 +17,13 @@ import {
     ValidateToken,
     WorkboxInit
 } from '@utils';
+import { HomeRoutes } from '@utils/constants';
 
 const Home = (props) => {
     const auth = useAuth();
     const router = useRouter();
+
+    const [_workspacesValidating, _setWorkspacesValidating] = useState(true);
 
     const [navCollapse, setNavCollapse] = useState(false);
 
@@ -47,7 +50,10 @@ const Home = (props) => {
             <meta name='description' content='Take your notes to next level with Notal' />
         </Head>
 
-        <Navbar user={props?.validate?.data} />
+        <Navbar
+            user={props?.validate?.data}
+            validating={_workspacesValidating}
+        />
 
         <div className="relative flex flex-row flex-1 bg-white dark:bg-neutral-900 overflow-y-auto overflow-x-hidden">
             <HomeSidebar
@@ -56,10 +62,16 @@ const Home = (props) => {
                 onViewingChange={({ nav }) => setHomeViewing(nav.id)}
                 onCollapse={() => setNavCollapse(prev => !prev)}
             />
-            <NavSelector
-                nav={homeViewing}
-                {...props}
-            />
+            {HomeRoutes.map((Route) => {
+                if (homeViewing == Route.id) {
+                    return Route.Component(
+                        {
+                            props: { ...props },
+                            isValidating: (val) => _setWorkspacesValidating(val)
+                        }
+                    );
+                }
+            })}
         </div>
 
         <AcceptCookies />
