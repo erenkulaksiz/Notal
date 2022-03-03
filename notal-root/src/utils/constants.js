@@ -181,18 +181,18 @@ export const WorkspaceButtons = [
         id: "favorite",
         multi: true,
         name: {
-            true: "Add to favorites",
-            false: "Remove from favorites"
+            true: "Remove from favorites",
+            false: "Add to favorites"
         },
         icon: {
-            true: <StarFilledIcon size={24} className="fill-yellow-500" />,
+            true: <StarFilledIcon size={24} fill="#eab308" />,
             false: <StarOutlineIcon size={24} className="fill-neutral-900 dark:fill-white" />
         }
     },
     {
         id: "settings",
         name: "Settings",
-        icon: <SettingsIcon size={24} color="currentColor" />
+        icon: <SettingsIcon size={24} className="dark:fill-white fill-black" />
     },
     {
         id: "visible",
@@ -209,11 +209,11 @@ export const WorkspaceButtons = [
     {
         id: "delete",
         name: "Delete workspace",
-        icon: <DeleteIcon size={24} color="currentColor" />,
+        icon: <DeleteIcon size={24} className="fill-neutral-900 dark:fill-white" />,
     },
     {
         id: "addfield",
         name: "Add field to workspace",
-        icon: <AddIcon size={24} color="currentColor" />
+        icon: <AddIcon size={24} className="fill-neutral-900 dark:fill-white" />
     }
 ]

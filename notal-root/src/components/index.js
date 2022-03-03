@@ -10,6 +10,7 @@ export { default as HomeNavTitle } from "./home/navigations/title";
 export { default as HomeSidebar } from "./home/sidebar";
 export { default as HomeSidebarItem } from "./home/sidebar/sidebarItem";
 export { default as HomeWorkspaceCard } from "./home/workspaceCard";
+export { default as HomeWorkspaceCardSkeleton } from "./home/workspaceCardSkeleton";
 export { default as Input } from "./input";
 export { default as LandingFeatureCard } from "./landing/featureCard";
 export { default as LoginSelector } from "./loginSelector";

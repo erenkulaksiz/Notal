@@ -20,8 +20,7 @@ class CriticalCssHead extends Head {
     }
 }
 
-const Notal = (props) => {
-
+const Notal = () => {
     return (
         <Html lang='en'>
             <CriticalCssHead>
@@ -30,7 +29,6 @@ const Notal = (props) => {
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
                 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet"></link>
                 <meta name="x" content="why are you reading this?" />
-
                 <meta name='application-name' content='Notal' />
                 <meta name='apple-mobile-web-app-capable' content='yes' />
                 <meta name='apple-mobile-web-app-status-bar-style' content='default' />
@@ -38,12 +36,10 @@ const Notal = (props) => {
                 <meta name='format-detection' content='telephone=no' />
                 <meta name='mobile-web-app-capable' content='yes' />
                 <link rel="apple-touch-icon" href="https://notal.app/apple-touch-icon.png"></link>
-
                 <link rel='icon' type='image/png' sizes='32x32' href='/favicon-32x32.png' />
                 <link rel='icon' type='image/png' sizes='16x16' href='/favicon-16x16.png' />
                 <link rel='manifest' href='/manifest.json' />
                 <link rel='shortcut icon' href='/favicon.ico' />
-
                 <meta name='twitter:card' content='summary' />
                 <meta name='twitter:url' content='https://notal.app' />
                 <meta name='twitter:title' content='Notal' />
@@ -54,9 +50,7 @@ const Notal = (props) => {
                 <meta property='og:site_name' content='Notal' />
                 <meta property='og:url' content='https://notal.app' />
                 <meta property='og:image' content='https://notal.app/icon_big.png' />
-
                 <meta property="theme-color" content="#292524" />
-
                 <script
                     async
                     src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
