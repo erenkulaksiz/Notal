@@ -98,7 +98,6 @@ const Landing = (props) => {
             />
           </div>
         </div>
-
         <div className="sm:container px-8 md:container md:px-1 lg:px-2 xl:px-32 pt-40 z-10">
           <div className="relative z-50">
             <h1 className="text-black drop-shadow-xl dark:text-white sm:text-5xl text-4xl font-bold font-sans">

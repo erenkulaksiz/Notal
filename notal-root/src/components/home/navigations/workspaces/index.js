@@ -172,7 +172,7 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
                 onDelete={() => setDeleteModal({ ...deleteModal, visible: true, workspace: element._id })}
             />)}
             {!loadingWorkspaces && <AddWorkspaceButton onClick={() => setNewWorkspaceModal(true)} />}
-            {loadingWorkspaces && [1, 2, 3].map((item) => <HomeWorkspaceCard skeleton key={item} />)}
+            {loadingWorkspaces && [1, 2, 3, 4].map((item) => <HomeWorkspaceCard skeleton key={item} />)}
         </motion.div>
 
         {(!loadingWorkspaces && _workspacesFiltered.length == 0) && (

@@ -1,7 +1,8 @@
-import { WarningIcon } from "@icons";
+import { MoreIcon, WarningIcon } from "@icons";
+import { Button } from "@components";
 
 const CardColor = ({ color }) => {
-    return (<div className="min-w-[1em] h-full" style={{ backgroundColor: color }} />)
+    return (<div className="min-w-[.7em] h-full" style={{ backgroundColor: color }} />)
 }
 
 const WorkspaceFieldCard = ({ card }) => {
@@ -13,9 +14,16 @@ const WorkspaceFieldCard = ({ card }) => {
                     <span className="text-xl font-medium break-before-left w-full">
                         {card.title}
                     </span>
-                    {card.color == "#D28519" && <div>
-                        <WarningIcon size={24} fill="#D28519" style={{ transform: "scale(.7)" }} />
-                    </div>}
+                    <div className="flex flex-row">
+                        {card.color == "#D28519" && <div className="py-1">
+                            <WarningIcon size={24} fill="#D28519" style={{ transform: "scale(.7)" }} />
+                        </div>}
+                        <div className="fill-neutral-200 dark:fill-neutral-600">
+                            <Button light size="sm" className="px-1">
+                                <MoreIcon size={24} fill="currentFill" style={{ transform: "scale(.7)" }} />
+                            </Button>
+                        </div>
+                    </div>
                 </div>
                 {card.desc && <span className="dark:text-neutral-300 text-neutral-800 text-sm mt-1 break-all">
                     {card.desc}

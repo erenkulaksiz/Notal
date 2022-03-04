@@ -18,7 +18,8 @@ import {
     WorkspaceAddFieldBanner,
     WorkspaceField,
     WorkspaceNotFound,
-    WorkspaceSidebar
+    WorkspaceSidebar,
+    DeleteWorkspaceModal
 } from "@components";
 
 import { fetchWorkspace } from "@utils/fetcher";
@@ -32,8 +33,6 @@ const Workspace = (props) => {
         ["api/fetchWorkspace/" + id],
         () => fetchWorkspace({ token: Cookies.get("auth"), id })
     );
-
-    const [savingWorkspace, setSavingWorkspace] = useState(false);
 
     // Modals
     const [privateModal, setPrivateModal] = useState({ visible: false, desc: "" });
@@ -51,7 +50,7 @@ const Workspace = (props) => {
     const [_workspace, _setWorkspace] = useState({});
     const [_workspaceValidating, _setWorkspaceValidating] = useState(true);
 
-    const isOwner = (_workspace ? _workspace?.owner == props?.validate?.uid : false);
+    const isOwner = (_workspace?.data ? (_workspace?.data?.owner == props?.validate?.uid) : false);
 
     // Check for validation
     useEffect(() => {
@@ -93,23 +92,26 @@ const Workspace = (props) => {
     }, [workspaceData]);
 
     const handle = {
-        editWorkspace: async ({ title = _workspace.title, desc = _workspace.desc, workspaceVisible = _workspace.workspaceVisible ?? false }) => {
-            if (_workspace.title != title || _workspace.desc != desc || _workspace.workspaceVisible != workspaceVisible) {
+        editWorkspace: async ({ title = _workspace?.data?.title, desc = _workspace?.data?.desc, workspaceVisible = _workspace?.data?.workspaceVisible ?? false }) => {
+            if (_workspace?.data?.title != title || _workspace?.data?.desc != desc || _workspace?.data?.workspaceVisible != workspaceVisible) {
 
-                if (_workspace.workspaceVisible != workspaceVisible) {
+                /*
+                if (_workspace?.data?.workspaceVisible != workspaceVisible) {
                     setPrivateModal({ ...privateModal, visible: true, desc: workspaceVisible ? "This workspace is now visible to everyone who has the link." : "This workspace is now set to private." })
                 } else {
                     setPrivateModal({ ...privateModal, visible: false });
                 }
 
-                const newWorkspace = { ..._workspace, title, desc, workspaceVisible };
+                const newWorkspace = { ..._workspace, data: { ..._workspace.data, title, desc, workspaceVisible } };
                 _setWorkspace(newWorkspace);
+                */
 
-                const data = await auth.workspace.editWorkspace({ id: _workspace._id, title, desc, workspaceVisible });
+                const data = await auth.workspace.editWorkspace({ id: _workspace?.data?._id, title, desc, workspaceVisible });
 
                 if (data.success) {
                     //window.gtag('event', "editWorkspace", { login: "type:google/" + user.email });
-                    router.replace(router.asPath);
+                    //router.replace(router.asPath);
+                    workspaceData.mutate();
                 } else if (data?.error) {
                     console.error("error on delete workspace: ", data.error);
                 }
@@ -156,7 +158,7 @@ const Workspace = (props) => {
             }
         },
         deleteWorkspace: async () => {
-            const data = await auth.workspace.deleteWorkspace({ id: _workspace._id });
+            const data = await auth.workspace.deleteWorkspace({ id: _workspace?.data?._id });
 
             if (data.success) {
                 router.replace("/home");
@@ -234,28 +236,41 @@ const Workspace = (props) => {
             validating={_workspaceValidating}
         />
 
-        <div className="relative flex flex-row flex-1 bg-white dark:bg-neutral-900 overflow-y-auto overflow-x-hidden">
-            {(!loadingWorkspace && !_workspace?.error) && <WorkspaceSidebar
+        <div className="relative flex flex-row flex-1 bg-white dark:bg-neutral-900 overflow-y-auto">
+            {(!loadingWorkspace && !_workspace?.error && isOwner) && <WorkspaceSidebar
                 starred={_workspace?.data?.starred}
                 visible={_workspace?.data?.workspaceVisible}
-                onStarred={handle.starWorkspace}
+                onStarred={() => handle.starWorkspace()}
                 onSettings={() => { }}
-                onDelete={() => { }}
-                onVisible={() => { }}
+                onDelete={() => setDeleteWorkspace(true)}
+                onVisible={() => handle.editWorkspace({ workspaceVisible: _workspace?.data?.workspaceVisible ? !_workspace?.data?.workspaceVisible : true })}
+                onAddField={() => { }}
             />}
-            <div className="flex flex-1 flex-row overflow-y-auto pt-1 pb-2 pl-2">
-                {!loadingWorkspace ? _workspace?.data?.fields?.map((field, index) => (
+            <div className="flex flex-1 flex-row overflow-y-auto pt-1 pb-2 pl-2 overflow-x-visible">
+                {!loadingWorkspace ? _workspace?.data?.fields?.map((field) => (
                     <WorkspaceField field={field} key={field._id} />
-                )) : [1, 2, 3].map((item) => (
-                    <WorkspaceField skeleton key={item} />
+                )) : [1, 2, 3, 4].map((item) => (
+                    <WorkspaceField skeleton key={item} /> // show skeleton loaders
                 ))}
-                {(!_workspace?.data?.fields || _workspace?.data?.fields?.length == 0)
+                {(_workspace?.success && (!_workspace?.data?.fields || _workspace?.data?.fields?.length == 0))
                     && <WorkspaceAddFieldBanner />}
             </div>
-            {(_workspace?.error == "not-found" || _workspace?.error == "invalid-params")
-                && <WorkspaceNotFound />
+            {(_workspace?.error == "not-found"
+                || _workspace?.error == "invalid-params"
+                || _workspace?.error == "user-workspace-private")
+                &&
+                <WorkspaceNotFound />
             }
         </div>
+
+        <DeleteWorkspaceModal
+            open={deleteWorkspaceModal}
+            onClose={() => setDeleteWorkspace(false)}
+            onDelete={() => {
+                setDeleteWorkspace(false);
+                handle.deleteWorkspace();
+            }}
+        />
 
         <AcceptCookies />
     </div>)

@@ -6,6 +6,9 @@ import {
 } from '@components';
 
 import BuildComponent from '@utils/buildComponent';
+import { isClient } from '@utils';
+import useClickAway from '@hooks/clickaway';
+import useClickAnyWhere from '@hooks/clickanywhere';
 
 const Tooltip = ({
     children,
@@ -27,28 +30,22 @@ const Tooltip = ({
         }
     }, [visible]);
 
-    const sideVariation = () => {
-        switch (direction) {
-            case "top":
-                return {
-                    hidden: { y: 10, opacity: 0, transitionEnd: { display: "none" } },
-                    show: { y: 0, opacity: 1, display: "flex" }
-                }
-            case "right":
-                return {
-                    hidden: { x: -10, opacity: 0, transitionEnd: { display: "none" } },
-                    show: { x: 0, opacity: 1, display: "flex" }
-                }
-            case "bottom":
-                return {
-                    hidden: { y: -10, opacity: 0, transitionEnd: { display: "none" } },
-                    show: { y: 0, opacity: 1, display: "flex" }
-                }
-            case "left":
-                return {
-                    hidden: { x: 10, opacity: 0, transitionEnd: { display: "none" } },
-                    show: { x: 0, opacity: 1, display: "flex" }
-                }
+    const variations = {
+        top: {
+            hidden: { y: 10, opacity: 0, transitionEnd: { display: "none" } },
+            show: { y: 0, opacity: 1, display: "flex" }
+        },
+        right: {
+            hidden: { x: -10, opacity: 0, transitionEnd: { display: "none" } },
+            show: { x: 0, opacity: 1, display: "flex" }
+        },
+        bottom: {
+            hidden: { y: -10, opacity: 0, transitionEnd: { display: "none" } },
+            show: { y: 0, opacity: 1, display: "flex" }
+        },
+        left: {
+            hidden: { x: 10, opacity: 0, transitionEnd: { display: "none" } },
+            show: { x: 0, opacity: 1, display: "flex" }
         }
     }
 
@@ -113,7 +110,6 @@ const Tooltip = ({
     return (<div
         onMouseEnter={() => setVisible(true)}
         onMouseLeave={() => setVisible(false)}
-        //onFocus={() => setVisible(true)}
         onTouchEnd={() => setVisible(false)}
         onBlur={() => setVisible(false)}
         ref={containerRef}
@@ -127,7 +123,7 @@ const Tooltip = ({
             <motion.div
                 initial="hidden"
                 animate={visible ? "show" : "hidden"}
-                variants={sideVariation()}
+                variants={variations[direction]}
                 transition={{ type: animated ? "spring" : "none", stiffness: 400, duration: 0.02, damping: 25 }} // bottom-[calc(100%+45px)] 
                 className={BuildTooltipContainer.classes}
                 onAnimationComplete={() => !visible && setShow(false)}
