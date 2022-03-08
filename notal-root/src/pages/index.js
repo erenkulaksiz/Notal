@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { motion, useTransform, useMotionValue, useElementScroll } from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
-import { useScrollData } from "scroll-data-hook";
+import { Parallax } from "react-scroll-parallax";
 
 import LandingBackground from "@public/landing_bg_banner_1.webp";
 
@@ -34,10 +34,6 @@ const Landing = (props) => {
   const auth = useAuth();
 
   const containerRef = useRef();
-
-  const { scrollYProgress } = useElementScroll(containerRef);
-
-  const containerY = useTransform(scrollYProgress, [0, .5, 1], [0, 50, 70]);
 
 
   /*
@@ -108,10 +104,7 @@ const Landing = (props) => {
           </div>
         </div>
         <div className="sm:container px-8 md:container md:px-1 lg:px-2 xl:px-32 pt-40 z-10">
-          <motion.div
-            style={{ y: containerY }}
-            transition={{ type: "spring", stiffness: 400, damping: 90 }}
-          >
+          <Parallax speed={20}>
             <div className="relative z-50">
               <h1 className="text-black drop-shadow-xl dark:text-white sm:text-5xl text-4xl font-bold font-sans">
                 Organize & Plan your{' '}
@@ -131,7 +124,7 @@ const Landing = (props) => {
               variants={{
                 show: {
                   transition: {
-                    staggerChildren: 0.15,
+                    staggerChildren: 0.1,
                   }
                 }
               }}
@@ -139,7 +132,7 @@ const Landing = (props) => {
               //ref={cardsRef}
               initial="hidden"
               animate="show"
-              transition={{ type: "spring", stiffness: 600, damping: 100 }}
+              transition={{ type: "spring", stiffness: 300, damping: 200 }}
               className="mt-16 flex-row grid gap-4 h-auto grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 relative"
             >
               {Features.map((feature, index) => <LandingFeatureCard feature={feature} key={index} />)}
@@ -147,10 +140,7 @@ const Landing = (props) => {
               <div className="bg-landing_bg_2 opacity-25 absolute w-[800px] h-[800px] -left-[300px] -bottom-[300px] bg-no-repeat bg-contain -z-50"></div>
               <div className="bg-landing_bg_3 opacity-20 absolute w-[800px] h-[800px] -right-[350px] -bottom-[300px] bg-no-repeat bg-contain -z-50"></div>
             </motion.div>
-          </motion.div>
-          <div className="mt-64 mb-64">
-            !
-          </div>
+          </Parallax>
           <Footer />
         </div>
       </main >

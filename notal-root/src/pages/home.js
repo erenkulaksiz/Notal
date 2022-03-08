@@ -75,8 +75,16 @@ const Home = (props) => {
                 }
             })}
         </main>
-
         <AcceptCookies />
+        <style jsx global>{`
+            html,
+            body,
+            body > div:first-child,
+            div#__next,
+            div#__next > div {
+              height: 100%;
+            }
+        `}</style>
     </div>)
 }
 

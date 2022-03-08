@@ -142,7 +142,7 @@ const Navbar = ({
             details > summary::marker {
                 display: none;
             }
-        `}</style>
+            `}</style>
         </div>
         {!auth.authUser && <LoginModal
             open={modalVisible}

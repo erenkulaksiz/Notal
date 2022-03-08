@@ -10,9 +10,11 @@
     @apply subpixel-antialiased;
     @apply bg-white;
     @apply dark:bg-black;
-    @apply overflow-hidden;
   }
 }
+
+/*
+@apply overflow-hidden;
 
 html,
 body,
@@ -21,3 +23,4 @@ div#__next,
 div#__next > div {
   height: 100%;
 }
+*/
