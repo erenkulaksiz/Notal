@@ -51,6 +51,7 @@ const Workspace = (props) => {
     const [_workspaceValidating, _setWorkspaceValidating] = useState(true);
 
     const isOwner = (_workspace?.data ? (_workspace?.data?.owner == props?.validate?.uid) : false);
+    const notFound = (_workspace?.error == "not-found" || _workspace?.error == "invalid-params" || _workspace?.error == "user-workspace-private")
 
     // Check for validation
     useEffect(() => {
@@ -252,15 +253,10 @@ const Workspace = (props) => {
                 )) : [1, 2, 3, 4].map((item) => (
                     <WorkspaceField skeleton key={item} /> // show skeleton loaders
                 ))}
-                {(!_workspaceValidating && (!_workspace?.data?.fields || _workspace?.data?.fields?.length == 0))
+                {(!_workspaceValidating && !notFound && (!_workspace?.data?.fields || _workspace?.data?.fields?.length == 0))
                     && <WorkspaceAddFieldBanner />}
             </div>
-            {(_workspace?.error == "not-found"
-                || _workspace?.error == "invalid-params"
-                || _workspace?.error == "user-workspace-private")
-                &&
-                <WorkspaceNotFound />
-            }
+            {notFound && <WorkspaceNotFound />}
         </div>
 
         <DeleteWorkspaceModal
