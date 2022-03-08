@@ -2,13 +2,13 @@ import { MoreIcon, WarningIcon } from "@icons";
 import { Button } from "@components";
 
 const CardColor = ({ color }) => {
-    return (<div className="min-w-[.7em] h-full" style={{ backgroundColor: color }} />)
+    return (<div className="w-[.4em] h-full absolute" style={{ backgroundColor: color }} />)
 }
 
 const WorkspaceFieldCard = ({ card }) => {
-    return (<div className="w-full min-h-min flex dark:bg-neutral-900 bg-white border-solid border-t-2 border-t-neutral-100 dark:border-t-neutral-800">
+    return (<div className="relative w-full min-h-min flex flex-row dark:bg-neutral-900 bg-white border-solid border-b-2 border-b-neutral-100 dark:border-b-neutral-800">
         <CardColor color={card.color} />
-        <div className="flex flex-1 p-2">
+        <div className="flex flex-1 p-2 pl-4">
             <div className="flex flex-col overflow-ellipsis w-full">
                 <div className="flex flex-row justify-between">
                     <span className="text-xl font-medium break-before-left w-full">

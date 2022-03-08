@@ -14,6 +14,7 @@ const Tooltip = ({
     children,
     content,
     allContainerClassName,
+    containerClassName,
     hideArrow = false,
     direction = "top",
     animated = true,
@@ -30,22 +31,31 @@ const Tooltip = ({
         }
     }, [visible]);
 
+    const vars = {
+        hidden: {
+            opacity: 0, transitionEnd: { display: "none" }
+        },
+        show: {
+            opacity: 1, display: "flex",
+        }
+    }
+
     const variations = {
         top: {
-            hidden: { y: 10, opacity: 0, transitionEnd: { display: "none" } },
-            show: { y: 0, opacity: 1, display: "flex" }
+            hidden: { y: 10, ...vars.hidden },
+            show: { y: 0, ...vars.show }
         },
         right: {
-            hidden: { x: -10, opacity: 0, transitionEnd: { display: "none" } },
-            show: { x: 0, opacity: 1, display: "flex" }
+            hidden: { x: -10, ...vars.hidden },
+            show: { x: 0, ...vars.show }
         },
         bottom: {
-            hidden: { y: -10, opacity: 0, transitionEnd: { display: "none" } },
-            show: { y: 0, opacity: 1, display: "flex" }
+            hidden: { y: -10, ...vars.hidden },
+            show: { y: 0, ...vars.show }
         },
         left: {
-            hidden: { x: 10, opacity: 0, transitionEnd: { display: "none" } },
-            show: { x: 0, opacity: 1, display: "flex" }
+            hidden: { x: 10, ...vars.hidden },
+            show: { x: 0, ...vars.show }
         }
     }
 
@@ -93,7 +103,8 @@ const Tooltip = ({
 
     const BuildTooltipContainer = BuildComponent({
         name: "Tooltip Container",
-        defaultClasses: "shadow-xl z-50 relative bg-white dark:bg-neutral-800 whitespace-nowrap px-3 py-1 flex items-center justify-center rounded-xl text-sm shadow-xl text-black dark:text-white",
+        defaultClasses: "shadow-xl z-50 relative bg-white dark:bg-neutral-800 dark:shadow-black/60 shadow-neutral-400/70 whitespace-nowrap px-3 py-1 flex items-center justify-center rounded-xl text-sm shadow-xl text-black dark:text-white",
+        extraClasses: containerClassName,
         conditionalClasses: [
             {
                 top: "top-0",

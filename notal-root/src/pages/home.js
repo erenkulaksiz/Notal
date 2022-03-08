@@ -13,13 +13,10 @@ import { withAuth } from '@hooks/route';
 
 import {
     CheckToken,
-    GetWorkspaces,
     ValidateToken,
     WorkboxInit
 } from '@utils';
 import { HomeRoutes } from '@utils/constants';
-
-import useNotalUI from '@hooks/notalui';
 
 const Home = (props) => {
     const auth = useAuth();
@@ -57,7 +54,7 @@ const Home = (props) => {
             validating={_workspacesValidating}
         />
 
-        <main className="relative flex flex-row flex-1 bg-white dark:bg-neutral-900 overflow-y-auto overflow-x-hidden">
+        <main className="relative flex flex-1 flex-row bg-white dark:bg-neutral-900 overflow-y-auto overflow-x-hidden">
             <HomeSidebar
                 navCollapse={navCollapse}
                 current={homeViewing}

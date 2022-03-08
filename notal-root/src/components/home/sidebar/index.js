@@ -12,13 +12,13 @@ import BuildComponent from "@utils/buildComponent";
 const HomeSidebar = ({ navCollapse, current, onViewingChange, onCollapse }) => {
     const BuildSidebar = BuildComponent({
         name: "Home Sidebar Navigation",
-        defaultClasses: "flex shadow-xl flex-col bg-white dark:bg-neutral-800 z-30 top-0 sticky max-w-2xl",
+        defaultClasses: "flex shadow-xl flex-col bg-white dark:bg-neutral-800 z-30 top-0 sticky",
     })
 
     return (<motion.nav
         variants={{
-            open: { maxWidth: "14rem", width: "20%" },
-            close: { width: "2.6rem" }
+            open: { maxWidth: "14rem", minWidth: "10rem", width: "12rem" },
+            close: { minWidth: "2.6rem", width: "2.6rem" }
         }}
         initial="open"
         animate={navCollapse ? "close" : "open"}
