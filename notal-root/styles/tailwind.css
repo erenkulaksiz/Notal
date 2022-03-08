@@ -10,6 +10,7 @@
     @apply subpixel-antialiased;
     @apply bg-white;
     @apply dark:bg-black;
+    @apply overflow-hidden;
   }
 }
 

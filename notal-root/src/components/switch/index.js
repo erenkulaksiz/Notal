@@ -48,7 +48,7 @@ const Switch = ({
     });
 
     return (<div className={BuildSwitchContainer.classes}>
-        <input type="checkbox" checked={value} onChange={onChange} className="hidden" {...props} />
+        <input type="checkbox" id={props.id} checked={value} onChange={onChange} className="hidden" {...props} />
         <label htmlFor={props.id} className="h-full w-10 cursor-pointer">
             <div className={BuildSwitch.classes}>
                 <motion.div

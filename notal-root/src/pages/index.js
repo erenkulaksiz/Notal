@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { motion, useViewportScroll, useTransform, useMotionValue } from "framer-motion";
+import { motion, useTransform, useMotionValue, useElementScroll } from "framer-motion";
 import Image from "next/image";
 import { useScrollData } from "scroll-data-hook";
 
@@ -34,29 +34,11 @@ const Landing = (props) => {
   const auth = useAuth();
 
   const containerRef = useRef();
-  const cardsRef = useRef();
 
-  const containerYValue = useMotionValue(0);
-  const cardsYValue = useMotionValue(0);
+  const { scrollYProgress } = useElementScroll(containerRef);
 
-  const handleScroll = useCallback(() => {
-    //console.log("scroll!!!");
-    console.log("scrollPos: ", cardsRef.current.scrollTop);
-    console.log("cards: ", cardsRef);
-    containerYValue.set(containerRef.current.scrollTop);
-    cardsYValue.set(containerRef.current.scrollTop * .2);
-  }, []);
+  const containerY = useTransform(scrollYProgress, [0, .5, 1], [0, 50, 70]);
 
-  useEffect(() => {
-    const div = containerRef.current;
-    div.addEventListener("scroll", handleScroll);
-    return () => {
-      div.removeEventListener("scroll", handleScroll);
-    }
-  }, [handleScroll])
-
-  const containerY = useTransform(containerYValue, [0, 200, 700], [0, 50, 100]);
-  const cardsY = useTransform(cardsYValue, [0, 200, 700], [0, 50, 100]);
 
   /*
   const [_validate, _setValidate] = useState(null);
@@ -153,8 +135,8 @@ const Landing = (props) => {
                   }
                 }
               }}
-              style={{ y: cardsY }}
-              ref={cardsRef}
+              //style={{ y: cardsY }}
+              //ref={cardsRef}
               initial="hidden"
               animate="show"
               transition={{ type: "spring", stiffness: 600, damping: 100 }}
