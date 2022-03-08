@@ -4,15 +4,15 @@ import React, { useEffect } from 'react';
 
 import { isClient } from '@utils';
 
+import { Loading } from '@components';
+
 import useAuth from './auth';
 
-const Loading = <div>
+const LoadingPage = <div className="w-full h-full justify-center items-center flex flex-col">
     <Head>
         <title>Loading...</title>
     </Head>
-    <div>
-        loading...
-    </div>
+    <Loading size="xl" />
 </div>
 
 /**
@@ -27,7 +27,7 @@ export function withPublic(Component) {
 
         if (props.validate?.success || auth?.authUser) {
             isClient && router.replace("/home");
-            return Loading;
+            return LoadingPag;
         }
         return <Component {...props} />
     }
@@ -47,7 +47,7 @@ export function withAuth(Component) {
             return <Component {...props} />
         } else {
             if (auth.authLoading) {
-                return Loading;
+                return LoadingPage;
             } else {
                 if (!auth.authUser) {
                     isClient && router.replace("/");

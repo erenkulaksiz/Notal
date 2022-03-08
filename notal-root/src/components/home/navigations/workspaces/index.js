@@ -5,6 +5,7 @@ import useSWR from "swr";
 import { useRouter } from "next/router";
 
 import useAuth from "@hooks/auth";
+import useNotalUI from "@hooks/notalui";
 import { fetchWorkspaces } from "@utils/fetcher";
 import { CheckToken } from "@utils";
 import {
@@ -16,7 +17,7 @@ import {
     Select,
     Tooltip,
     HomeNavTitle,
-    Loading,
+    Button
 } from '@components';
 import {
     DashboardFilledIcon, FilterIcon
@@ -26,6 +27,8 @@ import { FilterWorkspaces } from "@utils/filterWorkspaces";
 const HomeNavWorkspaces = ({ validate, isValidating }) => {
     const auth = useAuth();
     const router = useRouter();
+    const NotalUI = useNotalUI();
+
     // Modals
     const [newWorkspaceModal, setNewWorkspaceModal] = useState(false);
     const [deleteModal, setDeleteModal] = useState({ workspace: -1, visible: false });
@@ -119,10 +122,6 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
                 <DashboardFilledIcon size={24} fill="currentColor" />
             </HomeNavTitle>
             <div className="flex-1 flex flex-row items-center justify-end">
-                {/*_workspaceValidating && <div className="flex sm:flex-row flex-col items-center justify-center p-1 bg-neutral-800 rounded-lg mr-4 px-3">
-                    <Loading size="md" />
-                    <span className="ml-2 text-sm">Loading...</span>
-</div>*/}
                 <FilterIcon size={24} fill="currentColor" className="mr-4" />
                 <Tooltip
                     content="Filter Workspaces"
@@ -159,23 +158,30 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
         </div>
 
         <motion.div
+            transition={{ staggerChildren: .5 }}
             initial="hidden"
             animate="show"
-            transition={{ staggerChildren: 0.03 }}
             className="relative pb-4 mt-4 grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 items-start auto-rows-max"
         >
-            {!loadingWorkspaces && _workspacesFiltered.map((element, index) => <HomeWorkspaceCard
-                workspace={element}
-                key={index}
-                index={index}
-                onStar={() => workspace.star({ id: element._id })}
-                onDelete={() => setDeleteModal({ ...deleteModal, visible: true, workspace: element._id })}
-            />)}
-            {!loadingWorkspaces && <AddWorkspaceButton onClick={() => setNewWorkspaceModal(true)} />}
+            <AnimatePresence>
+                {!loadingWorkspaces && _workspacesFiltered.map((element, index) => <HomeWorkspaceCard
+                    workspace={element}
+                    key={index}
+                    index={index}
+                    onStar={() => workspace.star({ id: element._id })}
+                    onDelete={() => setDeleteModal({ ...deleteModal, visible: true, workspace: element._id })}
+                />)}
+            </AnimatePresence>
+            {(!loadingWorkspaces/* && !_workspaceValidating*/) && <AddWorkspaceButton onClick={() => setNewWorkspaceModal(true)} />}
             {loadingWorkspaces && [1, 2, 3, 4].map((item) => <HomeWorkspaceCard skeleton key={item} />)}
+
+            <Button onClick={() => NotalUI.Toast.trigger({ title: "Selam!", desc: "ov yee" })}>
+                asdkasdj
+            </Button>
+
         </motion.div>
 
-        {(!loadingWorkspaces && _workspacesFiltered.length == 0) && (
+        {((!loadingWorkspaces && !_workspaceValidating) && _workspacesFiltered.length == 0) && (
             <div className="w-full h-full relative">
                 <AddWorkspaceBanner />
             </div>

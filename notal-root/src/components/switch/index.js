@@ -2,7 +2,16 @@ import { motion } from "framer-motion";
 
 import BuildComponent from "@utils/buildComponent";
 
-const Switch = ({ onChange, value, icon, className, ...props }) => {
+/*
+    Provide id prop for switch!!
+*/
+const Switch = ({
+    onChange,
+    value,
+    icon,
+    className,
+    ...props
+}) => {
 
     const BuildSwitchContainer = BuildComponent({
         name: "Switch Container",
@@ -39,8 +48,8 @@ const Switch = ({ onChange, value, icon, className, ...props }) => {
     });
 
     return (<div className={BuildSwitchContainer.classes}>
-        <input type="checkbox" checked={value} onChange={onChange} className="hidden" role="switch" id="switch" {...props} />
-        <label htmlFor="switch" className="h-full w-10 cursor-pointer">
+        <input type="checkbox" checked={value} onChange={onChange} className="hidden" {...props} />
+        <label htmlFor={props.id} className="h-full w-10 cursor-pointer">
             <div className={BuildSwitch.classes}>
                 <motion.div
                     layout

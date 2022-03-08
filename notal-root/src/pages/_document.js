@@ -69,6 +69,7 @@ page_path: window.location.pathname,
                 />
             </CriticalCssHead>
             <body>
+                <noscript>If you're seeing this message, that means <strong>JavaScript has been disabled on your browser</strong>, please <strong>enable JS</strong> to make this app work.</noscript>
                 <Main />
                 <NextScript />
             </body>

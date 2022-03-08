@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
+
 import {
     Navbar,
     HomeSidebar,
-    NavSelector,
     AcceptCookies
 } from '@components';
 
@@ -18,6 +18,8 @@ import {
     WorkboxInit
 } from '@utils';
 import { HomeRoutes } from '@utils/constants';
+
+import useNotalUI from '@hooks/notalui';
 
 const Home = (props) => {
     const auth = useAuth();
@@ -55,7 +57,7 @@ const Home = (props) => {
             validating={_workspacesValidating}
         />
 
-        <div className="relative flex flex-row flex-1 bg-white dark:bg-neutral-900 overflow-y-auto overflow-x-hidden">
+        <main className="relative flex flex-row flex-1 bg-white dark:bg-neutral-900 overflow-y-auto overflow-x-hidden">
             <HomeSidebar
                 navCollapse={navCollapse}
                 current={homeViewing}
@@ -72,7 +74,7 @@ const Home = (props) => {
                     );
                 }
             })}
-        </div>
+        </main>
 
         <AcceptCookies />
     </div>)

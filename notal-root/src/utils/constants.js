@@ -14,6 +14,7 @@ import {
     StarOutlineIcon,
     SettingsIcon,
     DeleteIcon,
+    EditIcon,
 } from '@icons';
 
 export const CardColors = [
@@ -215,5 +216,10 @@ export const WorkspaceButtons = [
         id: "addfield",
         name: "Add field to workspace",
         icon: <AddIcon size={24} className="fill-neutral-900 dark:fill-white" />
+    },
+    {
+        id: "edit",
+        name: "Edit workspace",
+        icon: <EditIcon size={24} className="fill-neutral-900 dark:fill-white" />
     }
 ]

@@ -92,9 +92,11 @@ const Navbar = ({
                 <div className="p-4 absolute top-full rounded-lg right-0 dark:bg-neutral-900/70 filter backdrop-blur-sm bg-white/70 shadow-2xl w-60" style={{ zIndex: 999 }}>
                     {isClient && <div className="flex flex-row items-center">
                         <Switch
-                            onChange={e => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+                            onChange={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
                             value={resolvedTheme == "dark"}
                             icon={resolvedTheme == "dark" ? <LightIcon size={24} fill="black" style={{ transform: "scale(0.7)" }} /> : <DarkIcon size={24} fill="black" style={{ transform: "scale(0.7)" }} />}
+                            role="switch"
+                            id="changeTheme"
                         />
                         <span className="ml-2 text-xs dark:text-neutral-600 text-neutral-300">v{process.env.NEXT_PUBLIC_APP_VERSION}</span>
                     </div>}

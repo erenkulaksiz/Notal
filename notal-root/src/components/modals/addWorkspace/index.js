@@ -14,12 +14,12 @@ import {
 } from "@icons";
 
 const AddWorkspaceModal = ({ open, onClose, onAdd }) => {
-    const [newWorkspace, setNewWorkspace] = useState({ title: "", desc: "", starred: false });
+    const [newWorkspace, setNewWorkspace] = useState({ title: "Untitled", desc: "", starred: false });
     const [newWorkspaceErr, setNewWorkspaceErr] = useState({ title: false, desc: false });
 
     const close = () => {
         setNewWorkspaceErr({ ...newWorkspace, title: false, desc: false });
-        setNewWorkspace({ title: "", desc: "", starred: false });
+        setNewWorkspace({ title: "Untitled", desc: "", starred: false });
         onClose();
     }
 
@@ -39,8 +39,18 @@ const AddWorkspaceModal = ({ open, onClose, onAdd }) => {
         </Modal.Title >
         <Modal.Body className="grid grid-cols-1 gap-2 pb-2" animate>
             {/*<Input fullWidth icon={<UserIcon size={24} />} containerClassName="fill-neutral-600" placeholder="Workspace Title" />*/}
-            <Input fullWidth placeholder="Workspace Title" onChange={(e) => setNewWorkspace({ ...newWorkspace, title: e.target.value })} />
-            <Input fullWidth placeholder="Workspace Description" onChange={(e) => setNewWorkspace({ ...newWorkspace, desc: e.target.value })} />
+            <Input
+                fullWidth
+                placeholder="Workspace Title"
+                onChange={(e) => setNewWorkspace({ ...newWorkspace, title: e.target.value })}
+                value={newWorkspace.title}
+            />
+            <Input
+                fullWidth
+                placeholder="Workspace Description"
+                onChange={(e) => setNewWorkspace({ ...newWorkspace, desc: e.target.value })}
+                value={newWorkspace.desc}
+            />
             <div className="py-4">
                 <Checkbox content="Add to favorites" value={newWorkspace.starred} onChange={(e) => setNewWorkspace({ ...newWorkspace, starred: !newWorkspace.starred })} />
             </div>

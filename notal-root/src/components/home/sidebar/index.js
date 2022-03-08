@@ -18,7 +18,7 @@ const HomeSidebar = ({ navCollapse, current, onViewingChange, onCollapse }) => {
     return (<motion.nav
         variants={{
             open: { maxWidth: "14rem", width: "20%" },
-            close: { width: "2.6rem", minWidth: 0 }
+            close: { width: "2.6rem" }
         }}
         initial="open"
         animate={navCollapse ? "close" : "open"}

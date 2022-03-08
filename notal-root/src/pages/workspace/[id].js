@@ -72,7 +72,6 @@ const Workspace = (props) => {
     useEffect(() => {
         (async () => {
             if (workspaceData.data) {
-                console.log("workspaceData: ", workspaceData.data);
                 if (workspaceData?.data?.error?.code == "auth/id-token-expired") {
                     const token = await auth.users.getIdToken();
                     const res = await CheckToken({ token: token.res, props });
@@ -238,13 +237,14 @@ const Workspace = (props) => {
 
         <div className="relative flex flex-row flex-1 bg-white dark:bg-neutral-900 overflow-y-auto">
             {(!loadingWorkspace && !_workspace?.error && isOwner) && <WorkspaceSidebar
-                starred={_workspace?.data?.starred}
-                visible={_workspace?.data?.workspaceVisible}
+                workspaceStarred={_workspace?.data?.starred}
+                workspaceVisible={_workspace?.data?.workspaceVisible}
                 onStarred={() => handle.starWorkspace()}
                 onSettings={() => { }}
                 onDelete={() => setDeleteWorkspace(true)}
                 onVisible={() => handle.editWorkspace({ workspaceVisible: _workspace?.data?.workspaceVisible ? !_workspace?.data?.workspaceVisible : true })}
                 onAddField={() => { }}
+                onEditWorkspace={() => { }}
             />}
             <div className="flex flex-1 flex-row overflow-y-auto pt-1 pb-2 pl-2 overflow-x-visible">
                 {!loadingWorkspace ? _workspace?.data?.fields?.map((field) => (
@@ -252,7 +252,7 @@ const Workspace = (props) => {
                 )) : [1, 2, 3, 4].map((item) => (
                     <WorkspaceField skeleton key={item} /> // show skeleton loaders
                 ))}
-                {(_workspace?.success && (!_workspace?.data?.fields || _workspace?.data?.fields?.length == 0))
+                {(!_workspaceValidating && (!_workspace?.data?.fields || _workspace?.data?.fields?.length == 0))
                     && <WorkspaceAddFieldBanner />}
             </div>
             {(_workspace?.error == "not-found"

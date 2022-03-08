@@ -3,8 +3,8 @@
     "short_name": "Notal",
     "display": "standalone",
     "orientation": "portrait",
-    "theme_color": "#FFFFFF",
-    "background_color": "#FFFFFF",
+    "theme_color": "#292524",
+    "background_color": "#292524",
     "start_url": "/",
     "icons": [
       {

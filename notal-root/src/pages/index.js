@@ -1,12 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { motion } from "framer-motion";
+import { motion, useViewportScroll, useTransform, useMotionValue } from "framer-motion";
 import Image from "next/image";
-import useSWR from "swr";
-import Cookies from "js-cookie";
+import { useScrollData } from "scroll-data-hook";
 
-import LandingBackground from "../../public/landing_bg_banner_1.webp";
+import LandingBackground from "@public/landing_bg_banner_1.webp";
 
 import useAuth from '@hooks/auth';
 
@@ -33,6 +32,31 @@ import { fetchValidate } from "@utils/fetcher";
 const Landing = (props) => {
   const router = useRouter();
   const auth = useAuth();
+
+  const containerRef = useRef();
+  const cardsRef = useRef();
+
+  const containerYValue = useMotionValue(0);
+  const cardsYValue = useMotionValue(0);
+
+  const handleScroll = useCallback(() => {
+    //console.log("scroll!!!");
+    console.log("scrollPos: ", cardsRef.current.scrollTop);
+    console.log("cards: ", cardsRef);
+    containerYValue.set(containerRef.current.scrollTop);
+    cardsYValue.set(containerRef.current.scrollTop * .2);
+  }, []);
+
+  useEffect(() => {
+    const div = containerRef.current;
+    div.addEventListener("scroll", handleScroll);
+    return () => {
+      div.removeEventListener("scroll", handleScroll);
+    }
+  }, [handleScroll])
+
+  const containerY = useTransform(containerYValue, [0, 200, 700], [0, 50, 100]);
+  const cardsY = useTransform(cardsYValue, [0, 200, 700], [0, 50, 100]);
 
   /*
   const [_validate, _setValidate] = useState(null);
@@ -82,9 +106,12 @@ const Landing = (props) => {
         <meta name='description' content='Take your notes to next level with Notal' />
       </Head>
 
-      <Navbar user={props?.validate?.data} showHomeButton />
+      <Navbar
+        user={props?.validate?.data}
+        showHomeButton
+      />
 
-      <div className="flex flex-1 flex-col items-center relative overflow-y-auto overflow-x-hidden">
+      <main className="flex flex-1 flex-col items-center relative overflow-y-auto overflow-x-hidden" ref={containerRef}>
         <div className="absolute w-full z-0">
           <div className="absolute block bg-gradient-to-t dark:from-black from-white w-full h-[800px] z-10" />
           <div className="relative z-0 dark:opacity-30 opacity-40 w-full h-[800px]">
@@ -99,45 +126,55 @@ const Landing = (props) => {
           </div>
         </div>
         <div className="sm:container px-8 md:container md:px-1 lg:px-2 xl:px-32 pt-40 z-10">
-          <div className="relative z-50">
-            <h1 className="text-black drop-shadow-xl dark:text-white sm:text-5xl text-4xl font-bold font-sans">
-              Organize & Plan your{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600">
-                next
-              </span>{' '}
-              project with Notal 🚀
-            </h1>
-            <h5 className="dark:text-neutral-400 text-gray-600 drop-shadow-lg mt-4 text-lg font-semibold">
-              {"Developer's solution from an developer. Keep focus on your project, not on your planning."}
-            </h5>
-            <Button rounded className="w-32 mt-4" aria-label="Discover more button">
-              Discover More
-            </Button>
-          </div>
           <motion.div
-            variants={{
-              show: {
-                transition: {
-                  staggerChildren: 0.15,
-                }
-              }
-            }}
-            initial="hidden"
-            animate="show"
-            transition={{ type: "spring", stiffness: 600, damping: 100 }}
-            className="mt-16 flex-row grid gap-4 h-auto grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 relative"
+            style={{ y: containerY }}
+            transition={{ type: "spring", stiffness: 400, damping: 90 }}
           >
-            {Features.map((feature, index) => <LandingFeatureCard feature={feature} key={index} />)}
+            <div className="relative z-50">
+              <h1 className="text-black drop-shadow-xl dark:text-white sm:text-5xl text-4xl font-bold font-sans">
+                Organize & Plan your{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600">
+                  next
+                </span>{' '}
+                project with Notal 🚀
+              </h1>
+              <h5 className="dark:text-neutral-400 text-gray-600 drop-shadow-lg mt-4 text-lg font-semibold">
+                {"Developer's solution from an developer. Keep focus on your project, not on your planning."}
+              </h5>
+              <Button rounded className="w-32 mt-4" aria-label="Discover more button">
+                Discover More
+              </Button>
+            </div>
+            <motion.div
+              variants={{
+                show: {
+                  transition: {
+                    staggerChildren: 0.15,
+                  }
+                }
+              }}
+              style={{ y: cardsY }}
+              ref={cardsRef}
+              initial="hidden"
+              animate="show"
+              transition={{ type: "spring", stiffness: 600, damping: 100 }}
+              className="mt-16 flex-row grid gap-4 h-auto grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 relative"
+            >
+              {Features.map((feature, index) => <LandingFeatureCard feature={feature} key={index} />)}
 
-            <div className="bg-landing_bg_2 opacity-25 absolute w-[800px] h-[800px] -left-[300px] -bottom-[300px] bg-no-repeat bg-contain -z-50"></div>
-            <div className="bg-landing_bg_3 opacity-20 absolute w-[800px] h-[800px] -right-[350px] -bottom-[300px] bg-no-repeat bg-contain -z-50"></div>
+              <div className="bg-landing_bg_2 opacity-25 absolute w-[800px] h-[800px] -left-[300px] -bottom-[300px] bg-no-repeat bg-contain -z-50"></div>
+              <div className="bg-landing_bg_3 opacity-20 absolute w-[800px] h-[800px] -right-[350px] -bottom-[300px] bg-no-repeat bg-contain -z-50"></div>
+            </motion.div>
           </motion.div>
+          <div className="mt-64 mb-64">
+            !
+          </div>
           <Footer />
         </div>
-      </div>
+      </main >
 
       <AcceptCookies />
-    </div>
+    </div >
   )
 }
 
