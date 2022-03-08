@@ -3,7 +3,6 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Parallax } from "react-scroll-parallax";
 
 import LandingBackground from "@public/landing_bg_banner_1.webp";
 
@@ -32,9 +31,6 @@ import { fetchValidate } from "@utils/fetcher";
 const Landing = (props) => {
   const router = useRouter();
   const auth = useAuth();
-
-  const containerRef = useRef();
-
 
   /*
   const [_validate, _setValidate] = useState(null);
@@ -89,7 +85,7 @@ const Landing = (props) => {
         showHomeButton
       />
 
-      <main className="flex flex-1 flex-col items-center relative overflow-y-auto overflow-x-hidden" ref={containerRef}>
+      <main className="flex h-full flex-col items-center absolute w-full overflow-x-hidden">
         <div className="absolute w-full z-0">
           <div className="absolute block bg-gradient-to-t dark:from-black from-white w-full h-[800px] z-10" />
           <div className="relative z-0 dark:opacity-30 opacity-40 w-full h-[800px]">
@@ -103,50 +99,46 @@ const Landing = (props) => {
             />
           </div>
         </div>
-        <div className="sm:container px-8 md:container md:px-1 lg:px-2 xl:px-32 pt-40 z-10">
-          <Parallax speed={20}>
-            <div className="relative z-50">
-              <h1 className="text-black drop-shadow-xl dark:text-white sm:text-5xl text-4xl font-bold font-sans">
-                Organize & Plan your{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600">
-                  next
-                </span>{' '}
-                project with Notal 🚀
-              </h1>
-              <h5 className="dark:text-neutral-400 text-gray-600 drop-shadow-lg mt-4 text-lg font-semibold">
-                {"Developer's solution from an developer. Keep focus on your project, not on your planning."}
-              </h5>
-              <Button rounded className="w-32 mt-4" aria-label="Discover more button">
-                Discover More
-              </Button>
-            </div>
-            <motion.div
-              variants={{
-                show: {
-                  transition: {
-                    staggerChildren: 0.1,
-                  }
+        <div className="sm:container px-8 md:container md:px-1 lg:px-2 xl:px-32 pt-64 z-10">
+          <div className="relative z-50">
+            <h1 className="text-black drop-shadow-xl dark:text-white sm:text-5xl text-4xl font-bold font-sans">
+              Organize & Plan your{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600">
+                next
+              </span>{' '}
+              project with Notal 🚀
+            </h1>
+            <h5 className="dark:text-neutral-400 text-gray-600 drop-shadow-lg mt-4 text-lg font-semibold">
+              {"Developer's solution from an developer. Keep focus on your project, not on your planning."}
+            </h5>
+            <Button rounded className="w-32 mt-4" aria-label="Discover more button">
+              Discover More
+            </Button>
+          </div>
+          <motion.div
+            variants={{
+              show: {
+                transition: {
+                  staggerChildren: 0.1,
                 }
-              }}
-              //style={{ y: cardsY }}
-              //ref={cardsRef}
-              initial="hidden"
-              animate="show"
-              transition={{ type: "spring", stiffness: 300, damping: 200 }}
-              className="mt-16 flex-row grid gap-4 h-auto grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 relative"
-            >
-              {Features.map((feature, index) => <LandingFeatureCard feature={feature} key={index} />)}
+              }
+            }}
+            initial="hidden"
+            animate="show"
+            transition={{ type: "spring", stiffness: 300, damping: 200 }}
+            className="mt-16 flex-row grid gap-4 h-auto grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 relative"
+          >
+            {Features.map((feature, index) => <LandingFeatureCard feature={feature} key={index} />)}
 
-              <div className="bg-landing_bg_2 opacity-25 absolute w-[800px] h-[800px] -left-[300px] -bottom-[300px] bg-no-repeat bg-contain -z-50"></div>
-              <div className="bg-landing_bg_3 opacity-20 absolute w-[800px] h-[800px] -right-[350px] -bottom-[300px] bg-no-repeat bg-contain -z-50"></div>
-            </motion.div>
-          </Parallax>
+            <div className="bg-landing_bg_2 opacity-25 absolute w-[800px] h-[800px] -left-[300px] -bottom-[300px] bg-no-repeat bg-contain -z-50"></div>
+            <div className="bg-landing_bg_3 opacity-20 absolute w-[800px] h-[800px] -right-[350px] -bottom-[300px] bg-no-repeat bg-contain -z-50"></div>
+          </motion.div>
           <Footer />
         </div>
-      </main >
+      </main>
 
       <AcceptCookies />
-    </div >
+    </div>
   )
 }
 

@@ -7,7 +7,6 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import ProgressBar from "@badrap/bar-of-progress";
-import { ParallaxProvider } from "react-scroll-parallax";
 
 const progress = new ProgressBar({
   size: 3,
@@ -65,9 +64,7 @@ const Notal = ({ Component, pageProps }) => {
       </Head>
       <AuthProvider>
         <NotalUIProvider>
-          <ParallaxProvider>
-            <Component {...pageProps} />
-          </ParallaxProvider>
+          <Component {...pageProps} />
         </NotalUIProvider>
       </AuthProvider>
     </ThemeProvider>
