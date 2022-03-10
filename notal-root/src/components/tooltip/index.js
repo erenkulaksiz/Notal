@@ -103,7 +103,7 @@ const Tooltip = ({
 
     const BuildTooltipContainer = BuildComponent({
         name: "Tooltip Container",
-        defaultClasses: "shadow-xl z-50 relative bg-white dark:bg-neutral-800 dark:shadow-black/60 shadow-neutral-400/70 whitespace-nowrap px-3 py-1 flex items-center justify-center rounded-xl text-sm shadow-xl text-black dark:text-white",
+        defaultClasses: "shadow-xl z-50 relative bg-white dark:bg-neutral-800 dark:shadow-black/60 shadow-neutral-800/30 whitespace-nowrap px-3 py-1 flex items-center justify-center rounded-xl text-sm shadow-xl text-black dark:text-white",
         extraClasses: containerClassName,
         conditionalClasses: [
             {

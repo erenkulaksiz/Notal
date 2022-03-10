@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+
 import {
     Button,
     Tooltip,
@@ -17,14 +19,19 @@ import FieldCardIndicator from "../fieldCardIndicator";
 
 const WorkspaceField = ({
     field,
-    skeleton = false
+    skeleton = false,
+    onCollapse,
+    collapsed,
 }) => {
 
     if (skeleton) {
         return (<WorkspaceFieldSkeleton />)
     }
 
-    return (<div className="h-full relative rounded shadow min-w-[280px] flex flex-col items-start dark:bg-neutral-800 bg-neutral-100 mr-2">
+    return (<motion.div
+
+        className="h-full relative rounded shadow min-w-[280px] flex flex-col items-start dark:bg-neutral-800 bg-neutral-100 mr-2"
+    >
         <div className="z-20 p-2 pr-1 w-full flex flex-row justify-between backdrop-blur-sm dark:bg-neutral-900/50 bg-white/50 pb-2 shadow-md shadow-neutral-200/50 dark:shadow-neutral-800/50 overflow-visible">
             <div className="flex flex-row items-center">
                 <FieldCardIndicator cardCount={field?.cards?.length} />
@@ -66,7 +73,7 @@ const WorkspaceField = ({
         </div>
         <WorkspaceAddCardButton title={field.title} />
 
-    </div>)
+    </motion.div>)
 }
 
 export default WorkspaceField;

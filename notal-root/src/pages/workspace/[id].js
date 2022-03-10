@@ -72,18 +72,19 @@ const Workspace = (props) => {
 
     useEffect(() => {
         (async () => {
-            if (workspaceData.data) {
-                if (workspaceData?.data?.error?.code == "auth/id-token-expired") {
-                    const token = await auth.users.getIdToken();
-                    const res = await CheckToken({ token: token.res, props });
-                    if (!res) {
-                        setTimeout(() => router.replace(router.asPath), 1000);
-                    }
-                } else {
-                    _setWorkspace(workspaceData.data);
-                    setLoadingWorkspace(false);
-                    //console.log("workspace:", workspaceData?.data);
-                }
+            if (workspaceData?.data?.error) {
+                console.error("swr error workspaceData: ", workspaceData?.data);
+            }
+            if (workspaceData?.data?.error?.code == "auth/id-token-expired") {
+                const token = await auth.users.getIdToken();
+                setTimeout(() => {
+                    router.replace(router.asPath);
+                    workspaceData.mutate();
+                }, 5000);
+            } else {
+                _setWorkspace(workspaceData.data);
+                setLoadingWorkspace(false);
+                //console.log("workspace:", workspaceData?.data);
             }
             if (workspaceData.error) {
                 console.error("Error with workspace: ", workspaceData.error);
@@ -101,28 +102,23 @@ const Workspace = (props) => {
                 } else {
                     setPrivateModal({ ...privateModal, visible: false });
                 }
-
-                const newWorkspace = { ..._workspace, data: { ..._workspace.data, title, desc, workspaceVisible } };
-                _setWorkspace(newWorkspace);
                 */
 
                 const data = await auth.workspace.editWorkspace({ id: _workspace?.data?._id, title, desc, workspaceVisible });
 
                 if (data.success) {
-                    //window.gtag('event', "editWorkspace", { login: "type:google/" + user.email });
+                    window.gtag('event', "editWorkspace", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
                     //router.replace(router.asPath);
-                    workspaceData.mutate();
+                    workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, title, desc, workspaceVisible } });
                 } else if (data?.error) {
                     console.error("error on delete workspace: ", data.error);
                 }
             }
         },
         starWorkspace: async () => {
-            //const newWorkspace = { ..._workspace, data: { ..._workspace, starred: !_workspace?.data?.starred } };
-            //_setWorkspace({ ...newWorkspace });
             const data = await auth.workspace.starWorkspace({ id: _workspace?.data?._id });
-
-            workspaceData.mutate();
+            window.gtag('event', "starWorkspace", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
+            workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, starred: !_workspace?.data?.starred } });
 
             if (data.success != true) {
                 console.log("error star workspace: ", data?.error);
@@ -253,7 +249,7 @@ const Workspace = (props) => {
                 )) : [1, 2, 3, 4].map((item) => (
                     <WorkspaceField skeleton key={item} /> // show skeleton loaders
                 ))}
-                {(!_workspaceValidating && !notFound && (!_workspace?.data?.fields || _workspace?.data?.fields?.length == 0))
+                {(!loadingWorkspace && !notFound && (!_workspace?.data?.fields || _workspace?.data?.fields?.length == 0))
                     && <WorkspaceAddFieldBanner />}
             </div>
             {notFound && <WorkspaceNotFound />}

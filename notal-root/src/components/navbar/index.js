@@ -55,9 +55,9 @@ const Navbar = ({
         <div className="w-1/2 flex items-center justify-end">
             {(validating) && <div className="flex flex-row items-center justify-center p-1 dark:bg-neutral-800 bg-neutral-100 shadow rounded-lg mr-2 px-3">
                 <Loading size="md" />
-                <span className="ml-2 text-sm">Loading...</span>
+                <span className="ml-2 text-sm sm:flex hidden">Loading...</span>
             </div>}
-            {(showHomeButton && (auth.authUser/* || user*/)) && <Link href="/home" passHref>
+            {(showHomeButton && (auth.authUser/* || user*/)) && !validating && <Link href="/home" passHref>
                 <Button
                     light
                     size="sm"

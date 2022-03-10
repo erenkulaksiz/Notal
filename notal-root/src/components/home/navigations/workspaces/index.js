@@ -35,7 +35,7 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
 
     const [loadingWorkspaces, setLoadingWorkspaces] = useState(true);
     const [filter, setFilter] = useState(null);
-    const [_workspaces, _setWorkspaces] = useState([]);
+    const [_workspaces, _setWorkspaces] = useState({});
     const [_workspacesFiltered, _setWorkspacesFiltered] = useState([]);
     const [_workspaceValidating, _setWorkspaceValidating] = useState(true);
 
@@ -46,17 +46,18 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
 
     useEffect(() => {
         (async () => {
-            if (workspacesData?.data?.success) {
-                if (workspacesData?.data?.error?.code == "auth/id-token-expired") {
-                    const token = await auth.users.getIdToken();
-                    const res = await CheckToken({ token: token.res, props });
-                    if (!res) {
-                        setTimeout(() => router.replace(router.asPath), 1000);
-                    }
-                } else {
-                    _setWorkspaces(workspacesData?.data?.data);
-                    setLoadingWorkspaces(false);
-                }
+            if (workspacesData?.data?.error) {
+                console.error("swr error workspacesData: ", workspacesData?.data);
+            }
+            if (workspacesData?.data?.error?.code == "auth/id-token-expired") {
+                const token = await auth.users.getIdToken();
+                setTimeout(() => {
+                    router.replace(router.asPath);
+                    workspacesData.mutate();
+                }, 5000);
+            } else {
+                _setWorkspaces(workspacesData?.data);
+                setLoadingWorkspaces(false);
             }
             if (workspacesData.error) {
                 console.error("swr err: ", workspacesData.error);
@@ -64,56 +65,41 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
         })();
     }, [workspacesData]);
 
+    console.log("_workspaces: ", _workspaces)
+
     useEffect(() => {
         _setWorkspaceValidating(workspacesData.isValidating);
         isValidating(workspacesData.isValidating);
     }, [workspacesData.isValidating]);
 
     useEffect(() => {
-        !_workspaces?.error &&
-            _setWorkspacesFiltered([...FilterWorkspaces({ workspaces: _workspaces, filter })]);
+        (!_workspaces?.error && !loadingWorkspaces) && _setWorkspacesFiltered(FilterWorkspaces({ workspaces: _workspaces?.data, filter }));
     }, [filter, _workspaces]);
 
     const workspace = {
         create: async ({ title, desc, starred }) => {
-            const newWorkspaces = _workspaces;
-            newWorkspaces.push({ title, desc, starred, createdAt: Date.now(), updatedAt: Date.now(), workspaceVisible: false });
-            _setWorkspaces([...newWorkspaces]);
-
-            await auth.workspace.createWorkspace({ title, desc, starred, workspaceVisible: false });
-
-            /*const authCookie = Cookies.get("auth");
-            const workspaces = await GetWorkspaces({ uid: validate?.uid, token: authCookie });
-            console.log("Got all workspaces: ", workspaces);
-            _setWorkspaces([...workspaces.data]);*/
-            workspacesData.mutate();
+            auth.workspace.createWorkspace({ title, desc, starred, workspaceVisible: false });
+            workspacesData.mutate({ ..._workspaces, data: [..._workspaces.data, { updatedAt: Date.now(), createdAt: Date.now(), title, desc, starred, workspaceVisible: false }] });
         },
         delete: async ({ id }) => {
             setDeleteModal({ visible: false, workspace: -1 }); // set visiblity to false and id to -1
 
-            const newWorkspaces = _workspaces;
-            newWorkspaces.splice(_workspaces.findIndex(el => el._id == id), 1);
-            _setWorkspaces([...newWorkspaces]);
+            const newWorkspaces = _workspaces.data;
+            newWorkspaces.splice(_workspaces.data.findIndex(el => el._id == id), 1);
 
             auth.workspace.deleteWorkspace({ id });
+
+            workspacesData.mutate({ ..._workspaces, data: [...newWorkspaces] });
         },
         star: async ({ id }) => {
-            const newWorkspaces = _workspaces;
+            const newWorkspaces = _workspaces.data;
             const workspaceIndex = newWorkspaces.findIndex(el => el._id == id)
             newWorkspaces[workspaceIndex].starred = !newWorkspaces[workspaceIndex].starred;
             newWorkspaces[workspaceIndex].updatedAt = Date.now(); // update date
-            _setWorkspaces([...newWorkspaces]);
 
-            const data = await auth.workspace.starWorkspace({ id });
-            if (data?.error) console.error("error on star workspace: ", data.error);
+            await auth.workspace.starWorkspace({ id });
+            workspacesData.mutate({ ..._workspaces, data: [...newWorkspaces] });
         },
-        /*
-        closeModal: () => {
-            setNewWorkspaceVisible(false);
-            setNewWorkspaceErr({ ...newWorkspace, desc: false, title: false });
-            setNewWorkspace({ ...newWorkspace, title: "", desc: "", starred: "" });
-        },
-        */
     }
 
     return (<div className="flex flex-1 px-8 py-4 flex-col overflow-y-auto overflow-x-hidden">
@@ -158,7 +144,6 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
         </div>
 
         <motion.div
-            transition={{ staggerChildren: .5 }}
             initial="hidden"
             animate="show"
             className="relative pb-4 mt-4 grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 items-start auto-rows-max"
@@ -172,16 +157,17 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
                     onDelete={() => setDeleteModal({ ...deleteModal, visible: true, workspace: element._id })}
                 />)}
             </AnimatePresence>
-            {(!loadingWorkspaces/* && !_workspaceValidating*/) && <AddWorkspaceButton onClick={() => setNewWorkspaceModal(true)} />}
+
+            {(!loadingWorkspaces) && <AddWorkspaceButton onClick={() => setNewWorkspaceModal(true)} workspaceLength={_workspacesFiltered?.length} />}
             {loadingWorkspaces && [1, 2, 3, 4].map((item) => <HomeWorkspaceCard skeleton key={item} />)}
 
-            <Button onClick={() => NotalUI.Toast.trigger({ title: "Selam!", desc: "ov yee" })}>
+            {/*<Button onClick={() => NotalUI.Toast.trigger({ title: "Selam!", desc: "ov yee" })}>
                 asdkasdj
-            </Button>
+            </Button>*/}
 
         </motion.div>
 
-        {((!loadingWorkspaces && !_workspaceValidating) && _workspacesFiltered.length == 0) && (
+        {(!_workspaceValidating && !loadingWorkspaces && _workspacesFiltered.length == 0) && (
             <div className="w-full h-full relative">
                 <AddWorkspaceBanner />
             </div>

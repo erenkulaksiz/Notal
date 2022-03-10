@@ -1,25 +1,17 @@
-
+// Function to filter workspaces and return filtered data.
+// @param {array} workspaces
+// @param {string} filter 
 export const FilterWorkspaces = ({ workspaces, filter }) => {
-    switch (filter) {
-        case "favorites":
-            if (workspaces) return workspaces.filter(el => el.starred == true);
-            else return []
-            break;
-        case "privateWorkspaces":
-            if (workspaces) return workspaces.filter(el => !!el?.workspaceVisible == false);
-            else return []
-            break;
-        case "createdAt":
-            if (workspaces) return workspaces?.sort((a, b) => { return a?.createdAt - b?.createdAt });
-            else return []
-            break;
-        case "updatedAt":
-            if (workspaces) return workspaces?.sort((a, b) => { return b?.updatedAt - a?.updatedAt });
-            else return []
-            break;
-        default:
-            if (workspaces) return workspaces?.sort((a, b) => { return a?.createdAt - b?.createdAt });
-            else return []
-            break;
+
+    if (!workspaces) return []
+
+    const filterObj = {
+        favorites: workspaces.filter(el => { return el.starred == true }),
+        privateWorkspaces: workspaces.filter(el => { return !!el?.workspaceVisible == false }),
+        createdAt: workspaces.sort((a, b) => { return a?.createdAt - b?.createdAt }),
+        updatedAt: workspaces.sort((a, b) => { return b?.updatedAt - a?.updatedAt }),
     }
+
+    if (!filterObj[filter]) return workspaces // Return default
+    return filterObj[filter]
 }

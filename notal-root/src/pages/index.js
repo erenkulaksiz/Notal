@@ -26,7 +26,7 @@ import {
   Features
 } from '@utils/constants';
 
-import { fetchValidate } from "@utils/fetcher";
+import { withPublic } from "@hooks/route";
 
 const Landing = (props) => {
   const router = useRouter();
@@ -142,7 +142,7 @@ const Landing = (props) => {
   )
 }
 
-export default Landing;
+export default withPublic(Landing);
 
 export async function getServerSideProps(ctx) {
   const { req, res, query } = ctx;

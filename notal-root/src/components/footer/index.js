@@ -51,9 +51,11 @@ const LandingFooter = () => {
                         Cookies
                     </a>
                 </Link>
-                <a href="#" className="uppercase mt-2 text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
-                    Privacy Policy
-                </a>
+                <Link href="/privacy-policy" passHref>
+                    <a className="uppercase mt-2 text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
+                        Privacy Policy
+                    </a>
+                </Link>
             </div>
         </div>
         <div className="w-full mt-10 flex flex-row justify-between">

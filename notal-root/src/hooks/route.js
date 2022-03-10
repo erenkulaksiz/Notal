@@ -27,7 +27,7 @@ export function withPublic(Component) {
 
         if (props.validate?.success || auth?.authUser) {
             isClient && router.replace("/home");
-            return LoadingPag;
+            return LoadingPage;
         }
         return <Component {...props} />
     }
@@ -51,7 +51,7 @@ export function withAuth(Component) {
             } else {
                 if (!auth.authUser) {
                     isClient && router.replace("/");
-                    return Loading;
+                    return LoadingPage;
                 }
             }
         }

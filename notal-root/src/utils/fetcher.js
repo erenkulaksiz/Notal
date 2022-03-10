@@ -5,7 +5,14 @@ export const fetchWorkspaces = ({ token, uid }) => fetch(`${server}/api/workspac
     method: "POST",
     headers: { 'Authorization': 'Bearer ' + token },
     body: JSON.stringify({ uid, action: "GET_WORKSPACES" }),
-}).then(response => response.json());
+})
+    .then(response => {
+        if (response.status >= 400 && response.status < 600) {
+            throw new Error("Bad response from server");
+        }
+        return response.json();
+    })
+    .catch(error => { return { success: false, error: { code: "workspace_error", errorMessage: error } } });
 
 export const fetchValidate = ({ url, token }) => fetch(`${server}/${url}`, {
     'Content-Type': 'application/json',
@@ -22,4 +29,5 @@ export const fetchWorkspace = ({ token, id }) => fetch(`${server}/api/workspace`
     method: "POST",
     headers: { 'Authorization': 'Bearer ' + token },
     body: JSON.stringify({ id, action: "GET_WORKSPACE" }),
-}).then(response => response.json());
+})
+    .then(response => response.json());

@@ -2,11 +2,11 @@ import { motion } from "framer-motion";
 
 import { AddIcon } from "@icons";
 
-const AddWorkspaceButton = ({ onClick }) => {
+const AddWorkspaceButton = ({ onClick, workspaceLength }) => {
     return (<motion.div
         variants={{
-            hidden: { y: -25, opacity: 0 },
-            show: { y: 0, opacity: 1 },
+            hidden: { y: -30, opacity: 0 },
+            show: { y: 0, opacity: 1, transition: { delay: .02 * workspaceLength } },
         }}
         transition={{ type: "spring", stiffness: 400, duration: 0.02, damping: 25 }}
         className="sticky bottom-4 z-20"
