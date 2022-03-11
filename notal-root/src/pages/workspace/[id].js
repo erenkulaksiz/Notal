@@ -19,7 +19,8 @@ import {
     WorkspaceField,
     WorkspaceNotFound,
     WorkspaceSidebar,
-    DeleteWorkspaceModal
+    DeleteWorkspaceModal,
+    AddFieldModal
 } from "@components";
 
 import { fetchWorkspace } from "@utils/fetcher";
@@ -97,34 +98,17 @@ const Workspace = (props) => {
     const handle = {
         editWorkspace: async ({ title = _workspace?.data?.title, desc = _workspace?.data?.desc, workspaceVisible = _workspace?.data?.workspaceVisible ?? false }) => {
             if (_workspace?.data?.title != title || _workspace?.data?.desc != desc || _workspace?.data?.workspaceVisible != workspaceVisible) {
-
-                /*
-                if (_workspace?.data?.workspaceVisible != workspaceVisible) {
-                    setPrivateModal({ ...privateModal, visible: true, desc: workspaceVisible ? "This workspace is now visible to everyone who has the link." : "This workspace is now set to private." })
-                } else {
-                    setPrivateModal({ ...privateModal, visible: false });
-                }
-                */
-
+                await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, title, desc, workspaceVisible } }, false);
                 const data = await auth.workspace.editWorkspace({ id: _workspace?.data?._id, title, desc, workspaceVisible });
-
-                if (data.success) {
-                    window.gtag('event', "editWorkspace", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
-                    //router.replace(router.asPath);
-                    workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, title, desc, workspaceVisible } });
-                } else if (data?.error) {
-                    console.error("error on delete workspace: ", data.error);
-                }
+                window.gtag('event', "editWorkspace", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
+                console.log("editData:", data);
             }
         },
         starWorkspace: async () => {
+            await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, starred: !_workspace?.data?.starred } }, false);
             const data = await auth.workspace.starWorkspace({ id: _workspace?.data?._id });
+            console.log("starData:", data);
             window.gtag('event', "starWorkspace", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
-            workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, starred: !_workspace?.data?.starred } });
-
-            if (data.success != true) {
-                console.log("error star workspace: ", data?.error);
-            }
         },
         addField: async ({ title }) => {
             const data = await auth.workspace.field.addField({ title: title, id: _workspace._id, filterBy: "index" });
@@ -241,8 +225,10 @@ const Workspace = (props) => {
                 onStarred={() => handle.starWorkspace()}
                 onSettings={() => { }}
                 onDelete={() => setDeleteWorkspace(true)}
-                onVisible={() => handle.editWorkspace({ workspaceVisible: _workspace?.data?.workspaceVisible ? !_workspace?.data?.workspaceVisible : true })}
-                onAddField={() => { }}
+                onVisible={() => handle.editWorkspace({
+                    workspaceVisible: _workspace?.data?.workspaceVisible ? !_workspace?.data?.workspaceVisible : true
+                })}
+                onAddField={() => setAddFieldModal(true)}
                 onEditWorkspace={() => { }}
             />}
             <div className="flex flex-1 flex-row overflow-y-auto pt-1 pb-2 pl-2 overflow-x-visible">
@@ -257,6 +243,14 @@ const Workspace = (props) => {
             </div>
             {notFound && <WorkspaceNotFound />}
         </div>
+
+        <AddFieldModal
+            open={addFieldModal}
+            onClose={() => setAddFieldModal(false)}
+            onAdd={({ title }) => {
+                setAddFieldModal(false);
+            }}
+        />
 
         <DeleteWorkspaceModal
             open={deleteWorkspaceModal}

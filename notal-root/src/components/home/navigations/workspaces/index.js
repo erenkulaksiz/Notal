@@ -83,22 +83,18 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
         },
         delete: async ({ id }) => {
             setDeleteModal({ visible: false, workspace: -1 }); // set visiblity to false and id to -1
-
             const newWorkspaces = _workspaces.data;
             newWorkspaces.splice(_workspaces.data.findIndex(el => el._id == id), 1);
-
             auth.workspace.deleteWorkspace({ id });
-
-            workspacesData.mutate({ ..._workspaces, data: [...newWorkspaces] });
+            workspacesData.mutate({ ..._workspaces, data: [...newWorkspaces] }, false);
         },
         star: async ({ id }) => {
             const newWorkspaces = _workspaces.data;
             const workspaceIndex = newWorkspaces.findIndex(el => el._id == id)
             newWorkspaces[workspaceIndex].starred = !newWorkspaces[workspaceIndex].starred;
             newWorkspaces[workspaceIndex].updatedAt = Date.now(); // update date
-
-            await auth.workspace.starWorkspace({ id });
-            workspacesData.mutate({ ..._workspaces, data: [...newWorkspaces] });
+            workspacesData.mutate({ ..._workspaces, data: [...newWorkspaces] }, false);
+            auth.workspace.starWorkspace({ id });
         },
     }
 

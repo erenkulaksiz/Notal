@@ -24,7 +24,7 @@ const HomeWorkspaceCard = ({ workspace, onStar, onDelete, index, skeleton = fals
             <motion.div
                 variants={{
                     hidden: { y: -30, opacity: 0 },
-                    show: { y: 0, opacity: 1, transition: { delay: .02 * index } },
+                    show: { y: 0, opacity: 1, transition: { delay: .012 * index } },
                 }}
                 //exit={{ y: -30, opacity: 0 }}
                 transition={{ type: "spring", stiffness: 400, duration: 0.02, damping: 25 }}
