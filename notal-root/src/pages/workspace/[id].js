@@ -82,8 +82,10 @@ const Workspace = (props) => {
                     workspaceData.mutate();
                 }, 5000);
             } else {
-                _setWorkspace(workspaceData.data);
-                setLoadingWorkspace(false);
+                if (workspaceData.data) {
+                    _setWorkspace(workspaceData.data);
+                    setLoadingWorkspace(false);
+                }
                 //console.log("workspace:", workspaceData?.data);
             }
             if (workspaceData.error) {
@@ -244,12 +246,13 @@ const Workspace = (props) => {
                 onEditWorkspace={() => { }}
             />}
             <div className="flex flex-1 flex-row overflow-y-auto pt-1 pb-2 pl-2 overflow-x-visible">
-                {!loadingWorkspace ? _workspace?.data?.fields?.map((field) => (
-                    <WorkspaceField field={field} key={field._id} />
-                )) : [1, 2, 3, 4].map((item) => (
+                {loadingWorkspace && [1, 2, 3, 4].map((item) => (
                     <WorkspaceField skeleton key={item} /> // show skeleton loaders
                 ))}
-                {(!loadingWorkspace && !notFound && (!_workspace?.data?.fields || _workspace?.data?.fields?.length == 0))
+                {!loadingWorkspace && _workspace?.data?.fields?.map((field) => (
+                    <WorkspaceField field={field} key={field._id} />
+                ))}
+                {(!loadingWorkspace && !notFound && !_workspaceValidating && (!_workspace?.data?.fields || _workspace?.data?.fields?.length == 0))
                     && <WorkspaceAddFieldBanner />}
             </div>
             {notFound && <WorkspaceNotFound />}

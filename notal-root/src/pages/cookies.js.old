@@ -44,7 +44,7 @@ const Cookies = (props) => {
                         GitHub oAuth
                     </li>
                 </ol>
-                We only use cookies to Authenticate you through our auth systems other than systems stated above. We are using Google Analytics to improve performance of our app & and analyze our traffic from all over the world.
+                We only use cookies to Authenticate you through our auth systems other than systems stated above. We are using Google Analytics to improve performance of our app & analyze our traffic from all over the world.
             </div>
         </div>
 

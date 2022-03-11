@@ -52,7 +52,13 @@ const AddWorkspaceModal = ({ open, onClose, onAdd }) => {
                 value={newWorkspace.desc}
             />
             <div className="py-4">
-                <Checkbox content="Add to favorites" value={newWorkspace.starred} onChange={(e) => setNewWorkspace({ ...newWorkspace, starred: !newWorkspace.starred })} />
+                <Checkbox
+                    id="starredWorkspace"
+                    value={newWorkspace.starred}
+                    onChange={(e) => setNewWorkspace({ ...newWorkspace, starred: !newWorkspace.starred })}
+                >
+                    Add to favorites
+                </Checkbox>
             </div>
         </Modal.Body>
         <Modal.Footer className="justify-between" animate>

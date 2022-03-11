@@ -26,8 +26,9 @@ const HomeWorkspaceCard = ({ workspace, onStar, onDelete, index, skeleton = fals
                     hidden: { y: -30, opacity: 0 },
                     show: { y: 0, opacity: 1, transition: { delay: .02 * index } },
                 }}
+                //exit={{ y: -30, opacity: 0 }}
                 transition={{ type: "spring", stiffness: 400, duration: 0.02, damping: 25 }}
-                className="relative xl:max-w-[420px] w-full h-32 shadow-xl rounded-xl p-3 flex flex-col justify-end"
+                className="relative xl:max-w-[500px] w-full h-32 shadow-xl rounded-xl p-3 flex flex-col justify-end"
             >
                 <div className="flex flex-row justify-between group-hover:scale-[97%] transition-all ease-in-out z-20">
                     <div className="flex items-start justify-end text-xl flex-col text-white max-w-[calc(100%-60px)]">
@@ -36,10 +37,10 @@ const HomeWorkspaceCard = ({ workspace, onStar, onDelete, index, skeleton = fals
                         </Tooltip>}
                         <Link href="/workspace/[id]" as={`/workspace/${workspace._id || "not-found"}`} passHref>
                             <a className="flex-col flex">
-                                <span className="font-medium text-ellipsis overflow-hidden whitespace-nowrap">
+                                <span className="font-medium text-ellipsis overflow-hidden whitespace-nowrap drop-shadow-xl">
                                     {workspace.title}
                                 </span>
-                                <span className="text-sm">
+                                <span className="text-sm drop-shadow-lg">
                                     {workspace.desc}
                                 </span>
                             </a>

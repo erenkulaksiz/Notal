@@ -9,7 +9,7 @@ import IconGalactic from "@public/icon_galactic.webp";
 const LandingFooter = () => {
     const { resolvedTheme } = useTheme();
 
-    return (<footer className="w-full pb-8 flex mt-24 flex-col z-20">
+    return (<footer className="w-full pb-8 flex flex-col z-20">
         <div className="h-0.5 dark:bg-neutral-700 bg-neutral-300 w-full rounded-full" />
         <div className="grid grid-cols-1 sm:grid-cols-3 mt-8 gap-8 sm:gap-4">
             <div className="flex flex-col">
@@ -34,9 +34,11 @@ const LandingFooter = () => {
             </div>
             <div className="flex flex-col">
                 <span className="uppercase dark:text-neutral-400 font-bold">Pages</span>
-                <a href="#" className="uppercase mt-2 text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
-                    Home
-                </a>
+                <Link href="/" passHref>
+                    <a href="#" className="uppercase mt-2 text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
+                        Home
+                    </a>
+                </Link>
                 <a href="#" className="uppercase mt-2 text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
                     Tutorial
                 </a>
@@ -46,16 +48,14 @@ const LandingFooter = () => {
             </div>
             <div className="flex flex-col">
                 <span className="uppercase dark:text-neutral-400 font-bold">Legal</span>
-                <Link href="/cookies" passHref>
-                    <a className="uppercase mt-2 text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
-                        Cookies
-                    </a>
-                </Link>
                 <Link href="/privacy-policy" passHref>
                     <a className="uppercase mt-2 text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
                         Privacy Policy
                     </a>
                 </Link>
+                <a href="mailto:erenkulaksz@gmail.com" className="uppercase mt-2 text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
+                    Contact
+                </a>
             </div>
         </div>
         <div className="w-full mt-10 flex flex-row justify-between">

@@ -126,7 +126,7 @@ const Landing = (props) => {
             initial="hidden"
             animate="show"
             transition={{ type: "spring", stiffness: 300, damping: 200 }}
-            className="mt-16 flex-row grid gap-4 h-auto grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 relative"
+            className="mb-24 mt-16 flex-row grid gap-4 h-auto grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 relative"
           >
             {Features.map((feature, index) => <LandingFeatureCard feature={feature} key={index} />)}
 

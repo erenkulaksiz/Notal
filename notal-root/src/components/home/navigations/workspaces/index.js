@@ -56,16 +56,16 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
                     workspacesData.mutate();
                 }, 5000);
             } else {
-                _setWorkspaces(workspacesData?.data);
-                setLoadingWorkspaces(false);
+                if (workspacesData?.data?.success) {
+                    _setWorkspaces(workspacesData?.data);
+                    setLoadingWorkspaces(false);
+                }
             }
             if (workspacesData.error) {
                 console.error("swr err: ", workspacesData.error);
             }
         })();
     }, [workspacesData]);
-
-    console.log("_workspaces: ", _workspaces)
 
     useEffect(() => {
         _setWorkspaceValidating(workspacesData.isValidating);
@@ -158,8 +158,11 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
                 />)}
             </AnimatePresence>
 
-            {(!loadingWorkspaces) && <AddWorkspaceButton onClick={() => setNewWorkspaceModal(true)} workspaceLength={_workspacesFiltered?.length} />}
             {loadingWorkspaces && [1, 2, 3, 4].map((item) => <HomeWorkspaceCard skeleton key={item} />)}
+            {!loadingWorkspaces && <AddWorkspaceButton
+                onClick={() => setNewWorkspaceModal(true)}
+                workspaceLength={_workspacesFiltered?.length}
+            />}
 
             {/*<Button onClick={() => NotalUI.Toast.trigger({ title: "Selam!", desc: "ov yee" })}>
                 asdkasdj
