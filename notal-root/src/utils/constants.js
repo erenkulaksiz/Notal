@@ -21,7 +21,7 @@ export const CardColors = [
     {
         type: "color",
         name: "",
-        code: "currentColor",
+        code: "",
         showName: "None"
     },
     {

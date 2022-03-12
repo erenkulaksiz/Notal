@@ -5,9 +5,8 @@ import useSWR from "swr";
 import { useRouter } from "next/router";
 
 import useAuth from "@hooks/auth";
-import useNotalUI from "@hooks/notalui";
+//import useNotalUI from "@hooks/notalui";
 import { fetchWorkspaces } from "@utils/fetcher";
-import { CheckToken } from "@utils";
 import {
     AddWorkspaceBanner,
     AddWorkspaceButton,
@@ -16,8 +15,7 @@ import {
     HomeWorkspaceCard,
     Select,
     Tooltip,
-    HomeNavTitle,
-    Button
+    HomeNavTitle
 } from '@components';
 import {
     DashboardFilledIcon, FilterIcon
@@ -27,7 +25,7 @@ import { FilterWorkspaces } from "@utils/filterWorkspaces";
 const HomeNavWorkspaces = ({ validate, isValidating }) => {
     const auth = useAuth();
     const router = useRouter();
-    const NotalUI = useNotalUI();
+    //const NotalUI = useNotalUI();
 
     // Modals
     const [newWorkspaceModal, setNewWorkspaceModal] = useState(false);
@@ -50,7 +48,7 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
                 console.error("swr error workspacesData: ", workspacesData?.data);
             }
             if (workspacesData?.data?.error?.code == "auth/id-token-expired") {
-                const token = await auth.users.getIdToken();
+                //const token = await auth.users.getIdToken();
                 setTimeout(() => {
                     router.replace(router.asPath);
                     workspacesData.mutate();
@@ -106,13 +104,14 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
             <div className="flex-1 flex flex-row items-center justify-end">
                 <FilterIcon size={24} fill="currentColor" className="mr-4" />
                 <Tooltip
-                    content="Filter Workspaces"
+                    content={<label for="workspaceFilter">Filter Workspaces</label>}
                     direction="bottom"
                     allContainerClassName="sm:w-64 w-full"
                 >
                     <Select
                         onChange={e => setFilter(e.target.value)}
                         className="w-full"
+                        id="workspaceFilter"
                         options={[{
                             id: null,
                             text: "All Workspaces"

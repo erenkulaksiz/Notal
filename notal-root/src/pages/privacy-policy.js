@@ -1,9 +1,7 @@
 import Head from "next/head";
 
 import { ValidateToken } from "@utils";
-
 import { SecureIcon } from "@icons";
-
 import {
     Navbar,
     AcceptCookies,
@@ -23,13 +21,15 @@ const PrivacyPolicy = (props) => {
 
         <div className="sm:container px-4 sm:px-4 md:px-16 lg:px-16 w-full z-10 pt-8 mx-auto">
             <div className="text-3xl font-medium flex flex-row items-center border-b-2 border-neutral-800 pb-2">
-                <SecureIcon size={24} fill="currentColor" style={{ transform: "scale(1.4)" }} />
-                <h1 className="ml-3 flex flex-row items-end">
-                    Privacy Policy
-                    <h2 className="text-sm ml-2 text-neutral-400">
+                <SecureIcon size={24} fill="currentColor" style={{ transform: "scale(1.4)" }} className="mr-2" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-2 items-end">
+                    <h1 className="flex flex-row items-end">
+                        Privacy Policy
+                    </h1>
+                    <h1 className="text-sm text-neutral-400">
                         Last Updated: 11 March, 2022
-                    </h2>
-                </h1>
+                    </h1>
+                </div>
             </div>
             <div className="grid grid-cols-1 gap-4 mt-4 text-neutral-700 dark:text-neutral-300">
                 <p>
@@ -44,9 +44,9 @@ const PrivacyPolicy = (props) => {
             </h1>
             <div className="grid grid-cols-1 gap-4 mt-4 text-neutral-700 dark:text-neutral-300">
                 <p>
-                    <h2 className="text-xl mb-1 text-black dark:text-white">
+                    <h1 className="text-xl mb-1 text-black dark:text-white">
                         Interpretation
-                    </h2>
+                    </h1>
                     <p>
                         The words of which the initial letter is capitalized have meanings defined under the following conditions. The following definitions shall have the same meaning regardless of whether they appear in singular or in plural.
                     </p>
@@ -94,15 +94,15 @@ const PrivacyPolicy = (props) => {
                         </li>
                     </ul>
                 </p>
-                <h2 className="text-xl border-b-2 border-neutral-800 pb-2 mt-4 dark:text-white text-black">
+                <h1 className="text-xl border-b-2 border-neutral-800 pb-2 mt-4 dark:text-white text-black">
                     Collecting and Using Your Personal Data
-                </h2>
-                <h2 className="text-lg pb-2">
+                </h1>
+                <h1 className="text-lg pb-2">
                     Types of Data Collected
-                </h2>
-                <h2 className="text-md pb-2">
+                </h1>
+                <h1 className="text-md pb-2">
                     Personal Data
-                </h2>
+                </h1>
                 <p className="text-neutral-700 dark:text-neutral-300">
                     While using Our Service, We may ask You to provide Us with certain personally identifiable information that can be used to contact or identify You. Personally identifiable information may include, but is not limited to:
                 </p>
@@ -117,9 +117,9 @@ const PrivacyPolicy = (props) => {
                         Usage Data
                     </li>
                 </ul>
-                <h2 className="text-xl pb-2 mt-4 dark:text-white text-black">
+                <h1 className="text-xl pb-2 mt-4 dark:text-white text-black">
                     Usage Data
-                </h2>
+                </h1>
                 <p>
                     Usage Data is collected automatically when using the Service.
                 </p>
@@ -132,9 +132,9 @@ const PrivacyPolicy = (props) => {
                 <p>
                     We may also collect information that Your browser sends whenever You visit our Service or when You access the Service by or through a mobile device.
                 </p>
-                <h2 className="text-xl dark:text-white text-black">
+                <h1 className="text-xl dark:text-white text-black">
                     Information from Third-Party Social Media Services
-                </h2>
+                </h1>
                 <p>
                     The Company(s) allows You to create an account and log in to use the Service through the following Third-party Social Media Services:
                 </p>
@@ -152,9 +152,9 @@ const PrivacyPolicy = (props) => {
                 <p>
                     {"You may also have the option of sharing additional information with the Company through Your Third-Party Social Media Service's account. If You choose to provide such information and Personal Data, during registration or otherwise, You are giving the Company permission to use, share, and store it in a manner consistent with this Privacy Policy."}
                 </p>
-                <h2 className="text-xl dark:text-white text-black">
+                <h1 className="text-xl dark:text-white text-black">
                     Tracking Technologies and Cookies
-                </h2>
+                </h1>
                 <p>
                     We use Cookies and similar tracking technologies to track the activity on Our Service and store certain information. Tracking technologies used are beacons, tags, and scripts to collect and track information and to improve and analyze Our Service. The technologies We use may include:
                 </p>
@@ -169,9 +169,9 @@ const PrivacyPolicy = (props) => {
                 <p>
                     For more information about the cookies we use and your choices regarding cookies, please visit our Cookies Policy or the Cookies section of our Privacy Policy.
                 </p>
-                <h2 className="text-xl dark:text-white text-black">
+                <h1 className="text-xl dark:text-white text-black">
                     Use of Your Personal Data
-                </h2>
+                </h1>
                 <p>
                     The Company may use Personal Data for the following purposes:
                 </p>
@@ -212,33 +212,33 @@ const PrivacyPolicy = (props) => {
                         With Your consent: We may disclose Your personal information for any other purpose with Your consent.
                     </li>
                 </ul>
-                <h2 className="text-xl dark:text-white text-black">
+                <h1 className="text-xl dark:text-white text-black">
                     Retention of Your Personal Data
-                </h2>
+                </h1>
                 <p>
                     The Company will retain Your Personal Data only for as long as is necessary for the purposes set out in this Privacy Policy. We will retain and use Your Personal Data to the extent necessary to comply with our legal obligations (for example, if we are required to retain your data to comply with applicable laws), resolve disputes, and enforce our legal agreements and policies.
                 </p>
                 <p>
                     The Company will also retain Usage Data for internal analysis purposes. Usage Data is generally retained for a shorter period of time, except when this data is used to strengthen the security or to improve the functionality of Our Service, or We are legally obligated to retain this data for longer time periods.
                 </p>
-                <h2 className="text-xl dark:text-white text-black">
+                <h1 className="text-xl dark:text-white text-black">
                     Disclosure of Your Personal Data
-                </h2>
-                <h2 className="text-md dark:text-white text-black">
+                </h1>
+                <h1 className="text-md dark:text-white text-black">
                     Business Transactions
-                </h2>
+                </h1>
                 <p>
                     If the Company is involved in a merger, acquisition or asset sale, Your Personal Data may be transferred. We will provide notice before Your Personal Data is transferred and becomes subject to a different Privacy Policy.
                 </p>
-                <h2 className="text-md dark:text-white text-black">
+                <h1 className="text-md dark:text-white text-black">
                     Law enforcement
-                </h2>
+                </h1>
                 <p>
                     Under certain circumstances, the Company may be required to disclose Your Personal Data if required to do so by law or in response to valid requests by public authorities (e.g. a court or a government agency).
                 </p>
-                <h2 className="text-md dark:text-white text-black">
+                <h1 className="text-md dark:text-white text-black">
                     Other legal requirements
-                </h2>
+                </h1>
                 <p>
                     The Company may disclose Your Personal Data in the good faith belief that such action is necessary to:
                 </p>
@@ -259,33 +259,33 @@ const PrivacyPolicy = (props) => {
                         Protect against legal liability
                     </li>
                 </ul>
-                <h2 className="text-md dark:text-white text-black">
+                <h1 className="text-md dark:text-white text-black">
                     Security of Your Personal Data
-                </h2>
+                </h1>
                 <p>
                     The security of Your Personal Data is important to Us, but remember that no method of transmission over the Internet, or method of electronic storage is 100% secure. While We strive to use commercially acceptable means to protect Your Personal Data, We cannot guarantee its absolute security.
                 </p>
-                <h2 className="text-md dark:text-white text-black">
+                <h1 className="text-md dark:text-white text-black">
                     {"Children's Privacy"}
-                </h2>
+                </h1>
                 <p>
                     Our Service does not address anyone under the age of 13. We do not knowingly collect personally identifiable information from anyone under the age of 13. If You are a parent or guardian and You are aware that Your child has provided Us with Personal Data, please contact Us. If We become aware that We have collected Personal Data from anyone under the age of 13 without verification of parental consent, We take steps to remove that information from Our servers.
                 </p>
                 <p>
                     {"If We need to rely on consent as a legal basis for processing Your information and Your country requires consent from a parent, We may require Your parent's consent before We collect and use that information."}
                 </p>
-                <h2 className="text-md dark:text-white text-black">
+                <h1 className="text-md dark:text-white text-black">
                     Links to Other Websites
-                </h2>
+                </h1>
                 <p>
                     {"Our Service may contain links to other websites that are not operated by Us. If You click on a third party link, You will be directed to that third party's site. We strongly advise You to review the Privacy Policy of every site You visit."}
                 </p>
                 <p>
                     We have no control over and assume no responsibility for the content, privacy policies or practices of any third party sites or services.
                 </p>
-                <h2 className="text-2xl font-semibold dark:text-white text-black border-b-2 border-neutral-800 pb-2">
+                <h1 className="text-2xl font-semibold dark:text-white text-black border-b-2 border-neutral-800 pb-2">
                     Changes to this Privacy Policy
-                </h2>
+                </h1>
                 <p>
                     We may update Our Privacy Policy from time to time. We will notify You of any changes by posting the new Privacy Policy on this page.
                 </p>
@@ -301,10 +301,10 @@ const PrivacyPolicy = (props) => {
                 <p>
                     If you have any questions about this Privacy Policy, You can contact us:
                 </p>
-                <p className="text-blue-700 mb-16 flex flex-col">
+                <div className="text-blue-700 flex flex-col pb-16">
                     <a href="mailto:erenkulaksz@gmail.com">erenkulaksz@gmail.com</a>
-                    <a href="https://twitter.com/notalapp" target="_blank" rel="noreferrer">twitter.com/notalapp</a>
-                </p>
+                    <a href="https://twitter.com/notalapp" target="_blank" rel="noreferrer" className="text-blue-700">twitter.com/notalapp</a>
+                </div>
             </div>
 
             <Footer />

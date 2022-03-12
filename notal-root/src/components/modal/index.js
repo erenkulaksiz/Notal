@@ -43,7 +43,7 @@ const Modal = ({ children, open, blur, onClose, className, animate = false, clos
     return (show && <ModalPortal>
         <Backdrop blur={blur} onClose={onClose} open={open} setShow={setShow}>
             <Content blur={blur} className={className} animate={animate}>
-                {closeBtn && <div className="absolute right-2 top-2">
+                {closeBtn && <div className="absolute right-2 top-2 z-50">
                     <button onClick={onClose} className="fill-neutral-600 hover:fill-neutral-700 rounded-lg">
                         <CrossIcon size={24} />
                     </button>

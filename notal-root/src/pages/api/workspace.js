@@ -297,9 +297,9 @@ export default async function handler(req, res) {
                                 _id: ObjectId(),
                             }
                         }
-                    }, { returnDocument: 'after' }, (err, documents) => {
+                    }, (err) => {
                         if (!err) {
-                            res.status(200).send({ success: true, data: documents.value.fields });
+                            res.status(200).send({ success: true });
                         } else {
                             res.status(400).send({ success: false, error: new Error(err).message });
                         }

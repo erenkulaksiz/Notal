@@ -12,7 +12,9 @@ import {
 import {
     MoreIcon,
     EditIcon,
-    FilterIcon
+    FilterIcon,
+    DeleteIcon,
+    SettingsIcon
 } from "@icons";
 
 import FieldCardIndicator from "../fieldCardIndicator";
@@ -20,7 +22,11 @@ import FieldCardIndicator from "../fieldCardIndicator";
 const WorkspaceField = ({
     field,
     skeleton = false,
+    onSettings,
+    onDelete,
     onCollapse,
+    onAddCard,
+    onDeleteCard,
     collapsed,
 }) => {
 
@@ -51,10 +57,10 @@ const WorkspaceField = ({
                     direction="bottom"
                     content={<div className="flex flex-row p-1">
                         <Button size="md" className="px-2">
-                            <EditIcon size={24} fill="currentColor" />
+                            <SettingsIcon size={24} fill="currentColor" />
                         </Button>
-                        <Button size="md" className="px-2 ml-1">
-                            <FilterIcon size={24} fill="currentColor" />
+                        <Button size="md" className="px-2 ml-1" onClick={onDelete}>
+                            <DeleteIcon size={24} fill="currentColor" />
                         </Button>
                     </div>}
                 >
@@ -64,14 +70,21 @@ const WorkspaceField = ({
                 </Tooltip>
             </div>
         </div>
-        <div className="overflow-auto h-full">
+        <div className="overflow-auto h-full w-full">
             {field?.cards && field?.cards.map((card, index) =>
-                <WorkspaceFieldCard card={card} key={card._id} />
+                <WorkspaceFieldCard
+                    card={card}
+                    key={card._id}
+                    onDelete={() => onDeleteCard({ id: card._id })}
+                />
             )}
             {(field?.cards?.length == 0 || !field?.cards)
                 && <WorkspaceAddCardBanner />}
         </div>
-        <WorkspaceAddCardButton title={field.title} />
+        <WorkspaceAddCardButton
+            title={field.title}
+            onAddCard={onAddCard}
+        />
 
     </motion.div>)
 }

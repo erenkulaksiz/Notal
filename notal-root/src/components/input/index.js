@@ -8,8 +8,10 @@ const Input = ({
     containerClassName,
     className,
     height,
+    textarea = false,
     rounded = false,
-    icon
+    icon,
+    id,
 }) => {
 
     const BuildInputContainer = BuildComponent({
@@ -27,7 +29,7 @@ const Input = ({
             {
                 false: "rounded-xl",
                 true: "rounded-full",
-            },
+            }
         ],
         selectedClasses: [
             fullWidth,
@@ -47,17 +49,22 @@ const Input = ({
             },
             {
                 true: "absolute pl-8"
+            },
+            {
+                true: "resize-none"
             }
         ],
         selectedClasses: [
             rounded,
-            icon && true
+            icon && true,
+            textarea
         ]
     });
 
     return (<div className={BuildInputContainer.classes}>
         {icon && <span className="z-20 absolute left-2 fill-inherit" style={{ transform: "scale(0.8)" }}>{icon}</span>}
-        <input value={value} type="text" onChange={onChange} className={BuildInput.classes} placeholder={placeholder} />
+        {textarea && <textarea id={id} value={value} type="text" onChange={onChange} className={BuildInput.classes} placeholder={placeholder} />}
+        {!textarea && <input id={id} value={value} type="text" onChange={onChange} className={BuildInput.classes} placeholder={placeholder} />}
     </div>)
 }
 

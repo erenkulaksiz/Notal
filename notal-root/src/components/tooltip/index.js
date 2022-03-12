@@ -72,7 +72,7 @@ const Tooltip = ({
             {
                 top: "bottom-[calc(100%+5px)]",
                 right: "left-[calc(100%+5px)]",
-                left: "right-[calc(100%)+5px]",
+                left: "right-[calc(100%+5px)]",
                 bottom: "top-[calc(100%+5px)]"
             },
             {

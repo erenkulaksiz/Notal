@@ -39,17 +39,21 @@ const AddWorkspaceModal = ({ open, onClose, onAdd }) => {
         </Modal.Title >
         <Modal.Body className="grid grid-cols-1 gap-2 pb-2" animate>
             {/*<Input fullWidth icon={<UserIcon size={24} />} containerClassName="fill-neutral-600" placeholder="Workspace Title" />*/}
+            <label for="workspaceTitle" className="">Workspace Title</label>
             <Input
                 fullWidth
                 placeholder="Workspace Title"
                 onChange={(e) => setNewWorkspace({ ...newWorkspace, title: e.target.value })}
                 value={newWorkspace.title}
+                id="workspaceTitle"
             />
+            <label for="workspaceDescription">Workspace Description</label>
             <Input
                 fullWidth
                 placeholder="Workspace Description"
                 onChange={(e) => setNewWorkspace({ ...newWorkspace, desc: e.target.value })}
                 value={newWorkspace.desc}
+                id="workspaceDescription"
             />
             <div className="py-4">
                 <Checkbox

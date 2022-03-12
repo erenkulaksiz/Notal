@@ -20,7 +20,8 @@ import {
     WorkspaceNotFound,
     WorkspaceSidebar,
     DeleteWorkspaceModal,
-    AddFieldModal
+    AddFieldModal,
+    AddCardModal
 } from "@components";
 
 import { fetchWorkspace } from "@utils/fetcher";
@@ -97,27 +98,25 @@ const Workspace = (props) => {
 
     const handle = {
         editWorkspace: async ({ title = _workspace?.data?.title, desc = _workspace?.data?.desc, workspaceVisible = _workspace?.data?.workspaceVisible ?? false }) => {
-            if (_workspace?.data?.title != title || _workspace?.data?.desc != desc || _workspace?.data?.workspaceVisible != workspaceVisible) {
-                await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, title, desc, workspaceVisible } }, false);
-                const data = await auth.workspace.editWorkspace({ id: _workspace?.data?._id, title, desc, workspaceVisible });
-                window.gtag('event', "editWorkspace", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
-                console.log("editData:", data);
-            }
+            if (_workspace?.data?.title == title && _workspace?.data?.desc == desc && _workspace?.data?.workspaceVisible == workspaceVisible) return;
+            await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, title, desc, workspaceVisible } }, false);
+            const data = await auth.workspace.editWorkspace({ id: _workspace?.data?._id, title, desc, workspaceVisible });
+            window.gtag("event", "editWorkspace", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
+            console.log("editData:", data);
         },
         starWorkspace: async () => {
             await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, starred: !_workspace?.data?.starred } }, false);
             const data = await auth.workspace.starWorkspace({ id: _workspace?.data?._id });
             console.log("starData:", data);
-            window.gtag('event', "starWorkspace", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
+            window.gtag("event", "starWorkspace", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
         },
-        addField: async ({ title }) => {
-            const data = await auth.workspace.field.addField({ title: title, id: _workspace._id, filterBy: "index" });
-
-            if (data.success) {
-                router.replace(router.asPath);
-            } else {
-                console.log("addfield error: ", data?.error);
-            }
+        addField: async ({ title, filterBy }) => {
+            const currFields = _workspace?.data?.fields || [];
+            await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: [...currFields, { title, updatedAt: Date.now(), createdAt: Date.now(), filterBy }] } }, false)
+            const data = await auth.workspace.field.addField({ title, id: _workspace?.data?._id, filterBy });
+            workspaceData.mutate(); // Refresh data in order to get new ID's
+            console.log("addField data: ", data);
+            window.gtag("event", "addField", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
         },
         editField: async ({ id, title }) => {
             const data = await auth.workspace.field.editField({ id, title, workspaceId: _workspace._id });
@@ -129,59 +128,36 @@ const Workspace = (props) => {
             }
         },
         deleteField: async ({ id }) => {
-            const newFields = _workspace;
-            newFields.fields.splice(_workspace.fields.findIndex(el => el._id == id), 1);
-            _setWorkspace({ ...newFields });
-
-            const data = await auth.workspace.field.removeField({ id, workspaceId: _workspace._id });
-
-            if (data.success != true) {
-                console.log("delete field error: ", data?.error);
-            }
+            const newFields = _workspace?.data?.fields;
+            newFields.splice(_workspace?.data?.fields.findIndex(el => el._id == id), 1);
+            await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: newFields } }, false);
+            const data = await auth.workspace.field.removeField({ id, workspaceId: _workspace?.data?._id });
+            console.log("deleteField data: ", data);
+            window.gtag("event", "deleteField", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
         },
         deleteWorkspace: async () => {
             const data = await auth.workspace.deleteWorkspace({ id: _workspace?.data?._id });
-
-            if (data.success) {
-                router.replace("/home");
-            } else if (data?.error) {
-                console.error("error on delete workspace: ", data.error);
-            }
+            if (data.success) router.replace("/home");
+            else if (data?.error) console.error("error on delete workspace: ", data.error);
         },
         addCardToField: async ({ fieldId, title, desc, color, tag }) => {
-            const newFields = _workspace;
-            newFields.fields[_workspace.fields.findIndex(el => el._id == fieldId)].cards?.push({ title, desc, color, createdAt: Date.now(), tag });
-            _setWorkspace(newFields);
-
+            const newFields = _workspace?.data?.fields;
+            newFields[_workspace?.data?.fields?.findIndex(el => el._id == fieldId)].cards?.push({ title, desc, color, createdAt: Date.now(), updatedAt: Date.now(), tag });
+            await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: newFields } }, false);
             const data = await auth.workspace.field.addCard({
-                id: fieldId,
-                workspaceId: _workspace._id,
-                title,
-                desc,
-                color,
-                tag
+                id: fieldId, workspaceId: _workspace?.data?._id, title, desc, color, tag
             });
-
-            console.log("addCardToField res: ", data);
-
-            if (data.success != true) {
-                console.log("add card error: ", data?.error);
-            } else {
-                _setWorkspace({ ..._workspace, fields: data.data });
-            }
+            console.log("addCardToField data: ", data);
+            workspaceData.mutate();
+            window.gtag("event", "addCardToField", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
         },
         deleteCard: async ({ id, fieldId }) => {
-            const newFields = _workspace;
-            const cardIndex = newFields.fields[_workspace.fields.findIndex(el => el._id == fieldId)].cards.findIndex(el => el._id == id);
-            newFields.fields[_workspace.fields.findIndex(el => el._id == fieldId)].cards.splice(cardIndex, 1);
-            _setWorkspace({ ...newFields });
-
-            const data = await auth.workspace.field.removeCard({
-                id,
-                fieldId,
-                workspaceId: _workspace._id,
-            });
-
+            const newFields = _workspace?.data?.fields;
+            const cardIndex = newFields[_workspace?.data?.fields.findIndex(el => el._id == fieldId)].cards.findIndex(el => el._id == id);
+            newFields[_workspace?.data?.fields.findIndex(el => el._id == fieldId)].cards.splice(cardIndex, 1);
+            await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: newFields } }, false);
+            const data = await auth.workspace.field.removeCard({ id, fieldId, workspaceId: _workspace?.data?._id });
+            console.log("removeCard data: ", data);
             if (data.success != true) {
                 console.log("delete card error: ", data?.error);
             }
@@ -225,9 +201,7 @@ const Workspace = (props) => {
                 onStarred={() => handle.starWorkspace()}
                 onSettings={() => { }}
                 onDelete={() => setDeleteWorkspace(true)}
-                onVisible={() => handle.editWorkspace({
-                    workspaceVisible: _workspace?.data?.workspaceVisible ? !_workspace?.data?.workspaceVisible : true
-                })}
+                onVisible={() => handle.editWorkspace({ workspaceVisible: _workspace?.data?.workspaceVisible ? !_workspace?.data?.workspaceVisible : true })}
                 onAddField={() => setAddFieldModal(true)}
                 onEditWorkspace={() => { }}
             />}
@@ -236,7 +210,13 @@ const Workspace = (props) => {
                     <WorkspaceField skeleton key={item} /> // show skeleton loaders
                 ))}
                 {!loadingWorkspace && _workspace?.data?.fields?.map((field) => (
-                    <WorkspaceField field={field} key={field._id} />
+                    <WorkspaceField
+                        field={field}
+                        key={field._id}
+                        onDelete={() => handle.deleteField({ id: field._id })}
+                        onAddCard={() => setAddCardModal({ ...addCardModal, visible: true, field: field._id })}
+                        onDeleteCard={({ id }) => handle.deleteCard({ id, fieldId: field._id })}
+                    />
                 ))}
                 {(!loadingWorkspace && !notFound && !_workspaceValidating && (!_workspace?.data?.fields || _workspace?.data?.fields?.length == 0))
                     && <WorkspaceAddFieldBanner />}
@@ -244,14 +224,22 @@ const Workspace = (props) => {
             {notFound && <WorkspaceNotFound />}
         </div>
 
+        <AddCardModal
+            open={addCardModal.visible}
+            onClose={() => setAddCardModal({ ...addCardModal, visible: false })}
+            onAdd={({ title, desc, color, tag }) => {
+                handle.addCardToField({ fieldId: addCardModal.field, title, desc, color, tag });
+                setAddCardModal({ ...addCardModal, visible: false });
+            }}
+        />
         <AddFieldModal
             open={addFieldModal}
             onClose={() => setAddFieldModal(false)}
             onAdd={({ title }) => {
+                handle.addField({ title, filterBy: "index" });
                 setAddFieldModal(false);
             }}
         />
-
         <DeleteWorkspaceModal
             open={deleteWorkspaceModal}
             onClose={() => setDeleteWorkspace(false)}

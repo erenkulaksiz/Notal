@@ -1,14 +1,18 @@
-import { Modal, Button } from "@components";
+import { useState } from "react";
+import { Modal, Button, Input } from "@components";
 import { AddIcon, CrossIcon, CheckIcon } from "@icons";
 
 const AddFieldModal = ({ open, onClose, onAdd }) => {
+    const [newField, setNewField] = useState({ title: "Untitled" });
 
     const close = () => {
         onClose();
+        setNewField({ title: "Untitled" });
     }
 
     const submit = () => {
-
+        onAdd(newField);
+        close();
     }
 
     return (<Modal open={open} onClose={close} className="w-[90%] sm:w-[400px] p-4 px-5">
@@ -16,8 +20,15 @@ const AddFieldModal = ({ open, onClose, onAdd }) => {
             <AddIcon size={24} fill="currentColor" />
             <span className="text-lg font-medium"> Add Field</span>
         </Modal.Title>
-        <Modal.Body animate>
-            selam!
+        <Modal.Body className="grid grid-cols-1 gap-2 pb-2" animate>
+            <label for="fieldTitle">Field Title</label>
+            <Input
+                fullWidth
+                placeholder="Field Title"
+                onChange={(e) => setNewField({ ...newField, title: e.target.value })}
+                value={newField.title}
+                id="fieldTitle"
+            />
         </Modal.Body>
         <Modal.Footer className="justify-between" animate>
             <Button

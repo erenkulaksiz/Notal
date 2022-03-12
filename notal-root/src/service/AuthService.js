@@ -266,7 +266,7 @@ const AuthService = {
                 }).then(response => response.json());
 
                 if (data?.success) {
-                    return { success: true, data: data.data }
+                    return { success: true }
                 } else {
                     return { error: data?.error }
                 }
