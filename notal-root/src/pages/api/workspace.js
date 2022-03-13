@@ -294,6 +294,10 @@ export default async function handler(req, res) {
                 res.status(400).send({ success: false, error: "invalid-params" });
                 return;
             }
+            if (color && color.length > 7) {
+                res.status(400).send({ success: false, error: "ona izin veremiyoruz paşam" });
+                return;
+            }
             try {
                 const bearer = req.headers['authorization'];
                 if (typeof bearer !== 'undefined') {

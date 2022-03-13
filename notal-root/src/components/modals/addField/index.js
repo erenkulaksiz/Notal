@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Modal, Button, Input } from "@components";
 import { AddIcon, CrossIcon, CheckIcon } from "@icons";
 
-const AddFieldModal = ({ open, onClose, onAdd }) => {
+const AddFieldModal = ({ open, onClose, onAdd, workspaceTitle }) => {
     const [newField, setNewField] = useState({ title: "Untitled" });
 
     const close = () => {
@@ -18,7 +18,7 @@ const AddFieldModal = ({ open, onClose, onAdd }) => {
     return (<Modal open={open} onClose={close} className="w-[90%] sm:w-[400px] p-4 px-5">
         <Modal.Title animate>
             <AddIcon size={24} fill="currentColor" />
-            <span className="text-lg font-medium"> Add Field</span>
+            <span className="text-lg font-medium"> {`Add field to ${workspaceTitle}`}</span>
         </Modal.Title>
         <Modal.Body className="grid grid-cols-1 gap-2 pb-2" animate>
             <label htmlFor="fieldTitle">Field Title</label>

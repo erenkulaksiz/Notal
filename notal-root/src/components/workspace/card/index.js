@@ -9,10 +9,10 @@ const CardColor = ({ color }) => {
 const WorkspaceFieldCard = ({ card, onDelete, onSettings, preview, isOwner }) => {
     return (<div className="relative w-full group min-h-min flex flex-row dark:bg-neutral-900 bg-white border-solid border-b-2 border-b-neutral-100 dark:border-b-neutral-800">
         <CardColor color={card.color} />
-        <div className="flex flex-1 p-2 pl-4 max-w-full">
+        <div className="flex flex-1 p-2 pl-4 min-w-full">
             <div className="flex flex-col overflow-ellipsis w-full">
                 <div className="flex flex-row justify-between">
-                    <span className="text-xl font-medium break-before-left w-full">
+                    <span className="text-xl font-medium break-words w-full">
                         {card.title}
                     </span>
                     <div className="flex flex-row">

@@ -52,6 +52,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, workspace }) => {
                         workspaceVisible: workspace?.workspaceVisible,
                         title: editWorkspace.title,
                         desc: editWorkspace.desc,
+                        _id: workspace?._id,
                     }}
                     onStar={() => { }}
                     onDelete={() => { }}

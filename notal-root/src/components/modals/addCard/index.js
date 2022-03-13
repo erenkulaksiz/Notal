@@ -1,10 +1,13 @@
 import { useState } from "react";
+import { HexColorPicker, HexColorInput } from "react-colorful";
 import {
     Modal,
     Button,
     Input,
     WorkspaceFieldCard,
-    Select
+    Select,
+    Tooltip,
+    Checkbox
 } from "@components";
 import {
     AddIcon,
@@ -14,14 +17,16 @@ import {
 
 import { CardColors } from "@utils/constants";
 
-const AddCardModal = ({ open, onClose, onAdd }) => {
-    const [addCard, setAddCard] = useState({ title: "", desc: "", color: "", tag: { tag: "", tagColor: "" } })
+const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
+    const [addCard, setAddCard] = useState({ title: "", desc: "", color: "#ffffff", tag: { tag: "", tagColor: "" } })
     const [addCardErrors, setAddCardErrors] = useState({ title: false, desc: false, color: false, tag: false });
+    //const [colorPicker, setColorPicker] = useState({visible: false})
+    const [useColor, setUseColor] = useState(true);
 
     const close = () => {
         onClose();
         setAddCardErrors({ title: false, desc: false, color: false, tag: false });
-        setAddCard({ title: "", desc: "", color: "", tag: { tag: "", tagColor: "" } });
+        setAddCard({ ...addCard, title: "", desc: "", /*color: "",*/ tag: { tag: "", tagColor: "" } });
     }
 
     const submit = () => {
@@ -29,7 +34,12 @@ const AddCardModal = ({ open, onClose, onAdd }) => {
             setAddCardErrors({ ...addCardErrors, title: "Card title must be minimum 3 characters long." })
             return;
         }
-        onAdd({ title: addCard.title, desc: addCard.desc, color: addCard.color, tag: addCard.tag });
+        onAdd({
+            title: addCard.title,
+            desc: addCard.desc,
+            color: useColor ? addCard.color : "",
+            tag: addCard.tag
+        });
         close();
     }
 
@@ -38,11 +48,15 @@ const AddCardModal = ({ open, onClose, onAdd }) => {
             <div className="flex flex-col w-full justify-center items-center">
                 <div className="flex flex-row items-center">
                     <AddIcon size={24} fill="currentColor" />
-                    <span className="text-lg font-medium"> Add Card</span>
+                    <span className="text-lg font-medium">{`Add card to ${fieldTitle}`}</span>
                 </div>
                 <WorkspaceFieldCard
                     preview
-                    card={{ title: addCard.title || "Enter Card Title", desc: addCard.desc, color: addCard.color }}
+                    card={{
+                        title: addCard.title || "Enter Card Title",
+                        desc: addCard.desc,
+                        color: useColor ? addCard.color : ""
+                    }}
                 />
             </div>
         </Modal.Title>
@@ -69,14 +83,47 @@ const AddCardModal = ({ open, onClose, onAdd }) => {
                 id="cardDescription"
             />
             <label htmlFor="cardColor">Card Color</label>
-            <Select
-                onChange={e => setAddCard({ ...addCard, color: e.target.value })}
-                className="w-full"
-                options={[...CardColors.map(el => {
-                    return { id: el.code, text: el.name || "No Color", disabled: el.selectable == false }
-                })]}
-                id="cardColor"
-            />
+            <div className="flex items-center">
+                {useColor && <Tooltip
+                    useFocus
+                    blockContent={false}
+                    containerClassName="px-0 py-0"
+                    direction="top"
+                    content={<div className="flex flex-col relative">
+                        <HexColorPicker color={addCard.color} onChange={(color) => setAddCard({ ...addCard, color })} />
+                        <div className="flex flex-row flex-wrap">
+                            {CardColors.map((color, index) => <button
+                                key={index}
+                                className="w-6 h-6 m-1 rounded-lg"
+                                style={{ backgroundColor: color.code }}
+                                onClick={() => setAddCard({ ...addCard, color: color.code })}
+                            />)}
+                        </div>
+                    </div>}
+                >
+                    <input
+                        type="text"
+                        id="cardColor"
+                        value={addCard.color}
+                        className="p-0 w-20 h-7 rounded mr-2"
+                        style={{ backgroundColor: addCard.color || "gray" }}
+                        onChange={(e) => {
+                            setAddCard({ ...addCard, color: e.target.value });
+                            if (e.target.value == "") {
+                                setUseColor(false);
+                            }
+                        }}
+                        maxLength={7}
+                    />
+                </Tooltip>}
+                <Checkbox
+                    id="useCardColor"
+                    value={!useColor}
+                    onChange={(e) => setUseColor(!useColor)}
+                >
+                    No Color
+                </Checkbox>
+            </div>
         </Modal.Body>
         <Modal.Footer className="justify-between" animate>
             <Button

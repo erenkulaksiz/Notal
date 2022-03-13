@@ -30,6 +30,7 @@
     "prettier": "^2.5.1",
     "pretty-ms": "^7.0.1",
     "react": "17.0.2",
+    "react-colorful": "^5.5.1",
     "react-dom": "17.0.2",
     "swr": "^1.2.2",
     "workbox-window": "^6.4.2"

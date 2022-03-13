@@ -69,7 +69,7 @@ page_path: window.location.pathname,
                 />
             </CriticalCssHead>
             <body>
-                <noscript className="p-2 absolute">If you are seeing this message, that means <strong>JavaScript has been disabled on your browser</strong>, please <strong>enable JavaScript</strong> to make this app work.</noscript>
+                <noscript className="p-2 absolute" style={{ zIndex: 999 }}>If you are seeing this message, that means <strong>JavaScript has been disabled on your browser</strong>, please <strong>enable JavaScript</strong> to make this app work.</noscript>
                 <Main />
                 <NextScript />
             </body>

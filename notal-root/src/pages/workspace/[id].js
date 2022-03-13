@@ -40,9 +40,9 @@ const Workspace = (props) => {
     // Modals
     const [privateModal, setPrivateModal] = useState({ visible: false, desc: "" });
 
-    const [addFieldModal, setAddFieldModal] = useState(false);
+    const [addFieldModal, setAddFieldModal] = useState({ visible: false, workspaceTitle: "" });
     const [deleteWorkspaceModal, setDeleteWorkspace] = useState(false);
-    const [addCardModal, setAddCardModal] = useState({ visible: false, field: "" });
+    const [addCardModal, setAddCardModal] = useState({ visible: false, fieldId: "", fieldTitle: "" });
     const [editCardModal, setEditCardModal] = useState({ visible: false, card: {}, fieldId: "" });
 
     const [settingsModal, setSettingsModal] = useState(false);
@@ -205,7 +205,7 @@ const Workspace = (props) => {
                 onSettings={() => setSettingsModal(true)}
                 onDelete={() => setDeleteWorkspace(true)}
                 onVisible={() => handle.editWorkspace({ workspaceVisible: _workspace?.data?.workspaceVisible ? !_workspace?.data?.workspaceVisible : true })}
-                onAddField={() => setAddFieldModal(true)}
+                onAddField={() => setAddFieldModal({ visible: true, workspaceTitle: _workspace?.data?.title })}
             />}
             <div className="flex flex-1 flex-row overflow-y-auto pt-1 pb-2 pl-2 overflow-x-visible">
                 {loadingWorkspace && [1, 2, 3, 4].map((item) => (
@@ -216,7 +216,7 @@ const Workspace = (props) => {
                         field={field}
                         key={field._id}
                         onDelete={() => handle.deleteField({ id: field._id })}
-                        onAddCard={() => setAddCardModal({ ...addCardModal, visible: true, field: field._id })}
+                        onAddCard={() => setAddCardModal({ ...addCardModal, visible: true, fieldId: field._id, fieldTitle: field.title })}
                         onDeleteCard={({ id }) => handle.deleteCard({ id, fieldId: field._id })}
                         isOwner={isOwner}
                     />
@@ -238,18 +238,20 @@ const Workspace = (props) => {
         />
         <AddCardModal
             open={addCardModal.visible}
+            fieldTitle={addCardModal.fieldTitle}
             onClose={() => setAddCardModal({ ...addCardModal, visible: false })}
             onAdd={({ title, desc, color, tag }) => {
-                handle.addCardToField({ fieldId: addCardModal.field, title, desc, color, tag });
+                handle.addCardToField({ fieldId: addCardModal.fieldId, title, desc, color, tag });
                 setAddCardModal({ ...addCardModal, visible: false });
             }}
         />
         <AddFieldModal
-            open={addFieldModal}
-            onClose={() => setAddFieldModal(false)}
+            open={addFieldModal.visible}
+            workspaceTitle={addFieldModal.workspaceTitle}
+            onClose={() => setAddFieldModal({ ...addFieldModal, visible: false })}
             onAdd={({ title }) => {
                 handle.addField({ title, filterBy: "index" });
-                setAddFieldModal(false);
+                setAddFieldModal({ ...addFieldModal, visible: false });
             }}
         />
         <DeleteWorkspaceModal

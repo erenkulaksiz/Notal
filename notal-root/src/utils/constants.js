@@ -20,12 +20,6 @@ import {
 export const CardColors = [
     {
         type: "color",
-        name: "",
-        code: "",
-        showName: "None"
-    },
-    {
-        type: "color",
         name: "Red",
         code: "#a30b0b",
         showName: "Red",
@@ -47,13 +41,6 @@ export const CardColors = [
         name: "Yellow",
         code: "#D28519",
         showName: "Yellow",
-    },
-    {
-        type: "color",
-        name: "Custom (coming soon)",
-        showName: "Custom (coming soon)",
-        code: "gray",
-        selectable: false,
     }
 ];
 
