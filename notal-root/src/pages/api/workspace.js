@@ -26,7 +26,7 @@ export default async function handler(req, res) {
 
     const body = JSON.parse(req.body);
 
-    const { uid, title, desc, action, starred, id, workspaceId, color, fieldId, filterBy, swapType, cardId, toFieldId, toCardId, workspaceVisible, tag } = body ?? "";
+    const { uid, title, desc, action, starred, id, workspaceId, color, fieldId, filterBy, swapType, cardId, toFieldId, toCardId, workspaceVisible, tag, owner } = body ?? "";
 
     const workspaceAction = {
         create: async () => {
@@ -163,7 +163,7 @@ export default async function handler(req, res) {
                                     res.status(400).send({ success: false, error: "invalid-params" });
                                 }
                             }).catch(error => {
-                                res.status(400).json({ success: false, error: error.code == "auth/argument-error" ? "user-workspace-private" : error });
+                                res.status(400).json({ success: false, error: error.code == "auth/argument-error" ? "user-workspace-private" : error.code });
                                 return; // dont run code below
                             });
                         } else {
@@ -228,22 +228,37 @@ export default async function handler(req, res) {
             }
         },
         addfield: async () => {
-            if (!id || !uid || !filterBy) {
+            if (!id || !uid || !filterBy || !owner) {
                 res.status(400).send({ success: false, error: "invalid-params" });
                 return;
             }
             try {
-                await workspacesCollection.updateOne({ "_id": ObjectId(id) }, {
-                    $push: {
-                        fields: {
-                            title,
-                            createdAt: Date.now(),
-                            updatedAt: Date.now(),
-                            filterBy,
-                            _id: ObjectId(),
+                const bearer = req.headers['authorization'];
+                if (typeof bearer !== 'undefined') {
+                    const bearerToken = bearer?.split(' ')[1];
+                    await admin.auth().verifyIdToken(bearerToken).then(async (decodedToken) => {
+                        const user = await usersCollection.findOne({ uid: owner });
+                        if (user.uid == decodedToken.user_id) {
+                            await workspacesCollection.updateOne({ "_id": ObjectId(id) }, {
+                                $push: {
+                                    fields: {
+                                        title,
+                                        createdAt: Date.now(),
+                                        updatedAt: Date.now(),
+                                        filterBy,
+                                        owner,
+                                        _id: ObjectId(),
+                                    }
+                                }
+                            });
+                        } else {
+                            res.status(400).send({ success: false, error: "invalid-params" });
                         }
-                    }
-                });
+                    })
+                } else {
+                    res.status(400).send({ success: false, error: "invalid-params" });
+                }
+
                 res.status(200).send({ success: true });
             } catch (error) {
                 res.status(400).send({ success: false, error: new Error(error).message });
@@ -275,36 +290,52 @@ export default async function handler(req, res) {
             // id: field id
 
             console.log(color, title, desc, workspaceId, uid, id);
-            if (!id || !uid || !workspaceId || !title /*|| !desc || !color*/) {
+            if (!id || !uid || !workspaceId || !title || !owner) {
                 res.status(400).send({ success: false, error: "invalid-params" });
                 return;
             }
-
             try {
-                workspacesCollection.findOneAndUpdate({ "_id": ObjectId(workspaceId), "fields._id": ObjectId(id) },
-                    {
-                        $push: {
-                            "fields.$.cards": {
-                                title,
-                                desc,
-                                color,
-                                createdAt: Date.now(),
-                                updatedAt: Date.now(),
-                                tag: {
-                                    tag: tag.tag,
-                                    tagColor: tag.tagColor,
-                                },
-                                _id: ObjectId(),
-                            }
-                        }
-                    }, (err) => {
-                        if (!err) {
-                            res.status(200).send({ success: true });
+                const bearer = req.headers['authorization'];
+                if (typeof bearer !== 'undefined') {
+                    const bearerToken = bearer?.split(' ')[1];
+                    await admin.auth().verifyIdToken(bearerToken).then(async (decodedToken) => {
+                        const user = await usersCollection.findOne({ uid: owner });
+                        if (user.uid == decodedToken.user_id) {
+                            workspacesCollection.findOneAndUpdate({ "_id": ObjectId(workspaceId), "fields._id": ObjectId(id) },
+                                {
+                                    $push: {
+                                        "fields.$.cards": {
+                                            title,
+                                            desc,
+                                            color,
+                                            createdAt: Date.now(),
+                                            updatedAt: Date.now(),
+                                            tag: {
+                                                tag: tag.tag,
+                                                tagColor: tag.tagColor,
+                                            },
+                                            owner: user.uid,
+                                            _id: ObjectId(),
+                                        }
+                                    }
+                                }, (err) => {
+                                    if (!err) {
+                                        res.status(200).send({ success: true });
+                                    } else {
+                                        res.status(400).send({ success: false, error: new Error(err).message });
+                                    }
+                                }
+                            )
                         } else {
-                            res.status(400).send({ success: false, error: new Error(err).message });
+                            res.status(400).send({ success: false, error: "invalid-params" });
                         }
-                    }
-                )
+                    }).catch(error => {
+                        res.status(400).json({ success: false, error: error.code });
+                        return; // dont run code below
+                    });
+                } else {
+                    res.status(400).send({ success: false, error: "invalid-params" });
+                }
             } catch (error) {
                 res.status(400).send({ success: false, error: new Error(error).message });
             }

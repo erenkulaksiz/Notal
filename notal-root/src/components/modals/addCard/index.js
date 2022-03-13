@@ -15,28 +15,40 @@ import {
 import { CardColors } from "@utils/constants";
 
 const AddCardModal = ({ open, onClose, onAdd }) => {
-    const [addCard, setAddCard] = useState({ title: "", desc: "", color: "", tag: { tag: "asd", tagColor: "#baa30f" } })
+    const [addCard, setAddCard] = useState({ title: "", desc: "", color: "", tag: { tag: "", tagColor: "" } })
+    const [addCardErrors, setAddCardErrors] = useState({ title: false, desc: false, color: false, tag: false });
 
     const close = () => {
         onClose();
-        setAddCard({ title: "", desc: "", color: "", tag: { tag: "asd", tagColor: "#baa30f" } });
+        setAddCardErrors({ title: false, desc: false, color: false, tag: false });
+        setAddCard({ title: "", desc: "", color: "", tag: { tag: "", tagColor: "" } });
     }
 
     const submit = () => {
+        if (addCard.title.length < 3) {
+            setAddCardErrors({ ...addCardErrors, title: "Card title must be minimum 3 characters long." })
+            return;
+        }
         onAdd({ title: addCard.title, desc: addCard.desc, color: addCard.color, tag: addCard.tag });
         close();
     }
 
     return (<Modal open={open} onClose={close} className="w-[90%] sm:w-[400px] p-4 px-5">
         <Modal.Title animate>
-            <WorkspaceFieldCard
-                preview
-                card={{ title: addCard.title || "Enter Card Title", desc: addCard.desc, color: addCard.color }}
-            />
+            <div className="flex flex-col w-full justify-center items-center">
+                <div className="flex flex-row items-center">
+                    <AddIcon size={24} fill="currentColor" />
+                    <span className="text-lg font-medium"> Add Card</span>
+                </div>
+                <WorkspaceFieldCard
+                    preview
+                    card={{ title: addCard.title || "Enter Card Title", desc: addCard.desc, color: addCard.color }}
+                />
+            </div>
         </Modal.Title>
         <Modal.Body className="grid grid-cols-1 gap-2 pb-2 pt-4" animate>
             {/*<Input fullWidth icon={<UserIcon size={24} />} containerClassName="fill-neutral-600" placeholder="Workspace Title" />*/}
-            <label for="cardTitle">Card Title</label>
+            <label htmlFor="cardTitle">Card Title</label>
             <Input
                 fullWidth
                 placeholder="Card Title"
@@ -44,7 +56,8 @@ const AddCardModal = ({ open, onClose, onAdd }) => {
                 value={addCard.title}
                 id="cardTitle"
             />
-            <label for="cardDescription">Card Description</label>
+            {addCardErrors.title != false && <span className="text-red-500">{addCardErrors.title}</span>}
+            <label htmlFor="cardDescription">Card Description</label>
             <Input
                 fullWidth
                 textarea
@@ -55,12 +68,12 @@ const AddCardModal = ({ open, onClose, onAdd }) => {
                 value={addCard.desc}
                 id="cardDescription"
             />
-            <label for="cardColor">Card Color</label>
+            <label htmlFor="cardColor">Card Color</label>
             <Select
                 onChange={e => setAddCard({ ...addCard, color: e.target.value })}
                 className="w-full"
                 options={[...CardColors.map(el => {
-                    return { id: el.code, text: el.name || "Select Color", disabled: el.selectable == false }
+                    return { id: el.code, text: el.name || "No Color", disabled: el.selectable == false }
                 })]}
                 id="cardColor"
             />

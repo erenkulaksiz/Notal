@@ -158,7 +158,7 @@ const AuthService = {
             if (data?.success) {
                 return { ...data }
             } else {
-                return { error: data?.error }
+                return { success: false, error: data?.error }
             }
         },
         removeWorkspace: async ({ id }) => {
@@ -173,7 +173,7 @@ const AuthService = {
             if (data?.success) {
                 return { success: true }
             } else {
-                return { error: data?.error }
+                return { success: false, error: data?.error }
             }
         },
         editWorkspace: async ({ id, title, desc, workspaceVisible }) => {
@@ -188,7 +188,7 @@ const AuthService = {
             if (data?.success) {
                 return { success: true }
             } else {
-                return { error: data?.error }
+                return { success: false, error: data?.error }
             }
         },
         starWorkspace: async ({ id }) => {
@@ -203,24 +203,25 @@ const AuthService = {
             if (data?.success) {
                 return { success: true }
             } else {
-                return { error: data?.error }
+                return { success: false, error: data?.error }
             }
         },
         field: {
-            addField: async ({ title, id, filterBy }) => {
+            addField: async ({ title, id, filterBy, owner, token }) => {
                 // id: workspaceId
                 const auth = getAuth();
 
                 const data = await fetch(`${server}/api/workspace`, {
                     'Content-Type': 'application/json',
                     method: "POST",
-                    body: JSON.stringify({ title, id, action: "ADDFIELD", uid: auth?.currentUser?.uid, filterBy }),
+                    headers: { 'Authorization': 'Bearer ' + token },
+                    body: JSON.stringify({ title, id, action: "ADDFIELD", uid: auth?.currentUser?.uid, filterBy, owner }),
                 }).then(response => response.json());
 
                 if (data?.success) {
                     return { success: true }
                 } else {
-                    return { error: data?.error }
+                    return { success: false, error: data?.error }
                 }
             },
             removeField: async ({ id, workspaceId }) => {
@@ -235,7 +236,7 @@ const AuthService = {
                 if (data?.success) {
                     return { success: true }
                 } else {
-                    return { error: data?.error }
+                    return { success: false, error: data?.error }
                 }
             },
             editField: async ({ id, workspaceId, title }) => {
@@ -250,25 +251,26 @@ const AuthService = {
                 if (data?.success) {
                     return { success: true }
                 } else {
-                    return { error: data?.error }
+                    return { success: false, error: data?.error }
                 }
             },
         },
         card: {
-            addCard: async ({ id, workspaceId, title, desc, color, tag }) => {
+            addCard: async ({ id, workspaceId, title, desc, color, tag, owner, token }) => {
                 // id field id
                 const auth = getAuth();
 
                 const data = await fetch(`${server}/api/workspace`, {
                     'Content-Type': 'application/json',
                     method: "POST",
-                    body: JSON.stringify({ id, action: "ADDCARD", uid: auth?.currentUser?.uid, workspaceId, title, desc, color, tag }),
+                    headers: { 'Authorization': 'Bearer ' + token },
+                    body: JSON.stringify({ id, action: "ADDCARD", uid: auth?.currentUser?.uid, workspaceId, title, desc, color, tag, owner }),
                 }).then(response => response.json());
 
                 if (data?.success) {
                     return { success: true }
                 } else {
-                    return { error: data?.error }
+                    return { success: false, error: data?.error }
                 }
             },
             removeCard: async ({ id, workspaceId, fieldId }) => {
@@ -283,7 +285,7 @@ const AuthService = {
                 if (data?.success) {
                     return { success: true }
                 } else {
-                    return { error: data?.error }
+                    return { success: false, error: data?.error }
                 }
             },
             editCard: async ({ id, workspaceId, fieldId, title, desc, color }) => {
@@ -298,7 +300,7 @@ const AuthService = {
                 if (data?.success) {
                     return { success: true }
                 } else {
-                    return { error: data?.error }
+                    return { success: false, error: data?.error }
                 }
             },
         }

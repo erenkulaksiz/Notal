@@ -1,4 +1,5 @@
 import { server } from "config";
+import Cookies from "js-cookie";
 
 export const fetchWorkspaces = ({ token, uid }) => fetch(`${server}/api/workspace`, {
     'Content-Type': 'application/json',

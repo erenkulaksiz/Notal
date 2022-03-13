@@ -39,4 +39,5 @@ export { default as AddFieldModal } from "./modals/addField";
 export { default as AddCardModal } from "./modals/addCard";
 export { default as AddWorkspaceModal } from "./modals/addWorkspace";
 export { default as DeleteWorkspaceModal } from "./modals/deleteWorkspace";
+export { default as WorkspaceSettingsModal } from "./modals/workspaceSettings";
 export { default as LoginModal } from "./modals/login";

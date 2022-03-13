@@ -153,9 +153,9 @@ export function AuthProvider(props) {
             return res;
         },
         field: {
-            addField: async ({ id, title, filterBy }) => {
+            addField: async ({ id, title, filterBy, owner, token }) => {
                 // id: workspaceId
-                return await AuthService.workspace.field.addField({ id, title, filterBy });
+                return await AuthService.workspace.field.addField({ id, title, filterBy, owner, token });
             },
             removeField: async ({ id, workspaceId }) => {
                 return await AuthService.workspace.field.removeField({ id, workspaceId });
@@ -166,9 +166,9 @@ export function AuthProvider(props) {
             editCard: async ({ id, workspaceId, fieldId, title, desc, color }) => {
                 return await AuthService.workspace.card.editCard({ id, workspaceId, fieldId, title, desc, color });
             },
-            addCard: async ({ id, workspaceId, title, desc, color, tag }) => {
+            addCard: async ({ id, workspaceId, title, desc, color, tag, owner, token }) => {
                 // id as field id
-                return await AuthService.workspace.card.addCard({ id, workspaceId, title, desc, color, tag });
+                return await AuthService.workspace.card.addCard({ id, workspaceId, title, desc, color, tag, owner, token });
             },
             removeCard: async ({ id, workspaceId, fieldId }) => {
                 return await AuthService.workspace.card.removeCard({ id, workspaceId, fieldId });

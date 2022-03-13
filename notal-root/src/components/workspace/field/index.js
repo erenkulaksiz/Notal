@@ -28,6 +28,7 @@ const WorkspaceField = ({
     onAddCard,
     onDeleteCard,
     collapsed,
+    isOwner
 }) => {
 
     if (skeleton) {
@@ -35,7 +36,6 @@ const WorkspaceField = ({
     }
 
     return (<motion.div
-
         className="h-full relative rounded shadow min-w-[280px] flex flex-col items-start dark:bg-neutral-800 bg-neutral-100 mr-2"
     >
         <div className="z-20 p-2 pr-1 w-full flex flex-row justify-between backdrop-blur-sm dark:bg-neutral-900/50 bg-white/50 pb-2 shadow-md shadow-neutral-200/50 dark:shadow-neutral-800/50 overflow-visible">
@@ -51,7 +51,7 @@ const WorkspaceField = ({
                         <FilterIcon size={24} className="dark:fill-white fill-black" />
                     </Button>
                 </Tooltip>*/}
-                <Tooltip
+                {isOwner && <Tooltip
                     containerClassName="px-1 p-1"
                     blockContent={false}
                     direction="bottom"
@@ -67,25 +67,25 @@ const WorkspaceField = ({
                     <Button light size="sm" className="px-2 rounded-md active:scale-90">
                         <MoreIcon size={24} className="dark:fill-white fill-black" />
                     </Button>
-                </Tooltip>
+                </Tooltip>}
             </div>
         </div>
-        <div className="overflow-auto h-full w-full">
+        <div className="overflow-auto h-full w-full pl-[2px] pr-[2px]">
             {field?.cards && field?.cards.map((card, index) =>
                 <WorkspaceFieldCard
                     card={card}
                     key={card._id}
                     onDelete={() => onDeleteCard({ id: card._id })}
+                    isOwner={isOwner}
                 />
             )}
             {(field?.cards?.length == 0 || !field?.cards)
                 && <WorkspaceAddCardBanner />}
         </div>
-        <WorkspaceAddCardButton
+        {isOwner && <WorkspaceAddCardButton
             title={field.title}
             onAddCard={onAddCard}
-        />
-
+        />}
     </motion.div>)
 }
 

@@ -21,7 +21,8 @@ import {
     WorkspaceSidebar,
     DeleteWorkspaceModal,
     AddFieldModal,
-    AddCardModal
+    AddCardModal,
+    WorkspaceSettingsModal
 } from "@components";
 
 import { fetchWorkspace } from "@utils/fetcher";
@@ -33,7 +34,7 @@ const Workspace = (props) => {
 
     const workspaceData = useSWR(
         ["api/fetchWorkspace/" + id],
-        () => fetchWorkspace({ token: Cookies.get("auth"), id })
+        () => fetchWorkspace({ token: Cookies.get("auth"), id }) // get token from cookie
     );
 
     // Modals
@@ -44,7 +45,7 @@ const Workspace = (props) => {
     const [addCardModal, setAddCardModal] = useState({ visible: false, field: "" });
     const [editCardModal, setEditCardModal] = useState({ visible: false, card: {}, fieldId: "" });
 
-    const [editWorkspace, setEditWorkspace] = useState(false);
+    const [settingsModal, setSettingsModal] = useState(false);
     const [editField, setEditField] = useState({ visible: false, title: "" });
 
     // Workspace
@@ -112,8 +113,9 @@ const Workspace = (props) => {
         },
         addField: async ({ title, filterBy }) => {
             const currFields = _workspace?.data?.fields || [];
-            await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: [...currFields, { title, updatedAt: Date.now(), createdAt: Date.now(), filterBy }] } }, false)
-            const data = await auth.workspace.field.addField({ title, id: _workspace?.data?._id, filterBy });
+            await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: [...currFields, { title, updatedAt: Date.now(), createdAt: Date.now(), filterBy, owner: auth.authUser.uid }] } }, false)
+            const token = await auth.users.getIdToken(); // get refreshed token
+            const data = await auth.workspace.field.addField({ title, id: _workspace?.data?._id, filterBy, owner: auth.authUser.uid, token: token.res });
             workspaceData.mutate(); // Refresh data in order to get new ID's
             console.log("addField data: ", data);
             window.gtag("event", "addField", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
@@ -142,10 +144,11 @@ const Workspace = (props) => {
         },
         addCardToField: async ({ fieldId, title, desc, color, tag }) => {
             const newFields = _workspace?.data?.fields;
-            newFields[_workspace?.data?.fields?.findIndex(el => el._id == fieldId)].cards?.push({ title, desc, color, createdAt: Date.now(), updatedAt: Date.now(), tag });
+            newFields[_workspace?.data?.fields?.findIndex(el => el._id == fieldId)].cards?.push({ title, desc, color, createdAt: Date.now(), updatedAt: Date.now(), tag, owner: auth.authUser.uid });
             await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: newFields } }, false);
+            const token = await auth.users.getIdToken(); // get refreshed token
             const data = await auth.workspace.field.addCard({
-                id: fieldId, workspaceId: _workspace?.data?._id, title, desc, color, tag
+                id: fieldId, workspaceId: _workspace?.data?._id, title, desc, color, tag, owner: auth.authUser.uid, token: token.res,
             });
             console.log("addCardToField data: ", data);
             workspaceData.mutate();
@@ -199,11 +202,10 @@ const Workspace = (props) => {
                 workspaceStarred={_workspace?.data?.starred}
                 workspaceVisible={_workspace?.data?.workspaceVisible}
                 onStarred={() => handle.starWorkspace()}
-                onSettings={() => { }}
+                onSettings={() => setSettingsModal(true)}
                 onDelete={() => setDeleteWorkspace(true)}
                 onVisible={() => handle.editWorkspace({ workspaceVisible: _workspace?.data?.workspaceVisible ? !_workspace?.data?.workspaceVisible : true })}
                 onAddField={() => setAddFieldModal(true)}
-                onEditWorkspace={() => { }}
             />}
             <div className="flex flex-1 flex-row overflow-y-auto pt-1 pb-2 pl-2 overflow-x-visible">
                 {loadingWorkspace && [1, 2, 3, 4].map((item) => (
@@ -216,6 +218,7 @@ const Workspace = (props) => {
                         onDelete={() => handle.deleteField({ id: field._id })}
                         onAddCard={() => setAddCardModal({ ...addCardModal, visible: true, field: field._id })}
                         onDeleteCard={({ id }) => handle.deleteCard({ id, fieldId: field._id })}
+                        isOwner={isOwner}
                     />
                 ))}
                 {(!loadingWorkspace && !notFound && !_workspaceValidating && (!_workspace?.data?.fields || _workspace?.data?.fields?.length == 0))
@@ -224,6 +227,15 @@ const Workspace = (props) => {
             {notFound && <WorkspaceNotFound />}
         </div>
 
+        <WorkspaceSettingsModal
+            open={settingsModal}
+            workspace={_workspace?.data}
+            onClose={() => setSettingsModal(false)}
+            onSubmit={({ title, desc }) => {
+                handle.editWorkspace({ title, desc });
+                setSettingsModal(false);
+            }}
+        />
         <AddCardModal
             open={addCardModal.visible}
             onClose={() => setAddCardModal({ ...addCardModal, visible: false })}

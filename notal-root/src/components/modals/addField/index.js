@@ -21,7 +21,7 @@ const AddFieldModal = ({ open, onClose, onAdd }) => {
             <span className="text-lg font-medium"> Add Field</span>
         </Modal.Title>
         <Modal.Body className="grid grid-cols-1 gap-2 pb-2" animate>
-            <label for="fieldTitle">Field Title</label>
+            <label htmlFor="fieldTitle">Field Title</label>
             <Input
                 fullWidth
                 placeholder="Field Title"

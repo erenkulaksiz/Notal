@@ -15,7 +15,7 @@ import {
     StarFilledIcon,
 } from '@icons';
 
-const HomeWorkspaceCard = ({ workspace, onStar, onDelete, index, skeleton = false }) => {
+const HomeWorkspaceCard = ({ workspace, onStar, onDelete, index, skeleton = false, preview = false }) => {
 
     if (skeleton) return <HomeWorkspaceCardSkeleton />
 
@@ -46,7 +46,7 @@ const HomeWorkspaceCard = ({ workspace, onStar, onDelete, index, skeleton = fals
                             </a>
                         </Link>
                     </div>
-                    <div>
+                    {!preview && <div>
                         <Tooltip content={workspace?.starred ? "Remove from favorites" : "Add to favorites"}>
                             <Button className="mb-2 p-3 pt-1 pb-1" light onClick={onStar}>
                                 {workspace?.starred ? <StarFilledIcon size={24} fill="currentColor" /> : <StarOutlineIcon size={24} fill="currentColor" />}
@@ -57,7 +57,7 @@ const HomeWorkspaceCard = ({ workspace, onStar, onDelete, index, skeleton = fals
                                 <DeleteIcon size={24} fill="currentColor" />
                             </Button>
                         </Tooltip>
-                    </div>
+                    </div>}
                 </div>
                 <Link href="/workspace/[id]" as={`/workspace/${workspace._id || "not-found"}`} passHref>
                     <a className="cursor-pointer bg-gradient-to-t from-black/90 dark:from-black dark:to-trasparent to-black/30 group-hover:opacity-0 opacity-100 transition-all ease-in-out absolute left-0 right-0 top-0 bottom-0 rounded-xl z-10" />

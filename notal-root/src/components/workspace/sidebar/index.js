@@ -8,7 +8,6 @@ const WorkspaceSidebar = ({
     onVisible,
     onDelete,
     onAddField,
-    onEditWorkspace,
     workspaceStarred,
     workspaceVisible,
 }) => {
@@ -18,7 +17,6 @@ const WorkspaceSidebar = ({
         visible: () => onVisible(),
         delete: () => onDelete(),
         addfield: () => onAddField(),
-        edit: () => onEditWorkspace(),
     }
 
     return (<div className="flex flex-col items-center h-full sticky top-0 w-14 dark:bg-neutral-800 bg-neutral-100 shadow-xl dark:shadow-neutral-800 shadow-neutral-300 pt-2 z-30">

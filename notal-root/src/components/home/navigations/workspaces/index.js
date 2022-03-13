@@ -104,7 +104,7 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
             <div className="flex-1 flex flex-row items-center justify-end">
                 <FilterIcon size={24} fill="currentColor" className="mr-4" />
                 <Tooltip
-                    content={<label for="workspaceFilter">Filter Workspaces</label>}
+                    content={<label htmlFor="workspaceFilter">Filter Workspaces</label>}
                     direction="bottom"
                     allContainerClassName="sm:w-64 w-full"
                 >

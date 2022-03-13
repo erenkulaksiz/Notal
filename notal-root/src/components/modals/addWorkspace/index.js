@@ -39,7 +39,7 @@ const AddWorkspaceModal = ({ open, onClose, onAdd }) => {
         </Modal.Title >
         <Modal.Body className="grid grid-cols-1 gap-2 pb-2" animate>
             {/*<Input fullWidth icon={<UserIcon size={24} />} containerClassName="fill-neutral-600" placeholder="Workspace Title" />*/}
-            <label for="workspaceTitle" className="">Workspace Title</label>
+            <label htmlFor="workspaceTitle" className="">Workspace Title</label>
             <Input
                 fullWidth
                 placeholder="Workspace Title"
@@ -47,7 +47,8 @@ const AddWorkspaceModal = ({ open, onClose, onAdd }) => {
                 value={newWorkspace.title}
                 id="workspaceTitle"
             />
-            <label for="workspaceDescription">Workspace Description</label>
+            {newWorkspaceErr.title != false && <span className="text-red-500">{newWorkspaceErr.title}</span>}
+            <label htmlFor="workspaceDescription">Workspace Description</label>
             <Input
                 fullWidth
                 placeholder="Workspace Description"
