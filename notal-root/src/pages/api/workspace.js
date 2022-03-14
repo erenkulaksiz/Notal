@@ -33,7 +33,7 @@ export default async function handler(req, res) {
             }
 
             try {
-                await workspacesCollection.insertOne({
+                return await workspacesCollection.insertOne({
                     title,
                     desc,
                     starred,
@@ -42,10 +42,10 @@ export default async function handler(req, res) {
                     owner: uid,
                     workspaceVisible,
                 }).then(() => {
-                    res.status(200).send({ success: true });
+                    return res.status(200).send({ success: true });
                 });
             } catch (error) {
-                res.status(400).send({ success: false, error: new Error(error).message });
+                return res.status(400).send({ success: false, error });
             }
         },
         get_workspaces: async () => {

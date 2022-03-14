@@ -178,7 +178,7 @@ const AuthService = {
             const auth = getAuth();
             const token = await auth.currentUser.getIdToken();
 
-            const data = fetchWithAuth({
+            const data = await fetchWithAuth({
                 id,
                 action: "DELETE",
                 uid: auth?.currentUser?.uid
@@ -194,7 +194,7 @@ const AuthService = {
             const auth = getAuth();
             const token = await auth.currentUser.getIdToken();
 
-            const data = fetchWithAuth({
+            const data = await fetchWithAuth({
                 id,
                 action: "EDIT",
                 uid: auth?.currentUser?.uid,
@@ -213,7 +213,7 @@ const AuthService = {
             const auth = getAuth();
             const token = await auth.currentUser.getIdToken();
 
-            const data = fetchWithAuth({
+            const data = await fetchWithAuth({
                 id,
                 action: "STAR",
                 uid: auth?.currentUser?.uid
@@ -231,7 +231,7 @@ const AuthService = {
                 const auth = getAuth();
                 const token = await auth.currentUser.getIdToken();
 
-                const data = fetchWithAuth({
+                const data = await fetchWithAuth({
                     title,
                     id,
                     action: "ADDFIELD",
@@ -250,7 +250,7 @@ const AuthService = {
                 const auth = getAuth();
                 const token = await auth.currentUser.getIdToken();
 
-                const data = fetchWithAuth({
+                const data = await fetchWithAuth({
                     id,
                     action: "REMOVEFIELD",
                     uid: auth?.currentUser?.uid,
@@ -267,7 +267,7 @@ const AuthService = {
                 const auth = getAuth();
                 const token = await auth.currentUser.getIdToken();
 
-                const data = fetchWithAuth({
+                const data = await fetchWithAuth({
                     id,
                     action: "EDITFIELD",
                     uid: auth?.currentUser?.uid,
@@ -288,7 +288,7 @@ const AuthService = {
                 const auth = getAuth();
                 const token = await auth.currentUser.getIdToken();
 
-                const data = fetchWithAuth({
+                const data = await fetchWithAuth({
                     id,
                     action: "ADDCARD",
                     uid: auth?.currentUser?.uid,
@@ -309,7 +309,7 @@ const AuthService = {
                 const auth = getAuth();
                 const token = await auth.currentUser.getIdToken();
 
-                const data = fetchWithAuth({
+                const data = await fetchWithAuth({
                     id,
                     action: "REMOVECARD",
                     uid: auth?.currentUser?.uid,
@@ -327,7 +327,7 @@ const AuthService = {
                 const auth = getAuth();
                 const token = await auth.currentUser.getIdToken();
 
-                const data = fetchWithAuth({
+                const data = await fetchWithAuth({
                     id,
                     action: "EDITCARD",
                     uid: auth?.currentUser?.uid,
