@@ -326,6 +326,8 @@ export async function getServerSideProps(ctx) {
         [validate] = await Promise.all([
             ValidateToken({ token: authCookie })
         ]);
+
+        console.log("validate:", validate?.success, validate?.data?.uid, validate?.error);
     }
     return { props: { validate } }
 }

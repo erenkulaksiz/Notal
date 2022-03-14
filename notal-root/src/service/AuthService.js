@@ -5,6 +5,15 @@ import { server } from "../config";
 
 import Router from "next/router";
 
+const fetchWithAuth = async ({ ...rest }, token) => {
+    return await fetch(`${server}/api/workspace`, {
+        'Content-Type': 'application/json',
+        method: "POST",
+        headers: { 'Authorization': `Bearer ${token || ""}` },
+        body: JSON.stringify({ ...rest }),
+    }).then(response => response.json()).catch(error => { return error });
+}
+
 /**
  * AuthService for Notal
  *
@@ -104,7 +113,7 @@ const AuthService = {
                 })
         },
         createUser: async ({ email, password, fullname, username, paac }) => {
-            const auth = getAuth();
+            //const auth = getAuth();
             //const db = getDatabase();
 
             //await push(ref(db, "paacodes"), { valid: true, createDate: Date.now(), expireDate: Date.now() })
@@ -148,12 +157,16 @@ const AuthService = {
     workspace: {
         createWorkspace: async ({ title, desc, starred, workspaceVisible }) => {
             const auth = getAuth();
+            const token = await auth.currentUser.getIdToken();
 
-            const data = await fetch(`${server}/api/workspace`, {
-                'Content-Type': 'application/json',
-                method: "POST",
-                body: JSON.stringify({ uid: auth?.currentUser?.uid, title, desc, starred, action: "CREATE", workspaceVisible }),
-            }).then(response => response.json());
+            const data = await fetchWithAuth({
+                action: "CREATE",
+                uid: auth?.currentUser?.uid,
+                title,
+                desc,
+                starred,
+                workspaceVisible
+            }, token);
 
             if (data?.success) {
                 return { ...data }
@@ -163,12 +176,13 @@ const AuthService = {
         },
         removeWorkspace: async ({ id }) => {
             const auth = getAuth();
+            const token = await auth.currentUser.getIdToken();
 
-            const data = await fetch(`${server}/api/workspace`, {
-                'Content-Type': 'application/json',
-                method: "POST",
-                body: JSON.stringify({ id, action: "DELETE", uid: auth?.currentUser?.uid }),
-            }).then(response => response.json());
+            const data = fetchWithAuth({
+                id,
+                action: "DELETE",
+                uid: auth?.currentUser?.uid
+            }, token);
 
             if (data?.success) {
                 return { success: true }
@@ -178,12 +192,16 @@ const AuthService = {
         },
         editWorkspace: async ({ id, title, desc, workspaceVisible }) => {
             const auth = getAuth();
+            const token = await auth.currentUser.getIdToken();
 
-            const data = await fetch(`${server}/api/workspace`, {
-                'Content-Type': 'application/json',
-                method: "POST",
-                body: JSON.stringify({ id, action: "EDIT", uid: auth?.currentUser?.uid, title, desc, workspaceVisible }),
-            }).then(response => response.json());
+            const data = fetchWithAuth({
+                id,
+                action: "EDIT",
+                uid: auth?.currentUser?.uid,
+                title,
+                desc,
+                workspaceVisible
+            }, token);
 
             if (data?.success) {
                 return { success: true }
@@ -193,12 +211,13 @@ const AuthService = {
         },
         starWorkspace: async ({ id }) => {
             const auth = getAuth();
+            const token = await auth.currentUser.getIdToken();
 
-            const data = await fetch(`${server}/api/workspace`, {
-                'Content-Type': 'application/json',
-                method: "POST",
-                body: JSON.stringify({ id, action: "STAR", uid: auth?.currentUser?.uid }),
-            }).then(response => response.json());
+            const data = fetchWithAuth({
+                id,
+                action: "STAR",
+                uid: auth?.currentUser?.uid
+            }, token);
 
             if (data?.success) {
                 return { success: true }
@@ -207,16 +226,19 @@ const AuthService = {
             }
         },
         field: {
-            addField: async ({ title, id, filterBy, owner, token }) => {
+            addField: async ({ title, id, filterBy, owner }) => {
                 // id: workspaceId
                 const auth = getAuth();
+                const token = await auth.currentUser.getIdToken();
 
-                const data = await fetch(`${server}/api/workspace`, {
-                    'Content-Type': 'application/json',
-                    method: "POST",
-                    headers: { 'Authorization': 'Bearer ' + token },
-                    body: JSON.stringify({ title, id, action: "ADDFIELD", uid: auth?.currentUser?.uid, filterBy, owner }),
-                }).then(response => response.json());
+                const data = fetchWithAuth({
+                    title,
+                    id,
+                    action: "ADDFIELD",
+                    uid: auth?.currentUser?.uid,
+                    filterBy,
+                    owner
+                }, token);
 
                 if (data?.success) {
                     return { success: true }
@@ -226,12 +248,14 @@ const AuthService = {
             },
             removeField: async ({ id, workspaceId }) => {
                 const auth = getAuth();
+                const token = await auth.currentUser.getIdToken();
 
-                const data = await fetch(`${server}/api/workspace`, {
-                    'Content-Type': 'application/json',
-                    method: "POST",
-                    body: JSON.stringify({ id, action: "REMOVEFIELD", uid: auth?.currentUser?.uid, workspaceId }),
-                }).then(response => response.json());
+                const data = fetchWithAuth({
+                    id,
+                    action: "REMOVEFIELD",
+                    uid: auth?.currentUser?.uid,
+                    workspaceId
+                }, token);
 
                 if (data?.success) {
                     return { success: true }
@@ -241,12 +265,15 @@ const AuthService = {
             },
             editField: async ({ id, workspaceId, title }) => {
                 const auth = getAuth();
+                const token = await auth.currentUser.getIdToken();
 
-                const data = await fetch(`${server}/api/workspace`, {
-                    'Content-Type': 'application/json',
-                    method: "POST",
-                    body: JSON.stringify({ id, action: "EDITFIELD", uid: auth?.currentUser?.uid, workspaceId, title }),
-                }).then(response => response.json());
+                const data = fetchWithAuth({
+                    id,
+                    action: "EDITFIELD",
+                    uid: auth?.currentUser?.uid,
+                    workspaceId,
+                    title
+                }, token);
 
                 if (data?.success) {
                     return { success: true }
@@ -256,16 +283,21 @@ const AuthService = {
             },
         },
         card: {
-            addCard: async ({ id, workspaceId, title, desc, color, tag, owner, token }) => {
+            addCard: async ({ id, workspaceId, title, desc, color, tag }) => {
                 // id field id
                 const auth = getAuth();
+                const token = await auth.currentUser.getIdToken();
 
-                const data = await fetch(`${server}/api/workspace`, {
-                    'Content-Type': 'application/json',
-                    method: "POST",
-                    headers: { 'Authorization': 'Bearer ' + token },
-                    body: JSON.stringify({ id, action: "ADDCARD", uid: auth?.currentUser?.uid, workspaceId, title, desc, color, tag, owner }),
-                }).then(response => response.json());
+                const data = fetchWithAuth({
+                    id,
+                    action: "ADDCARD",
+                    uid: auth?.currentUser?.uid,
+                    workspaceId,
+                    title,
+                    desc,
+                    color,
+                    tag
+                }, token);
 
                 if (data?.success) {
                     return { success: true }
@@ -275,12 +307,15 @@ const AuthService = {
             },
             removeCard: async ({ id, workspaceId, fieldId }) => {
                 const auth = getAuth();
+                const token = await auth.currentUser.getIdToken();
 
-                const data = await fetch(`${server}/api/workspace`, {
-                    'Content-Type': 'application/json',
-                    method: "POST",
-                    body: JSON.stringify({ id, action: "REMOVECARD", uid: auth?.currentUser?.uid, workspaceId, fieldId }),
-                }).then(response => response.json());
+                const data = fetchWithAuth({
+                    id,
+                    action: "REMOVECARD",
+                    uid: auth?.currentUser?.uid,
+                    workspaceId,
+                    fieldId
+                }, token);
 
                 if (data?.success) {
                     return { success: true }
@@ -290,12 +325,18 @@ const AuthService = {
             },
             editCard: async ({ id, workspaceId, fieldId, title, desc, color }) => {
                 const auth = getAuth();
+                const token = await auth.currentUser.getIdToken();
 
-                const data = await fetch(`${server}/api/workspace`, {
-                    'Content-Type': 'application/json',
-                    method: "POST",
-                    body: JSON.stringify({ id, action: "EDITCARD", uid: auth?.currentUser?.uid, workspaceId, title, desc, color, fieldId }),
-                }).then(response => response.json());
+                const data = fetchWithAuth({
+                    id,
+                    action: "EDITCARD",
+                    uid: auth?.currentUser?.uid,
+                    workspaceId,
+                    title,
+                    desc,
+                    color,
+                    fieldId
+                }, token);
 
                 if (data?.success) {
                     return { success: true }

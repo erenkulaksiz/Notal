@@ -116,10 +116,27 @@ const Navbar = ({
                         <span>Sign Out</span>
                     </Button>
                 </div>
-            </details> : <Button gradient className="w-14 sm:w-32" size="sm" onClick={() => setModalVisible(true)} aria-label="Sign up or sign in button">
-                <LoginIcon size={24} fill="currentColor" style={{ display: "flex", transform: "scale(0.8)" }} />
-                <span className="hidden sm:flex">Sign Up/In</span>
-            </Button>}
+            </details> : <div className="flex flex-row">
+                <Button
+                    light
+                    className="w-16 sm:w-16 px-0 mr-2"
+                    size="sm"
+                    onClick={() => setModalVisible(true)}
+                    aria-label="Sign up button"
+                >
+                    <span className="dark:text-neutral-400 text-neutral-600 font-medium">Sign Up</span>
+                </Button>
+                <Button
+                    gradient
+                    className="w-14 sm:w-32"
+                    size="sm"
+                    onClick={() => setModalVisible(true)}
+                    aria-label="Sign in button"
+                >
+                    <LoginIcon size={24} fill="currentColor" style={{ display: "flex", transform: "scale(0.8)" }} />
+                    <span className="hidden sm:flex">Sign In</span>
+                </Button>
+            </div>}
             <style jsx>{`
             details[open] > summary:before {
                 position: fixed;

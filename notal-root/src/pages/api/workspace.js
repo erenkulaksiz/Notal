@@ -1,5 +1,4 @@
 const admin = require("firebase-admin");
-const { firebaseConfig } = require('../../config/firebaseApp.config');
 const { connectToDatabase } = require('../../../lib/mongodb');
 const ObjectId = require('mongodb').ObjectId;
 
@@ -8,14 +7,12 @@ const googleService = JSON.parse(process.env.NEXT_PUBLIC_GOOGLE_SERVICE);
 if (!admin.apps.length) {
     admin.initializeApp({
         credential: admin.credential.cert(googleService),
-        //databaseURL: firebaseConfig.databaseURL
     });
 }
 
 const { db } = await connectToDatabase();
 const workspacesCollection = db.collection("workspaces");
 const usersCollection = db.collection("users");
-//const fieldsCollection = db.collection("fields");
 
 export default async function handler(req, res) {
 
@@ -26,7 +23,7 @@ export default async function handler(req, res) {
 
     const body = JSON.parse(req.body);
 
-    const { uid, title, desc, action, starred, id, workspaceId, color, fieldId, filterBy, swapType, cardId, toFieldId, toCardId, workspaceVisible, tag, owner } = body ?? "";
+    const { uid, title, desc, action, starred, id, workspaceId, color, fieldId, filterBy, workspaceVisible, tag } = body ?? "";
 
     const workspaceAction = {
         create: async () => {
@@ -228,7 +225,7 @@ export default async function handler(req, res) {
             }
         },
         addfield: async () => {
-            if (!id || !uid || !filterBy || !owner) {
+            if (!id || !uid || !filterBy) {
                 res.status(400).send({ success: false, error: "invalid-params" });
                 return;
             }
@@ -237,7 +234,7 @@ export default async function handler(req, res) {
                 if (typeof bearer !== 'undefined') {
                     const bearerToken = bearer?.split(' ')[1];
                     await admin.auth().verifyIdToken(bearerToken).then(async (decodedToken) => {
-                        const user = await usersCollection.findOne({ uid: owner });
+                        const user = await usersCollection.findOne({ uid });
                         if (user.uid == decodedToken.user_id) {
                             await workspacesCollection.updateOne({ "_id": ObjectId(id) }, {
                                 $push: {
@@ -246,7 +243,7 @@ export default async function handler(req, res) {
                                         createdAt: Date.now(),
                                         updatedAt: Date.now(),
                                         filterBy,
-                                        owner,
+                                        owner: uid,
                                         _id: ObjectId(),
                                     }
                                 }
@@ -290,7 +287,7 @@ export default async function handler(req, res) {
             // id: field id
 
             console.log(color, title, desc, workspaceId, uid, id);
-            if (!id || !uid || !workspaceId || !title || !owner) {
+            if (!id || !uid || !workspaceId || !title) {
                 res.status(400).send({ success: false, error: "invalid-params" });
                 return;
             }
@@ -303,7 +300,7 @@ export default async function handler(req, res) {
                 if (typeof bearer !== 'undefined') {
                     const bearerToken = bearer?.split(' ')[1];
                     await admin.auth().verifyIdToken(bearerToken).then(async (decodedToken) => {
-                        const user = await usersCollection.findOne({ uid: owner });
+                        const user = await usersCollection.findOne({ uid });
                         if (user.uid == decodedToken.user_id) {
                             workspacesCollection.findOneAndUpdate({ "_id": ObjectId(workspaceId), "fields._id": ObjectId(id) },
                                 {
@@ -318,7 +315,7 @@ export default async function handler(req, res) {
                                                 tag: tag.tag,
                                                 tagColor: tag.tagColor,
                                             },
-                                            owner: user.uid,
+                                            owner: uid,
                                             _id: ObjectId(),
                                         }
                                     }

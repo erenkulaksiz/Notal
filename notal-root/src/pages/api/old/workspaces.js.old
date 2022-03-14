@@ -1,0 +1,86 @@
+const admin = require("firebase-admin");
+const googleService = JSON.parse(process.env.NEXT_PUBLIC_GOOGLE_SERVICE);
+if (!admin.apps.length) {
+    admin.initializeApp({
+        credential: admin.credential.cert(googleService),
+        //databaseURL: firebaseConfig.databaseURL
+    });
+}
+const { connectToDatabase } = require('../../../lib/mongodb');
+
+if (!admin.apps.length) {
+    admin.initializeApp({
+        credential: admin.credential.cert(googleService),
+        //databaseURL: firebaseConfig.databaseURL
+    });
+}
+
+const { db } = await connectToDatabase();
+const workspacesCollection = db.collection("workspaces");
+
+export default async function handler(req, res) {
+
+    const reject = () => res.status(400).send({ success: false, error: "invalid-params" });
+
+    const bearer = req.headers['authorization'];
+    if (!bearer) return reject();
+    const bearerToken = bearer.split(' ')[1];
+    if (typeof bearerToken == "undefined") return reject();
+    //const { id } = req.query;
+
+    if (req.method == "POST") {
+        // Create workspace
+        const body = JSON.parse(req.body);
+        const { uid } = body ?? {};
+        if (!uid) return reject();
+
+        console.log("Creating workspace for UID", uid);
+        return await admin.auth().verifyIdToken(bearerToken).then(async (decodedToken) => {
+            if (decodedToken.user_id !== uid) return reject();
+
+            const { title, desc, starred, workspaceVisible } = body;
+
+            try {
+                await workspacesCollection.insertOne({
+                    title,
+                    desc,
+                    starred,
+                    createdAt: Date.now(),
+                    updatedAt: Date.now(),
+                    owner: uid,
+                    workspaceVisible,
+                }).then(() => {
+                    return res.status(200).send({ success: true });
+                });
+            } catch (error) {
+                return res.status(400).send({ success: false, error: new Error(error).message });
+            }
+        }).catch(error => {
+            return res.status(400).json({ success: false, error: { code: error.code } });
+        });
+    } else if (req.method == "GET") {
+        return await admin.auth().verifyIdToken(bearerToken).then(async (decodedToken) => {
+            console.log("Getting workspaces for UID", decodedToken.user_id);
+            const workspaces = await workspacesCollection.find({ owner: decodedToken.user_id }).toArray();
+            return res.status(200).send({
+                success: true,
+                data: workspaces.map(el => {
+                    return {
+                        _id: el._id,
+                        createdAt: el.createdAt,
+                        desc: el.desc,
+                        title: el.title,
+                        owner: el.owner,
+                        starred: el.starred,
+                        updatedAt: el.updatedAt,
+                        workspaceVisible: el.workspaceVisible
+                    }
+                })
+            });
+        }).catch(error => {
+            return res.status(400).json({ success: false, error: { code: error.code } });
+        });
+    } else if (req.method == "DELETE") {
+
+    }
+}

@@ -34,7 +34,7 @@ const Workspace = (props) => {
 
     const workspaceData = useSWR(
         ["api/fetchWorkspace/" + id],
-        () => fetchWorkspace({ token: Cookies.get("auth"), id }) // get token from cookie
+        () => fetchWorkspace({ token: Cookies.get("auth"), id, uid: props?.validate?.data?.uid }) // get token from cookie
     );
 
     // Modals
@@ -64,13 +64,6 @@ const Workspace = (props) => {
     useEffect(() => {
         console.log("workspace props: ", props);
         WorkboxInit();
-        (async () => {
-            const token = await auth.users.getIdToken();
-            const res = await CheckToken({ token: token.res, props });
-            if (!res) {
-                setTimeout(() => router.replace(router.asPath), 1000);
-            }
-        })();
     }, []);
 
     useEffect(() => {
@@ -94,6 +87,11 @@ const Workspace = (props) => {
             if (workspaceData.error) {
                 console.error("Error with workspace: ", workspaceData.error);
             }
+            const token = await auth.users.getIdToken();
+            const res = CheckToken({ token: token.res, props });
+            if (!res) {
+                setTimeout(() => router.replace(router.asPath), 1000);
+            }
         })();
     }, [workspaceData]);
 
@@ -114,8 +112,7 @@ const Workspace = (props) => {
         addField: async ({ title, filterBy }) => {
             const currFields = _workspace?.data?.fields || [];
             await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: [...currFields, { title, updatedAt: Date.now(), createdAt: Date.now(), filterBy, owner: auth.authUser.uid }] } }, false)
-            const token = await auth.users.getIdToken(); // get refreshed token
-            const data = await auth.workspace.field.addField({ title, id: _workspace?.data?._id, filterBy, owner: auth.authUser.uid, token: token.res });
+            const data = await auth.workspace.field.addField({ title, id: _workspace?.data?._id, filterBy });
             workspaceData.mutate(); // Refresh data in order to get new ID's
             console.log("addField data: ", data);
             window.gtag("event", "addField", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
@@ -146,9 +143,8 @@ const Workspace = (props) => {
             const newFields = _workspace?.data?.fields;
             newFields[_workspace?.data?.fields?.findIndex(el => el._id == fieldId)].cards?.push({ title, desc, color, createdAt: Date.now(), updatedAt: Date.now(), tag, owner: auth.authUser.uid });
             await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: newFields } }, false);
-            const token = await auth.users.getIdToken(); // get refreshed token
             const data = await auth.workspace.field.addCard({
-                id: fieldId, workspaceId: _workspace?.data?._id, title, desc, color, tag, owner: auth.authUser.uid, token: token.res,
+                id: fieldId, workspaceId: _workspace?.data?._id, title, desc, color, tag
             });
             console.log("addCardToField data: ", data);
             workspaceData.mutate();
@@ -284,7 +280,7 @@ export async function getServerSideProps(ctx) {
             //GetWorkspace({ id: queryId, token: authCookie })
         ]);
 
-        console.log("validate:", validate);
+        console.log("validate:", validate?.success, validate?.data?.uid, validate?.error);
     }
     return { props: { validate, /*workspace, query: queryId*/ } }
 }

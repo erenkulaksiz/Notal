@@ -1,10 +1,9 @@
 import { server } from "config";
-import Cookies from "js-cookie";
 
 export const fetchWorkspaces = ({ token, uid }) => fetch(`${server}/api/workspace`, {
     'Content-Type': 'application/json',
     method: "POST",
-    headers: { 'Authorization': 'Bearer ' + token },
+    headers: { 'Authorization': `Bearer ${token || ""}` },
     body: JSON.stringify({ uid, action: "GET_WORKSPACES" }),
 })
     .then(response => {
@@ -15,6 +14,7 @@ export const fetchWorkspaces = ({ token, uid }) => fetch(`${server}/api/workspac
     })
     .catch(error => { return { success: false, error: { code: "workspace_error", errorMessage: error } } });
 
+/*
 export const fetchValidate = ({ url, token }) => fetch(`${server}/${url}`, {
     'Content-Type': 'application/json',
     method: "POST",
@@ -24,11 +24,12 @@ export const fetchValidate = ({ url, token }) => fetch(`${server}/${url}`, {
     .catch(error => {
         return { success: false, error: { code: "validation-error", errorMessage: error } }
     });
+*/
 
-export const fetchWorkspace = ({ token, id }) => fetch(`${server}/api/workspace`, {
+export const fetchWorkspace = ({ token, id, uid }) => fetch(`${server}/api/workspace`, {
     'Content-Type': 'application/json',
     method: "POST",
-    headers: { 'Authorization': 'Bearer ' + token },
-    body: JSON.stringify({ id, action: "GET_WORKSPACE" }),
+    headers: { 'Authorization': `Bearer ${token || ""}` },
+    body: JSON.stringify({ uid, action: "GET_WORKSPACE", id }),
 })
     .then(response => response.json());

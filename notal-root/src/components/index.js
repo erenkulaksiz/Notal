@@ -22,6 +22,7 @@ export { default as ModalPortal } from "./portals/modal";
 export { default as Navbar } from "./navbar";
 export { default as Select } from "./select";
 export { default as Switch } from "./switch";
+export { default as Tab } from "./tab";
 export { default as Toast } from "./toast";
 export { default as Tooltip } from "./tooltip";
 export { default as TooltipPortal } from "./portals/tooltip";

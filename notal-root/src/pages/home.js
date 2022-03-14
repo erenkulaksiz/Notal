@@ -32,13 +32,6 @@ const Home = (props) => {
     useEffect(() => {
         console.log("home props: ", props);
         WorkboxInit();
-        (async () => {
-            const token = await auth.users.getIdToken();
-            const res = await CheckToken({ token: token.res, props });
-            if (!res) {
-                setTimeout(() => router.replace(router.asPath), 1000);
-            }
-        })();
     }, []);
 
     return (<div className="mx-auto h-full flex flex-col transition-colors duration-100">
@@ -91,7 +84,7 @@ export async function getServerSideProps(ctx) {
             //GetWorkspaces({ uid: validate?.data?.uid, token: authCookie }),
         ]);
 
-        console.log("validate:", validate);
+        console.log("validate:", validate?.success, validate?.data?.uid, validate?.error);
     }
     return { props: { validate } }
 }

@@ -63,13 +63,15 @@ export default async function handler(req, res) {
                         avatar: user.avatar,
                         profileVisible: user.profileVisible,
                         email: user.email,
+                        createdAt: Date.now(),
+                        updatedAt: Date.now(),
                         provider: user?.provider ?? "",
                     },
                     uid: user.uid
                 });
             }
         }).catch(error => {
-            console.log("TOken failure!", error)
+            console.log("Token failure!", error)
             res.status(400).json({ success: false, error: "auth/argument-error" });
             return; // dont run code below
         });

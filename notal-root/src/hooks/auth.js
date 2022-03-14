@@ -137,25 +137,21 @@ export function AuthProvider(props) {
 
     const workspace = {
         createWorkspace: async ({ title, desc, starred, workspaceVisible }) => {
-            const res = await AuthService.workspace.createWorkspace({ title, desc, starred, workspaceVisible });
-            return res;
+            return await AuthService.workspace.createWorkspace({ title, desc, starred, workspaceVisible });
         },
         deleteWorkspace: async ({ id }) => {
-            const res = await AuthService.workspace.removeWorkspace({ id });
-            return res;
+            return await AuthService.workspace.removeWorkspace({ id });
         },
         starWorkspace: async ({ id }) => {
-            const res = await AuthService.workspace.starWorkspace({ id });
-            return res;
+            return await AuthService.workspace.starWorkspace({ id });
         },
         editWorkspace: async ({ id, title, desc, workspaceVisible }) => {
-            const res = await AuthService.workspace.editWorkspace({ id, title, desc, workspaceVisible });
-            return res;
+            return await AuthService.workspace.editWorkspace({ id, title, desc, workspaceVisible });
         },
         field: {
-            addField: async ({ id, title, filterBy, owner, token }) => {
+            addField: async ({ id, title, filterBy }) => {
                 // id: workspaceId
-                return await AuthService.workspace.field.addField({ id, title, filterBy, owner, token });
+                return await AuthService.workspace.field.addField({ id, title, filterBy });
             },
             removeField: async ({ id, workspaceId }) => {
                 return await AuthService.workspace.field.removeField({ id, workspaceId });
@@ -166,9 +162,9 @@ export function AuthProvider(props) {
             editCard: async ({ id, workspaceId, fieldId, title, desc, color }) => {
                 return await AuthService.workspace.card.editCard({ id, workspaceId, fieldId, title, desc, color });
             },
-            addCard: async ({ id, workspaceId, title, desc, color, tag, owner, token }) => {
+            addCard: async ({ id, workspaceId, title, desc, color, tag }) => {
                 // id as field id
-                return await AuthService.workspace.card.addCard({ id, workspaceId, title, desc, color, tag, owner, token });
+                return await AuthService.workspace.card.addCard({ id, workspaceId, title, desc, color, tag });
             },
             removeCard: async ({ id, workspaceId, fieldId }) => {
                 return await AuthService.workspace.card.removeCard({ id, workspaceId, fieldId });

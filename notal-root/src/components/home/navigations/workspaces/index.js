@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 import useSWR from "swr";
 import { useRouter } from "next/router";
 
+import { CheckToken } from "@utils";
 import useAuth from "@hooks/auth";
 //import useNotalUI from "@hooks/notalui";
 import { fetchWorkspaces } from "@utils/fetcher";
@@ -39,7 +40,7 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
 
     const workspacesData = useSWR(
         ['api/fetchWorkspaces'],
-        () => fetchWorkspaces({ token: Cookies.get("auth"), uid: validate.uid })
+        () => fetchWorkspaces({ token: Cookies.get("auth"), uid: validate?.data?.uid })
     );
 
     useEffect(() => {
@@ -62,6 +63,11 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
             if (workspacesData.error) {
                 console.error("swr err: ", workspacesData.error);
             }
+            const token = await auth.users.getIdToken();
+            const res = CheckToken({ token: token.res, props: { validate } });
+            if (!res) {
+                setTimeout(() => router.replace(router.asPath), 1000);
+            }
         })();
     }, [workspacesData]);
 
@@ -76,15 +82,16 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
 
     const workspace = {
         create: async ({ title, desc, starred }) => {
-            auth.workspace.createWorkspace({ title, desc, starred, workspaceVisible: false });
-            workspacesData.mutate({ ..._workspaces, data: [..._workspaces.data, { updatedAt: Date.now(), createdAt: Date.now(), title, desc, starred, workspaceVisible: false }] });
+            workspacesData.mutate({ ..._workspaces, data: [..._workspaces.data, { updatedAt: Date.now(), createdAt: Date.now(), title, desc, starred, workspaceVisible: false }] }, false);
+            await auth.workspace.createWorkspace({ title, desc, starred, workspaceVisible: false });
+            workspacesData.mutate(); // get refreshed workspaces
         },
         delete: async ({ id }) => {
             setDeleteModal({ visible: false, workspace: -1 }); // set visiblity to false and id to -1
             const newWorkspaces = _workspaces.data;
             newWorkspaces.splice(_workspaces.data.findIndex(el => el._id == id), 1);
-            auth.workspace.deleteWorkspace({ id });
             workspacesData.mutate({ ..._workspaces, data: [...newWorkspaces] }, false);
+            auth.workspace.deleteWorkspace({ id });
         },
         star: async ({ id }) => {
             const newWorkspaces = _workspaces.data;

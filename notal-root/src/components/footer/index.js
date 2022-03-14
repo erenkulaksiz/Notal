@@ -1,7 +1,8 @@
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
-import { CodeIcon, HeartIcon, TwitterIcon } from '@icons';
 import Link from 'next/link';
+
+import { CodeIcon, HeartIcon, TwitterIcon } from '@icons';
 
 import IconWhite from "@public/icon_white.webp";
 import IconGalactic from "@public/icon_galactic.webp";
