@@ -112,8 +112,8 @@ export function AuthProvider(props) {
                 return { success: false, error: data }
             }
         },
-        uploadAvatar: async ({ avatar, uid }) => {
-            const res = await AuthService.user.uploadAvatar({ avatar, uid });
+        uploadAvatar: async ({ avatar }) => {
+            const res = await AuthService.user.uploadAvatar({ avatar });
             return res;
         },
         logout: async () => {
@@ -136,8 +136,11 @@ export function AuthProvider(props) {
     }
 
     const workspace = {
-        createWorkspace: async ({ title, desc, starred, workspaceVisible }) => {
-            return await AuthService.workspace.createWorkspace({ title, desc, starred, workspaceVisible });
+        createWorkspace: async ({ title, desc, starred, workspaceVisible, thumbnail }) => {
+            return await AuthService.workspace.createWorkspace({ title, desc, starred, workspaceVisible, thumbnail });
+        },
+        uploadThumbnailTemp: async ({ thumbnail }) => {
+            return await AuthService.workspace.uploadThumbnailTemp({ thumbnail });
         },
         deleteWorkspace: async ({ id }) => {
             return await AuthService.workspace.removeWorkspace({ id });
@@ -145,8 +148,8 @@ export function AuthProvider(props) {
         starWorkspace: async ({ id }) => {
             return await AuthService.workspace.starWorkspace({ id });
         },
-        editWorkspace: async ({ id, title, desc, workspaceVisible }) => {
-            return await AuthService.workspace.editWorkspace({ id, title, desc, workspaceVisible });
+        editWorkspace: async ({ id, title, desc, workspaceVisible, thumbnail }) => {
+            return await AuthService.workspace.editWorkspace({ id, title, desc, workspaceVisible, thumbnail });
         },
         field: {
             addField: async ({ id, title, filterBy }) => {

@@ -47,7 +47,6 @@ export default async function handler(req, res) {
                 }
                 await usersCollection.insertOne({ ...newUser });
                 res.status(200).send({ success: true, data: { ...newUser } });
-
             } else {
                 if (!user?.provider) {
                     await usersCollection.updateOne({ uid: decodedToken.uid }, { $set: { provider: decodedToken?.firebase?.sign_in_provider } });

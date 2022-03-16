@@ -6,11 +6,18 @@ import { CodeIcon, HeartIcon, TwitterIcon } from '@icons';
 
 import IconWhite from "@public/icon_white.webp";
 import IconGalactic from "@public/icon_galactic.webp";
+import BuildComponent from '@utils/buildComponent';
 
-const LandingFooter = () => {
+const Footer = ({ className }) => {
     const { resolvedTheme } = useTheme();
 
-    return (<footer className="w-full pb-8 flex flex-col z-20">
+    const BuildFooter = BuildComponent({
+        name: "Footer",
+        defaultClasses: "w-full pb-8 flex flex-col z-20",
+        extraClasses: className
+    })
+
+    return (<footer className={BuildFooter.classes}>
         <div className="h-0.5 dark:bg-neutral-700 bg-neutral-300 w-full rounded-full" />
         <div className="grid grid-cols-1 sm:grid-cols-3 mt-8 gap-8 sm:gap-4">
             <div className="flex flex-col">
@@ -72,4 +79,4 @@ const LandingFooter = () => {
     </footer>)
 }
 
-export default LandingFooter;
+export default Footer;

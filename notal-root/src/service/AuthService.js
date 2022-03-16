@@ -129,10 +129,10 @@ const AuthService = {
 
             return null
         },
-        uploadAvatar: async ({ avatar, uid }) => {
-            const storage = getStorage();
-            const storageRef = stRef(storage, `avatars/${uid}`);
+        uploadAvatar: async ({ avatar }) => {
             const auth = getAuth();
+            const storage = getStorage();
+            const storageRef = stRef(storage, `avatars/${auth?.currentUser?.uid}`);
 
             return await uploadBytes(storageRef, avatar).then((snapshot) => {
                 console.log(snapshot);
@@ -155,7 +155,7 @@ const AuthService = {
         },
     },
     workspace: {
-        createWorkspace: async ({ title, desc, starred, workspaceVisible }) => {
+        createWorkspace: async ({ title, desc, starred, workspaceVisible, thumbnail }) => {
             const auth = getAuth();
             const token = await auth.currentUser.getIdToken();
 
@@ -165,7 +165,8 @@ const AuthService = {
                 title,
                 desc,
                 starred,
-                workspaceVisible
+                workspaceVisible,
+                thumbnail,
             }, token);
 
             if (data?.success) {
@@ -173,6 +174,34 @@ const AuthService = {
             } else {
                 return { success: false, error: data?.error }
             }
+        },
+        uploadThumbnailTemp: async ({ thumbnail }) => {
+            // temporarily uploads thumbnail for later use.
+            const auth = getAuth();
+            const token = await auth.currentUser.getIdToken();
+            const storage = getStorage();
+            const storageRef = stRef(storage, `thumbnails/temp/workspace_${auth.currentUser.uid}`);
+
+            return await uploadBytes(storageRef, thumbnail).then((snapshot) => {
+                console.log(snapshot);
+
+                return getDownloadURL(snapshot.ref).then(async (downloadURL) => {
+                    /*
+                    console.log('File available at', downloadURL);
+
+                    const avatarRes = await fetch(`${server}/api/workspace`, {
+                        'Content-Type': 'application/json',
+                        method: "POST",
+                        body: JSON.stringify({ avatar: downloadURL, action: "TEMP_THUMBNAIL", uid: auth?.currentUser?.uid }),
+                    }).then(response => response.json());
+                    console.log("avatar res: ", avatarRes);
+
+                    */ // no need to send to the server at first
+                    return { success: true, url: downloadURL }
+                });
+            }).catch(error => {
+                return { success: false, error }
+            });
         },
         removeWorkspace: async ({ id }) => {
             const auth = getAuth();
@@ -190,7 +219,7 @@ const AuthService = {
                 return { success: false, error: data?.error }
             }
         },
-        editWorkspace: async ({ id, title, desc, workspaceVisible }) => {
+        editWorkspace: async ({ id, title, desc, workspaceVisible, thumbnail }) => {
             const auth = getAuth();
             const token = await auth.currentUser.getIdToken();
 
@@ -200,7 +229,8 @@ const AuthService = {
                 uid: auth?.currentUser?.uid,
                 title,
                 desc,
-                workspaceVisible
+                workspaceVisible,
+                thumbnail,
             }, token);
 
             if (data?.success) {

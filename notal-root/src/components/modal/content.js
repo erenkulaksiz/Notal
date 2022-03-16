@@ -22,7 +22,7 @@ const Content = ({ children, blur, className }) => {
             }
         }}
         onClick={e => e.stopPropagation()}
-        className={`${className ? className + " " : ""}z-50 relative box-border flex flex-col min-h-min shadow-2xl p-2 ${blur ? "backdrop-brightness-75 dark:bg-black/50 bg-white " : "dark:bg-neutral-900 bg-white "}rounded-xl`}
+        className={`${className ? className + " " : ""}z-50 relative box-border flex flex-col max-h-[80%] sm:min-h-min sm:h-auto overflow-y-auto overflow-x-visible sm:overflow-visible shadow-2xl p-2 ${blur ? "backdrop-brightness-75 dark:bg-black/50 bg-white " : "dark:bg-neutral-900 bg-white "}rounded-xl`}
     >
         {children}
     </motion.div>)

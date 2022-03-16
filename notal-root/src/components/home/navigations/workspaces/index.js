@@ -81,9 +81,9 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
     }, [filter, _workspaces]);
 
     const workspace = {
-        create: async ({ title, desc, starred }) => {
-            workspacesData.mutate({ ..._workspaces, data: [..._workspaces.data, { updatedAt: Date.now(), createdAt: Date.now(), title, desc, starred, workspaceVisible: false }] }, false);
-            await auth.workspace.createWorkspace({ title, desc, starred, workspaceVisible: false });
+        create: async ({ title, desc, starred, workspaceVisible, thumbnail }) => {
+            workspacesData.mutate({ ..._workspaces, data: [..._workspaces.data, { updatedAt: Date.now(), createdAt: Date.now(), title, desc, starred, workspaceVisible, thumbnail }] }, false);
+            await auth.workspace.createWorkspace({ title, desc, starred, workspaceVisible, thumbnail });
             workspacesData.mutate(); // get refreshed workspaces
         },
         delete: async ({ id }) => {
@@ -189,7 +189,9 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
         <AddWorkspaceModal
             open={newWorkspaceModal}
             onClose={() => setNewWorkspaceModal(false)}
-            onAdd={({ title, desc, starred }) => workspace.create({ title, desc, starred })}
+            onAdd={({ title, desc, starred, workspaceVisible, thumbnail }) => {
+                workspace.create({ title, desc, starred, workspaceVisible, thumbnail });
+            }}
         />
     </div >)
 }

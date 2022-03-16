@@ -12,6 +12,7 @@ export { default as CodeIcon } from "../../public/icons/code.svg";
 export { default as CookieIcon } from "../../public/icons/cookie.svg";
 export { default as CrossIcon } from "../../public/icons/cross.svg";
 export { default as ChevronRightIcon } from "../../public/icons/chevron-right.svg";
+export { default as CloudUploadIcon } from "../../public/icons/cloud-upload.svg";
 export { default as DarkIcon } from "../../public/icons/dark.svg";
 export { default as DashboardOutlineIcon } from "../../public/icons/dashboard_outline.svg";
 export { default as DashboardFilledIcon } from "../../public/icons/dashboard_filled.svg";

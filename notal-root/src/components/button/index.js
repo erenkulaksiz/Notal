@@ -5,6 +5,7 @@ import {
 
 import BuildComponent from '@utils/buildComponent';
 import React from 'react';
+import { Loading } from '@components';
 
 const Button = ({
     children,
@@ -17,6 +18,7 @@ const Button = ({
     rounded = false,
     fullWidth = false,
     ring = true,
+    loading = false,
     as = "button",
     ...props
 }) => {
@@ -36,7 +38,7 @@ const Button = ({
 
     const BuildButton = BuildComponent({
         name: "Button",
-        defaultClasses: "cursor-pointer z-10 hover:opacity-80 active:opacity-80 flex flex-row items-center p-4 py-2 relative active:scale-95 transition-all duration-75 text-white font-semibold text-sm",
+        defaultClasses: "cursor-pointer z-10 overflow-hidden hover:opacity-80 active:opacity-80 flex flex-row items-center p-4 py-2 relative active:scale-95 transition-all duration-75 text-white font-semibold text-sm",
         extraClasses: className,
         conditionalClasses: [
             {
@@ -82,6 +84,9 @@ const Button = ({
     return (<ButtonEl onClick={onClick} className={BuildButton.classes} {...props}>
         {icon && <span className={iconClasses}>{icon}</span>}
         <span className="mx-auto flex flex-row items-center">{children}</span>
+        {loading && <div className="absolute left-0 right-0 bottom-0 top-0 dark:bg-neutral-900/90 bg-neutral-200/50 flex items-center justify-center">
+            <Loading size="lg" />
+        </div>}
     </ButtonEl>)
 }
 

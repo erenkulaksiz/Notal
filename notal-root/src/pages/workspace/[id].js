@@ -96,10 +96,17 @@ const Workspace = (props) => {
     }, [workspaceData]);
 
     const handle = {
-        editWorkspace: async ({ title = _workspace?.data?.title, desc = _workspace?.data?.desc, workspaceVisible = _workspace?.data?.workspaceVisible ?? false }) => {
-            if (_workspace?.data?.title == title && _workspace?.data?.desc == desc && _workspace?.data?.workspaceVisible == workspaceVisible) return;
-            await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, title, desc, workspaceVisible } }, false);
-            const data = await auth.workspace.editWorkspace({ id: _workspace?.data?._id, title, desc, workspaceVisible });
+        editWorkspace: async ({ title = _workspace?.data?.title, desc = _workspace?.data?.desc, workspaceVisible = _workspace?.data?.workspaceVisible ?? false, thumbnail }) => {
+            /*
+            // check for any changes
+            if (
+                _workspace?.data?.title == title
+                && _workspace?.data?.desc == desc
+                && _workspace?.data?.workspaceVisible == workspaceVisible
+                && _workspace?.data?.thumbnail != thumbnail) return;
+                */
+            await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, title, desc, workspaceVisible, thumbnail } }, false);
+            const data = await auth.workspace.editWorkspace({ id: _workspace?.data?._id, title, desc, workspaceVisible, thumbnail });
             window.gtag("event", "editWorkspace", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
             console.log("editData:", data);
         },
@@ -194,16 +201,43 @@ const Workspace = (props) => {
         />
 
         <div className="relative flex flex-row flex-1 bg-white dark:bg-neutral-900 overflow-y-auto">
+            {!notFound && !loadingWorkspace && <div className="absolute flex flex-row left-2 bottom-2 z-40 shadow-xl rounded p-2 dark:bg-neutral-800/20 bg-neutral-200/20 backdrop-blur-sm">
+                <div className="flex flex-col">
+                    <span className="text-medium">
+                        {_workspace?.data?.title}
+                    </span>
+                    {_workspace?.data?.desc && <span className="text-xs text-neutral-600">
+                        {_workspace?.data?.desc}
+                    </span>}
+                </div>
+                {!isOwner && <div className="flex flex-row ml-2 items-center">
+                    <div className="p-[2px] w-10 h-10 rounded-full cursor-pointer bg-gradient-to-tr from-blue-700 to-pink-700">
+                        <img
+                            src={_workspace?.data?.user?.avatar}
+                            className="w-10 h-9 rounded-full border-[2px] dark:border-black border-white"
+                        />
+                    </div>
+                    <div className="flex flex-col ml-1">
+                        <span className="text-lg">
+                            {_workspace?.data?.user?.fullname ? `${_workspace?.data?.user?.fullname}` : `@${_workspace?.data?.user?.username}`}
+                        </span>
+                        {_workspace?.data?.user?.fullname && <span className="text-sm text-neutral-600">
+                            {`@${_workspace?.data?.user?.username}`}
+                        </span>}
+                    </div>
+                </div>}
+            </div>}
             {(!loadingWorkspace && !_workspace?.error && isOwner) && <WorkspaceSidebar
                 workspaceStarred={_workspace?.data?.starred}
                 workspaceVisible={_workspace?.data?.workspaceVisible}
                 onStarred={() => handle.starWorkspace()}
                 onSettings={() => setSettingsModal(true)}
                 onDelete={() => setDeleteWorkspace(true)}
-                onVisible={() => handle.editWorkspace({ workspaceVisible: _workspace?.data?.workspaceVisible ? !_workspace?.data?.workspaceVisible : true })}
+                // refactor onVisible.
+                onVisible={() => handle.editWorkspace({ workspaceVisible: _workspace?.data?.workspaceVisible ? !_workspace?.data?.workspaceVisible : true, thumbnail: _workspace?.data?.thumbnail })}
                 onAddField={() => setAddFieldModal({ visible: true, workspaceTitle: _workspace?.data?.title })}
             />}
-            <div className="flex flex-1 flex-row overflow-y-auto pt-1 pb-2 pl-2 overflow-x-visible">
+            <div className="relative flex flex-1 flex-row overflow-y-auto pt-1 pb-2 pl-2 overflow-x-visible">
                 {loadingWorkspace && [1, 2, 3, 4].map((item) => (
                     <WorkspaceField skeleton key={item} /> // show skeleton loaders
                 ))}
@@ -227,8 +261,8 @@ const Workspace = (props) => {
             open={settingsModal}
             workspace={_workspace?.data}
             onClose={() => setSettingsModal(false)}
-            onSubmit={({ title, desc }) => {
-                handle.editWorkspace({ title, desc });
+            onSubmit={({ title, desc, thumbnail }) => {
+                handle.editWorkspace({ title, desc, thumbnail });
                 setSettingsModal(false);
             }}
         />

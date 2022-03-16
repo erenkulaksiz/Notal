@@ -20,7 +20,6 @@ import { CardColors } from "@utils/constants";
 const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
     const [addCard, setAddCard] = useState({ title: "", desc: "", color: "#ffffff", tag: { tag: "", tagColor: "" } })
     const [addCardErrors, setAddCardErrors] = useState({ title: false, desc: false, color: false, tag: false });
-    //const [colorPicker, setColorPicker] = useState({visible: false})
     const [useColor, setUseColor] = useState(true);
 
     const close = () => {
@@ -31,7 +30,11 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
 
     const submit = () => {
         if (addCard.title.length < 3) {
-            setAddCardErrors({ ...addCardErrors, title: "Card title must be minimum 3 characters long." })
+            setAddCardErrors({ ...addCardErrors, title: "Card title must be minimum 3 characters long." });
+            return;
+        }
+        if (addCard.color.length > 7 && useColor) {
+            setAddCardErrors({ ...addCardErrors, color: "Color length must be between 1 and 7." });
             return;
         }
         onAdd({
@@ -88,7 +91,7 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
                     useFocus
                     blockContent={false}
                     containerClassName="px-0 py-0"
-                    direction="top"
+                    direction="right"
                     content={<div className="flex flex-col relative">
                         <HexColorPicker color={addCard.color} onChange={(color) => setAddCard({ ...addCard, color })} />
                         <div className="flex flex-row flex-wrap">
@@ -124,6 +127,7 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
                     No Color
                 </Checkbox>
             </div>
+            {addCardErrors.color != false && <span className="text-red-500">{addCardErrors.color}</span>}
         </Modal.Body>
         <Modal.Footer className="justify-between" animate>
             <Button

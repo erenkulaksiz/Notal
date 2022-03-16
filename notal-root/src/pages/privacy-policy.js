@@ -301,13 +301,13 @@ const PrivacyPolicy = (props) => {
                 <p>
                     If you have any questions about this Privacy Policy, You can contact us:
                 </p>
-                <div className="text-blue-700 flex flex-col pb-16">
+                <div className="text-blue-700 flex flex-col">
                     <a href="mailto:erenkulaksz@gmail.com">erenkulaksz@gmail.com</a>
                     <a href="https://twitter.com/notalapp" target="_blank" rel="noreferrer" className="text-blue-700">twitter.com/notalapp</a>
                 </div>
             </div>
 
-            <Footer />
+            <Footer className="pt-4" />
         </div>
 
         <AcceptCookies />

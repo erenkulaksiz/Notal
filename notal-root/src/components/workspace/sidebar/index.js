@@ -25,8 +25,8 @@ const WorkspaceSidebar = ({
             key={index}
             onClick={action[item.id]}
             state={{
-                visible: workspaceVisible,
-                favorite: workspaceStarred
+                visible: workspaceVisible || false,
+                favorite: workspaceStarred || false,
             }}
         />))}
     </div>)

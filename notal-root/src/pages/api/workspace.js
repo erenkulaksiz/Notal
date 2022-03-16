@@ -23,7 +23,7 @@ export default async function handler(req, res) {
 
     const body = JSON.parse(req.body);
 
-    const { uid, title, desc, action, starred, id, workspaceId, color, fieldId, filterBy, workspaceVisible, tag } = body ?? "";
+    const { uid, title, desc, action, starred, id, workspaceId, color, fieldId, filterBy, workspaceVisible, tag, thumbnail } = body ?? "";
 
     const workspaceAction = {
         create: async () => {
@@ -41,8 +41,34 @@ export default async function handler(req, res) {
                     updatedAt: Date.now(),
                     owner: uid,
                     workspaceVisible,
-                }).then(() => {
-                    return res.status(200).send({ success: true });
+                    thumbnail,
+                }).then(async (result) => {
+                    const resId = result.insertedId;
+                    console.log("updating id: ", resId);
+                    console.log("thumbnail: ", thumbnail);
+
+                    if (thumbnail?.type == "image") {
+                        // move from temp to real location
+                        const storageRef = admin.storage().bucket("gs://notal-1df19.appspot.com");
+                        const file = storageRef.file(`thumbnails/temp/workspace_${uid}`);
+                        const fileExist = await file.exists();
+                        if (fileExist[0]) {
+                            await file.move(`thumbnails/workspace_${resId}`);
+                            const newFile = storageRef.file(`thumbnails/workspace_${resId}`);
+                            //const meta = await newFile.getMetadata();
+                            const url = await newFile.getSignedUrl({
+                                action: 'read',
+                                expires: '03-09-2491'
+                            });
+                            return await workspacesCollection.updateOne({ _id: ObjectId(resId) }, { $set: { thumbnail: { type: "image", file: url[0] } } })
+                                .then(() => { return res.status(200).send({ success: true }); })
+                                .catch(error => { return res.status(400).send({ success: false, error }); });
+                        } else {
+                            return res.status(200).send({ success: true });
+                        }
+                    } else {
+                        return res.status(200).send({ success: true });
+                    }
                 });
             } catch (error) {
                 return res.status(400).send({ success: false, error });
@@ -72,7 +98,8 @@ export default async function handler(req, res) {
                                             owner: el.owner,
                                             starred: el.starred,
                                             updatedAt: el.updatedAt,
-                                            workspaceVisible: el.workspaceVisible
+                                            workspaceVisible: el.workspaceVisible,
+                                            thumbnail: el.thumbnail,
                                         }
                                     })
                                 });
@@ -117,6 +144,7 @@ export default async function handler(req, res) {
             const bearer = req.headers['authorization'];
             try {
                 const workspace = await workspacesCollection.findOne({ "_id": ObjectId(id) });
+
                 if (!workspace) {
                     res.status(400).send({ success: false, error: "not-found" });
                 } else {
@@ -127,9 +155,11 @@ export default async function handler(req, res) {
                                 success: true,
                                 data: {
                                     ...workspace,
-                                    username: user.username,
-                                    fullname: user.fullname ?? "",
-                                    avatar: user.avatar ?? ""
+                                    user: {
+                                        username: user.username,
+                                        fullname: user.fullname ?? "",
+                                        avatar: user.avatar ?? ""
+                                    }
                                 }
                             });
                         } else {
@@ -148,9 +178,11 @@ export default async function handler(req, res) {
                                             success: true,
                                             data: {
                                                 ...workspace,
-                                                username: user.username,
-                                                fullname: user.fullname ?? "",
-                                                avatar: user.avatar ?? ""
+                                                user: {
+                                                    username: user.username,
+                                                    fullname: user.fullname ?? "",
+                                                    avatar: user.avatar ?? ""
+                                                }
                                             }
                                         });
                                     } catch (error) {
@@ -216,10 +248,20 @@ export default async function handler(req, res) {
             } // uid: owner, id: workspace
 
             try {
-                await workspacesCollection.updateOne({ "_id": ObjectId(id) }, { $set: { title, desc, workspaceVisible } })
-                    .then(() => {
-                        res.status(200).send({ success: true });
-                    });
+                if (thumbnail?.type != "image") {
+                    await workspacesCollection.updateOne({ "_id": ObjectId(id) }, {
+                        $set: {
+                            title,
+                            desc,
+                            workspaceVisible,
+                            updatedAt: Date.now(),
+                            thumbnail,
+                        }
+                    })
+                        .then(() => {
+                            res.status(200).send({ success: true });
+                        });
+                }
             } catch (error) {
                 res.status(400).send({ success: false, error: new Error(error).message });
             }
