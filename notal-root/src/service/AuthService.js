@@ -5,8 +5,8 @@ import { server } from "../config";
 
 import Router from "next/router";
 
-const fetchWithAuth = async ({ ...rest }, token) => {
-    return await fetch(`${server}/api/workspace`, {
+const fetchWithAuth = async ({ ...rest }, { token, action }) => {
+    return await fetch(`${server}/api/workspace/${action}`, {
         'Content-Type': 'application/json',
         method: "POST",
         headers: { 'Authorization': `Bearer ${token || ""}` },
@@ -160,14 +160,16 @@ const AuthService = {
             const token = await auth.currentUser.getIdToken();
 
             const data = await fetchWithAuth({
-                action: "CREATE",
                 uid: auth?.currentUser?.uid,
                 title,
                 desc,
                 starred,
                 workspaceVisible,
                 thumbnail,
-            }, token);
+            }, {
+                token,
+                action: "createworkspace"
+            });
 
             if (data?.success) {
                 return { ...data }
@@ -209,9 +211,11 @@ const AuthService = {
 
             const data = await fetchWithAuth({
                 id,
-                action: "DELETE",
-                uid: auth?.currentUser?.uid
-            }, token);
+                uid: auth?.currentUser?.uid,
+            }, {
+                token,
+                action: "removeworkspace",
+            });
 
             if (data?.success) {
                 return { success: true }
@@ -225,13 +229,15 @@ const AuthService = {
 
             const data = await fetchWithAuth({
                 id,
-                action: "EDIT",
                 uid: auth?.currentUser?.uid,
                 title,
                 desc,
                 workspaceVisible,
                 thumbnail,
-            }, token);
+            }, {
+                token,
+                action: "editworkspace",
+            });
 
             if (data?.success) {
                 return { success: true }
@@ -245,9 +251,11 @@ const AuthService = {
 
             const data = await fetchWithAuth({
                 id,
-                action: "STAR",
                 uid: auth?.currentUser?.uid
-            }, token);
+            }, {
+                token,
+                action: "starworkspace"
+            });
 
             if (data?.success) {
                 return { success: true }
@@ -264,11 +272,13 @@ const AuthService = {
                 const data = await fetchWithAuth({
                     title,
                     id,
-                    action: "ADDFIELD",
                     uid: auth?.currentUser?.uid,
                     filterBy,
                     owner
-                }, token);
+                }, {
+                    token,
+                    action: "addfield"
+                });
 
                 if (data?.success) {
                     return { success: true }
@@ -282,10 +292,12 @@ const AuthService = {
 
                 const data = await fetchWithAuth({
                     id,
-                    action: "REMOVEFIELD",
                     uid: auth?.currentUser?.uid,
                     workspaceId
-                }, token);
+                }, {
+                    token,
+                    action: "removefield"
+                });
 
                 if (data?.success) {
                     return { success: true }
@@ -299,11 +311,13 @@ const AuthService = {
 
                 const data = await fetchWithAuth({
                     id,
-                    action: "EDITFIELD",
                     uid: auth?.currentUser?.uid,
                     workspaceId,
                     title
-                }, token);
+                }, {
+                    token,
+                    action: "editfield"
+                });
 
                 if (data?.success) {
                     return { success: true }
@@ -320,14 +334,16 @@ const AuthService = {
 
                 const data = await fetchWithAuth({
                     id,
-                    action: "ADDCARD",
                     uid: auth?.currentUser?.uid,
                     workspaceId,
                     title,
                     desc,
                     color,
                     tag
-                }, token);
+                }, {
+                    token,
+                    action: "addcard",
+                });
 
                 if (data?.success) {
                     return { success: true }
@@ -341,11 +357,13 @@ const AuthService = {
 
                 const data = await fetchWithAuth({
                     id,
-                    action: "REMOVECARD",
                     uid: auth?.currentUser?.uid,
                     workspaceId,
                     fieldId
-                }, token);
+                }, {
+                    token,
+                    action: "removecard"
+                });
 
                 if (data?.success) {
                     return { success: true }
@@ -359,14 +377,16 @@ const AuthService = {
 
                 const data = await fetchWithAuth({
                     id,
-                    action: "EDITCARD",
                     uid: auth?.currentUser?.uid,
                     workspaceId,
                     title,
                     desc,
                     color,
                     fieldId
-                }, token);
+                }, {
+                    token,
+                    action: "editcard"
+                });
 
                 if (data?.success) {
                     return { success: true }

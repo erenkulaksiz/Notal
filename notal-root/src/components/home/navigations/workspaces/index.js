@@ -63,11 +63,6 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
             if (workspacesData.error) {
                 console.error("swr err: ", workspacesData.error);
             }
-            const token = await auth.users.getIdToken();
-            const res = CheckToken({ token: token.res, props: { validate } });
-            if (!res) {
-                setTimeout(() => router.replace(router.asPath), 1000);
-            }
         })();
     }, [workspacesData]);
 

@@ -71,6 +71,7 @@ const HomeWorkspaceCard = ({ workspace, onStar, onDelete, index, skeleton = fals
                     <img
                         src={workspace?.thumbnail.file}
                         className="w-full h-full object-cover"
+                        alt="Workspace Image"
                     />
                 </div>}
                 {(workspace?.thumbnail && workspace?.thumbnail?.type == "singleColor") && <div className="absolute left-0 right-0 top-0 bottom-0 rounded-xl overflow-hidden z-0" style={{ backgroundColor: workspace?.thumbnail?.color }} />}

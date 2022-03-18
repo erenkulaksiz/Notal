@@ -30,6 +30,8 @@ export { default as HomeFilledIcon } from "../../public/icons/home_filled.svg";
 export { default as HomeOutlineIcon } from "../../public/icons/home_outline.svg";
 export { default as InstagramIcon } from "../../public/icons/instagram.svg";
 export { default as InvisibleIcon } from "../../public/icons/invisible.svg";
+export { default as LayersIcon } from "../../public/icons/layers.svg";
+export { default as LayersOutlineIcon } from "../../public/icons/layers_outline.svg";
 export { default as LightIcon } from "../../public/icons/light.svg";
 export { default as LinkIcon } from "../../public/icons/link.svg";
 export { default as LockIcon } from "../../public/icons/lock.svg";

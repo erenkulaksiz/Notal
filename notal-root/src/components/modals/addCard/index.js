@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { HexColorPicker, HexColorInput } from "react-colorful";
+import { HexColorPicker } from "react-colorful";
 import {
     Modal,
     Button,
     Input,
     WorkspaceFieldCard,
-    Select,
     Tooltip,
-    Checkbox
+    Checkbox,
+    Tab
 } from "@components";
 import {
     AddIcon,
@@ -22,10 +22,13 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
     const [addCardErrors, setAddCardErrors] = useState({ title: false, desc: false, color: false, tag: false });
     const [useColor, setUseColor] = useState(true);
 
+    const [tab, setTab] = useState(0);
+
     const close = () => {
         onClose();
         setAddCardErrors({ title: false, desc: false, color: false, tag: false });
         setAddCard({ ...addCard, title: "", desc: "", /*color: "",*/ tag: { tag: "", tagColor: "" } });
+        setTab(0);
     }
 
     const submit = () => {
@@ -63,71 +66,85 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
                 />
             </div>
         </Modal.Title>
-        <Modal.Body className="grid grid-cols-1 gap-2 pb-2 pt-4" animate>
+        <Modal.Body className="flex flex-col pb-2 pt-2" animate>
             {/*<Input fullWidth icon={<UserIcon size={24} />} containerClassName="fill-neutral-600" placeholder="Workspace Title" />*/}
-            <label htmlFor="cardTitle">Card Title</label>
-            <Input
-                fullWidth
-                placeholder="Card Title"
-                onChange={(e) => setAddCard({ ...addCard, title: e.target.value })}
-                value={addCard.title}
-                id="cardTitle"
-            />
-            {addCardErrors.title != false && <span className="text-red-500">{addCardErrors.title}</span>}
-            <label htmlFor="cardDescription">Card Description</label>
-            <Input
-                fullWidth
-                textarea
-                height="h-24"
-                className="p-2"
-                placeholder="Card Description"
-                onChange={(e) => setAddCard({ ...addCard, desc: e.target.value })}
-                value={addCard.desc}
-                id="cardDescription"
-            />
-            <label htmlFor="cardColor">Card Color</label>
-            <div className="flex items-center">
-                {useColor && <Tooltip
-                    useFocus
-                    blockContent={false}
-                    containerClassName="px-0 py-0"
-                    direction="right"
-                    content={<div className="flex flex-col relative">
-                        <HexColorPicker color={addCard.color} onChange={(color) => setAddCard({ ...addCard, color })} />
-                        <div className="flex flex-row flex-wrap">
-                            {CardColors.map((color, index) => <button
-                                key={index}
-                                className="w-6 h-6 m-1 rounded-lg"
-                                style={{ backgroundColor: color.code }}
-                                onClick={() => setAddCard({ ...addCard, color: color.code })}
-                            />)}
-                        </div>
-                    </div>}
-                >
-                    <input
-                        type="text"
-                        id="cardColor"
-                        value={addCard.color}
-                        className="p-0 w-20 h-7 rounded mr-2"
-                        style={{ backgroundColor: addCard.color || "gray" }}
-                        onChange={(e) => {
-                            setAddCard({ ...addCard, color: e.target.value });
-                            if (e.target.value == "") {
-                                setUseColor(false);
-                            }
-                        }}
-                        maxLength={7}
+            <Tab
+                selected={tab}
+                onSelect={({ index }) => setTab(index)}
+                id="workspaceTab"
+                views={[
+                    { title: "Card", id: "card" },
+                    { title: "Details", id: "details" }
+                ]}>
+                <Tab.TabView index={0} className="pt-4 grid grid-cols-1 gap-2">
+                    <label htmlFor="cardTitle">Card Title</label>
+                    <Input
+                        fullWidth
+                        placeholder="Card Title"
+                        onChange={(e) => setAddCard({ ...addCard, title: e.target.value })}
+                        value={addCard.title}
+                        id="cardTitle"
                     />
-                </Tooltip>}
-                <Checkbox
-                    id="useCardColor"
-                    value={!useColor}
-                    onChange={(e) => setUseColor(!useColor)}
-                >
-                    No Color
-                </Checkbox>
-            </div>
-            {addCardErrors.color != false && <span className="text-red-500">{addCardErrors.color}</span>}
+                    {addCardErrors.title != false && <span className="text-red-500">{addCardErrors.title}</span>}
+                    <label htmlFor="cardDescription">Card Description</label>
+                    <Input
+                        fullWidth
+                        textarea
+                        height="h-24"
+                        className="p-2"
+                        placeholder="Card Description"
+                        onChange={(e) => setAddCard({ ...addCard, desc: e.target.value })}
+                        value={addCard.desc}
+                        id="cardDescription"
+                    />
+                    <label htmlFor="cardColor">Card Color</label>
+                    <div className="flex items-center">
+                        {useColor && <Tooltip
+                            useFocus
+                            blockContent={false}
+                            containerClassName="px-0 py-0"
+                            direction="right"
+                            content={<div className="flex flex-col relative">
+                                <HexColorPicker color={addCard.color} onChange={(color) => setAddCard({ ...addCard, color })} />
+                                <div className="flex flex-row flex-wrap">
+                                    {CardColors.map((color, index) => <button
+                                        key={index}
+                                        className="w-6 h-6 m-1 rounded-lg"
+                                        style={{ backgroundColor: color.code }}
+                                        onClick={() => setAddCard({ ...addCard, color: color.code })}
+                                    />)}
+                                </div>
+                            </div>}
+                        >
+                            <input
+                                type="text"
+                                id="cardColor"
+                                value={addCard.color}
+                                className="p-0 w-20 h-7 rounded mr-2"
+                                style={{ backgroundColor: addCard.color || "gray" }}
+                                onChange={(e) => {
+                                    setAddCard({ ...addCard, color: e.target.value });
+                                    if (e.target.value == "") {
+                                        setUseColor(false);
+                                    }
+                                }}
+                                maxLength={7}
+                            />
+                        </Tooltip>}
+                        <Checkbox
+                            id="useCardColor"
+                            value={!useColor}
+                            onChange={(e) => setUseColor(!useColor)}
+                        >
+                            No Color
+                        </Checkbox>
+                    </div>
+                    {addCardErrors.color != false && <span className="text-red-500">{addCardErrors.color}</span>}
+                </Tab.TabView>
+                <Tab.TabView index={1} className="pt-4 grid grid-cols-1 gap-2">
+                    sdfds
+                </Tab.TabView>
+            </Tab>
         </Modal.Body>
         <Modal.Footer className="justify-between" animate>
             <Button

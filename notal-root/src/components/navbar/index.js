@@ -34,7 +34,7 @@ const Navbar = ({
     const router = useRouter();
     const auth = useAuth();
 
-    const [modalVisible, setModalVisible] = useState(false);
+    const [loginModalVisible, setLoginModalVisible] = useState(false);
 
     return (<nav className="p-3 flex flex-row sticky top-0 z-40">
         <div className="absolute top-0 bottom-0 right-0 left-0 dark:bg-black/50 bg-white/50 backdrop-blur-md -z-10 shadow-none dark:shadow-md" />
@@ -88,6 +88,7 @@ const Navbar = ({
                         <img
                             src={user?.avatar}
                             className="w-10 h-9 rounded-full border-[2px] dark:border-black border-white"
+                            alt="Avatar"
                         />
                     </div>
                 </summary>
@@ -121,7 +122,7 @@ const Navbar = ({
                     light
                     className="w-16 sm:w-16 px-0 mr-2"
                     size="sm"
-                    onClick={() => setModalVisible(true)}
+                    onClick={() => setLoginModalVisible(true)}
                     aria-label="Sign up button"
                 >
                     <span className="dark:text-neutral-400 text-neutral-600 font-medium">Sign Up</span>
@@ -130,7 +131,7 @@ const Navbar = ({
                     gradient
                     className="w-14 sm:w-32"
                     size="sm"
-                    onClick={() => setModalVisible(true)}
+                    onClick={() => setLoginModalVisible(true)}
                     aria-label="Sign in button"
                 >
                     <LoginIcon size={24} fill="currentColor" style={{ display: "flex", transform: "scale(0.8)" }} />
@@ -164,11 +165,11 @@ const Navbar = ({
             `}</style>
         </div>
         {!auth.authUser && <LoginModal
-            open={modalVisible}
-            onClose={() => setModalVisible(false)}
+            open={loginModalVisible}
+            onClose={() => setLoginModalVisible(false)}
             onLoginSuccess={() => {
                 setTimeout(() => {
-                    setModalVisible(false);
+                    setLoginModalVisible(false);
                     router.replace(router.asPath);
                 }, 1000);
             }}

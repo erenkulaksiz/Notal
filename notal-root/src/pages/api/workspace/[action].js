@@ -1,5 +1,5 @@
 const admin = require("firebase-admin");
-const { connectToDatabase } = require('../../../lib/mongodb');
+const { connectToDatabase } = require('../../../../lib/mongodb');
 const ObjectId = require('mongodb').ObjectId;
 
 const googleService = JSON.parse(process.env.NEXT_PUBLIC_GOOGLE_SERVICE);
@@ -17,16 +17,18 @@ const usersCollection = db.collection("users");
 export default async function handler(req, res) {
 
     if (req.method !== 'POST') {
-        res.status(400).send({ success: false });
+        res.status(400).send({ success: false, error: "invalid-params", al_gulum: true, ver_gulum: false });
         return;
     }
 
+    const WORKSPACE_ACTION = req.query.action;
+
     const body = JSON.parse(req.body);
 
-    const { uid, title, desc, action, starred, id, workspaceId, color, fieldId, filterBy, workspaceVisible, tag, thumbnail } = body ?? "";
+    const { uid, title, desc, starred, id, workspaceId, color, fieldId, filterBy, workspaceVisible, tag, thumbnail } = body ?? "";
 
     const workspaceAction = {
-        create: async () => {
+        createworkspace: async () => {
             if (!uid) {
                 res.status(400).send({ success: false, error: "invalid-params" });
                 return;
@@ -74,7 +76,7 @@ export default async function handler(req, res) {
                 return res.status(400).send({ success: false, error });
             }
         },
-        get_workspaces: async () => {
+        getworkspaces: async () => {
 
             const bearer = req.headers['authorization'];
             if (typeof bearer !== "undefined") {
@@ -135,7 +137,7 @@ export default async function handler(req, res) {
                 res.status(400).send({ success: false, error: "invalid-params" });
             }
         },
-        get_workspace: async () => {
+        getworkspace: async () => {
             console.log("!!!getting workspace with id: ", id);
             if (!id) {
                 res.status(400).send({ success: false, error: "invalid-params" });
@@ -205,7 +207,7 @@ export default async function handler(req, res) {
                 res.status(400).send({ success: false, error: "not-found" });
             }
         },
-        delete: async () => {
+        removeworkspace: async () => {
             if (!uid || !id) { // id: workspace
                 res.status(400).send({ success: false, error: "invalid-params" });
                 return;
@@ -219,7 +221,7 @@ export default async function handler(req, res) {
                 res.status(400).send({ success: false, error: new Error(error).message });
             }
         },
-        star: async () => {
+        starworkspace: async () => {
             if (!uid || !id) {
                 res.status(400).send({ success: false, error: "invalid-params" });
                 return;
@@ -241,7 +243,7 @@ export default async function handler(req, res) {
                 res.status(400).send({ success: false, error: new Error(error).message });
             }
         },
-        edit: async () => {
+        editworkspace: async () => {
             if (!id || !uid) {
                 res.status(400).send({ success: false, error: "invalid-params" });
                 return;
@@ -261,6 +263,32 @@ export default async function handler(req, res) {
                         .then(() => {
                             res.status(200).send({ success: true });
                         });
+                } else if (thumbnail.type == "image") {
+                    const storageRef = admin.storage().bucket("gs://notal-1df19.appspot.com");
+                    const file = storageRef.file(`thumbnails/temp/workspace_${uid}`);
+                    const fileExist = await file.exists();
+                    if (fileExist[0]) {
+                        await file.move(`thumbnails/workspace_${id}`);
+                        const newFile = storageRef.file(`thumbnails/workspace_${id}`);
+                        //const meta = await newFile.getMetadata();
+                        const url = await newFile.getSignedUrl({
+                            action: 'read',
+                            expires: '03-09-2491'
+                        });
+                        return await workspacesCollection.updateOne({ _id: ObjectId(id) }, {
+                            $set: {
+                                title,
+                                desc,
+                                workspaceVisible,
+                                updatedAt: Date.now(),
+                                thumbnail: { type: "image", file: url[0] }
+                            }
+                        })
+                            .then(() => { return res.status(200).send({ success: true }); })
+                            .catch(error => { return res.status(400).send({ success: false, error }); });
+                    } else {
+                        return res.status(200).send({ success: true });
+                    }
                 }
             } catch (error) {
                 res.status(400).send({ success: false, error: new Error(error).message });
@@ -447,9 +475,9 @@ export default async function handler(req, res) {
         }
     }
 
-    if (!workspaceAction[action?.toLowerCase()]) {
-        res.status(400).send({ success: false, error: "invalid-params-action" });
+    if (!workspaceAction[WORKSPACE_ACTION?.toLowerCase()]) {
+        return res.status(400).send({ success: false, error: "invalid-params" });
     } else {
-        await workspaceAction[action?.toLowerCase()]();
+        await workspaceAction[WORKSPACE_ACTION?.toLowerCase()]();
     }
 }

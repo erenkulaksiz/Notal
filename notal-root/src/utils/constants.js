@@ -14,7 +14,8 @@ import {
     StarOutlineIcon,
     SettingsIcon,
     DeleteIcon,
-    EditIcon,
+    LayersIcon,
+    LayersOutlineIcon,
 } from '@icons';
 
 export const CardColors = [
@@ -162,7 +163,16 @@ export const HomeRoutes = [{
         selected: <BookmarkFilledIcon size={24} fill="currentColor" style={{ transform: "scale(0.8)" }} />
     },
     Component: (props) => <HomeNavBookmarks {...props} />
-}]
+},
+{
+    id: "roadmap",
+    name: "Roadmap",
+    icon: {
+        default: <LayersOutlineIcon size={24} fill="currentColor" style={{ transform: "scale(0.8)" }} />,
+        selected: <LayersIcon size={24} fill="currentColor" style={{ transform: "scale(0.8)" }} />
+    },
+}
+]
 
 export const WorkspaceButtons = [
     {

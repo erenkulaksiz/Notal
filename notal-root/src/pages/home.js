@@ -32,7 +32,14 @@ const Home = (props) => {
     useEffect(() => {
         console.log("home props: ", props);
         WorkboxInit();
-    }, []);
+        (async () => {
+            const token = await auth.users.getIdToken();
+            const res = await CheckToken({ token: token.res, props });
+            if (!res) {
+                setTimeout(() => router.replace(router.asPath), 1000);
+            }
+        })();
+    }, [_workspacesValidating]);
 
     return (<div className="mx-auto h-full flex flex-col transition-colors duration-100">
         <Head>
@@ -56,6 +63,11 @@ const Home = (props) => {
             />
             {HomeRoutes.map((Route) => {
                 if (homeViewing == Route.id) {
+                    if (!Route.Component) {
+                        return <div>
+                            no route found!
+                        </div>
+                    }
                     return Route.Component(
                         {
                             props: { ...props },

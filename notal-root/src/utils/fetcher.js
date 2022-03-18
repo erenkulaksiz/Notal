@@ -1,10 +1,10 @@
 import { server } from "config";
 
-export const fetchWorkspaces = ({ token, uid }) => fetch(`${server}/api/workspace`, {
+export const fetchWorkspaces = ({ token, uid }) => fetch(`${server}/api/workspace/getworkspaces`, {
     'Content-Type': 'application/json',
     method: "POST",
     headers: { 'Authorization': `Bearer ${token || ""}` },
-    body: JSON.stringify({ uid, action: "GET_WORKSPACES" }),
+    body: JSON.stringify({ uid }),
 })
     .then(response => {
         if (response.status >= 400 && response.status < 600) {
@@ -26,10 +26,10 @@ export const fetchValidate = ({ url, token }) => fetch(`${server}/${url}`, {
     });
 */
 
-export const fetchWorkspace = ({ token, id, uid }) => fetch(`${server}/api/workspace`, {
+export const fetchWorkspace = ({ token, id, uid }) => fetch(`${server}/api/workspace/getworkspace`, {
     'Content-Type': 'application/json',
     method: "POST",
     headers: { 'Authorization': `Bearer ${token || ""}` },
-    body: JSON.stringify({ uid, action: "GET_WORKSPACE", id }),
+    body: JSON.stringify({ uid, id }),
 })
     .then(response => response.json());

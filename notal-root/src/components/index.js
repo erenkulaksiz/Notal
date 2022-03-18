@@ -7,7 +7,7 @@ export { default as Checkbox } from "./checkbox";
 export { default as FieldCardIndicator } from "./workspace/fieldCardIndicator";
 export { default as Footer } from "./footer";
 export { default as HomeNavBookmarks } from "./home/navigations/bookmarks";
-export { default as HomeNavTitle } from "./home/navigations/title";
+export { default as HomeNavTitle } from "./home/title";
 export { default as HomeNavWorkspaces } from "./home/navigations/workspaces";
 export { default as HomeSidebar } from "./home/sidebar";
 export { default as HomeSidebarItem } from "./home/sidebarItem";

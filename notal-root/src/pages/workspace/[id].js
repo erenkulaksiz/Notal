@@ -26,6 +26,8 @@ import {
 } from "@components";
 
 import { fetchWorkspace } from "@utils/fetcher";
+import BuildComponent from "@utils/buildComponent";
+import Link from "next/link";
 
 const Workspace = (props) => {
     const auth = useAuth();
@@ -64,7 +66,7 @@ const Workspace = (props) => {
     useEffect(() => {
         console.log("workspace props: ", props);
         WorkboxInit();
-    }, []);
+    }, [_workspaceValidating]);
 
     useEffect(() => {
         (async () => {
@@ -118,7 +120,7 @@ const Workspace = (props) => {
         },
         addField: async ({ title, filterBy }) => {
             const currFields = _workspace?.data?.fields || [];
-            await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: [...currFields, { title, updatedAt: Date.now(), createdAt: Date.now(), filterBy, owner: auth.authUser.uid }] } }, false)
+            await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: [...currFields, { _id: "1", title, updatedAt: Date.now(), createdAt: Date.now(), filterBy, owner: auth.authUser.uid, cards: [] }] } }, false)
             const data = await auth.workspace.field.addField({ title, id: _workspace?.data?._id, filterBy });
             workspaceData.mutate(); // Refresh data in order to get new ID's
             console.log("addField data: ", data);
@@ -186,6 +188,16 @@ const Workspace = (props) => {
         },
     }
 
+    const BuildWorkspaceContainer = BuildComponent({
+        name: "Workspace Container",
+        defaultClasses: "relative flex flex-1 flex-row overflow-y-auto pt-1 pb-2 pl-2 overflow-x-visible",
+    });
+
+    const BuildWorkspaceOwnerProfileContainer = BuildComponent({
+        name: "Workspace Owner Profile Container",
+        defaultClasses: "absolute flex flex-col bottom-7 left-2 left-[4.3rem] z-40 shadow-xl rounded p-2 dark:bg-neutral-700/80 bg-white/60 backdrop-blur-sm",
+    });
+
     return (<div className="mx-auto h-full flex flex-col transition-colors duration-100">
         <Head>
             <title>{loadingWorkspace ? "Loading..." : _workspace?.data?.title ?? "Not Found"}</title>
@@ -201,31 +213,33 @@ const Workspace = (props) => {
         />
 
         <div className="relative flex flex-row flex-1 bg-white dark:bg-neutral-900 overflow-y-auto">
-            {!notFound && !loadingWorkspace && <div className="absolute flex flex-row left-2 bottom-2 z-40 shadow-xl rounded p-2 dark:bg-neutral-800/20 bg-neutral-200/20 backdrop-blur-sm">
+            {!notFound && !loadingWorkspace && <div className={BuildWorkspaceOwnerProfileContainer.classes}>
                 <div className="flex flex-col">
                     <span className="text-medium">
                         {_workspace?.data?.title}
                     </span>
-                    {_workspace?.data?.desc && <span className="text-xs text-neutral-600">
+                    {_workspace?.data?.desc && <span className="text-xs text-neutral-600 dark:text-neutral-400">
                         {_workspace?.data?.desc}
                     </span>}
                 </div>
-                {!isOwner && <div className="flex flex-row ml-2 items-center">
-                    <div className="p-[2px] w-10 h-10 rounded-full cursor-pointer bg-gradient-to-tr from-blue-700 to-pink-700">
-                        <img
-                            src={_workspace?.data?.user?.avatar}
-                            className="w-10 h-9 rounded-full border-[2px] dark:border-black border-white"
-                        />
-                    </div>
-                    <div className="flex flex-col ml-1">
-                        <span className="text-lg">
-                            {_workspace?.data?.user?.fullname ? `${_workspace?.data?.user?.fullname}` : `@${_workspace?.data?.user?.username}`}
-                        </span>
-                        {_workspace?.data?.user?.fullname && <span className="text-sm text-neutral-600">
-                            {`@${_workspace?.data?.user?.username}`}
-                        </span>}
-                    </div>
-                </div>}
+                {!isOwner && <Link href="/profile/[username]" as={`/profile/${_workspace?.data?.user?.username || "not-found"}`} passHref>
+                    <a className="flex flex-row items-center">
+                        <div className="p-[2px] w-10 h-10 rounded-full cursor-pointer bg-gradient-to-tr from-blue-700 to-pink-700">
+                            <img
+                                src={_workspace?.data?.user?.avatar}
+                                className="w-10 h-9 rounded-full border-[2px] dark:border-black border-white"
+                            />
+                        </div>
+                        <div className="flex flex-col ml-1">
+                            <span className="text-lg">
+                                {_workspace?.data?.user?.fullname ? `${_workspace?.data?.user?.fullname}` : `@${_workspace?.data?.user?.username}`}
+                            </span>
+                            {_workspace?.data?.user?.fullname && <span className="text-sm text-neutral-600">
+                                {`@${_workspace?.data?.user?.username}`}
+                            </span>}
+                        </div>
+                    </a>
+                </Link>}
             </div>}
             {(!loadingWorkspace && !_workspace?.error && isOwner) && <WorkspaceSidebar
                 workspaceStarred={_workspace?.data?.starred}
@@ -237,7 +251,7 @@ const Workspace = (props) => {
                 onVisible={() => handle.editWorkspace({ workspaceVisible: _workspace?.data?.workspaceVisible ? !_workspace?.data?.workspaceVisible : true, thumbnail: _workspace?.data?.thumbnail })}
                 onAddField={() => setAddFieldModal({ visible: true, workspaceTitle: _workspace?.data?.title })}
             />}
-            <div className="relative flex flex-1 flex-row overflow-y-auto pt-1 pb-2 pl-2 overflow-x-visible">
+            <div className={BuildWorkspaceContainer.classes}>
                 {loadingWorkspace && [1, 2, 3, 4].map((item) => (
                     <WorkspaceField skeleton key={item} /> // show skeleton loaders
                 ))}
