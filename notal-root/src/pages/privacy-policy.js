@@ -9,7 +9,7 @@ import {
 } from "@components";
 
 const PrivacyPolicy = (props) => {
-    return (<div className="mx-auto max-h-screen min-h-screen flex flex-col transition-colors duration-100 overflow-y-auto">
+    return (<div className="mx-auto flex flex-col transition-colors duration-100 overflow-y-auto overflow-x-hidden">
         <Head>
             <title>Privacy Policy · Notal</title>
             <meta name='twitter:description' content='Take your notes to next level with Notal' />
@@ -311,7 +311,7 @@ const PrivacyPolicy = (props) => {
         </div>
 
         <AcceptCookies />
-    </div >)
+    </div>)
 }
 
 export default PrivacyPolicy;

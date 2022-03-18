@@ -28,7 +28,7 @@ const HomeSidebarItem = ({ nav, onClick, current, navCollapse }) => {
             <motion.div
                 transition={{ type: "spring", duration: 0.5 }}
                 layoutId="sidenavback"
-                className="z-10 absolute left-1.5 top-1 right-1 bottom-1 rounded dark:bg-neutral-700 bg-neutral-100"
+                className="z-10 absolute left-1.5 top-1 right-1 bottom-1 rounded dark:bg-neutral-700 bg-neutral-200"
             />
         }
     </a>)

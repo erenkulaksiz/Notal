@@ -74,7 +74,10 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
                 id="workspaceTab"
                 views={[
                     { title: "Card", id: "card" },
-                    { title: "Details", id: "details" }
+                    { title: "Subtasks", id: "subtasks" },
+                    { title: "Image", id: "image" },
+                    { title: "Notes", id: "notes" },
+                    { title: "Details", id: "details" },
                 ]}>
                 <Tab.TabView index={0} className="pt-4 grid grid-cols-1 gap-2">
                     <label htmlFor="cardTitle">Card Title</label>
@@ -142,6 +145,15 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
                     {addCardErrors.color != false && <span className="text-red-500">{addCardErrors.color}</span>}
                 </Tab.TabView>
                 <Tab.TabView index={1} className="pt-4 grid grid-cols-1 gap-2">
+                    sdfds
+                </Tab.TabView>
+                <Tab.TabView index={2} className="pt-4 grid grid-cols-1 gap-2">
+                    sdfds
+                </Tab.TabView>
+                <Tab.TabView index={3} className="pt-4 grid grid-cols-1 gap-2">
+                    sdfds
+                </Tab.TabView>
+                <Tab.TabView index={4} className="pt-4 grid grid-cols-1 gap-2">
                     sdfds
                 </Tab.TabView>
             </Tab>

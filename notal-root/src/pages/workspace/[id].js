@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import useSWR from "swr";
 import Cookies from "js-cookie";
+import Link from "next/link";
 
 import useAuth from "@hooks/auth";
 
@@ -27,7 +28,6 @@ import {
 
 import { fetchWorkspace } from "@utils/fetcher";
 import BuildComponent from "@utils/buildComponent";
-import Link from "next/link";
 
 const Workspace = (props) => {
     const auth = useAuth();
@@ -195,7 +195,9 @@ const Workspace = (props) => {
 
     const BuildWorkspaceOwnerProfileContainer = BuildComponent({
         name: "Workspace Owner Profile Container",
-        defaultClasses: "absolute flex flex-col bottom-7 left-2 left-[4.3rem] z-40 shadow-xl rounded p-2 dark:bg-neutral-700/80 bg-white/60 backdrop-blur-sm",
+        defaultClasses: "absolute flex flex-col bottom-7 z-40 shadow-xl rounded p-2 dark:bg-neutral-800/80 bg-white/60 backdrop-blur-sm",
+        conditionalClasses: [{ true: "left-[4.3rem]", false: "left-2" }],
+        selectedClasses: [isOwner]
     });
 
     return (<div className="mx-auto h-full flex flex-col transition-colors duration-100">

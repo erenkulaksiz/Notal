@@ -28,7 +28,8 @@ const WorkspaceField = ({
     onAddCard,
     onDeleteCard,
     collapsed,
-    isOwner
+    isOwner,
+    key
 }) => {
 
     if (skeleton) {
