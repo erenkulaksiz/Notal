@@ -159,8 +159,8 @@ export function AuthProvider(props) {
             removeField: async ({ id, workspaceId }) => {
                 return await AuthService.workspace.field.removeField({ id, workspaceId });
             },
-            editField: async ({ id, workspaceId, title }) => {
-                return await AuthService.workspace.field.editField({ id, title, workspaceId });
+            editField: async ({ id, workspaceId, field }) => {
+                return await AuthService.workspace.field.editField({ id, field, workspaceId });
             },
             editCard: async ({ id, workspaceId, fieldId, title, desc, color }) => {
                 return await AuthService.workspace.card.editCard({ id, workspaceId, fieldId, title, desc, color });

@@ -29,7 +29,7 @@ export default async function handler(req, res) {
 
     const body = JSON.parse(req.body);
 
-    const { uid, title, desc, starred, id, workspaceId, color, fieldId, filterBy, workspaceVisible, tag, thumbnail } = body ?? "";
+    const { uid, title, desc, starred, id, workspaceId, color, fieldId, filterBy, workspaceVisible, tag, thumbnail, field } = body ?? "";
 
     const workspaceAction = {
         createworkspace: async () => {
@@ -440,13 +440,21 @@ export default async function handler(req, res) {
             }
         },
         editfield: async () => {
-            if (!id || !uid || !workspaceId || !title) {
+            if (!id || !uid || !workspaceId || !field) {
                 res.status(400).send({ success: false, error: "invalid-params" });
                 return;
             }
 
             try {
-                await workspacesCollection.updateOne({ "_id": ObjectId(workspaceId), "fields._id": ObjectId(id) }, { $set: { "fields.$.title": title } });
+                await workspacesCollection.updateOne(
+                    { "_id": ObjectId(workspaceId), "fields._id": ObjectId(id) },
+                    {
+                        $set: {
+                            "fields.$.title": field?.title,
+                            "fields.$.filterBy": field?.filterBy,
+                            "fields.$.collapsed": field?.collapsed,
+                        }
+                    });
                 res.status(200).send({ success: true });
             } catch (error) {
                 res.status(400).send({ success: false, error: new Error(error).message });

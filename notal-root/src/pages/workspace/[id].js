@@ -198,6 +198,15 @@ const Workspace = (props) => {
                 newFields[fieldIndex]["collapsed"] = true;
             }
             await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: newFields } }, false);
+            await auth.workspace.field.editField({
+                id,
+                field: {
+                    title: newFields[fieldIndex]?.title,
+                    filterBy: newFields[fieldIndex]?.filterBy,
+                    collapsed: !!newFields[fieldIndex]?.collapsed,
+                },
+                workspaceId: _workspace?.data?._id,
+            });
         },
     }
 

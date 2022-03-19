@@ -305,7 +305,7 @@ const AuthService = {
                     return { success: false, error: data?.error }
                 }
             },
-            editField: async ({ id, workspaceId, title }) => {
+            editField: async ({ id, workspaceId, field }) => {
                 const auth = getAuth();
                 const token = await auth.currentUser.getIdToken();
 
@@ -313,7 +313,7 @@ const AuthService = {
                     id,
                     uid: auth?.currentUser?.uid,
                     workspaceId,
-                    title
+                    field,
                 }, {
                     token,
                     action: "editfield"
