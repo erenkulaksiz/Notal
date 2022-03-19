@@ -7,7 +7,7 @@ const CardColor = ({ color }) => {
 }
 
 const WorkspaceFieldCard = ({ card, onDelete, onSettings, preview, isOwner }) => {
-    return (<div className="relative w-full group min-h-min flex flex-row dark:bg-neutral-900 bg-white border-solid border-b-2 border-b-neutral-100 dark:border-b-neutral-800">
+    return (<div className="relative w-full group min-h-min flex flex-row dark:bg-neutral-900 bg-white border-solid border-b-2 border-b-neutral-200 dark:border-b-neutral-800">
         <CardColor color={card.color} />
         <div className="flex flex-1 p-2 pl-4 min-w-full">
             <div className="flex flex-col overflow-ellipsis w-full">
@@ -43,13 +43,13 @@ const WorkspaceFieldCard = ({ card, onDelete, onSettings, preview, isOwner }) =>
                 {card.desc && <span className="dark:text-neutral-300 text-neutral-800 text-sm mt-1 break-words">
                     {card.desc}
                 </span>}
-                {card.updatedAt && <span className="text-sm dark:text-neutral-600 text-neutral-400 mt-2 group-hover:flex hidden" title={`Created ${new Date(card.createdAt).getDate()} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][new Date(card.createdAt).getMonth()]}, ${new Date(card.createdAt).getFullYear()} ${new Date(card.createdAt).getUTCHours().toString().padStart(2, '0')}:${new Date(card.createdAt).getUTCMinutes().toString().padStart(2, '0')} • Updated ${new Date(card.updatedAt).getDate()} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][new Date(card.updatedAt).getMonth()]}, ${new Date(card.updatedAt).getFullYear()} ${new Date(card.updatedAt).getUTCHours().toString().padStart(2, '0')}:${new Date(card.updatedAt).getUTCMinutes().toString().padStart(2, '0')}`}>
+                {card.updatedAt && <span className="text-sm dark:text-neutral-600 text-neutral-400 mt-2 group-hover:flex hidden" title={`Created ${new Date(card.createdAt).getDate()} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][new Date(card.createdAt).getMonth()]}, ${new Date(card.createdAt).getFullYear()} ${new Date(card.createdAt).getHours().toString().padStart(2, '0')}:${new Date(card.createdAt).getMinutes().toString().padStart(2, '0')} • Updated ${new Date(card.updatedAt).getDate()} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][new Date(card.updatedAt).getMonth()]}, ${new Date(card.updatedAt).getFullYear()} ${new Date(card.updatedAt).getHours().toString().padStart(2, '0')}:${new Date(card.updatedAt).getMinutes().toString().padStart(2, '0')}`}>
                     <time dateTime={card.updatedAt}>{`Created ${prettyMilliseconds(Date.now() - card.createdAt, { compact: true })} ago • Updated ${prettyMilliseconds(Date.now() - card.updatedAt, { compact: true })} ago`}</time>
                 </span>}
                 {card.owner && <span className="text-xs dark:text-neutral-600 text-neutral-400 group-hover:flex hidden">{`Owner: ${card.owner}`}</span>}
             </div>
         </div>
     </div>)
-} // {`Joined  ${new Date(createdAt).getDate()} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][new Date(createdAt).getMonth()]}, ${new Date(createdAt).getFullYear()}`}
+}
 
 export default WorkspaceFieldCard;

@@ -14,6 +14,10 @@ const { db } = await connectToDatabase();
 const workspacesCollection = db.collection("workspaces");
 const usersCollection = db.collection("users");
 
+const checkBearer = () => {
+
+}
+
 export default async function handler(req, res) {
 
     if (req.method !== 'POST') {
@@ -314,6 +318,7 @@ export default async function handler(req, res) {
                                         updatedAt: Date.now(),
                                         filterBy,
                                         owner: uid,
+                                        cards: [],
                                         _id: ObjectId(),
                                     }
                                 }
@@ -362,7 +367,11 @@ export default async function handler(req, res) {
                 return;
             }
             if (color && color.length > 7) {
-                res.status(400).send({ success: false, error: "ona izin veremiyoruz paşam" });
+                res.status(400).send({ success: false, error: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" });
+                return;
+            }
+            if (thumbnail && thumbnail?.type == "gradient" && (thumbnail?.colors?.start?.length > 7 || thumbnail?.colors?.end?.length > 7)) {
+                res.status(400).send({ success: false, error: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" });
                 return;
             }
             try {

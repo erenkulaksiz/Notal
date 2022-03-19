@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 
 import {
@@ -14,7 +15,9 @@ import {
     EditIcon,
     FilterIcon,
     DeleteIcon,
-    SettingsIcon
+    SettingsIcon,
+    FoldIcon,
+    UnfoldIcon
 } from "@icons";
 
 import FieldCardIndicator from "../fieldCardIndicator";
@@ -27,19 +30,32 @@ const WorkspaceField = ({
     onCollapse,
     onAddCard,
     onDeleteCard,
-    collapsed,
-    isOwner,
-    key
+    isOwner
 }) => {
+    const [hovered, setHovered] = useState(false);
 
     if (skeleton) {
         return (<WorkspaceFieldSkeleton />)
     }
 
-    return (<motion.div
-        className="h-full relative rounded shadow min-w-[280px] flex flex-col items-start dark:bg-neutral-800 bg-neutral-100 mr-2"
+    return (<motion.div // min-w-[280px] 
+        className="h-full relative rounded shadow flex flex-col items-start dark:bg-neutral-800 bg-neutral-200 p-0.5 mr-1.5"
+        animate={field?.collapsed && !hovered ? "collapse" : "normal"}
+        variants={{
+            collapse: {
+                width: "120px",
+                minWidth: "120px"
+            },
+            normal: {
+                minWidth: "280px",
+                width: "280px"
+            }
+        }}
+        transition={{ type: "spring", damping: 15, mass: .25 }}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
     >
-        <div className="z-20 p-2 pr-1 w-full flex flex-row justify-between backdrop-blur-sm dark:bg-neutral-900/50 bg-white/50 pb-2 shadow-md shadow-neutral-200/50 dark:shadow-neutral-800/50 overflow-visible">
+        <div className={`${hovered ? "z-50" : "z-10"} p-2 pr-1 w-full flex flex-row justify-between backdrop-blur-sm dark:bg-neutral-900/50 bg-white/50 pb-2 overflow-visible border-b-2 border-b-neutral-200 dark:border-b-neutral-800`}>
             <div className="flex flex-row items-center">
                 <FieldCardIndicator cardCount={field?.cards?.length} />
                 <span className="ml-2 font-medium">
@@ -63,6 +79,9 @@ const WorkspaceField = ({
                         <Button size="md" className="px-2 ml-1" onClick={onDelete}>
                             <DeleteIcon size={24} fill="currentColor" />
                         </Button>
+                        <Button size="md" className="px-2 ml-1" onClick={onCollapse}>
+                            {field.collapsed ? <FoldIcon size={24} fill="currentColor" style={{ transform: "rotate(90deg)" }} /> : <UnfoldIcon size={24} fill="currentColor" style={{ transform: "rotate(90deg)" }} />}
+                        </Button>
                     </div>}
                 >
                     <Button light size="sm" className="px-2 rounded-md active:scale-90">
@@ -71,7 +90,7 @@ const WorkspaceField = ({
                 </Tooltip>}
             </div>
         </div>
-        <div className="overflow-auto h-full w-full pl-[2px] pr-[2px]">
+        <div className="overflow-auto h-full w-full">
             {field?.cards && field?.cards.map((card, index) =>
                 <WorkspaceFieldCard
                     card={card}

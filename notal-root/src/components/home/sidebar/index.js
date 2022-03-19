@@ -36,7 +36,7 @@ const HomeSidebar = ({ navCollapse, current, onViewingChange, onCollapse }) => {
                     initial={{ rotate: 0 }}
                     animate={navCollapse ? { rotate: 180 } : ""}
                     transition={{ type: "spring", damping: 50, stiffness: 500 }}
-                    className="dark:bg-neutral-800 drop-shadow-sm rounded-full w-7 h-7 flex items-center justify-center hover:dark:bg-neutral-900 hover:bg-neutral-200 transition-colors ease-in-out"
+                    className="dark:bg-neutral-800 bg-neutral-100 drop-shadow-sm rounded-full w-7 h-7 flex items-center justify-center hover:dark:bg-neutral-900 hover:bg-neutral-200 transition-colors ease-in-out"
                 >
                     <ChevronRightIcon size={24} fill={"currentColor"} style={{ transform: "rotate(-180deg)" }} />
                 </motion.div>

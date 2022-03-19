@@ -13,8 +13,10 @@ if (!admin.apps.length) {
 
 const ValidateUser = ({ token, uid }) => {
     return await admin.auth().verifyIdToken(token).then(async (decodedToken) => {
-        if (decodedToken.user_id == uid) return true
-        return false
+        if (decodedToken.user_id == uid) return { success: false, decodedToken }
+        return { success: false, error: "invalid-match" }
+    }).catch(error => {
+        return { success: false, error }
     })
 }
 

@@ -15,3 +15,11 @@ export const FilterWorkspaces = ({ workspaces, filter }) => {
     if (!filterObj[filter]) return workspaces // Return default
     return filterObj[filter]
 }
+
+export const FILTER_MAP = {
+    all: () => true,
+    favorites: el => el.starred,
+    privateWorkspaces: el => !!el?.workspaceVisible == false,
+    createdAt: (a, b) => a?.createdAt - b?.createdAt,
+    updatedAt: (a, b) => a?.updatedAt - b?.updatedAt,
+}

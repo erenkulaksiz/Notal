@@ -66,10 +66,18 @@ const Workspace = (props) => {
     useEffect(() => {
         console.log("workspace props: ", props);
         WorkboxInit();
+        (async () => {
+            const token = await auth.users.getIdToken();
+            const res = CheckToken({ token: token.res, props });
+            if (!res) {
+                setTimeout(() => router.replace(router.asPath), 1000);
+            }
+        })();
     }, [_workspaceValidating]);
 
     useEffect(() => {
         (async () => {
+            console.log("newData: ", workspaceData?.data?.data);
             if (workspaceData?.data?.error) {
                 console.error("swr error workspaceData: ", workspaceData?.data);
             }
@@ -88,11 +96,6 @@ const Workspace = (props) => {
             }
             if (workspaceData.error) {
                 console.error("Error with workspace: ", workspaceData.error);
-            }
-            const token = await auth.users.getIdToken();
-            const res = CheckToken({ token: token.res, props });
-            if (!res) {
-                setTimeout(() => router.replace(router.asPath), 1000);
             }
         })();
     }, [workspaceData]);
@@ -186,6 +189,16 @@ const Workspace = (props) => {
                 console.log("edit card error: ", data?.error);
             }
         },
+        collapseField: async ({ id }) => {
+            const newFields = _workspace?.data?.fields;
+            const fieldIndex = _workspace?.data?.fields.findIndex(el => el._id == id);
+            if (newFields[fieldIndex]["collapsed"]) {
+                newFields[fieldIndex]["collapsed"] = false;
+            } else {
+                newFields[fieldIndex]["collapsed"] = true;
+            }
+            await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: newFields } }, false);
+        },
     }
 
     const BuildWorkspaceContainer = BuildComponent({
@@ -215,7 +228,7 @@ const Workspace = (props) => {
         />
 
         <div className="relative flex flex-row flex-1 bg-white dark:bg-neutral-900 overflow-y-auto">
-            {!notFound && !loadingWorkspace && <div className={BuildWorkspaceOwnerProfileContainer.classes}>
+            {!notFound && !loadingWorkspace && _workspace?.data?.user?.username && <div className={BuildWorkspaceOwnerProfileContainer.classes}>
                 <div className="flex flex-col">
                     <span className="text-medium">
                         {_workspace?.data?.title}
@@ -264,6 +277,7 @@ const Workspace = (props) => {
                         onDelete={() => handle.deleteField({ id: field._id })}
                         onAddCard={() => setAddCardModal({ ...addCardModal, visible: true, fieldId: field._id, fieldTitle: field.title })}
                         onDeleteCard={({ id }) => handle.deleteCard({ id, fieldId: field._id })}
+                        onCollapse={() => handle.collapseField({ id: field._id })}
                         isOwner={isOwner}
                     />
                 ))}

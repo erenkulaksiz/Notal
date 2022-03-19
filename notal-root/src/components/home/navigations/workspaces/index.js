@@ -4,7 +4,6 @@ import Cookies from "js-cookie";
 import useSWR from "swr";
 import { useRouter } from "next/router";
 
-import { CheckToken } from "@utils";
 import useAuth from "@hooks/auth";
 //import useNotalUI from "@hooks/notalui";
 import { fetchWorkspaces } from "@utils/fetcher";
@@ -72,7 +71,7 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
     }, [workspacesData.isValidating]);
 
     useEffect(() => {
-        (!_workspaces?.error && !loadingWorkspaces) && _setWorkspacesFiltered(FilterWorkspaces({ workspaces: _workspaces?.data, filter }));
+        (!_workspaces?.error && !loadingWorkspaces) && _setWorkspacesFiltered([...FilterWorkspaces({ workspaces: _workspaces?.data, filter })]);
     }, [filter, _workspaces]);
 
     const workspace = {

@@ -16,6 +16,8 @@ import {
     DeleteIcon,
     LayersIcon,
     LayersOutlineIcon,
+    GroupsOutlineIcon,
+    GroupsIcon,
 } from '@icons';
 
 export const CardColors = [
@@ -171,6 +173,14 @@ export const HomeRoutes = [{
         default: <LayersOutlineIcon size={24} fill="currentColor" style={{ transform: "scale(0.8)" }} />,
         selected: <LayersIcon size={24} fill="currentColor" style={{ transform: "scale(0.8)" }} />
     },
+},
+{
+    id: "teams",
+    name: "Teams",
+    icon: {
+        default: <GroupsOutlineIcon size={24} fill="currentColor" style={{ transform: "scale(0.8)" }} />,
+        selected: <GroupsIcon size={24} fill="currentColor" style={{ transform: "scale(0.8)" }} />
+    }
 }
 ]
 
