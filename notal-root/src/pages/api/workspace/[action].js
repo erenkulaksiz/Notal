@@ -291,7 +291,17 @@ export default async function handler(req, res) {
                             .then(() => { return res.status(200).send({ success: true }); })
                             .catch(error => { return res.status(400).send({ success: false, error }); });
                     } else {
-                        return res.status(200).send({ success: true });
+                        return await workspacesCollection.updateOne({ _id: ObjectId(id) }, {
+                            $set: {
+                                title,
+                                desc,
+                                workspaceVisible,
+                                updatedAt: Date.now(),
+                                thumbnail: thumbnail,
+                            }
+                        })
+                            .then(() => { return res.status(200).send({ success: true }); })
+                            .catch(error => { return res.status(400).send({ success: false, error }); });
                     }
                 }
             } catch (error) {

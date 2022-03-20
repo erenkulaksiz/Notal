@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 
 import { CodeIcon, HeartIcon, TwitterIcon } from '@icons';
 
@@ -8,19 +10,38 @@ import IconWhite from "@public/icon_white.webp";
 import IconGalactic from "@public/icon_galactic.webp";
 import BuildComponent from '@utils/buildComponent';
 
+import { isClient } from '@utils';
+import { Tooltip } from '@components';
+
 const Footer = ({ className }) => {
     const { resolvedTheme } = useTheme();
+    const [isInView, setInView] = useState(false);
 
     const BuildFooter = BuildComponent({
         name: "Footer",
         defaultClasses: "w-full pb-8 flex flex-col z-20",
         extraClasses: className
-    })
+    });
 
-    return (<footer className={BuildFooter.classes}>
+    return (<motion.footer
+        className={BuildFooter.classes}
+        animate={isInView ? "show" : "hidden"}
+        /*variants={{
+            hidden: { y: isClient ? 50 : 0 },
+            show: { y: 0 },
+        }}*/
+        onViewportEnter={(e) => setInView(true)}
+        onViewportLeave={(e) => setInView(false)}
+    >
         <div className="h-0.5 dark:bg-neutral-700 bg-neutral-300 w-full rounded-full" />
         <div className="grid grid-cols-1 sm:grid-cols-3 mt-8 gap-8 sm:gap-4">
-            <div className="flex flex-col">
+            <motion.div
+                variants={{
+                    hidden: { y: isClient ? -50 : 0, opacity: isClient ? 0 : 1 },
+                    show: { y: 0, opacity: 1, transition: { type: "spring", damping: 25, mass: .50 } },
+                }}
+                className="flex flex-col"
+            >
                 {typeof resolvedTheme != "undefined" && <div className="w-32 h-8 object-contain">
                     <Image
                         src={resolvedTheme == "dark" ? IconWhite : IconGalactic}
@@ -35,12 +56,20 @@ const Footer = ({ className }) => {
                     <span>with</span>
                     <HeartIcon size={24} className="fill-red-500" style={{ transform: "scale(0.8)" }} />
                     <span>by</span>
-                    <a href="https://github.com/erenkulaksiz" target="_blank" rel="noreferrer" className="ml-1">
-                        @Eren Kulaksiz
-                    </a>
+                    <Tooltip content={<span className="text-xs">GitHub</span>}>
+                        <a href="https://github.com/erenkulaksiz" target="_blank" rel="noreferrer" className="ml-1">
+                            @Eren Kulaksiz
+                        </a>
+                    </Tooltip>
                 </span>
-            </div>
-            <div className="flex flex-col">
+            </motion.div>
+            <motion.div
+                variants={{
+                    hidden: { y: isClient ? -50 : 0, opacity: isClient ? 0 : 1 },
+                    show: { y: 0, opacity: 1, transition: { type: "spring", damping: 25, mass: .50, delay: .2 } },
+                }}
+                className="flex flex-col"
+            >
                 <span className="uppercase dark:text-neutral-400 font-bold">Pages</span>
                 <Link href="/" passHref>
                     <a href="#" className="uppercase mt-2 text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
@@ -53,8 +82,14 @@ const Footer = ({ className }) => {
                 <a href="#" className="uppercase mt-2 text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
                     Behind The Scenes
                 </a>
-            </div>
-            <div className="flex flex-col">
+            </motion.div>
+            <motion.div
+                variants={{
+                    hidden: { y: isClient ? -50 : 0, opacity: isClient ? 0 : 1 },
+                    show: { y: 0, opacity: 1, transition: { type: "spring", damping: 25, mass: .50, delay: .4 } },
+                }}
+                className="flex flex-col"
+            >
                 <span className="uppercase dark:text-neutral-400 font-bold">Legal</span>
                 <Link href="/privacy-policy" passHref>
                     <a className="uppercase mt-2 text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
@@ -64,19 +99,21 @@ const Footer = ({ className }) => {
                 <a href="mailto:erenkulaksz@gmail.com" className="uppercase mt-2 text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
                     Contact
                 </a>
-            </div>
+            </motion.div>
         </div>
         <div className="w-full mt-10 flex flex-row justify-between">
             <div className="flex items-center">
-                <a href="https://twitter.com/notalapp" target="_blank" rel="noreferrer">
-                    <TwitterIcon width={18} height={18} style={{ color: "currentColor" }} />
-                </a>
+                <Tooltip content="Twitter @notalapp" direction="right">
+                    <a href="https://twitter.com/notalapp" target="_blank" rel="noreferrer">
+                        <TwitterIcon width={18} height={18} style={{ color: "currentColor" }} />
+                    </a>
+                </Tooltip>
             </div>
             <div className="flex items-center text-neutral-400">
                 © 2022 notal.app, All Rights Reserved.
             </div>
         </div>
-    </footer>)
+    </motion.footer>)
 }
 
 export default Footer;

@@ -20,12 +20,12 @@ const WorkspaceFieldCard = ({ card, onDelete, onSettings, preview, isOwner, fiel
         <CardColor color={card.color} />
         <div className="flex flex-1 p-2 pl-4 min-w-full">
             <div className="flex flex-col overflow-ellipsis w-full">
-                <div className="flex flex-row justify-between">
+                <div className="flex flex-row justify-between items-center">
                     <span className={BuildTitle.classes}>
                         {card.title}
                     </span>
                     <div className="flex flex-row">
-                        {card.color == "#D28519" && <div className="py-1">
+                        {card?.color == "#D28519" && <div className="py-1">
                             <WarningIcon size={24} fill="#D28519" style={{ transform: "scale(.7)" }} />
                         </div>}
                         {(!preview && isOwner) && !fieldCollapsed && <div className="fill-neutral-200 dark:fill-neutral-600 relative">
@@ -49,7 +49,7 @@ const WorkspaceFieldCard = ({ card, onDelete, onSettings, preview, isOwner, fiel
                         </div>}
                     </div>
                 </div>
-                {card.desc && !fieldCollapsed && <span className="dark:text-neutral-300 text-neutral-800 text-sm mt-1 break-words">
+                {card?.desc && !fieldCollapsed && <span className="dark:text-neutral-300 text-neutral-800 text-sm mt-1 break-words">
                     {card.desc}
                 </span>}
                 {card.updatedAt && <span className="text-sm dark:text-neutral-600 text-neutral-400 mt-2 group-hover:flex hidden" title={`Created ${new Date(card.createdAt).getDate()} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][new Date(card.createdAt).getMonth()]}, ${new Date(card.createdAt).getFullYear()} ${new Date(card.createdAt).getHours().toString().padStart(2, '0')}:${new Date(card.createdAt).getMinutes().toString().padStart(2, '0')} • Updated ${new Date(card.updatedAt).getDate()} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][new Date(card.updatedAt).getMonth()]}, ${new Date(card.updatedAt).getFullYear()} ${new Date(card.updatedAt).getHours().toString().padStart(2, '0')}:${new Date(card.updatedAt).getMinutes().toString().padStart(2, '0')}`}>

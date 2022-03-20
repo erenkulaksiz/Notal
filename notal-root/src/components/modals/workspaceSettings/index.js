@@ -32,6 +32,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, workspace }) => {
         setEditWorkspace({
             title: workspace?.title,
             desc: workspace?.desc,
+            workspaceVisible: workspace?.workspaceVisible,
             thumbnail: workspace?.thumbnail
         });
     }, [workspace]);
@@ -42,6 +43,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, workspace }) => {
         setEditWorkspace({
             title: workspace?.title,
             desc: workspace?.desc,
+            workspaceVisible: workspace?.workspaceVisible,
             thumbnail: workspace?.thumbnail,
         });
     }
@@ -52,6 +54,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, workspace }) => {
                 onSubmit({
                     title: editWorkspace.title,
                     desc: editWorkspace.desc,
+                    workspaceVisible: editWorkspace.workspaceVisible,
                     thumbnail: {
                         type: editWorkspace.thumbnail.type,
                         color: editWorkspace.thumbnail.color,
@@ -62,6 +65,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, workspace }) => {
                 onSubmit({
                     title: editWorkspace.title,
                     desc: editWorkspace.desc,
+                    workspaceVisible: editWorkspace.workspaceVisible,
                     thumbnail: {
                         type: editWorkspace.thumbnail.type,
                         colors: {
@@ -93,6 +97,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, workspace }) => {
                         onSubmit({
                             title: editWorkspace.title,
                             desc: editWorkspace.desc,
+                            workspaceVisible: editWorkspace.workspaceVisible,
                             thumbnail: {
                                 type: "image",
                                 file: res.url
@@ -107,15 +112,11 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, workspace }) => {
                     alert("only png, jpeg and jpg is allowed");
                 }
             } else {
-                onAdd({
-                    title: newWorkspace.title,
-                    desc: newWorkspace.desc,
-                    starred: newWorkspace.starred,
-                    workspaceVisible: newWorkspace.workspaceVisible,
-                    thumbnail: {
-                        type: "image",
-                        file: michael,
-                    }
+                onSubmit({
+                    title: editWorkspace.title,
+                    desc: editWorkspace.desc,
+                    workspaceVisible: editWorkspace.workspaceVisible,
+                    thumbnail: editWorkspace.thumbnail
                 })
                 close();
             }

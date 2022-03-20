@@ -1,10 +1,10 @@
+import { createElement } from 'react';
 import {
     conditionalClass,
     allClass
 } from '@utils/conditionalClass';
 
 import BuildComponent from '@utils/buildComponent';
-import React from 'react';
 import { Loading } from '@components';
 
 const Button = ({
@@ -19,6 +19,7 @@ const Button = ({
     fullWidth = false,
     ring = true,
     loading = false,
+    form,
     as = "button",
     ...props
 }) => {
@@ -79,9 +80,9 @@ const Button = ({
         ]
     });
 
-    const ButtonEl = ({ ...props }) => (React.createElement(as, props));
+    const ButtonEl = ({ ...props }) => (createElement(as, props));
 
-    return (<ButtonEl onClick={onClick} className={BuildButton.classes} {...props}>
+    return (<ButtonEl onClick={onClick} className={BuildButton.classes} {...props} form={form}>
         {icon && <span className={iconClasses}>{icon}</span>}
         <span className="mx-auto flex flex-row items-center">{children}</span>
         {loading && <div className="absolute left-0 right-0 bottom-0 top-0 dark:bg-neutral-900/90 bg-neutral-200/50 flex items-center justify-center">
