@@ -13,6 +13,7 @@ export { default as HomeSidebar } from "./home/sidebar";
 export { default as HomeSidebarItem } from "./home/sidebarItem";
 export { default as HomeWorkspaceCard } from "./home/workspaceCard";
 export { default as HomeWorkspaceCardSkeleton } from "./home/workspaceCardSkeleton";
+export { default as HomeBookmarkItem } from "./home/bookmarks/bookmarkItem";
 export { default as Input } from "./input";
 export { default as LandingFeatureCard } from "./landing/featureCard";
 export { default as Loading } from "./loading";

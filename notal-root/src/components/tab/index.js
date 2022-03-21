@@ -41,8 +41,15 @@ const TabButton = ({ children, selected, hover, onMouseEnter, onMouseLeave, setS
     </button >)
 }
 
-const TabHeader = ({ children }) => {
-    return (<div className="w-full h-10 flex flex-row relative dark:bg-neutral-800 bg-gray-100 border-2 border-solid dark:border-neutral-700 border-neutral-200 rounded-lg">
+const TabHeader = ({ children, headerClassName }) => {
+
+    const BuildTabHeader = BuildComponent({
+        name: "Notal UI Tab Header",
+        defaultClasses: "w-full h-10 flex flex-row relative border-2 border-solid dark:border-neutral-700 border-neutral-200 rounded-lg",
+        extraClasses: headerClassName
+    });
+
+    return (<div className={BuildTabHeader.classes}>
         {children}
     </div>)
 }
@@ -50,21 +57,27 @@ const TabHeader = ({ children }) => {
 const TabView = ({ children, className }) => {
 
     const BuildTabView = BuildComponent({
-        name: "TabView",
+        name: "Notal UI Tab View",
         defaultClasses: "w-full h-full",
         extraClasses: className
-    })
+    });
 
     return (<div className={BuildTabView.classes}>
         {children}
     </div>)
 }
 
-const Tab = ({ children, selected, views, onSelect, id }) => {
+const Tab = ({ children, selected, views, onSelect, id, className, headerClassName }) => {
     const [hover, setHover] = useState(-1);
 
-    return (<div className="w-full h-full relative">
-        <TabHeader>
+    const BuildTab = BuildComponent({
+        name: "Notal UI Tab",
+        defaultClasses: "w-full h-full relative",
+        extraClasses: className
+    })
+
+    return (<div className={BuildTab.classes}>
+        <TabHeader headerClassName={headerClassName}>
             <LayoutGroup id={id}>
                 {views.map((view, index) => <TabButton
                     className="w-full h-full group relative"

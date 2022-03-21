@@ -97,12 +97,12 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
         },
     }
 
-    return (<div className="flex flex-1 px-8 py-4 flex-col overflow-y-auto overflow-x-hidden">
-        <div className="w-full grid gap-2 flex-row items-center flex-wrap grid-cols-1 sm:grid-cols-2 md:grid-cols-2">
-            <HomeNavTitle title="Workspaces">
-                <DashboardFilledIcon size={24} fill="currentColor" />
-            </HomeNavTitle>
-            <div className="flex-1 flex flex-row items-center justify-end">
+    return (<div className="flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+        <HomeNavTitle title="Workspaces">
+            <DashboardFilledIcon size={24} fill="currentColor" />
+        </HomeNavTitle>
+        <div className="w-full mt-4 grid gap-2 flex-row items-center flex-wrap grid-cols-1 sm:grid-cols-1 md:grid-cols-1">
+            <div className="flex-1 flex px-4 flex-row items-center justify-end">
                 <FilterIcon size={24} fill="currentColor" className="mr-4" />
                 <Tooltip
                     content={<label htmlFor="workspaceFilter">Filter Workspaces</label>}
@@ -142,7 +142,7 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
         <motion.div
             initial="hidden"
             animate="show"
-            className="relative pb-4 mt-4 grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 items-start auto-rows-max"
+            className="relative pb-4 px-4 mt-4 grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 items-start auto-rows-max"
         >
             <AnimatePresence>
                 {!loadingWorkspaces && _workspacesFiltered.map((element, index) => <HomeWorkspaceCard

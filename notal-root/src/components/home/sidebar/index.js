@@ -12,7 +12,7 @@ import BuildComponent from "@utils/buildComponent";
 const HomeSidebar = ({ navCollapse, current, onViewingChange, onCollapse }) => {
     const BuildSidebar = BuildComponent({
         name: "Home Sidebar Navigation",
-        defaultClasses: "flex shadow-xl flex-col bg-white dark:bg-neutral-800 z-30 top-0 sticky",
+        defaultClasses: "flex shadow-xl flex-col bg-white dark:bg-neutral-800 z-50 top-0 sticky",
     })
 
     return (<motion.nav

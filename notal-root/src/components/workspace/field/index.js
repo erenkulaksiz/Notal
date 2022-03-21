@@ -78,6 +78,7 @@ const WorkspaceField = ({
         transition={{ type: "spring", damping: 15, mass: .25 }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
+    //onClick={() => setHovered(!hovered)}
     >
         <div className={BuildFieldTitle.classes}>
             <div className={BuildTitleContainer.classes}>

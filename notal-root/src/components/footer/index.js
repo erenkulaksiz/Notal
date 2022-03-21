@@ -31,7 +31,7 @@ const Footer = ({ className }) => {
             show: { y: 0 },
         }}*/
         onViewportEnter={(e) => setInView(true)}
-        onViewportLeave={(e) => setInView(false)}
+    //onViewportLeave={(e) => setInView(false)}
     >
         <div className="h-0.5 dark:bg-neutral-700 bg-neutral-300 w-full rounded-full" />
         <div className="grid grid-cols-1 sm:grid-cols-3 mt-8 gap-8 sm:gap-4">
@@ -56,7 +56,7 @@ const Footer = ({ className }) => {
                     <span>with</span>
                     <HeartIcon size={24} className="fill-red-500" style={{ transform: "scale(0.8)" }} />
                     <span>by</span>
-                    <Tooltip content={<span className="text-xs">GitHub</span>}>
+                    <Tooltip direction="right" content={<span className="text-xs">GitHub</span>}>
                         <a href="https://github.com/erenkulaksiz" target="_blank" rel="noreferrer" className="ml-1">
                             @Eren Kulaksiz
                         </a>

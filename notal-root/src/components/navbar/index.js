@@ -37,7 +37,7 @@ const Navbar = ({
     const [loginModalVisible, setLoginModalVisible] = useState(false);
 
     return (<nav className="p-3 flex flex-row sticky top-0 z-40">
-        <div className="absolute top-0 bottom-0 right-0 left-0 dark:bg-black/50 bg-white/50 backdrop-blur-md -z-10 shadow-none dark:shadow-md" />
+        <div className="absolute top-0 bottom-0 right-0 left-0 dark:bg-black/30 bg-white/30 backdrop-blur-md -z-10 shadow-none dark:shadow-md" />
         <div className="w-1/2 flex items-start">
             {typeof resolvedTheme != "undefined" && <Link href={auth?.authUser ? "/home" : "/"} passHref>
                 <a className="w-auto">
@@ -101,7 +101,7 @@ const Navbar = ({
                             role="switch"
                             id="changeTheme"
                         />
-                        <span className="ml-2 text-xs dark:text-neutral-600 text-neutral-300">v{process.env.NEXT_PUBLIC_APP_VERSION}</span>
+                        <span className="ml-2 text-xs dark:text-neutral-600 text-neutral-300">{`v${process.env.NEXT_PUBLIC_APP_VERSION}`}</span>
                     </div>}
                     <h2 className="text-current font-bold text-xl">{user?.fullname ? user?.fullname : user?.username ? "@" + user?.username : "..."}</h2>
                     <h4 className="text-current text-md">{user?.email}</h4>
@@ -120,7 +120,7 @@ const Navbar = ({
             </details> : <div className="flex flex-row">
                 <Button
                     light
-                    className="w-16 sm:w-16 px-0 mr-2"
+                    className="w-16 px-0 mr-2"
                     size="sm"
                     onClick={() => setLoginModalVisible(true)}
                     aria-label="Sign up button"
