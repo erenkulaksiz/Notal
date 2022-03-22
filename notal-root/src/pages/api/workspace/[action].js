@@ -48,6 +48,7 @@ export default async function handler(req, res) {
                     owner: uid,
                     workspaceVisible,
                     thumbnail,
+                    users: [uid], // Add owner as default user 
                 }).then(async (result) => {
                     const resId = result.insertedId;
                     console.log("updating id: ", resId);
@@ -128,7 +129,8 @@ export default async function handler(req, res) {
                                     owner: el.owner,
                                     starred: el.starred,
                                     updatedAt: el.updatedAt,
-                                    workspaceVisible: el.workspaceVisible
+                                    workspaceVisible: el.workspaceVisible,
+                                    thumbnail: el.thumbnail,
                                 }
                             })
                         });
@@ -151,21 +153,48 @@ export default async function handler(req, res) {
             try {
                 const workspace = await workspacesCollection.findOne({ "_id": ObjectId(id) });
 
+                if (!workspace.users) {
+                    // Add owner if theres no users exist
+                    await workspacesCollection.updateOne({ _id: ObjectId(id) }, {
+                        $set: {
+                            users: [workspace.owner],
+                        }
+                    });
+                }
+
                 if (!workspace) {
                     res.status(400).send({ success: false, error: "not-found" });
                 } else {
                     if (workspace.workspaceVisible) {
+                        const workspaceUsers = workspace.users ?? [];
+                        console.log("users: ", workspaceUsers);
+                        const wUsers = await usersCollection.find({ "uid": { $in: workspaceUsers } }).toArray();
+
+                        console.log("!!!wuser: ", wUsers);
+
+                        const newWUsers = wUsers.map(el => {
+                            return {
+                                uid: el.uid,
+                                username: el.username,
+                                updatedAt: el.updatedAt,
+                                createdAt: el.createdAt,
+                                fullname: el.fullname,
+                                avatar: el.avatar,
+                            }
+                        });
+
                         const user = await usersCollection.findOne({ "uid": workspace.owner });
                         if (user) {
                             res.status(200).send({
                                 success: true,
                                 data: {
                                     ...workspace,
-                                    user: {
+                                    ownerUser: {
                                         username: user.username,
                                         fullname: user.fullname ?? "",
                                         avatar: user.avatar ?? ""
-                                    }
+                                    },
+                                    users: newWUsers
                                 }
                             });
                         } else {
@@ -180,15 +209,33 @@ export default async function handler(req, res) {
                                 const user = await usersCollection.findOne({ uid: decodedToken.user_id });
                                 if (workspace.owner === user.uid || user?.role === "admin") {
                                     try {
+                                        const workspaceUsers = workspace.users ?? [];
+                                        console.log("users: ", workspaceUsers);
+                                        const wUsers = await usersCollection.find({ "uid": { $in: workspaceUsers } }).toArray();
+
+                                        console.log("!!!wuser: ", wUsers);
+
+                                        const newWUsers = wUsers.map(el => {
+                                            return {
+                                                uid: el.uid,
+                                                username: el.username,
+                                                updatedAt: el.updatedAt,
+                                                createdAt: el.createdAt,
+                                                fullname: el.fullname,
+                                                avatar: el.avatar,
+                                            }
+                                        });
+
                                         res.status(200).send({
                                             success: true,
                                             data: {
                                                 ...workspace,
-                                                user: {
+                                                ownerUser: {
                                                     username: user.username,
                                                     fullname: user.fullname ?? "",
                                                     avatar: user.avatar ?? ""
-                                                }
+                                                },
+                                                users: newWUsers,
                                             }
                                         });
                                     } catch (error) {
@@ -320,6 +367,18 @@ export default async function handler(req, res) {
                     await admin.auth().verifyIdToken(bearerToken).then(async (decodedToken) => {
                         const user = await usersCollection.findOne({ uid });
                         if (user.uid == decodedToken.user_id) {
+
+                            const _workspace = await workspacesCollection.findOne({ "_id": ObjectId(id) });
+                            console.log("workspace: ", _workspace);
+                            const _workspaceUsers = _workspace.users ?? [];
+
+                            console.log("workspaceUsers", _workspaceUsers);
+
+                            if (_workspaceUsers?.findIndex(el => el == uid) == -1 || _workspaceUsers.length == 0) {
+                                // this user doesnt exist on workspace
+                                _workspaceUsers.push(uid);
+                            }
+
                             await workspacesCollection.updateOne({ "_id": ObjectId(id) }, {
                                 $push: {
                                     fields: {
@@ -331,8 +390,13 @@ export default async function handler(req, res) {
                                         cards: [],
                                         _id: ObjectId(),
                                     }
+                                },
+                                $set: {
+                                    users: [..._workspaceUsers],
                                 }
                             });
+
+                            res.status(200).send({ success: true });
                         } else {
                             res.status(400).send({ success: false, error: "invalid-params" });
                         }
@@ -340,8 +404,6 @@ export default async function handler(req, res) {
                 } else {
                     res.status(400).send({ success: false, error: "invalid-params" });
                 }
-
-                res.status(200).send({ success: true });
             } catch (error) {
                 res.status(400).send({ success: false, error: new Error(error).message });
             }

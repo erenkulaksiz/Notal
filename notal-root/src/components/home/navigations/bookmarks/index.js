@@ -18,7 +18,7 @@ const HomeNavBookmarks = () => {
     const [tab, setTab] = useState(0);
 
     const add = () => {
-        setBookmarks([...bookmarks, { url: currBookmark }]);
+        setBookmarks([...bookmarks, { url: currBookmark, createdAt: Date.now() }]);
     }
 
     return (<div className="flex flex-1 flex-col relative">
@@ -26,7 +26,7 @@ const HomeNavBookmarks = () => {
             <BookmarkFilledIcon size={24} fill="currentColor" />
         </HomeNavTitle>
         <div className="mt-2 flex flex-1 flex-col px-4">
-            <div className="flex mb-2 flex-1 flex-col mt-2 dark:bg-neutral-800 bg-neutral-100 rounded-xl p-2">
+            <div className="flex flex-col mt-2 dark:bg-neutral-800 bg-neutral-100 rounded-xl p-2">
                 <div className="flex flex-row items-start w-full">
                     <Input
                         placeholder="Paste Bookmark"
@@ -43,7 +43,7 @@ const HomeNavBookmarks = () => {
                     onSelect={({ index }) => setTab(index)}
                     className="mt-2"
                     id="bookmarkTabs"
-                    headerClassName="sm:w-[40%] md:w-[20%] w-full dark:bg-transparent bg-white"
+                    headerClassName="sm:w-[40%] md:w-[40%] w-full dark:bg-transparent bg-white"
                     views={[
                         { title: "tab1", id: "tab1" },
                         { title: "tab2", id: "tab2" }

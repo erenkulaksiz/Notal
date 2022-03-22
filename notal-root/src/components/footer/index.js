@@ -33,7 +33,7 @@ const Footer = ({ className }) => {
         onViewportEnter={(e) => setInView(true)}
     //onViewportLeave={(e) => setInView(false)}
     >
-        <div className="h-0.5 dark:bg-neutral-700 bg-neutral-300 w-full rounded-full" />
+        <div className="h-0.5 dark:bg-neutral-700/70 bg-neutral-300/70 w-full rounded-full" />
         <div className="grid grid-cols-1 sm:grid-cols-3 mt-8 gap-8 sm:gap-4">
             <motion.div
                 variants={{
@@ -68,9 +68,11 @@ const Footer = ({ className }) => {
                     hidden: { y: isClient ? -50 : 0, opacity: isClient ? 0 : 1 },
                     show: { y: 0, opacity: 1, transition: { type: "spring", damping: 25, mass: .50, delay: .2 } },
                 }}
-                className="flex flex-col"
+                className="flex flex-col dark:text-white text-neutral-600"
             >
-                <span className="uppercase dark:text-neutral-400 font-bold">Pages</span>
+                <span className="uppercase dark:text-neutral-400 text-black font-bold">
+                    Pages
+                </span>
                 <Link href="/" passHref>
                     <a href="#" className="uppercase mt-2 text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
                         Home
@@ -88,9 +90,11 @@ const Footer = ({ className }) => {
                     hidden: { y: isClient ? -50 : 0, opacity: isClient ? 0 : 1 },
                     show: { y: 0, opacity: 1, transition: { type: "spring", damping: 25, mass: .50, delay: .4 } },
                 }}
-                className="flex flex-col"
+                className="flex flex-col dark:text-white text-neutral-600"
             >
-                <span className="uppercase dark:text-neutral-400 font-bold">Legal</span>
+                <span className="uppercase dark:text-neutral-400 text-black font-bold">
+                    Legal
+                </span>
                 <Link href="/privacy-policy" passHref>
                     <a className="uppercase mt-2 text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
                         Privacy Policy

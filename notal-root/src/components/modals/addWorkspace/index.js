@@ -179,7 +179,8 @@ const AddWorkspaceModal = ({ open, onClose, onAdd }) => {
                 views={[
                     { title: "Workspace", id: "workspace" },
                     { title: "Thumbnail", id: "thumbnail" }
-                ]}>
+                ]}
+            >
                 <Tab.TabView index={0} className="pt-4 grid grid-cols-1 gap-2">
                     <label htmlFor="workspaceTitle">Workspace Title</label>
                     <Input

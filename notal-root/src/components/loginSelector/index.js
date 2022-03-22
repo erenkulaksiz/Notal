@@ -1,5 +1,3 @@
-import Link from 'next/link';
-
 import { Button } from '@components';
 
 import {
@@ -33,9 +31,6 @@ const LoginSelector = ({ onLoginWithEmail, onLoginWithGithub, onLoginWithGoogle,
             Email
         </Button>*/}
         {oauthError && <span className="text-red-400 text-center mt-2">{oauthError}</span>}
-        <span className="text-neutral-500 text-sm text-center mt-2">
-            {"We'll never post to any of your accounts without your permission. More info on"} <Link href="/privacy-policy" passHref><a className="text-blue-600 underline underline-offset-2">Privacy Policy</a></Link>
-        </span>
     </div>)
 }
 

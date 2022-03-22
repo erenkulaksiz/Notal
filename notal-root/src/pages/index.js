@@ -3,6 +3,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Typewriter from 'typewriter-effect';
 
 import LandingBackground from "@public/landing_bg_banner_1.webp";
 
@@ -101,12 +102,26 @@ const Landing = (props) => {
         </div>
         <div className="sm:container px-8 md:container md:px-1 lg:px-2 xl:px-32 pt-64 z-10">
           <div className="relative z-50">
-            <h1 className="text-black drop-shadow-xl dark:text-white sm:text-5xl text-4xl font-bold font-sans">
-              Organize & Plan your{' '}
+            <h1 className="text-black drop-shadow-xl dark:text-white sm:text-4xl text-3xl font-bold font-sans">
+              {/*Organize & Plan your{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600">
                 next
               </span>{' '}
-              project with Notal 🚀
+  project with Notal 🚀*/}
+
+              <Typewriter
+                options={{
+                  strings: [
+                    'Organize & Plan your next project with Notal 🚀',
+                    'Create your team and work on workspaces as a team',
+                    'Personalize your workspace with thumbnails, colors and much more',
+                    'Share your bookmarks, workspaces and your profile'
+                  ],
+                  autoStart: true,
+                  loop: true,
+                }}
+              />
+
             </h1>
             <h5 className="dark:text-neutral-400 text-gray-600 drop-shadow-lg mt-4 text-lg font-semibold">
               {"Developer's solution from an developer. Keep focus on your project, not on your planning."}
@@ -133,6 +148,7 @@ const Landing = (props) => {
             <div className="bg-landing_bg_2 opacity-25 absolute w-[800px] h-[800px] -left-[300px] -bottom-[300px] bg-no-repeat bg-contain -z-50"></div>
             <div className="bg-landing_bg_3 opacity-20 absolute w-[800px] h-[800px] -right-[350px] -bottom-[300px] bg-no-repeat bg-contain -z-50"></div>
           </motion.div>
+
           <Footer />
         </div>
       </main>

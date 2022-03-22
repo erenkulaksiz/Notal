@@ -6,6 +6,8 @@ import Image from "next/image";
 
 import IconWhite from "@public/icon_white.webp";
 import IconGalactic from "@public/icon_galactic.webp";
+import IconWhiteMobile from "@public/logo_white_mobile.webp";
+import IconGalacticMobile from "@public/logo_galactic_mobile.webp";
 
 import { isClient } from "@utils";
 
@@ -40,13 +42,23 @@ const Navbar = ({
         <div className="absolute top-0 bottom-0 right-0 left-0 dark:bg-black/30 bg-white/30 backdrop-blur-md -z-10 shadow-none dark:shadow-md" />
         <div className="w-1/2 flex items-start">
             {typeof resolvedTheme != "undefined" && <Link href={auth?.authUser ? "/home" : "/"} passHref>
-                <a className="w-auto">
-                    <div className="object-contain max-h-max w-40">
+                <a className="">
+                    <div className="h-10 sm:flex w-40 hidden">
                         <Image
                             src={resolvedTheme == "dark" ? IconWhite : IconGalactic}
                             alt="Logo of Notal"
                             priority
                             placeholder="blur"
+                            className="object-contain"
+                        />
+                    </div>
+                    <div className="h-10 w-12 sm:hidden flex">
+                        <Image
+                            src={resolvedTheme == "dark" ? IconWhiteMobile : IconGalacticMobile}
+                            alt="Logo of Notal"
+                            priority
+                            placeholder="blur"
+                            className="object-contain"
                         />
                     </div>
                 </a>

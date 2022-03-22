@@ -237,7 +237,7 @@ const Workspace = (props) => {
         />
 
         <div className="relative flex flex-row flex-1 bg-white dark:bg-neutral-900 overflow-y-auto">
-            {!notFound && !loadingWorkspace && _workspace?.data?.user?.username && <div className={BuildWorkspaceOwnerProfileContainer.classes}>
+            {!notFound && !loadingWorkspace && _workspace?.data?.ownerUser?.username && <div className={BuildWorkspaceOwnerProfileContainer.classes}>
                 <div className="flex flex-col">
                     <span className="text-medium">
                         {_workspace?.data?.title}
@@ -246,20 +246,20 @@ const Workspace = (props) => {
                         {_workspace?.data?.desc}
                     </span>}
                 </div>
-                {!isOwner && <Link href="/profile/[username]" as={`/profile/${_workspace?.data?.user?.username || "not-found"}`} passHref>
+                {!isOwner && <Link href="/profile/[username]" as={`/profile/${_workspace?.data?.ownerUser?.username || "not-found"}`} passHref>
                     <a className="flex flex-row items-center">
                         <div className="p-[2px] w-10 h-10 rounded-full cursor-pointer bg-gradient-to-tr from-blue-700 to-pink-700">
                             <img
-                                src={_workspace?.data?.user?.avatar}
+                                src={_workspace?.data?.ownerUser?.avatar}
                                 className="w-10 h-9 rounded-full border-[2px] dark:border-black border-white"
                             />
                         </div>
                         <div className="flex flex-col ml-1">
-                            <span className="text-lg">
-                                {_workspace?.data?.user?.fullname ? `${_workspace?.data?.user?.fullname}` : `@${_workspace?.data?.user?.username}`}
+                            <span className="text-lg h-5">
+                                {_workspace?.data?.ownerUser?.fullname ? `${_workspace?.data?.ownerUser?.fullname}` : `@${_workspace?.data?.ownerUser?.username}`}
                             </span>
-                            {_workspace?.data?.user?.fullname && <span className="text-sm text-neutral-600">
-                                {`@${_workspace?.data?.user?.username}`}
+                            {_workspace?.data?.ownerUser?.fullname && <span className="text-sm text-neutral-600">
+                                {`@${_workspace?.data?.ownerUser?.username}`}
                             </span>}
                         </div>
                     </a>
@@ -288,6 +288,7 @@ const Workspace = (props) => {
                         onDeleteCard={({ id }) => handle.deleteCard({ id, fieldId: field._id })}
                         onCollapse={() => handle.collapseField({ id: field._id })}
                         isOwner={isOwner}
+                        workspaceUsers={_workspace?.data?.users}
                     />
                 ))}
                 {(!loadingWorkspace && !notFound && !_workspaceValidating && (!_workspace?.data?.fields || _workspace?.data?.fields?.length == 0))

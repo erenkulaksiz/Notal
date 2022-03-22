@@ -20,7 +20,7 @@ const HomeSidebar = ({ navCollapse, current, onViewingChange, onCollapse }) => {
             open: { maxWidth: "10rem", minWidth: "10rem", width: "10rem" },
             close: { minWidth: "2.6rem", width: "2.6rem" }
         }}
-        initial="open"
+        initial={navCollapse ? "close" : "open"}
         animate={navCollapse ? "close" : "open"}
         transition={{ type: "spring", damping: 50, stiffness: 500 }}
         className={BuildSidebar.classes}

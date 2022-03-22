@@ -24,10 +24,25 @@ const Home = (props) => {
 
     const [_workspacesValidating, _setWorkspacesValidating] = useState(true);
 
-    const [navCollapse, setNavCollapse] = useState(false);
+    const [navCollapse, setNavCollapse] = useState(undefined);
 
     // View/Filter
     const [homeViewing, setHomeViewing] = useState("workspaces");
+
+    useEffect(() => {
+        const homeNavCollapsed = localStorage.getItem("homeNavCollapsed");
+        if (typeof homeNavCollapsed == "undefined") {
+            localStorage.setItem("homeNavCollapsed", false);
+            setNavCollapse(false);
+        } else {
+            setNavCollapse(JSON.parse(homeNavCollapsed));
+        }
+    }, []);
+
+    const onCollapse = () => {
+        localStorage.setItem("homeNavCollapsed", !navCollapse);
+        setNavCollapse(!navCollapse);
+    }
 
     useEffect(() => {
         console.log("home props: ", props);
@@ -55,12 +70,12 @@ const Home = (props) => {
         />
 
         <main className="relative flex flex-1 flex-row bg-white dark:bg-neutral-900 overflow-y-auto overflow-x-hidden">
-            <HomeSidebar
+            {typeof navCollapse != "undefined" && <HomeSidebar
                 navCollapse={navCollapse}
                 current={homeViewing}
                 onViewingChange={({ nav }) => setHomeViewing(nav.id)}
-                onCollapse={() => setNavCollapse(prev => !prev)}
-            />
+                onCollapse={() => onCollapse()}
+            />}
             {HomeRoutes.map((Route) => {
                 if (homeViewing == Route.id) {
                     if (!Route.Component) {

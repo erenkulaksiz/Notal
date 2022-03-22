@@ -31,7 +31,8 @@ const WorkspaceField = ({
     onCollapse,
     onAddCard,
     onDeleteCard,
-    isOwner
+    isOwner,
+    workspaceUsers
 }) => {
     const [hovered, setHovered] = useState(false);
 
@@ -123,6 +124,7 @@ const WorkspaceField = ({
                     key={card._id}
                     onDelete={() => onDeleteCard({ id: card._id })}
                     isOwner={isOwner}
+                    cardOwner={workspaceUsers.filter(el => el.uid == card.owner)[0]}
                 />
             )}
             {(field?.cards?.length == 0 || !field?.cards)

@@ -27,15 +27,21 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, workspace }) => {
     const [tab, setTab] = useState(0);
     const thumbnailRef = useRef();
 
+
     useEffect(() => {
         console.log("thumb: ", workspace?.thumbnail);
         setEditWorkspace({
             title: workspace?.title,
             desc: workspace?.desc,
             workspaceVisible: workspace?.workspaceVisible,
-            thumbnail: workspace?.thumbnail
+            thumbnail: workspace?.thumbnail,
+            users: workspace?.users,
+            owner: workspace?.owner,
         });
     }, [workspace]);
+
+    const workspaceOwner = editWorkspace?.users?.filter(el => el.uid == editWorkspace?.owner)[0];
+    const workspaceUsers = editWorkspace?.users?.filter(el => el.uid != editWorkspace?.owner);
 
     const close = () => {
         onClose();
@@ -45,6 +51,8 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, workspace }) => {
             desc: workspace?.desc,
             workspaceVisible: workspace?.workspaceVisible,
             thumbnail: workspace?.thumbnail,
+            users: workspace?.users,
+            owner: workspace?.owner,
         });
     }
 
@@ -169,7 +177,8 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, workspace }) => {
                 id="settingsWorkspaceTab"
                 views={[
                     { title: "Workspace", id: "workspace" },
-                    { title: "Thumbnail", id: "thumbnail" }
+                    { title: "Thumbnail", id: "thumbnail" },
+                    { title: "Users", id: "users" }
                 ]}>
                 <Tab.TabView index={0} className="pt-4 grid grid-cols-1 gap-2">
                     <label htmlFor="workspaceTitle">Workspace Title</label>
@@ -313,6 +322,19 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, workspace }) => {
                             </Tooltip>
                         </div>
                     </div>}
+                </Tab.TabView>
+                <Tab.TabView index={2} className="pt-4 grid grid-cols-1 gap-2">
+                    <label>Workspace Owner</label>
+                    <div className="w-full h-16 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
+                        {workspaceOwner?.username}
+                    </div>
+                    {workspaceUsers?.length != 0 && <div className="flex gap-2 flex-col">
+                        <label>Workspace Users</label>
+                        {workspaceUsers?.map((user, index) => (<div key={index} className="w-full h-16 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
+                            {user?.username}
+                        </div>))}
+                    </div>}
+                    <Button>Add User</Button>
                 </Tab.TabView>
             </Tab>
         </Modal.Body>

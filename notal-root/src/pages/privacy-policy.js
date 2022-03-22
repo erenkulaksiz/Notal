@@ -23,7 +23,7 @@ const PrivacyPolicy = (props) => {
             <div className="text-3xl font-medium flex flex-row items-center border-b-2 border-neutral-800 pb-2">
                 <SecureIcon size={24} fill="currentColor" style={{ transform: "scale(1.4)" }} className="mr-2" />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-2 items-end">
-                    <h1 className="flex flex-row items-end">
+                    <h1 className="flex flex-row items-end text-black dark:text-white">
                         Privacy Policy
                     </h1>
                     <h1 className="text-sm text-neutral-400">

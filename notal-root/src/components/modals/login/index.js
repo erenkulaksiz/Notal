@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
+import Link from "next/link";
 
 import { Modal, LoginSelector } from "@components";
 import useAuth from "@hooks/auth";
@@ -55,7 +56,7 @@ const LoginModal = ({ open, onClose, onLoginSuccess }) => {
                         placeholder="blur"
                     />
                 </div>}
-                <span className="text-2xl font-medium mt-8">Sign up on Notal</span>
+                <span className="text-2xl font-medium mt-8 text-black dark:text-white">Sign up on Notal</span>
             </div>
         </Modal.Title>
         <Modal.Body className="p-4" animate>
@@ -64,6 +65,11 @@ const LoginModal = ({ open, onClose, onLoginSuccess }) => {
                 onLoginWithGoogle={onLoginWithGoogle}
                 oauthError={oauthError}
             />
+            <span className="text-neutral-500 text-sm text-center mt-2">
+                {"We'll never post to any of your accounts without your permission. More info on"} <Link href="/privacy-policy" passHref>
+                    <a className="text-blue-600 underline underline-offset-2">Privacy Policy</a>
+                </Link>
+            </span>
         </Modal.Body>
     </Modal>)
 }
