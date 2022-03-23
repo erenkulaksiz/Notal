@@ -119,6 +119,7 @@ const Landing = (props) => {
                   ],
                   autoStart: true,
                   loop: true,
+                  delay: 90
                 }}
               />
 

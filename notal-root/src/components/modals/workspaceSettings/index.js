@@ -14,18 +14,21 @@ import {
     CrossIcon,
     CheckIcon,
     SettingsIcon,
-    CloudUploadIcon
+    CloudUploadIcon,
+    AddIcon,
+    DeleteIcon
 } from "@icons";
 import { CardColors } from "@utils/constants";
 import useAuth from "@hooks/auth";
 
-const WorkspaceSettingsModal = ({ open, onClose, onSubmit, workspace }) => {
+const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspace }) => {
     const auth = useAuth();
     const michael = "https://i.pinimg.com/474x/78/8f/f7/788ff7a1a2c291a33ea995dc8de5dbcc.jpg";
     const [editWorkspace, setEditWorkspace] = useState({ title: "", desc: "", thumbnail: { type: "image", file: michael, color: "#666666", colors: { start: "#0eeaed", end: "#00575e" } } });
     const [thumbnailLoading, setThumbnailLoading] = useState(false);
     const [tab, setTab] = useState(0);
     const thumbnailRef = useRef();
+    const [addWorkspaceOwner, setAddWorkspaceOwner] = useState("");
 
 
     useEffect(() => {
@@ -54,6 +57,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, workspace }) => {
             users: workspace?.users,
             owner: workspace?.owner,
         });
+        setAddWorkspaceOwner("");
     }
 
     const submit = async () => {
@@ -146,6 +150,34 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, workspace }) => {
                 });
             };
             reader.readAsDataURL(file);
+        }
+    }
+
+    const addUser = async ({ username }) => {
+        const res = await auth.workspace.addUser({
+            id: workspace._id,
+            username,
+        });
+        console.log("res::", res);
+        if (res?.success) {
+            onUserChange();
+        } else if (res?.error == "user-not-found") {
+            alert("user not found");
+        } else if (res?.error == "user-already-added") {
+            alert("user already added");
+        }
+    }
+
+    const deleteUser = async ({ id }) => {
+        const res = await auth.workspace.removeUser({
+            id: workspace._id,
+            userId: id
+        });
+        if (res?.success) {
+            onUserChange();
+        } else {
+            alert("error check console");
+            console.log(res);
         }
     }
 
@@ -330,11 +362,34 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, workspace }) => {
                     </div>
                     {workspaceUsers?.length != 0 && <div className="flex gap-2 flex-col">
                         <label>Workspace Users</label>
-                        {workspaceUsers?.map((user, index) => (<div key={index} className="w-full h-16 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
-                            {user?.username}
+                        {workspaceUsers?.map((user, index) => (<div
+                            key={index}
+                            className="flex flex-row justify-between items-center w-full h-16 bg-neutral-100 dark:bg-neutral-800 p-2 rounded-lg"
+                        >
+                            <span>{user?.username}</span>
+                            <Button
+                                onClick={() => deleteUser({ id: user?.uid })}
+                                size="sm"
+                                className="px-2"
+                                light
+                            >
+                                <DeleteIcon size={24} fill="currentColor" />
+                            </Button>
                         </div>))}
                     </div>}
-                    <Button>Add User</Button>
+                    <div className="flex flex-row">
+                        <Input
+                            fullWidth
+                            containerClassName="flex-1"
+                            placeholder="Username"
+                            value={addWorkspaceOwner}
+                            onChange={(e) => setAddWorkspaceOwner(e.target.value)}
+                        />
+                        <Button className="ml-2" onClick={() => addUser({ username: addWorkspaceOwner })}>
+                            <AddIcon size={24} fill="currentColor" />
+                            Add User
+                        </Button>
+                    </div>
                 </Tab.TabView>
             </Tab>
         </Modal.Body>

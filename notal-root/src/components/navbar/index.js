@@ -82,7 +82,7 @@ const Navbar = ({
                     </span>
                 </Button>
             </Link>}
-            {(!auth.authUser && !auth.authLoading && isClient) && <Switch
+            {(!auth.authUser && isClient) && auth.authLoading ? <Loading size="lg" /> : <Switch
                 onChange={e => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
                 value={resolvedTheme == "dark"}
                 icon={resolvedTheme == "dark" ? <LightIcon size={24} fill="black" style={{ transform: "scale(0.7)" }} /> : <DarkIcon size={24} fill="black" style={{ transform: "scale(0.7)" }} />}

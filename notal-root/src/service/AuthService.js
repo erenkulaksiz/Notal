@@ -263,6 +263,44 @@ const AuthService = {
                 return { success: false, error: data?.error }
             }
         },
+        addUser: async ({ id, username }) => {
+            const auth = getAuth();
+            const token = await auth.currentUser.getIdToken();
+
+            const data = await fetchWithAuth({
+                id,
+                username,
+                uid: auth?.currentUser?.uid
+            }, {
+                token,
+                action: "adduser"
+            });
+
+            if (data?.success) {
+                return { success: true }
+            } else {
+                return { success: false, error: data?.error }
+            }
+        },
+        removeUser: async ({ id, userId }) => {
+            const auth = getAuth();
+            const token = await auth.currentUser.getIdToken();
+
+            const data = await fetchWithAuth({
+                id,
+                userId,
+                uid: auth?.currentUser?.uid
+            }, {
+                token,
+                action: "removeuser"
+            });
+
+            if (data?.success) {
+                return { success: true }
+            } else {
+                return { success: false, error: data?.error }
+            }
+        },
         field: {
             addField: async ({ title, id, filterBy, owner }) => {
                 // id: workspaceId

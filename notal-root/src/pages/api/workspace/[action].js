@@ -29,7 +29,7 @@ export default async function handler(req, res) {
 
     const body = JSON.parse(req.body);
 
-    const { uid, title, desc, starred, id, workspaceId, color, fieldId, filterBy, workspaceVisible, tag, thumbnail, field } = body ?? "";
+    const { uid, title, desc, starred, id, workspaceId, color, fieldId, filterBy, workspaceVisible, tag, thumbnail, field, username, userId } = body ?? "";
 
     const workspaceAction = {
         createworkspace: async () => {
@@ -160,6 +160,17 @@ export default async function handler(req, res) {
                             users: [workspace.owner],
                         }
                     });
+                }
+
+                if (workspace?.users) {
+                    // add owner if its not into users
+                    if (workspace?.users?.findIndex(el => el == workspace.owner) == -1) {
+                        await workspacesCollection.updateOne({ _id: ObjectId(id) }, {
+                            $push: {
+                                users: workspace.owner,
+                            }
+                        });
+                    }
                 }
 
                 if (!workspace) {
@@ -555,6 +566,76 @@ export default async function handler(req, res) {
                     },
                     {
                         arrayFilters: [{ "i._id": ObjectId(fieldId) }, { "j._id": ObjectId(id) }]
+                    }
+                );
+                res.status(200).send({ success: true });
+            } catch (error) {
+                res.status(400).send({ success: false, error: new Error(error).message });
+            }
+        },
+        adduser: async () => {
+            console.log("adduser", id, uid, username);
+
+            if (!id || !uid || !username) {
+                res.status(400).send({ success: false, error: "invalid-params" });
+                return;
+            }
+
+            try {
+                const user = await usersCollection.findOne({ "username": username });
+
+                if (!user) {
+                    res.status(400).send({ success: false, error: "user-not-found" });
+                    return;
+                }
+
+                const workspace = await workspacesCollection.findOne({ "_id": ObjectId(id) });
+
+                if (!workspace) {
+                    res.status(400).send({ success: false, error: "workspace-not-found" });
+                    return;
+                }
+
+                if (workspace?.users.findIndex(el => el == user.uid) != -1) {
+                    res.status(400).send({ success: false, error: "user-already-added" });
+                    return;
+                }
+
+                await workspacesCollection.updateOne(
+                    {
+                        "_id": ObjectId(id)
+                    },
+                    {
+                        $set: {
+                            updatedAt: Date.now(),
+                        },
+                        $push: {
+                            "users": user.uid
+                        }
+                    }
+                );
+                res.status(200).send({ success: true });
+            } catch (error) {
+                res.status(400).send({ success: false, error: new Error(error).message });
+            }
+        },
+        removeuser: async () => {
+            console.log("removeuser", id, uid);
+
+            if (!id || !uid || !userId) {
+                res.status(400).send({ success: false, error: "invalid-params" });
+                return;
+            }
+
+            try {
+                await workspacesCollection.updateOne(
+                    {
+                        "_id": ObjectId(id)
+                    },
+                    {
+                        $pull: {
+                            users: userId,
+                        },
                     }
                 );
                 res.status(200).send({ success: true });

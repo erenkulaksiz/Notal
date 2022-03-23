@@ -207,7 +207,7 @@ const Workspace = (props) => {
                 },
                 workspaceId: _workspace?.data?._id,
             });
-        },
+        }
     }
 
     const BuildWorkspaceContainer = BuildComponent({
@@ -218,7 +218,7 @@ const Workspace = (props) => {
     const BuildWorkspaceOwnerProfileContainer = BuildComponent({
         name: "Workspace Owner Profile Container",
         defaultClasses: "absolute flex flex-col bottom-7 z-40 shadow-xl rounded p-2 dark:bg-neutral-800/80 bg-white/60 backdrop-blur-sm",
-        conditionalClasses: [{ true: "left-[4.3rem]", false: "left-2" }],
+        conditionalClasses: [{ true: "left-[4.3rem]", false: "left-4" }],
         selectedClasses: [isOwner]
     });
 
@@ -268,6 +268,7 @@ const Workspace = (props) => {
             {(!loadingWorkspace && !_workspace?.error && isOwner) && <WorkspaceSidebar
                 workspaceStarred={_workspace?.data?.starred}
                 workspaceVisible={_workspace?.data?.workspaceVisible}
+                workspaceUsers={_workspace?.data?.users}
                 onStarred={() => handle.starWorkspace()}
                 onSettings={() => setSettingsModal(true)}
                 onDelete={() => setDeleteWorkspace(true)}
@@ -304,6 +305,10 @@ const Workspace = (props) => {
             onSubmit={({ title, desc, thumbnail }) => {
                 handle.editWorkspace({ title, desc, thumbnail });
                 setSettingsModal(false);
+            }}
+            onUserChange={() => {
+                workspaceData.mutate();
+                //setSettingsModal(false);
             }}
         />
         <AddCardModal

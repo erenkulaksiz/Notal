@@ -1,4 +1,6 @@
 import prettyMilliseconds from "pretty-ms";
+import Link from "next/link";
+
 import { MoreIcon, WarningIcon, SettingsIcon, DeleteIcon } from "@icons";
 import { Button, Tooltip } from "@components";
 import BuildComponent from "@utils/buildComponent";
@@ -55,19 +57,21 @@ const WorkspaceFieldCard = ({ card, onDelete, onSettings, preview, isOwner, fiel
                 {card.updatedAt && <span className="text-xs dark:text-neutral-600 text-neutral-400 mt-2 group-hover:flex hidden" title={`Created ${new Date(card.createdAt).getDate()} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][new Date(card.createdAt).getMonth()]}, ${new Date(card.createdAt).getFullYear()} ${new Date(card.createdAt).getHours().toString().padStart(2, '0')}:${new Date(card.createdAt).getMinutes().toString().padStart(2, '0')} • Updated ${new Date(card.updatedAt).getDate()} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][new Date(card.updatedAt).getMonth()]}, ${new Date(card.updatedAt).getFullYear()} ${new Date(card.updatedAt).getHours().toString().padStart(2, '0')}:${new Date(card.updatedAt).getMinutes().toString().padStart(2, '0')}`}>
                     <time dateTime={card.updatedAt}>{`Created ${prettyMilliseconds(Date.now() - card.createdAt, { compact: true })} ago • Updated ${prettyMilliseconds(Date.now() - card.updatedAt, { compact: true })} ago`}</time>
                 </span>}
-                {card.owner && <div className="w-full items-center flex-row group-hover:flex hidden mt-2">
-                    <div className="p-[2px] w-8 h-8 rounded-full cursor-pointer bg-gradient-to-tr from-blue-700 to-pink-700">
-                        <img
-                            src={cardOwner?.avatar}
-                            className="w-7 h-7 rounded-full border-[2px] dark:border-black border-white"
-                            alt="Avatar"
-                        />
-                    </div>
-                    <div className="flex flex-col ml-1">
-                        <span className="h-4">{cardOwner.fullname}</span>
-                        <span className="text-sm dark:text-neutral-500 text-neutral-400">@{cardOwner.username}</span>
-                    </div>
-                </div>}
+                {card.owner && <Link href="/profile/[username]" as={`/profile/${cardOwner?.username || "not-found"}`} passHref>
+                    <a className="items-center flex-row group-hover:flex hidden mt-2">
+                        <div className="p-[2px] w-8 h-8 rounded-full cursor-pointer bg-gradient-to-tr from-blue-700 to-pink-700">
+                            <img
+                                src={cardOwner?.avatar}
+                                className="w-7 h-7 rounded-full border-[2px] dark:border-black border-white"
+                                alt="Avatar"
+                            />
+                        </div>
+                        <div className="flex flex-col ml-1">
+                            <span className="h-5">{cardOwner?.fullname ? `${cardOwner?.fullname}` : `@${cardOwner?.username}`}</span>
+                            {cardOwner?.fullname && <span className="text-xs dark:text-neutral-500 text-neutral-400">@{cardOwner?.username}</span>}
+                        </div>
+                    </a>
+                </Link>}
             </div>
         </div>
     </div>)

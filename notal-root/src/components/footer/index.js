@@ -8,6 +8,7 @@ import { CodeIcon, HeartIcon, TwitterIcon } from '@icons';
 
 import IconWhite from "@public/icon_white.webp";
 import IconGalactic from "@public/icon_galactic.webp";
+import HeliosLogo from "@public/helios_logo.png"
 import BuildComponent from '@utils/buildComponent';
 
 import { isClient } from '@utils';
@@ -57,11 +58,27 @@ const Footer = ({ className }) => {
                     <HeartIcon size={24} className="fill-red-500" style={{ transform: "scale(0.8)" }} />
                     <span>by</span>
                     <Tooltip direction="right" content={<span className="text-xs">GitHub</span>}>
-                        <a href="https://github.com/erenkulaksiz" target="_blank" rel="noreferrer" className="ml-1">
-                            @Eren Kulaksiz
-                        </a>
+                        <Link href="https://github.com/erenkulaksiz" passHref>
+                            <a target="_blank" rel="noreferrer" className="ml-1">
+                                @Eren Kulaksiz
+                            </a>
+                        </Link>
                     </Tooltip>
                 </span>
+
+                <Link href="https://github.com/erenkulaksiz/Helios" passHref>
+                    <a target="_blank" className="mt-2 flex flex-row items-center text-sm dark:text-neutral-400 text-black">
+                        powered by
+                        <div className="flex items-center object-contain h-6 w-14 ml-1">
+                            <Image
+                                src={HeliosLogo}
+                                alt="Logo of Helios"
+                                priority
+                                placeholder="blur"
+                            />
+                        </div>
+                    </a>
+                </Link>
             </motion.div>
             <motion.div
                 variants={{
