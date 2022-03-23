@@ -19,7 +19,7 @@ const PrivacyPolicy = (props) => {
 
         <Navbar user={props?.validate?.data} showHomeButton />
 
-        <div className="sm:container px-4 sm:px-4 md:px-16 lg:px-16 w-full z-10 pt-8 mx-auto">
+        <div className="container px-8 sm:px-8 md:px-8 lg:px-8 xl:px-32 z-10 mx-auto pt-4">
             <div className="text-3xl font-medium flex flex-row items-center border-b-2 border-neutral-800 pb-2">
                 <SecureIcon size={24} fill="currentColor" style={{ transform: "scale(1.4)" }} className="mr-2" />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-2 items-end">

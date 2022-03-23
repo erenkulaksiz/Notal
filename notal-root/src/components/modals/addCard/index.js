@@ -88,6 +88,7 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
                         value={addCard.title}
                         autoFocus
                         id="cardTitle"
+                        maxLength={40}
                     />
                     {addCardErrors.title != false && <span className="text-red-500">{addCardErrors.title}</span>}
                     <label htmlFor="cardDescription">Card Description</label>
@@ -100,6 +101,7 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
                         onChange={(e) => setAddCard({ ...addCard, desc: e.target.value })}
                         value={addCard.desc}
                         id="cardDescription"
+                        maxLength={356}
                     />
                     <label htmlFor="cardColor">Card Color</label>
                     <div className="flex items-center">

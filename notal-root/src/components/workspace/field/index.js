@@ -48,7 +48,7 @@ const WorkspaceField = ({
     });
 
     const BuildTitleContainer = BuildComponent({
-        name: "Workspace Title",
+        name: "Workspace Title Container",
         defaultClasses: "flex items-center w-full",
         conditionalClasses: [{ true: "flex-col", false: "flex-row" }],
         selectedClasses: [!!field?.collapsed && !hovered]
@@ -56,8 +56,8 @@ const WorkspaceField = ({
 
     const BuildTitle = BuildComponent({
         name: "Workspace Title",
-        defaultClasses: "font-medium break-words text-center",
-        conditionalClasses: [{ true: "mt-1", false: "ml-2" }],
+        defaultClasses: "break-words text-center font-medium",
+        conditionalClasses: [{ true: "mt-1 text-sm", false: "ml-2 text-md" }],
         selectedClasses: [!!field?.collapsed && !hovered]
     })
 
@@ -130,7 +130,7 @@ const WorkspaceField = ({
             {(field?.cards?.length == 0 || !field?.cards)
                 && <WorkspaceAddCardBanner />}
         </div>
-        {isOwner && <WorkspaceAddCardButton
+        {isOwner && (hovered || !field?.collapsed) && <WorkspaceAddCardButton
             title={field.title}
             onAddCard={onAddCard}
         />}

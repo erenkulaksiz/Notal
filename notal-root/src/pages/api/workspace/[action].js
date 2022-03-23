@@ -20,9 +20,16 @@ const checkBearer = () => {
 
 export default async function handler(req, res) {
 
+    const reject = (reason = "invalid-params", status = 400) => {
+        return res.status(status).send({ success: false, error: reason });
+    }
+
+    const accept = (data = {}, status = 200) => {
+        return res.status(status).send({ success: true, data });
+    }
+
     if (req.method !== 'POST') {
-        res.status(400).send({ success: false, error: "invalid-params", al_gulum: true, ver_gulum: false });
-        return;
+        return reject();
     }
 
     const WORKSPACE_ACTION = req.query.action;
@@ -33,9 +40,15 @@ export default async function handler(req, res) {
 
     const workspaceAction = {
         createworkspace: async () => {
-            if (!uid) {
-                res.status(400).send({ success: false, error: "invalid-params" });
-                return;
+            if (!uid || !thumbnail) {
+                return reject();
+            }
+
+            if (title?.length > 32) {
+                return reject("title-maxlength");
+            }
+            if (desc?.length > 96) {
+                return reject("desc-maxlength");
             }
 
             try {
@@ -69,7 +82,7 @@ export default async function handler(req, res) {
                             });
                             return await workspacesCollection.updateOne({ _id: ObjectId(resId) }, { $set: { thumbnail: { type: "image", file: url[0] } } })
                                 .then(() => { return res.status(200).send({ success: true }); })
-                                .catch(error => { return res.status(400).send({ success: false, error }); });
+                                .catch(error => { return reject(error) });
                         } else {
                             return res.status(200).send({ success: true });
                         }
@@ -78,11 +91,10 @@ export default async function handler(req, res) {
                     }
                 });
             } catch (error) {
-                return res.status(400).send({ success: false, error });
+                return reject(error);
             }
         },
         getworkspaces: async () => {
-
             const bearer = req.headers['authorization'];
             if (typeof bearer !== "undefined") {
                 const bearerToken = bearer?.split(' ')[1];
@@ -111,10 +123,10 @@ export default async function handler(req, res) {
                                     })
                                 });
                             } catch (error) {
-                                res.status(200).send({ success: false, error: new Error(error).message });
+                                return reject(error);
                             }
                         } else {
-                            res.status(400).send({ success: false, error: "invalid-params" });
+                            return reject();
                         }
                     } else {
                         const workspaces = await workspacesCollection.find({ owner: decodedToken.uid }).toArray();
@@ -136,11 +148,10 @@ export default async function handler(req, res) {
                         });
                     }
                 }).catch(error => {
-                    res.status(400).json({ success: false, error: { code: error.code } });
-                    return; // dont run code below
+                    return reject({ code: error.code });
                 });
             } else {
-                res.status(400).send({ success: false, error: "invalid-params" });
+                return reject();
             }
         },
         getworkspace: async () => {
@@ -371,6 +382,9 @@ export default async function handler(req, res) {
                 res.status(400).send({ success: false, error: "invalid-params" });
                 return;
             }
+            if (title.length > 28) {
+                return reject("title-maxlength");
+            }
             try {
                 const bearer = req.headers['authorization'];
                 if (typeof bearer !== 'undefined') {
@@ -457,6 +471,13 @@ export default async function handler(req, res) {
                 res.status(400).send({ success: false, error: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" });
                 return;
             }
+            if (title?.length > 40) {
+                return reject("title-maxlength");
+            }
+            if (desc?.length > 356) {
+                return reject("desc-maxlength");
+            }
+
             try {
                 const bearer = req.headers['authorization'];
                 if (typeof bearer !== 'undefined') {

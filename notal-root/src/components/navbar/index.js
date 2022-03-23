@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Image from "next/image";
 
+import BuildComponent from "@utils/buildComponent";
+
 import IconWhite from "@public/icon_white.webp";
 import IconGalactic from "@public/icon_galactic.webp";
 import IconWhiteMobile from "@public/logo_white_mobile.webp";
@@ -30,13 +32,52 @@ import useAuth from "@hooks/auth";
 const Navbar = ({
     user,
     showHomeButton = false,
-    validating = false
+    validating = false,
+    workspace,
 }) => {
+    const { isOwner, _workspace, loadingWorkspace, } = workspace ?? {};
+
     const { resolvedTheme, setTheme } = useTheme();
     const router = useRouter();
     const auth = useAuth();
 
     const [loginModalVisible, setLoginModalVisible] = useState(false);
+
+    const BuildWorkspaceOwnerProfileContainer = BuildComponent({
+        name: "Workspace Owner Profile Container",
+        defaultClasses: "flex flex-row ml-2 z-40 rounded-lg p-2 dark:bg-neutral-800/80 bg-neutral-200/80",
+        conditionalClasses: [{ true: "left-[4.3rem]", false: "left-4" }],
+        selectedClasses: [isOwner]
+    });
+
+    const WorkspaceOwnerProfile = () => !workspace?.notFound && !loadingWorkspace && _workspace?.data?.ownerUser?.username ? <div className={BuildWorkspaceOwnerProfileContainer.classes}>
+        <div className="flex flex-col w-full">
+            <span className="text-sm break-words w-full">
+                {_workspace?.data?.title}
+            </span>
+            {_workspace?.data?.desc && <span className="text-xs text-neutral-600 dark:text-neutral-400 break-words w-full">
+                {_workspace?.data?.desc}
+            </span>}
+        </div>
+        {!isOwner && <Link href="/profile/[username]" as={`/profile/${_workspace?.data?.ownerUser?.username || "not-found"}`} passHref>
+            <a className="flex flex-row items-center ml-2 min-w-max">
+                <div className="p-[2px] w-7 h-7 rounded-full cursor-pointer bg-gradient-to-tr from-blue-700 to-pink-700">
+                    <img
+                        src={_workspace?.data?.ownerUser?.avatar}
+                        className="w-7 h-6 rounded-full border-[2px] dark:border-black border-white"
+                    />
+                </div>
+                <div className="flex flex-col ml-1">
+                    <span className="text-md h-4">
+                        {_workspace?.data?.ownerUser?.fullname ? `${_workspace?.data?.ownerUser?.fullname}` : `@${_workspace?.data?.ownerUser?.username}`}
+                    </span>
+                    {_workspace?.data?.ownerUser?.fullname && <span className="text-sm text-neutral-600">
+                        {`@${_workspace?.data?.ownerUser?.username}`}
+                    </span>}
+                </div>
+            </a>
+        </Link>}
+    </div> : null;
 
     return (<nav className="p-3 flex flex-row sticky top-0 z-40">
         <div className="absolute top-0 bottom-0 right-0 left-0 dark:bg-black/30 bg-white/30 backdrop-blur-md -z-10 shadow-none dark:shadow-md" />
@@ -63,6 +104,7 @@ const Navbar = ({
                     </div>
                 </a>
             </Link>}
+            <WorkspaceOwnerProfile />
         </div>
         <div className="w-1/2 flex items-center justify-end">
             {(validating) && <div className="flex flex-row items-center justify-center p-1 dark:bg-neutral-800 bg-neutral-100 shadow rounded-lg mr-2 px-3">
@@ -82,7 +124,7 @@ const Navbar = ({
                     </span>
                 </Button>
             </Link>}
-            {(!auth.authUser && isClient) && auth.authLoading ? <Loading size="lg" /> : <Switch
+            {(!auth.authUser && isClient) && <Switch
                 onChange={e => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
                 value={resolvedTheme == "dark"}
                 icon={resolvedTheme == "dark" ? <LightIcon size={24} fill="black" style={{ transform: "scale(0.7)" }} /> : <DarkIcon size={24} fill="black" style={{ transform: "scale(0.7)" }} />}
@@ -115,7 +157,7 @@ const Navbar = ({
                         />
                         <span className="ml-2 text-xs dark:text-neutral-600 text-neutral-300">{`v${process.env.NEXT_PUBLIC_APP_VERSION}`}</span>
                     </div>}
-                    <h2 className="text-current font-bold text-xl">{user?.fullname ? user?.fullname : user?.username ? "@" + user?.username : "..."}</h2>
+                    <h2 className="text-current font-bold text-xl mt-1">{user?.fullname ? user?.fullname : user?.username ? "@" + user?.username : "..."}</h2>
                     <h4 className="text-current text-md">{user?.email}</h4>
                     <Button fullWidth className="mt-2" icon={<UserIcon size={24} fill="white" />} gradient aria-label="Profile Button">
                         <span>Profile</span>

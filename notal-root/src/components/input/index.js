@@ -13,6 +13,7 @@ const Input = ({
     autoFocus = false,
     icon,
     id,
+    maxLength,
 }) => {
 
     const BuildInputContainer = BuildComponent({
@@ -64,8 +65,8 @@ const Input = ({
 
     return (<div className={BuildInputContainer.classes}>
         {icon && <span className="z-20 absolute left-2 fill-inherit" style={{ transform: "scale(0.8)" }}>{icon}</span>}
-        {textarea && <textarea id={id} value={value} type="text" onChange={onChange} className={BuildInput.classes} placeholder={placeholder} />}
-        {!textarea && <input id={id} value={value} type="text" autoFocus={autoFocus} onChange={onChange} className={BuildInput.classes} placeholder={placeholder} />}
+        {textarea && <textarea id={id} value={value} type="text" onChange={onChange} className={BuildInput.classes} placeholder={placeholder} maxLength={maxLength} />}
+        {!textarea && <input id={id} value={value} type="text" autoFocus={autoFocus} onChange={onChange} className={BuildInput.classes} placeholder={placeholder} maxLength={maxLength} />}
     </div>)
 }
 

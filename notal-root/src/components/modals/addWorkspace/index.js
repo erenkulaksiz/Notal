@@ -189,6 +189,7 @@ const AddWorkspaceModal = ({ open, onClose, onAdd }) => {
                         onChange={(e) => setNewWorkspace({ ...newWorkspace, title: e.target.value })}
                         value={newWorkspace.title}
                         id="workspaceTitle"
+                        maxLength={32}
                     />
                     {newWorkspaceErr.title != false && <span className="text-red-500">{newWorkspaceErr.title}</span>}
                     <label htmlFor="workspaceDescription">Workspace Description</label>
@@ -198,6 +199,7 @@ const AddWorkspaceModal = ({ open, onClose, onAdd }) => {
                         onChange={(e) => setNewWorkspace({ ...newWorkspace, desc: e.target.value })}
                         value={newWorkspace.desc}
                         id="workspaceDescription"
+                        maxLength={96}
                     />
                     <div className="py-1 grid grid-cols-1 gap-2">
                         <div className="flex flex-row items-center">

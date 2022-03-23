@@ -67,7 +67,7 @@ const Footer = ({ className }) => {
                 </span>
 
                 <Link href="https://github.com/erenkulaksiz/Helios" passHref>
-                    <a target="_blank" className="mt-2 flex flex-row items-center text-sm dark:text-neutral-400 text-black">
+                    <a target="_blank" className="mt-2 flex flex-row items-center text-sm dark:text-white text-black">
                         powered by
                         <div className="flex items-center object-contain h-6 w-14 ml-1">
                             <Image

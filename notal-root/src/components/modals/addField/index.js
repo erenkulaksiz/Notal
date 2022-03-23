@@ -28,6 +28,7 @@ const AddFieldModal = ({ open, onClose, onAdd, workspaceTitle }) => {
                 onChange={(e) => setNewField({ ...newField, title: e.target.value })}
                 value={newField.title}
                 id="fieldTitle"
+                maxLength={28}
             />
         </Modal.Body>
         <Modal.Footer className="justify-between" animate>

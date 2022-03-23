@@ -17,7 +17,8 @@ const Backdrop = ({ children, blur, onClose, open, setShow, onKeyDown }) => {
         animate={open ? "show" : "hidden"}
         onAnimationComplete={() => !open && setShow(false)}
         onKeyDown={onKeyDown}
-        className={`fixed top-0 right-0 bottom-0 left-0 ${blur ? "bg-black/50 backdrop-blur-sm" : "bg-black/60"} flex items-center justify-center z-50`} onClick={onClose}
+        className={`fixed top-0 right-0 bottom-0 left-0 ${blur ? "bg-black/50 backdrop-blur-sm" : "bg-black/60"} flex items-center justify-center z-50`}
+        onClick={onClose}
     >
         {children}
     </motion.div>)

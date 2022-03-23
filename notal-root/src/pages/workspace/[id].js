@@ -215,13 +215,6 @@ const Workspace = (props) => {
         defaultClasses: "relative flex flex-1 flex-row overflow-y-auto pt-1 pb-2 pl-2 overflow-x-visible",
     });
 
-    const BuildWorkspaceOwnerProfileContainer = BuildComponent({
-        name: "Workspace Owner Profile Container",
-        defaultClasses: "absolute flex flex-col bottom-7 z-40 shadow-xl rounded p-2 dark:bg-neutral-800/80 bg-white/60 backdrop-blur-sm",
-        conditionalClasses: [{ true: "left-[4.3rem]", false: "left-4" }],
-        selectedClasses: [isOwner]
-    });
-
     return (<div className="mx-auto h-full flex flex-col transition-colors duration-100">
         <Head>
             <title>{loadingWorkspace ? "Loading..." : _workspace?.data?.title ?? "Not Found"}</title>
@@ -234,37 +227,14 @@ const Workspace = (props) => {
             user={props?.validate?.data}
             showHomeButton
             validating={_workspaceValidating}
+            workspace={{
+                loadingWorkspace,
+                _workspace,
+                isOwner,
+            }}
         />
 
         <div className="relative flex flex-row flex-1 bg-white dark:bg-neutral-900 overflow-y-auto">
-            {!notFound && !loadingWorkspace && _workspace?.data?.ownerUser?.username && <div className={BuildWorkspaceOwnerProfileContainer.classes}>
-                <div className="flex flex-col">
-                    <span className="text-medium">
-                        {_workspace?.data?.title}
-                    </span>
-                    {_workspace?.data?.desc && <span className="text-xs text-neutral-600 dark:text-neutral-400">
-                        {_workspace?.data?.desc}
-                    </span>}
-                </div>
-                {!isOwner && <Link href="/profile/[username]" as={`/profile/${_workspace?.data?.ownerUser?.username || "not-found"}`} passHref>
-                    <a className="flex flex-row items-center">
-                        <div className="p-[2px] w-10 h-10 rounded-full cursor-pointer bg-gradient-to-tr from-blue-700 to-pink-700">
-                            <img
-                                src={_workspace?.data?.ownerUser?.avatar}
-                                className="w-10 h-9 rounded-full border-[2px] dark:border-black border-white"
-                            />
-                        </div>
-                        <div className="flex flex-col ml-1">
-                            <span className="text-lg h-5">
-                                {_workspace?.data?.ownerUser?.fullname ? `${_workspace?.data?.ownerUser?.fullname}` : `@${_workspace?.data?.ownerUser?.username}`}
-                            </span>
-                            {_workspace?.data?.ownerUser?.fullname && <span className="text-sm text-neutral-600">
-                                {`@${_workspace?.data?.ownerUser?.username}`}
-                            </span>}
-                        </div>
-                    </a>
-                </Link>}
-            </div>}
             {(!loadingWorkspace && !_workspace?.error && isOwner) && <WorkspaceSidebar
                 workspaceStarred={_workspace?.data?.starred}
                 workspaceVisible={_workspace?.data?.workspaceVisible}

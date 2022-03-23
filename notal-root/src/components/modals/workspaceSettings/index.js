@@ -220,6 +220,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                         onChange={(e) => setEditWorkspace({ ...editWorkspace, title: e.target.value })}
                         value={editWorkspace.title}
                         id="workspaceTitle"
+                        maxLength={32}
                     />
                     <label htmlFor="workspaceTitle">Workspace Description</label>
                     <Input
@@ -228,6 +229,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                         onChange={(e) => setEditWorkspace({ ...editWorkspace, desc: e.target.value })}
                         value={editWorkspace.desc}
                         id="workspaceDesc"
+                        maxLength={96}
                     />
                 </Tab.TabView>
                 <Tab.TabView index={1} className="pt-4 grid grid-cols-1 gap-2">
@@ -356,15 +358,16 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                     </div>}
                 </Tab.TabView>
                 <Tab.TabView index={2} className="pt-4 grid grid-cols-1 gap-2">
+                    <p className="border-b-2 border-b-solid border-b-neutral-200 dark:border-b-neutral-800 pb-2">Add up to 20 users to your workspace to work with together.</p>
                     <label>Workspace Owner</label>
                     <div className="w-full h-16 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
                         {workspaceOwner?.username}
                     </div>
                     {workspaceUsers?.length != 0 && <div className="flex gap-2 flex-col">
-                        <label>Workspace Users</label>
+                        <label>Workspace Users ({workspaceUsers?.length})</label>
                         {workspaceUsers?.map((user, index) => (<div
                             key={index}
-                            className="flex flex-row justify-between items-center w-full h-16 bg-neutral-100 dark:bg-neutral-800 p-2 rounded-lg"
+                            className="flex flex-row justify-between items-center w-full h-16 bg-neutral-100 dark:bg-neutral-800 p-2 rounded-lg text-black dark:text-white"
                         >
                             <span>{user?.username}</span>
                             <Button
@@ -373,7 +376,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                                 className="px-2"
                                 light
                             >
-                                <DeleteIcon size={24} fill="currentColor" />
+                                <DeleteIcon size={24} className="fill-red-700 dark:fill-red-600" />
                             </Button>
                         </div>))}
                     </div>}

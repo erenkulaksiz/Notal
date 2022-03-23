@@ -40,18 +40,25 @@ const HomeWorkspaceCard = ({ workspace, onStar, onDelete, index, skeleton = fals
                                 {workspace?.starred ? <StarFilledIcon size={24} fill="currentColor" /> : <StarOutlineIcon size={24} fill="currentColor" />}
                             </Tooltip>}
                         </div>
-                        <Link href="/workspace/[id]" as={`/workspace/${workspace._id || "not-found"}`} passHref>
-                            <a className="flex-col flex">
-                                <span className="font-medium text-ellipsis overflow-hidden whitespace-nowrap drop-shadow-xl">
+                        {!preview ? <Link href="/workspace/[id]" as={`/workspace/${workspace._id || "not-found"}`} passHref>
+                            <a className="flex-col flex w-full">
+                                <span className="font-medium text-ellipsis overflow-hidden whitespace-nowrap drop-shadow-xl break-words">
                                     {workspace.title}
                                 </span>
-                                <span className="text-sm drop-shadow-lg">
+                                <span className="text-sm drop-shadow-lg break-words">
                                     {workspace.desc}
                                 </span>
                             </a>
-                        </Link>
+                        </Link> : <div className="flex-col flex w-full">
+                            <span className="font-medium text-ellipsis overflow-hidden whitespace-nowrap drop-shadow-xl break-words">
+                                {workspace.title}
+                            </span>
+                            <span className="text-sm drop-shadow-lg break-words">
+                                {workspace.desc}
+                            </span>
+                        </div>}
                     </div>
-                    {!preview && <div>
+                    {!preview && <div className="flex flex-col justify-end">
                         <Tooltip content={workspace?.starred ? "Remove from favorites" : "Add to favorites"}>
                             <Button className="mb-2 p-3 pt-1 pb-1" light onClick={onStar}>
                                 {workspace?.starred ? <StarFilledIcon size={24} fill="currentColor" /> : <StarOutlineIcon size={24} fill="currentColor" />}
@@ -64,7 +71,7 @@ const HomeWorkspaceCard = ({ workspace, onStar, onDelete, index, skeleton = fals
                         </Tooltip>
                     </div>}
                 </div>
-                {(workspace?.thumbnail && workspace?.thumbnail?.type != "singleColor" && workspace?.thumbnail?.type != "gradient") && (workspace?._id ? <Link href="/workspace/[id]" as={`/workspace/${workspace._id || "not-found"}`} passHref>
+                {(workspace?.thumbnail && workspace?.thumbnail?.type == "image") && (!preview ? <Link href="/workspace/[id]" as={`/workspace/${workspace._id || "not-found"}`} passHref>
                     <a className="cursor-pointer bg-gradient-to-t from-black/30 dark:from-black/10 dark:to-trasparent to-black/30 group-hover:opacity-0 opacity-100 transition-all ease-in-out absolute left-0 right-0 top-0 bottom-0 rounded-xl z-10" />
                 </Link> : <div className="bg-gradient-to-t from-black/50 dark:from-black dark:to-trasparent to-black/30 group-hover:opacity-0 opacity-100 transition-all ease-in-out absolute left-0 right-0 top-0 bottom-0 rounded-xl z-10" />)}
                 {(workspace?.thumbnail && workspace?.thumbnail?.type == "image") && <div className="absolute left-0 right-0 top-0 bottom-0 rounded-xl overflow-hidden z-0">

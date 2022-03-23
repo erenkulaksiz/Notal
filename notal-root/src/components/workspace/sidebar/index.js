@@ -20,7 +20,7 @@ const WorkspaceSidebar = ({
         addfield: () => onAddField(),
     }
 
-    return (<div className="flex flex-col justify-between items-center py-2 h-full sticky backdrop-blur-md top-0 w-14 dark:bg-neutral-800/50 bg-white/50 shadow-xl dark:shadow-neutral-800 shadow-neutral-300 pt-2 z-40">
+    return (<nav className="flex flex-col justify-between items-center py-2 h-full sticky backdrop-blur-md top-0 w-14 dark:bg-neutral-800/50 bg-white/50 shadow-xl dark:shadow-neutral-800 shadow-neutral-300 pt-2 z-40">
         <div>
             {WorkspaceButtons.map((item, index) => (<WorkspaceSidebarItem
                 item={item}
@@ -32,7 +32,7 @@ const WorkspaceSidebar = ({
                 }}
             />))}
         </div>
-        <div className="pb-2 relative">
+        <div className="w-full h-full flex flex-col justify-end relative">
             {workspaceUsers && workspaceUsers.map((user, index) => <Tooltip
                 content={
                     <div className="items-center flex-row flex">
@@ -44,7 +44,7 @@ const WorkspaceSidebar = ({
                             />
                         </div>
                         <div className="flex flex-col ml-1">
-                            <span>{user.fullname ? `${user.fullname}` : `@${user.username}`}</span>
+                            <span className="h-4">{user.fullname ? `${user.fullname}` : `@${user.username}`}</span>
                             {user.fullname && <span className="text-xs dark:text-neutral-500 text-neutral-400">@{user.username}</span>}
                         </div>
                     </div>
@@ -52,9 +52,11 @@ const WorkspaceSidebar = ({
                 key={index}
                 direction="right"
                 containerClassName="px-2"
+                allContainerClassName={`absolute flex w-full h-8 hover:z-40 absolute`}
+                style={{ bottom: index * 12 }}
             >
                 <Link href="/profile/[username]" as={`/profile/${user?.username || "not-found"}`} passHref>
-                    <a className="mt-2">
+                    <a className="w-8 h-8 flex items-center justify-center border-2 border-solid rounded-full border-white dark:border-neutral-800">
                         <img
                             src={user?.avatar}
                             className="w-7 h-7 cursor-pointer rounded-full"
@@ -64,7 +66,7 @@ const WorkspaceSidebar = ({
                 </Link>
             </Tooltip>)}
         </div>
-    </div >)
+    </nav>)
 }
 
 export default WorkspaceSidebar;

@@ -21,6 +21,7 @@ const Tooltip = ({
     blockContent = true, // block pointer events
     closeAuto = true, // automatically close after time
     useFocus = false, // uses focus instead of using hover
+    style,
 }) => {
     const [show, setShow] = useState(false);
     const [visible, setVisible] = useState(false);
@@ -126,6 +127,7 @@ const Tooltip = ({
         onBlur={() => useFocus && setVisible(false)}
         ref={containerRef}
         className={BuildAllContainer.classes}
+        style={style}
     >
         {children}
         {(show && content) && <TooltipPortal
