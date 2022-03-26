@@ -1,12 +1,13 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 import { isClient } from "@utils";
 
-const LandingFeatureCard = ({ feature }) => {
+const LandingFeatureCard = ({ feature, ...rest }) => {
     return (<motion.div
         variants={{
             hidden: { y: isClient ? -50 : 0, opacity: isClient ? 0 : 1 },
-            show: { y: 0, opacity: 1 }
+            show: { y: 0, opacity: 1, transition: { type: "spring", damping: 25, stiffness: 100, mass: .5 } }
         }}
         className="dark:bg-white/5 bg-white/40 dark:text-white text-black p-4 py-3 flex-col rounded-xl drop-shadow-xl"
     >

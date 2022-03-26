@@ -19,7 +19,7 @@ export function NotalUIProvider(props) {
 
     const Toast = {
         trigger: ({ title, desc }) => {
-            setToastBuffer([<div className="toas"></div>, { title, desc }]);
+            setToastBuffer([{ title, desc }]);
             alert("triggered!!");
         }
     }

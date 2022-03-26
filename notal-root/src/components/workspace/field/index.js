@@ -42,7 +42,7 @@ const WorkspaceField = ({
 
     const BuildFieldTitle = BuildComponent({
         name: "Workspace Field",
-        defaultClasses: "p-2 pr-1 w-full flex flex-row backdrop-blur-sm dark:bg-neutral-900/50 bg-white/50 pb-2 overflow-visible border-b-2 border-b-neutral-200 dark:border-b-neutral-800",
+        defaultClasses: "p-2 pr-1 w-full flex flex-row backdrop-blur-sm dark:bg-neutral-900/50 bg-white/50 pb-2 overflow-visible border-b-2 border-b-neutral-100 dark:border-b-neutral-800",
         conditionalClasses: [{ true: "z-50", false: "z-10" }],
         selectedClasses: [hovered],
     });
@@ -62,7 +62,7 @@ const WorkspaceField = ({
     })
 
     return (<motion.div // min-w-[280px] 
-        className="h-full relative rounded shadow flex flex-col items-start dark:bg-neutral-800 bg-neutral-200 p-0.5 mr-1.5"
+        className="h-full relative rounded shadow flex flex-col items-start dark:bg-neutral-800 bg-neutral-100 p-0.5 mr-1.5"
         animate={field?.collapsed && !hovered ? "collapse" : "normal"}
         variants={{
             collapse: {
@@ -98,15 +98,18 @@ const WorkspaceField = ({
                     containerClassName="px-1 p-1"
                     blockContent={false}
                     direction="bottom"
-                    content={<div className="flex flex-row p-1">
-                        <Button size="md" className="px-2">
-                            <SettingsIcon size={24} fill="currentColor" />
+                    content={<div className="flex flex-row">
+                        <Button size="md" className="px-2" light>
+                            <SettingsIcon size={24} className="fill-neutral-800 dark:fill-white" />
                         </Button>
-                        <Button size="md" className="px-2 ml-1" onClick={onDelete}>
-                            <DeleteIcon size={24} fill="currentColor" />
+                        <Button size="md" className="px-2 ml-1" onClick={onDelete} light>
+                            <DeleteIcon size={24} className="fill-neutral-800 dark:fill-white" />
                         </Button>
-                        <Button size="md" className="px-2 ml-1" onClick={onCollapse}>
-                            {field.collapsed ? <FoldIcon size={24} fill="currentColor" style={{ transform: "rotate(90deg)" }} /> : <UnfoldIcon size={24} fill="currentColor" style={{ transform: "rotate(90deg)" }} />}
+                        <Button size="md" className="px-2 ml-1" onClick={onCollapse} light>
+                            {field.collapsed ?
+                                <FoldIcon size={24} className="fill-neutral-800 dark:fill-white" style={{ transform: "rotate(90deg)" }} />
+                                :
+                                <UnfoldIcon size={24} className="fill-neutral-800 dark:fill-white" style={{ transform: "rotate(90deg)" }} />}
                         </Button>
                     </div>}
                 >

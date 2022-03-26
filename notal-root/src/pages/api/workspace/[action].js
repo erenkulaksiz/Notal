@@ -52,6 +52,13 @@ export default async function handler(req, res) {
             }
 
             try {
+                // first check how many workspaces user have
+                const workspacesCount = await workspacesCollection.find({ owner: uid }).count();
+
+                if (workspacesCount >= 20) {
+                    return reject("max-workspaces");
+                }
+
                 return await workspacesCollection.insertOne({
                     title,
                     desc,

@@ -225,3 +225,7 @@ export const WorkspaceButtons = [
         icon: <AddIcon size={24} className="fill-neutral-900 dark:fill-white" />
     }
 ]
+
+const LandingSections = [{
+    title: ""
+}];

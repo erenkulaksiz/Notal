@@ -14,11 +14,13 @@ import {
   LandingFeatureCard,
   Button,
   Footer,
-  AcceptCookies
+  AcceptCookies,
+  LandingSection
 } from '@components';
 
 import {
   CheckToken,
+  isClient,
   ValidateToken,
   WorkboxInit
 } from '@utils';
@@ -32,6 +34,8 @@ import { withPublic } from "@hooks/route";
 const Landing = (props) => {
   const router = useRouter();
   const auth = useAuth();
+
+  const [featureHovered, setFeatureHovered] = useState(-1);
 
   /*
   const [_validate, _setValidate] = useState(null);
@@ -103,12 +107,6 @@ const Landing = (props) => {
         <div className="container px-8 sm:px-8 md:px-8 lg:px-8 xl:px-32 pt-64 z-10">
           <div className="relative z-50">
             <h1 className="text-black drop-shadow-xl dark:text-white sm:text-4xl text-3xl font-bold font-sans">
-              {/*Organize & Plan your{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600">
-                next
-              </span>{' '}
-  project with Notal 🚀*/}
-
               <Typewriter
                 options={{
                   strings: [
@@ -122,7 +120,11 @@ const Landing = (props) => {
                   delay: 90
                 }}
               />
-
+              {!isClient && <>Organize & Plan your
+                <span className="text-transparent ml-2 mr-2 bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600">
+                  next
+                </span>
+                project with Notal 🚀</>}
             </h1>
             <h5 className="dark:text-neutral-400 text-gray-600 drop-shadow-lg mt-4 text-lg font-semibold">
               {"Developer's solution from an developer. Keep focus on your project, not on your planning."}
@@ -135,20 +137,24 @@ const Landing = (props) => {
             variants={{
               show: {
                 transition: {
-                  staggerChildren: 0.1,
+                  staggerChildren: 0.15,
                 }
               }
             }}
             initial="hidden"
             animate="show"
-            transition={{ type: "spring", stiffness: 300, damping: 200 }}
-            className="mb-24 mt-16 flex-row grid gap-4 h-auto grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 relative"
+            className="mb-16 mt-16 flex-row grid gap-4 h-auto grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 relative"
           >
-            {Features.map((feature, index) => <LandingFeatureCard feature={feature} key={index} />)}
+            {Features.map((feature, index) => <LandingFeatureCard
+              feature={feature}
+              key={index}
+            />)}
 
             <div className="bg-landing_bg_2 opacity-25 absolute w-[800px] h-[800px] -left-[300px] -bottom-[300px] bg-no-repeat bg-contain -z-50"></div>
             <div className="bg-landing_bg_3 opacity-20 absolute w-[800px] h-[800px] -right-[350px] -bottom-[300px] bg-no-repeat bg-contain -z-50"></div>
           </motion.div>
+
+          {/*[1, 2, 3, 4].map(el => <LandingSection />)*/}
 
           <Footer />
         </div>

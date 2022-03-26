@@ -4,6 +4,7 @@ export { default as AddWorkspaceBanner } from "./home/addWorkspaceBanner";
 export { default as AddWorkspaceButton } from "./home/addWorkspaceBtn";
 export { default as Button } from "./button";
 export { default as Checkbox } from "./checkbox";
+export { default as Dropdown } from "./dropdown";
 export { default as FieldCardIndicator } from "./workspace/fieldCardIndicator";
 export { default as Footer } from "./footer";
 export { default as HomeNavBookmarks } from "./home/navigations/bookmarks";
@@ -16,6 +17,7 @@ export { default as HomeWorkspaceCardSkeleton } from "./home/workspaceCardSkelet
 export { default as HomeBookmarkItem } from "./home/bookmarks/bookmarkItem";
 export { default as Input } from "./input";
 export { default as LandingFeatureCard } from "./landing/featureCard";
+export { default as LandingSection } from "./landing/section";
 export { default as Loading } from "./loading";
 export { default as LoginSelector } from "./loginSelector";
 export { default as Modal } from "./modal";
@@ -37,6 +39,7 @@ export { default as WorkspaceNotFound } from "./workspace/notFound";
 export { default as WorkspaceSidebar } from "./workspace/sidebar";
 export { default as WorkspaceSidebarItem } from "./workspace/sidebarItem";
 // Modals
+export { default as AlertModal } from "./modals/alert";
 export { default as AddFieldModal } from "./modals/addField";
 export { default as AddCardModal } from "./modals/addCard";
 export { default as AddWorkspaceModal } from "./modals/addWorkspace";

@@ -15,7 +15,8 @@ import {
     HomeWorkspaceCard,
     Select,
     Tooltip,
-    HomeNavTitle
+    HomeNavTitle,
+    AlertModal
 } from '@components';
 import {
     DashboardFilledIcon, FilterIcon
@@ -30,6 +31,7 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
     // Modals
     const [newWorkspaceModal, setNewWorkspaceModal] = useState(false);
     const [deleteModal, setDeleteModal] = useState({ workspace: -1, visible: false });
+    const [alertModal, setAlertModal] = useState({ visible: false, title: "", desc: "" });
 
     const [loadingWorkspaces, setLoadingWorkspaces] = useState(true);
     const [filter, setFilter] = useState(null);
@@ -76,9 +78,18 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
 
     const workspace = {
         create: async ({ title, desc, starred, workspaceVisible, thumbnail }) => {
+            // check how many workspaces user has on client, first
+            if (_workspaces?.data?.length >= 20) {
+                setAlertModal({ ...alertModal, visible: true, title: "Maximum Workspaces", desc: "Sorry, you can create 20 workspaces maximum at this moment." })
+                return;
+            }
             workspacesData.mutate({ ..._workspaces, data: [..._workspaces.data, { updatedAt: Date.now(), createdAt: Date.now(), title, desc, starred, workspaceVisible, thumbnail }] }, false);
-            await auth.workspace.createWorkspace({ title, desc, starred, workspaceVisible, thumbnail });
-            workspacesData.mutate(); // get refreshed workspaces
+            const res = await auth.workspace.createWorkspace({ title, desc, starred, workspaceVisible, thumbnail });
+            if (res.success == true) {
+                workspacesData.mutate(); // get refreshed workspaces
+            } else if (res.success = false) {
+                console.log("RES ERR -> ", res);
+            }
         },
         delete: async ({ id }) => {
             setDeleteModal({ visible: false, workspace: -1 }); // set visiblity to false and id to -1
@@ -98,7 +109,15 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
     }
 
     return (<div className="flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
-        <HomeNavTitle title="Workspaces">
+        <HomeNavTitle
+            title="Workspaces"
+            starredWorkspacesCount={_workspaces?.data?.filter(el => el.starred).length}
+            count={{
+                workspaces: _workspaces?.data?.length,
+                starred: _workspaces?.data?.filter(el => !!el.starred).length,
+                private: _workspaces?.data?.filter(el => !el.workspaceVisible).length
+            }}
+        >
             <DashboardFilledIcon size={24} fill="currentColor" />
         </HomeNavTitle>
         <div className="w-full mt-4 grid gap-2 flex-row items-center flex-wrap grid-cols-1 sm:grid-cols-1 md:grid-cols-1">
@@ -171,6 +190,13 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
                 <AddWorkspaceBanner />
             </div>
         )}
+
+        <AlertModal
+            open={alertModal.visible}
+            title={alertModal.title}
+            desc={alertModal.desc}
+            onClose={() => setAlertModal({ ...alertModal, visible: false, title: "", desc: "" })}
+        />
 
         <DeleteWorkspaceModal
             open={deleteModal.visible}

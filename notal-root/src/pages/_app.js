@@ -16,6 +16,12 @@ const progress = new ProgressBar({
 });
 
 export function reportWebVitals({ id, name, label, value }) {
+  if (name == "FCP" || name == "LCP") {
+    console.log(name, value);
+  }
+  if (process.env.NODE_ENV !== "production") {
+    return; // don't report vitals on production
+  }
   window.gtag("event", name, {
     event_category:
       label === "web-vital" ? "Web Vitals" : "Next.js custom metric",
@@ -23,9 +29,6 @@ export function reportWebVitals({ id, name, label, value }) {
     event_label: id,
     non_interaction: true,
   });
-  if (name == "FCP" || name == "LCP") {
-    console.log(name, value);
-  }
 }
 
 const Notal = ({ Component, pageProps }) => {

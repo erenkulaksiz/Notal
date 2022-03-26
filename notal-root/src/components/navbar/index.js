@@ -79,9 +79,9 @@ const Navbar = ({
         </Link>}
     </div> : null;
 
-    return (<nav className="p-3 flex flex-row sticky top-0 z-40">
+    return (<nav className="p-3 flex flex-row sticky top-0 z-40 max-h-16">
         <div className="absolute top-0 bottom-0 right-0 left-0 dark:bg-black/30 bg-white/30 backdrop-blur-md -z-10 shadow-none dark:shadow-md" />
-        <div className="w-1/2 flex items-start">
+        <div className="w-1/2 flex items-center">
             {typeof resolvedTheme != "undefined" && <Link href={auth?.authUser ? "/home" : "/"} passHref>
                 <a className="">
                     <div className="h-10 sm:flex w-40 hidden">
@@ -157,7 +157,10 @@ const Navbar = ({
                         />
                         <span className="ml-2 text-xs dark:text-neutral-600 text-neutral-300">{`v${process.env.NEXT_PUBLIC_APP_VERSION}`}</span>
                     </div>}
-                    <h2 className="text-current font-bold text-xl mt-1">{user?.fullname ? user?.fullname : user?.username ? "@" + user?.username : "..."}</h2>
+                    <h2 className="text-current font-bold text-xl mt-1" title={user?.uid}>
+                        {user?.fullname ? user?.fullname : user?.username ? "@" + user?.username : "..."}
+                    </h2>
+                    {user?.fullname && <h3 className="dark:text-neutral-400 text-neutral-500" title={user?.uid}>@{user?.username}</h3>}
                     <h4 className="text-current text-md">{user?.email}</h4>
                     <Button fullWidth className="mt-2" icon={<UserIcon size={24} fill="white" />} gradient aria-label="Profile Button">
                         <span>Profile</span>
