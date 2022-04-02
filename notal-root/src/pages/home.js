@@ -1,6 +1,9 @@
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
+import { AnimatePresence } from 'framer-motion';
+
+import { isClient } from '@utils';
 
 import {
     Navbar,
@@ -13,14 +16,15 @@ import { withAuth } from '@hooks/route';
 
 import {
     CheckToken,
-    ValidateToken,
-    WorkboxInit
+    ValidateToken
 } from '@utils';
 import { HomeRoutes } from '@utils/constants';
+import useNotalUI from '@hooks/notalui';
 
 const Home = (props) => {
     const auth = useAuth();
     const router = useRouter();
+    const NotalUI = useNotalUI
 
     const [_workspacesValidating, _setWorkspacesValidating] = useState(true);
 
@@ -39,17 +43,16 @@ const Home = (props) => {
         }
     }, []);
 
-    const onCollapse = () => {
+    const onNavCollapse = () => {
         localStorage.setItem("homeNavCollapsed", !navCollapse);
         setNavCollapse(!navCollapse);
     }
 
     useEffect(() => {
         console.log("home props: ", props);
-        WorkboxInit();
         (async () => {
             const token = await auth.users.getIdToken();
-            const res = await CheckToken({ token: token.res, props });
+            const res = await CheckToken({ token: token.res, props, user: auth?.authUser });
             if (!res) {
                 setTimeout(() => router.replace(router.asPath), 1000);
             }
@@ -67,32 +70,34 @@ const Home = (props) => {
         <Navbar
             user={props?.validate?.data}
             validating={_workspacesValidating}
+            showCollapse
         />
 
         <main className="relative flex flex-1 flex-row bg-white dark:bg-neutral-900 overflow-y-auto overflow-x-hidden">
-            {typeof navCollapse != "undefined" && <HomeSidebar
-                navCollapse={navCollapse}
-                current={homeViewing}
-                onViewingChange={({ nav }) => setHomeViewing(nav.id)}
-                onCollapse={() => onCollapse()}
-            />}
+            <AnimatePresence initial={false}>
+                {typeof navCollapse != "undefined" && isClient && <HomeSidebar
+                    navCollapse={navCollapse}
+                    current={homeViewing}
+                    onViewingChange={({ nav }) => setHomeViewing(nav.id)}
+                    onCollapse={() => onNavCollapse()}
+                />}
+            </AnimatePresence>
             {HomeRoutes.map((Route) => {
-                if (homeViewing == Route.id) {
-                    if (!Route.Component) {
-                        return <div>
-                            no route found!
-                        </div>
-                    }
-                    return Route.Component(
-                        {
-                            props: { ...props },
-                            isValidating: (val) => _setWorkspacesValidating(val)
-                        }
-                    );
+                if (homeViewing != Route.id) return;
+
+                if (!Route.Component) {
+                    return <div className="w-full h-full flex items-center justify-center">
+                        <h1 className="text-2xl">🚧 Cannot found this route. 🚧</h1>
+                    </div>
                 }
+                return Route.Component(
+                    {
+                        props: { ...props },
+                        isValidating: (val) => _setWorkspacesValidating(val)
+                    }
+                );
             })}
         </main>
-        <AcceptCookies />
     </div>)
 }
 
@@ -101,7 +106,6 @@ export default withAuth(Home);
 export async function getServerSideProps(ctx) {
     const { req, res, query } = ctx;
     let validate = {};
-    let workspaces = {};
 
     if (req) {
         const authCookie = req.cookies.auth;

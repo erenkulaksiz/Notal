@@ -27,7 +27,15 @@ export const ChildrenAnim = {
     }
 }
 
-const Modal = ({ children, open, blur, onClose, className, animate = false, closeBtn = true }) => {
+const Modal = ({
+    children,
+    open,
+    blur = false,
+    onClose,
+    className,
+    animate = false,
+    closeBtn = true
+}) => {
     const [show, setShow] = useState(false);
 
     useEffect(() => {

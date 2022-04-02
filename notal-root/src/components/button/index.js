@@ -80,7 +80,9 @@ const Button = ({
         ]
     });
 
-    const ButtonEl = ({ ...props }) => (createElement(as, props));
+    const ButtonEl = ({ children, ...props }) => {
+        return createElement(as, props, children)
+    }
 
     return (<ButtonEl onClick={onClick} className={BuildButton.classes} {...props} form={form}>
         {icon && <span className={iconClasses}>{icon}</span>}

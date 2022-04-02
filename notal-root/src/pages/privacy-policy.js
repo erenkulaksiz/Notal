@@ -1,14 +1,31 @@
+import { useEffect } from "react";
 import Head from "next/head";
+import { useRouter } from "next/router";
 
-import { ValidateToken } from "@utils";
 import { SecureIcon } from "@icons";
+import { CheckToken, ValidateToken } from "@utils";
 import {
     Navbar,
     AcceptCookies,
     Footer
 } from "@components";
+import useAuth from "@hooks/auth";
 
 const PrivacyPolicy = (props) => {
+    const auth = useAuth();
+    const router = useRouter();
+
+    useEffect(() => {
+        console.log("home props: ", props);
+        (async () => {
+            const token = await auth.users.getIdToken();
+            const res = await CheckToken({ token: token.res, props, user: auth?.authUser });
+            if (!res) {
+                setTimeout(() => router.replace(router.asPath), 1000);
+            }
+        })();
+    }, []);
+
     return (<div className="mx-auto flex flex-col transition-colors duration-100 overflow-y-auto overflow-x-hidden">
         <Head>
             <title>Privacy Policy · Notal</title>
@@ -309,8 +326,6 @@ const PrivacyPolicy = (props) => {
 
             <Footer className="pt-4" />
         </div>
-
-        <AcceptCookies />
     </div>)
 }
 

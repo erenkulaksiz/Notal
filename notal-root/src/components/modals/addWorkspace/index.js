@@ -261,6 +261,7 @@ const AddWorkspaceModal = ({ open, onClose, onAdd }) => {
                         <label htmlFor="cardColor">Card Color</label>
                         <Tooltip
                             useFocus
+                            noPadding
                             blockContent={false}
                             containerClassName="px-0 py-0"
                             direction="right"
@@ -292,6 +293,7 @@ const AddWorkspaceModal = ({ open, onClose, onAdd }) => {
                             <label htmlFor="cardStartColor">Start Color</label>
                             <Tooltip
                                 useFocus
+                                noPadding
                                 blockContent={false}
                                 containerClassName="px-0 py-0"
                                 direction="right"
@@ -322,6 +324,7 @@ const AddWorkspaceModal = ({ open, onClose, onAdd }) => {
                             <label htmlFor="cardEndColor">End Color</label>
                             <Tooltip
                                 useFocus
+                                noPadding
                                 blockContent={false}
                                 containerClassName="px-0 py-0"
                                 direction="right"

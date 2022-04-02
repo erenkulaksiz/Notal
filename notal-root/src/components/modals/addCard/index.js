@@ -74,10 +74,10 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
                 id="workspaceTab"
                 views={[
                     { title: "Card", id: "card" },
-                    { title: "Subtasks", id: "subtasks" },
+                    /*{ title: "Subtasks", id: "subtasks" },
                     { title: "Image", id: "image" },
                     { title: "Notes", id: "notes" },
-                    { title: "Details", id: "details" },
+                    { title: "Details", id: "details" },*/
                 ]}>
                 <Tab.TabView index={0} className="pt-4 grid grid-cols-1 gap-2">
                     <label htmlFor="cardTitle">Card Title</label>
@@ -107,8 +107,9 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
                     <div className="flex items-center">
                         {useColor && <Tooltip
                             useFocus
+                            noPadding
                             blockContent={false}
-                            containerClassName="px-0 py-0"
+                            containerClassName="px-0"
                             direction="right"
                             content={<div className="flex flex-col relative">
                                 <HexColorPicker color={addCard.color} onChange={(color) => setAddCard({ ...addCard, color })} />

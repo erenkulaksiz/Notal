@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTheme } from 'next-themes';
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 import BuildComponent from "@utils/buildComponent";
 
@@ -19,13 +20,15 @@ import {
     DarkIcon,
     LightIcon,
     LoginIcon,
-    HomeFilledIcon
+    HomeFilledIcon,
+    ArrowDownIcon
 } from "@icons";
 import {
     Button,
     LoginModal,
     Switch,
     Loading,
+    Tooltip
 } from "@components";
 import useAuth from "@hooks/auth";
 
@@ -34,6 +37,7 @@ const Navbar = ({
     showHomeButton = false,
     validating = false,
     workspace,
+    showCollapse = false,
 }) => {
     const { isOwner, _workspace, loadingWorkspace, } = workspace ?? {};
 
@@ -42,6 +46,12 @@ const Navbar = ({
     const auth = useAuth();
 
     const [loginModalVisible, setLoginModalVisible] = useState(false);
+    const [navbarCollapse, setNavbarCollapse] = useState(undefined);
+
+    const onNavbarCollapse = () => {
+        localStorage.setItem("navbarCollapsed", !navbarCollapse);
+        setNavbarCollapse(!navbarCollapse);
+    }
 
     const BuildWorkspaceOwnerProfileContainer = BuildComponent({
         name: "Workspace Owner Profile Container",
@@ -49,6 +59,18 @@ const Navbar = ({
         conditionalClasses: [{ true: "left-[4.3rem]", false: "left-4" }],
         selectedClasses: [isOwner]
     });
+
+    useEffect(() => {
+        if (!showCollapse) return setNavbarCollapse(false);
+
+        const navbarCollapsed = localStorage.getItem("navbarCollapsed");
+        if (typeof navbarCollapsed == "undefined") {
+            localStorage.setItem("navbarCollapsed", false);
+            setNavbarCollapse(false);
+        } else {
+            setNavbarCollapse(JSON.parse(navbarCollapsed));
+        }
+    }, []);
 
     const WorkspaceOwnerProfile = () => !workspace?.notFound && !loadingWorkspace && _workspace?.data?.ownerUser?.username ? <div className={BuildWorkspaceOwnerProfileContainer.classes}>
         <div className="flex flex-col w-full">
@@ -79,8 +101,17 @@ const Navbar = ({
         </Link>}
     </div> : null;
 
-    return (<nav className="p-3 flex flex-row sticky top-0 z-40 max-h-16">
-        <div className="absolute top-0 bottom-0 right-0 left-0 dark:bg-black/30 bg-white/30 backdrop-blur-md -z-10 shadow-none dark:shadow-md" />
+    return (typeof navbarCollapse == "undefined" && showCollapse ? null : <motion.nav
+        variants={{
+            hidden: { height: 0, y: -60, paddingTop: 0, paddingBottom: 0 },
+            show: { height: 60, y: 0, },
+        }}
+        initial={navbarCollapse ? "hidden" : "show"}
+        animate={navbarCollapse ? "hidden" : "show"}
+        transition={{ type: "sticky", stifness: 500 }}
+        className="flex sticky flex-row p-4 top-0 z-50 max-h-16"
+    >
+        <div className="absolute left-0 right-0 top-0 bottom-0 dark:bg-black/30 bg-white/30 backdrop-blur-md -z-10 shadow-none dark:shadow-md" />
         <div className="w-1/2 flex items-center">
             {typeof resolvedTheme != "undefined" && <Link href={auth?.authUser ? "/home" : "/"} passHref>
                 <a className="">
@@ -105,7 +136,55 @@ const Navbar = ({
                 </a>
             </Link>}
             <WorkspaceOwnerProfile />
-        </div>
+            {showCollapse && <motion.div
+                variants={{
+                    hidden: { y: 70, },
+                    show: { y: 0, zIndex: 100 },
+                }}
+                animate={navbarCollapse ? "hidden" : "show"}
+                transition={{ type: "tween", }}
+                className="ml-2"
+            >
+                <Tooltip content={navbarCollapse ? "Show Navbar" : "Hide Navbar"} direction="bottom">
+                    <motion.div
+                        variants={{
+                            hidden: { rotate: 0, },
+                            show: { rotate: 180 },
+                        }}
+                        initial={navbarCollapse ? "hidden" : "show"}
+                        animate={navbarCollapse ? "hidden" : "show"}
+                        transition={{ type: "tween" }}
+                    >
+                        <Button
+                            className="px-0 h-6 w-6 dark:bg-neutral-800 bg-neutral-100 fill-black dark:fill-white shadow-xl"
+                            onClick={() => onNavbarCollapse()}
+                            light="hover:bg-neutral-300 hover:dark:bg-neutral-700 focus:dark:bg-neutral-600 focus:bg-neutral-400"
+                        >
+                            <ArrowDownIcon size={24} fill="currentFill" />
+                        </Button>
+                    </motion.div>
+                </Tooltip>
+            </motion.div>}
+            {showHomeButton && <motion.div
+                variants={{
+                    hidden: { y: 70, opacity: 1, display: "flex", },
+                    show: { y: 0, opacity: 0, transitionEnd: { display: "none" } },
+                }}
+                initial={navbarCollapse ? "hidden" : "show"}
+                animate={navbarCollapse ? "hidden" : "show"}
+                transition={{ type: "tween" }}
+            >
+                <Link href="/home" passHref>
+                    <Button
+                        className="ml-1 px-0 h-6 w-6 dark:bg-neutral-800 bg-neutral-100 fill-black dark:fill-white shadow-xl"
+                        light="hover:bg-neutral-300 hover:dark:bg-neutral-700 focus:dark:bg-neutral-600 focus:bg-neutral-400"
+                        as="a"
+                    >
+                        <HomeFilledIcon size={24} fill="currentFill" style={{ transform: "scale(.7)" }} />
+                    </Button>
+                </Link>
+            </motion.div>}
+        </div >
         <div className="w-1/2 flex items-center justify-end">
             {(validating) && <div className="flex flex-row items-center justify-center p-1 dark:bg-neutral-800 bg-neutral-100 shadow rounded-lg mr-2 px-3">
                 <Loading size="md" />
@@ -137,7 +216,8 @@ const Navbar = ({
                     style={{
                         userSelect: "none",
                         listStyle: "none"
-                    }}>
+                    }}
+                >
                     <div className="p-[2px] w-10 h-10 rounded-full cursor-pointer bg-gradient-to-tr from-blue-700 to-pink-700">
                         <img
                             src={user?.avatar}
@@ -168,7 +248,9 @@ const Navbar = ({
                     <Button fullWidth className="mt-2" icon={<LogoutIcon size={24} fill="white" />} gradient aria-label="Sign Out Button"
                         onClick={async () => {
                             await auth.users.logout();
-                            router.replace(router.asPath);
+                            setTimeout(() => {
+                                router.replace(router.asPath);
+                            }, 1000);
                         }}
                     >
                         <span>Sign Out</span>
@@ -221,17 +303,19 @@ const Navbar = ({
             }
             `}</style>
         </div>
-        {!auth.authUser && <LoginModal
-            open={loginModalVisible}
-            onClose={() => setLoginModalVisible(false)}
-            onLoginSuccess={() => {
-                setTimeout(() => {
-                    setLoginModalVisible(false);
-                    router.replace(router.asPath);
-                }, 1000);
-            }}
-        />}
-    </nav>)
+        {
+            !auth.authUser && <LoginModal
+                open={loginModalVisible}
+                onClose={() => setLoginModalVisible(false)}
+                onLoginSuccess={() => {
+                    setTimeout(() => {
+                        setLoginModalVisible(false);
+                        router.replace(router.asPath);
+                    }, 1000);
+                }}
+            />
+        }
+    </motion.nav >)
 }
 
 export default Navbar;

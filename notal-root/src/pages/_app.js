@@ -1,12 +1,13 @@
 import "../../styles/tailwind.css";
 import "../app/firebaseApp";
-import { AuthProvider } from "@hooks/auth";
-import { NotalUIProvider } from "@hooks/notalui";
 import { ThemeProvider } from "next-themes";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import ProgressBar from "@badrap/bar-of-progress";
+
+import { AuthProvider } from "@hooks/auth";
+import { NotalUIProvider } from "@hooks/notalui";
 
 const progress = new ProgressBar({
   size: 3,
@@ -65,11 +66,11 @@ const Notal = ({ Component, pageProps }) => {
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
         />
       </Head>
-      <AuthProvider>
-        <NotalUIProvider>
+      <NotalUIProvider>
+        <AuthProvider>
           <Component {...pageProps} />
-        </NotalUIProvider>
-      </AuthProvider>
+        </AuthProvider>
+      </NotalUIProvider>
     </ThemeProvider>
   );
 };

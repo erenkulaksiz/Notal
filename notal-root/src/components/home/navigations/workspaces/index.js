@@ -5,33 +5,36 @@ import useSWR from "swr";
 import { useRouter } from "next/router";
 
 import useAuth from "@hooks/auth";
-//import useNotalUI from "@hooks/notalui";
+import useNotalUI from "@hooks/notalui";
 import { fetchWorkspaces } from "@utils/fetcher";
 import {
     AddWorkspaceBanner,
     AddWorkspaceButton,
     AddWorkspaceModal,
-    DeleteWorkspaceModal,
     HomeWorkspaceCard,
     Select,
     Tooltip,
     HomeNavTitle,
-    AlertModal
+    Button
 } from '@components';
 import {
-    DashboardFilledIcon, FilterIcon
+    CheckIcon,
+    CrossIcon,
+    InfoIcon,
+    DashboardFilledIcon,
+    FilterIcon,
+    SendIcon,
+    DeleteIcon
 } from '@icons';
 import { FilterWorkspaces } from "@utils/filterWorkspaces";
 
 const HomeNavWorkspaces = ({ validate, isValidating }) => {
     const auth = useAuth();
     const router = useRouter();
-    //const NotalUI = useNotalUI();
+    const NotalUI = useNotalUI();
 
     // Modals
     const [newWorkspaceModal, setNewWorkspaceModal] = useState(false);
-    const [deleteModal, setDeleteModal] = useState({ workspace: -1, visible: false });
-    const [alertModal, setAlertModal] = useState({ visible: false, title: "", desc: "" });
 
     const [loadingWorkspaces, setLoadingWorkspaces] = useState(true);
     const [filter, setFilter] = useState(null);
@@ -80,7 +83,12 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
         create: async ({ title, desc, starred, workspaceVisible, thumbnail }) => {
             // check how many workspaces user has on client, first
             if (_workspaces?.data?.length >= 20) {
-                setAlertModal({ ...alertModal, visible: true, title: "Maximum Workspaces", desc: "Sorry, you can create 20 workspaces maximum at this moment." })
+                NotalUI.Toast.show({
+                    title: "Cannot create workspace",
+                    desc: "Maximum of 20 workspaces is allowed at the moment.",
+                    icon: <CrossIcon size={24} fill="currentColor" />,
+                    className: "dark:bg-red-600 bg-red-500 text-white"
+                });
                 return;
             }
             workspacesData.mutate({ ..._workspaces, data: [..._workspaces.data, { updatedAt: Date.now(), createdAt: Date.now(), title, desc, starred, workspaceVisible, thumbnail }] }, false);
@@ -92,7 +100,6 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
             }
         },
         delete: async ({ id }) => {
-            setDeleteModal({ visible: false, workspace: -1 }); // set visiblity to false and id to -1
             const newWorkspaces = _workspaces.data;
             newWorkspaces.splice(_workspaces.data.findIndex(el => el._id == id), 1);
             workspacesData.mutate({ ..._workspaces, data: [...newWorkspaces] }, false);
@@ -120,7 +127,7 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
         >
             <DashboardFilledIcon size={24} fill="currentColor" />
         </HomeNavTitle>
-        <div className="w-full mt-4 grid gap-2 flex-row items-center flex-wrap grid-cols-1 sm:grid-cols-1 md:grid-cols-1">
+        {/*<div className="w-full mt-4 grid gap-2 flex-row items-center flex-wrap grid-cols-1 sm:grid-cols-1 md:grid-cols-1">
             <div className="flex-1 flex px-4 flex-row items-center justify-end">
                 <FilterIcon size={24} fill="currentColor" className="mr-4" />
                 <Tooltip
@@ -156,7 +163,7 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
                     />
                 </Tooltip>
             </div>
-        </div>
+                    </div>*/}
 
         <motion.div
             initial="hidden"
@@ -169,7 +176,34 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
                     key={index}
                     index={index}
                     onStar={() => workspace.star({ id: element._id })}
-                    onDelete={() => setDeleteModal({ ...deleteModal, visible: true, workspace: element._id })}
+                    onDelete={() => {
+                        NotalUI.Alert.show({
+                            title: "Delete Workspace",
+                            titleIcon: <DeleteIcon size={24} fill="currentColor" />,
+                            desc: `Are you sure want to delete ${element?.title} workspace?`,
+                            showCloseButton: false,
+                            buttons: [
+                                <Button
+                                    className="bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500 h-10"
+                                    onClick={() => NotalUI.Alert.close()}
+                                    key={1}
+                                >
+                                    <CrossIcon size={24} fill="currentColor" />
+                                    Cancel
+                                </Button>,
+                                <Button
+                                    onClick={() => {
+                                        workspace.delete({ id: element._id });
+                                        NotalUI.Alert.close();
+                                    }}
+                                    key={2}
+                                >
+                                    <CheckIcon size={24} fill="currentColor" />
+                                    Delete
+                                </Button>
+                            ]
+                        })
+                    }}
                 />)}
             </AnimatePresence>
 
@@ -179,33 +213,128 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
                 workspaceLength={_workspacesFiltered?.length}
             />}
 
-            {/*<Button onClick={() => NotalUI.Toast.trigger({ title: "Selam!", desc: "ov yee" })}>
-                asdkasdj
+            {/*<Button onClick={() =>
+                NotalUI.Alert.show({
+                    title: "Selam!",
+                    titleIcon: <InfoIcon size={24} fill="currentColor" />,
+                    desc: "ov yee selamlarrrrrselamlarrrrrselamlarrrrrselamlarrrrrselamlarrrrrselamlarrrrrselamlarrrrr",
+                    blur: true
+                })
+            }>
+                modal
+            </Button>
+
+            <Button onClick={() => NotalUI.Toast.show({
+                title: "selam!!",
+                desc: "your process is complete",
+                icon: <CheckIcon size={24} fill="currentColor" />,
+                //timeEnabled: false,
+                className: "bg-green-800 text-white"
+            })}
+            >
+                1
+            </Button>
+
+            <Button
+                onClick={() =>
+                    NotalUI.Toast.show({
+                        title: "An update is available",
+                        desc: "A new version of Notal is available. Refresh to use latest version.",
+                        icon: <InfoIcon size={24} fill="currentColor" />,
+                        className: "dark:bg-yellow-600 bg-yellow-500 text-white",
+                        timeEnabled: false,
+                        buttons: (index) => {
+                            return [
+                                <Button
+                                    className="p-1 px-2 rounded hover:opacity-70"
+                                    onClick={() => {
+                                        router.reload();
+                                        NotalUI.Toast.close(index);
+                                    }}
+                                    size="sm"
+                                    light
+                                >
+                                    Refresh
+                                </Button>,
+                            ]
+                        },
+                    })
+                }
+            >
+                2
+            </Button>
+
+            <Button
+                onClick={() =>
+                    NotalUI.Toast.show({
+                        desc: "Successfully logged in as xxx",
+                        icon: <InfoIcon size={24} fill="currentColor" />,
+                        className: "dark:bg-green-600 bg-green-500 text-white",
+                        time: 3500,
+                    })
+                }
+            >
+                log
+            </Button>
+            
+
+            <Button
+                onClick={() =>
+                    NotalUI.Toast.show({
+                        title: "selamlarrr",
+                        desc: "seaaaaa",
+                        timeEnabled: false,
+                    })}
+            >
+                3
+            </Button>
+
+            <Button
+                onClick={() =>
+                    NotalUI.Alert.show({
+                        title: "selamlarrr",
+                    })}
+            >
+                m2
+            </Button>
+
+            <Button
+                onClick={() => NotalUI.Toast.closeAll()}
+            >
+                close all
+                </Button>*/}
+
+            {/* <Button
+                onClick={() =>
+                    NotalUI.Toast.showMultiple([{
+                        title: "Welcome to Notal!",
+                        desc: "I'm building this platform to keep track of your projects simpler way. Please share your feedback with email erenkulaksz@gmail.com",
+                        icon: <SendIcon size={24} fill="currentColor" style={{ transform: "rotate(-36deg) scale(.8)", marginLeft: 2 }} />,
+                        className: "dark:bg-green-600 bg-green-500 text-white max-w-[400px]",
+                        closeable: true,
+                    }, {
+                        desc: `Logged in as sea`,
+                        icon: <InfoIcon size={24} fill="currentColor" />,
+                        className: "dark:bg-green-600 bg-green-500 text-white",
+                        duration: 4500,
+                        timeEnabled: true,
+                        closeable: true,
+                    }])
+                }
+            >
+                log
             </Button>*/}
 
         </motion.div>
 
-        {(!_workspaceValidating && !loadingWorkspaces && _workspacesFiltered.length == 0) && (
-            <div className="w-full h-full relative">
-                <AddWorkspaceBanner />
-            </div>
-        )}
+        {
+            (!_workspaceValidating && !loadingWorkspaces && _workspacesFiltered.length == 0) && (
+                <div className="w-full h-full relative">
+                    <AddWorkspaceBanner />
+                </div>
+            )
+        }
 
-        <AlertModal
-            open={alertModal.visible}
-            title={alertModal.title}
-            desc={alertModal.desc}
-            onClose={() => setAlertModal({ ...alertModal, visible: false, title: "", desc: "" })}
-        />
-
-        <DeleteWorkspaceModal
-            open={deleteModal.visible}
-            onClose={() => setDeleteModal({ ...deleteModal, visible: false })}
-            onDelete={() => {
-                setDeleteModal({ ...deleteModal, visible: false });
-                workspace.delete({ id: deleteModal.workspace });
-            }}
-        />
         <AddWorkspaceModal
             open={newWorkspaceModal}
             onClose={() => setNewWorkspaceModal(false)}

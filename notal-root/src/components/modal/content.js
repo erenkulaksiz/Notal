@@ -1,7 +1,19 @@
+import BuildComponent from "@utils/buildComponent"
 import { motion } from "framer-motion"
 
 // Wrapper for modal content.
 const Content = ({ children, blur, className }) => {
+    const BuildModalContent = BuildComponent({
+        name: "Modal Content",
+        defaultClasses: "z-50 relative box-border flex flex-col overflow-y-visible overflow-x-visible sm:overflow-visible shadow-2xl p-2 rounded-xl",
+        conditionalClasses: [{
+            true: "backdrop-brightness-75 dark:bg-black/50 bg-white",
+            false: "dark:bg-neutral-900 bg-white"
+        }],
+        extraClasses: className,
+        selectedClasses: [blur]
+    });
+
     return (<motion.div
         variants={{
             hidden: {
@@ -22,7 +34,7 @@ const Content = ({ children, blur, className }) => {
             }
         }}
         onClick={e => e.stopPropagation()}
-        className={`${className ? className + " " : ""}z-50 relative box-border flex flex-col max-h-[80%] sm:min-h-min sm:h-auto overflow-y-auto overflow-x-visible sm:overflow-visible shadow-2xl p-2 ${blur ? "backdrop-brightness-75 dark:bg-black/50 bg-white " : "dark:bg-neutral-900 bg-white "}rounded-xl`}
+        className={BuildModalContent.classes}
     >
         {children}
     </motion.div>)

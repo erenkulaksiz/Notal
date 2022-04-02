@@ -329,6 +329,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                             <label htmlFor="cardEndColor">End Color</label>
                             <Tooltip
                                 useFocus
+                                noPadding
                                 blockContent={false}
                                 containerClassName="px-0 py-0"
                                 direction="right"

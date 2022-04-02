@@ -6,9 +6,12 @@ import {
 } from '@components';
 
 import BuildComponent from '@utils/buildComponent';
+
+/*
 import { isClient } from '@utils';
 import useClickAway from '@hooks/clickaway';
 import useClickAnyWhere from '@hooks/clickanywhere';
+*/
 
 const Tooltip = ({
     children,
@@ -22,6 +25,7 @@ const Tooltip = ({
     closeAuto = true, // automatically close after time
     useFocus = false, // uses focus instead of using hover
     style,
+    noPadding = false,
 }) => {
     const [show, setShow] = useState(false);
     const [visible, setVisible] = useState(false);
@@ -105,7 +109,7 @@ const Tooltip = ({
 
     const BuildTooltipContainer = BuildComponent({
         name: "Tooltip Container",
-        defaultClasses: "shadow-xl z-50 relative bg-white dark:bg-neutral-800 dark:shadow-black/60 shadow-neutral-800/30 whitespace-nowrap px-3 py-1 flex items-center justify-center rounded-xl text-sm shadow-xl text-black dark:text-white",
+        defaultClasses: "shadow-xl z-50 relative bg-white dark:bg-neutral-800 dark:shadow-black/60 shadow-neutral-800/30 whitespace-nowrap flex items-center justify-center rounded-xl text-sm shadow-xl text-black dark:text-white",
         extraClasses: containerClassName,
         conditionalClasses: [
             {
@@ -113,10 +117,14 @@ const Tooltip = ({
                 right: "right-0",
                 left: "left-0",
                 bottom: "bottom-0",
+            },
+            {
+                false: "px-3 py-1",
             }
         ],
         selectedClasses: [
             direction,
+            noPadding
         ]
     });
 

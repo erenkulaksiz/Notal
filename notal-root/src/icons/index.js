@@ -11,6 +11,7 @@ export { default as CheckOutlineIcon } from "../../public/icons/check_outline.sv
 export { default as CodeIcon } from "../../public/icons/code.svg";
 export { default as CookieIcon } from "../../public/icons/cookie.svg";
 export { default as CrossIcon } from "../../public/icons/cross.svg";
+export { default as Cross2Icon } from "../../public/icons/cross2.svg";
 export { default as ChevronRightIcon } from "../../public/icons/chevron-right.svg";
 export { default as CloudUploadIcon } from "../../public/icons/cloud-upload.svg";
 export { default as DarkIcon } from "../../public/icons/dark.svg";
@@ -32,6 +33,7 @@ export { default as HeartIcon } from "../../public/icons/heart.svg";
 export { default as HomeFilledIcon } from "../../public/icons/home_filled.svg";
 export { default as HomeOutlineIcon } from "../../public/icons/home_outline.svg";
 export { default as InstagramIcon } from "../../public/icons/instagram.svg";
+export { default as InfoIcon } from "../../public/icons/info.svg";
 export { default as InvisibleIcon } from "../../public/icons/invisible.svg";
 export { default as LayersIcon } from "../../public/icons/layers.svg";
 export { default as LayersOutlineIcon } from "../../public/icons/layers_outline.svg";

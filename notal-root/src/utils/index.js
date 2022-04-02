@@ -1,33 +1,23 @@
+import { InfoIcon } from "@icons";
 import Cookie from "js-cookie";
 import { server } from '../config';
 
+/**
+ * Get whether render is on clientside or serverside.
+ */
 export const isClient = (typeof window === 'undefined') ? false : true;
 
-export const CheckToken = async ({ token, props }) => {
+export const CheckToken = async ({ token, props, user }) => {
     //console.log("jwtyi kontrol edicem bi canım");
-
+    console.log("Checking token, " + (token ? "token exist" : "token doesnt exist") + " val: ", props.validate, " userVal: ", user)
     if (props.validate?.error == "auth/id-token-expired"
         || props.validate?.error == "auth/argument-error"
-        || props.validate?.error == "validation-error") {
-        try {
-            //console.log("Checktoken !!! ", token.res);
-            /*
-            const dataValidate = await fetch(`${server}/api/validate`, {
-                'Content-Type': 'application/json',
-                method: "POST",
-                body: JSON.stringify({ token: token.res }),
-            }).then(response => response.json()).catch(error => {
-                return { success: false, ...error }
-            });
-            */
-            //console.log("data validate: ", dataValidate);
-            await Cookie.set("auth", token, { expires: 1 });
-            return false
-        } catch (err) {
-            console.error(err);
-            //auth.users.logout();
-            return true
-        }
+        || props.validate?.error == "validation-error"
+        || (props.validate?.error == "no-token" && user)
+    ) {
+        await Cookie.set("auth", token, { expires: 1 });
+        console.log("Have to reload!");
+        return false;
     } else {
         if (!props.validate?.error) {
             return true;
@@ -107,7 +97,7 @@ export const GetProfile = async ({ username, token }) => {
     }
 }
 
-export const WorkboxInit = () => {
+export const WorkboxInit = (NotalUI) => {
     if (typeof window !== 'undefined' && 'serviceWorker' in navigator && window.workbox !== undefined) {
         const wb = window.workbox
         // add event listeners to handle any of PWA lifecycle event
@@ -138,49 +128,73 @@ export const WorkboxInit = () => {
                 window.location.reload()
             });
             wb.messageSkipWaiting();
-            /*
-            if (confirm('A newer version of Notal is available, reload to update?')) {
-                
-                wb.addEventListener('controlling', event => {
-                    window.location.reload()
-                })
 
-                // Send a message to the waiting service worker, instructing it to activate.
-                wb.messageSkipWaiting()
-                
-            } else {
-                console.log(
-                    'User rejected to reload the web app, keep using old version. New version will be automatically load when user open the app next time.'
-                )
-            }
-            */
+            NotalUI.Toast.show({
+                title: "An update is available",
+                desc: "A new version of Notal is available. Refresh to use latest version.",
+                icon: <InfoIcon size={24} fill="currentColor" />,
+                className: "dark:bg-yellow-600 bg-yellow-500 text-white",
+                timeEnabled: false,
+                buttons: (index) => {
+                    return [
+                        <Button
+                            className="p-1 px-2 rounded hover:opacity-70"
+                            onClick={() => {
+                                router.reload();
+                                NotalUI.Toast.close(index);
+                            }}
+                            size="sm"
+                            light
+                        >
+                            Refresh
+                        </Button>,
+                    ]
+                },
+                showClose: true,
+            })
         }
-
-        wb.addEventListener('waiting', promptNewVersionAvailable)
-
-        // ISSUE - this is not working as expected, why?
-        // I could only make message event listenser work when I manually add this listenser into sw.js file
-        wb.addEventListener('message', event => {
-            console.log(`Event ${event.type} is triggered.`)
-            console.log(event)
-        })
-
         /*
-        wb.addEventListener('redundant', event => {
-          console.log(`Event ${event.type} is triggered.`)
-          console.log(event)
-        })
-        wb.addEventListener('externalinstalled', event => {
-          console.log(`Event ${event.type} is triggered.`)
-          console.log(event)
-        })
-        wb.addEventListener('externalactivated', event => {
-          console.log(`Event ${event.type} is triggered.`)
-          console.log(event)
-        })
-        */
+        if (confirm('A newer version of Notal is available, reload to update?')) {
+            
+            wb.addEventListener('controlling', event => {
+                window.location.reload()
+            })
 
-        // never forget to call register as auto register is turned off in next.config.js
-        wb.register()
+            // Send a message to the waiting service worker, instructing it to activate.
+            wb.messageSkipWaiting()
+            
+        } else {
+            console.log(
+                'User rejected to reload the web app, keep using old version. New version will be automatically load when user open the app next time.'
+            )
+        }
+        */
     }
+
+    wb.addEventListener('waiting', promptNewVersionAvailable)
+
+    // ISSUE - this is not working as expected, why?
+    // I could only make message event listenser work when I manually add this listenser into sw.js file
+    wb.addEventListener('message', event => {
+        console.log(`Event ${event.type} is triggered.`)
+        console.log(event)
+    })
+
+    /*
+    wb.addEventListener('redundant', event => {
+      console.log(`Event ${event.type} is triggered.`)
+      console.log(event)
+    })
+    wb.addEventListener('externalinstalled', event => {
+      console.log(`Event ${event.type} is triggered.`)
+      console.log(event)
+    })
+    wb.addEventListener('externalactivated', event => {
+      console.log(`Event ${event.type} is triggered.`)
+      console.log(event)
+    })
+    */
+
+    // never forget to call register as auto register is turned off in next.config.js
+    wb.register()
 }

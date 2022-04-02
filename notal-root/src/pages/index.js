@@ -21,8 +21,7 @@ import {
 import {
   CheckToken,
   isClient,
-  ValidateToken,
-  WorkboxInit
+  ValidateToken
 } from '@utils';
 
 import {
@@ -66,10 +65,9 @@ const Landing = (props) => {
 
   useEffect(() => {
     console.log("home props: ", props);
-    WorkboxInit();
     (async () => {
       const token = await auth.users.getIdToken();
-      const res = await CheckToken({ token: token.res, props });
+      const res = await CheckToken({ token: token.res, props, user: auth?.authUser });
       if (!res) {
         setTimeout(() => router.replace(router.asPath), 1000);
       }
@@ -104,7 +102,7 @@ const Landing = (props) => {
             />
           </div>
         </div>
-        <div className="container px-8 sm:px-8 md:px-8 lg:px-8 xl:px-32 pt-64 z-10">
+        <div className="container px-8 sm:px-8 md:px-8 lg:px-8 xl:px-32 pt-56 z-10">
           <div className="relative z-50">
             <h1 className="text-black drop-shadow-xl dark:text-white sm:text-4xl text-3xl font-bold font-sans">
               <Typewriter
@@ -159,8 +157,6 @@ const Landing = (props) => {
           <Footer />
         </div>
       </main>
-
-      <AcceptCookies />
     </div>
   )
 }

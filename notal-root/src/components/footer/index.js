@@ -95,12 +95,12 @@ const Footer = ({ className }) => {
                         Home
                     </a>
                 </Link>
-                <a href="#" className="uppercase mt-2 text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
+                {/*<a href="#" className="uppercase mt-2 text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
                     Tutorial
-                </a>
-                <a href="#" className="uppercase mt-2 text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
+                </a>*/}
+                {/*<a href="#" className="uppercase mt-2 text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
                     Behind The Scenes
-                </a>
+                </a>*/}
             </motion.div>
             <motion.div
                 variants={{

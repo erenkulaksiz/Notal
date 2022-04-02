@@ -3,33 +3,38 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import useSWR from "swr";
 import Cookies from "js-cookie";
-import Link from "next/link";
 
 import useAuth from "@hooks/auth";
 
 import {
+    DeleteIcon,
+    CrossIcon,
+    CheckIcon
+} from "@icons";
+
+import {
     ValidateToken,
-    WorkboxInit,
     CheckToken
 } from "@utils";
 
 import {
-    AcceptCookies,
     Navbar,
     WorkspaceAddFieldBanner,
     WorkspaceField,
     WorkspaceNotFound,
     WorkspaceSidebar,
-    DeleteWorkspaceModal,
     AddFieldModal,
     AddCardModal,
-    WorkspaceSettingsModal
+    WorkspaceSettingsModal,
+    Button
 } from "@components";
 
 import { fetchWorkspace } from "@utils/fetcher";
 import BuildComponent from "@utils/buildComponent";
+import useNotalUI from "@hooks/notalui";
 
 const Workspace = (props) => {
+    const NotalUI = useNotalUI();
     const auth = useAuth();
     const router = useRouter();
     const { id } = router.query;
@@ -43,7 +48,6 @@ const Workspace = (props) => {
     const [privateModal, setPrivateModal] = useState({ visible: false, desc: "" });
 
     const [addFieldModal, setAddFieldModal] = useState({ visible: false, workspaceTitle: "" });
-    const [deleteWorkspaceModal, setDeleteWorkspace] = useState(false);
     const [addCardModal, setAddCardModal] = useState({ visible: false, fieldId: "", fieldTitle: "" });
     const [editCardModal, setEditCardModal] = useState({ visible: false, card: {}, fieldId: "" });
 
@@ -65,10 +69,9 @@ const Workspace = (props) => {
 
     useEffect(() => {
         console.log("workspace props: ", props);
-        WorkboxInit();
         (async () => {
             const token = await auth.users.getIdToken();
-            const res = CheckToken({ token: token.res, props });
+            const res = await CheckToken({ token: token.res, props, user: auth?.authUser });
             if (!res) {
                 setTimeout(() => router.replace(router.asPath), 1000);
             }
@@ -226,6 +229,7 @@ const Workspace = (props) => {
         <Navbar
             user={props?.validate?.data}
             showHomeButton
+            showCollapse
             validating={_workspaceValidating}
             workspace={{
                 loadingWorkspace,
@@ -241,7 +245,34 @@ const Workspace = (props) => {
                 workspaceUsers={_workspace?.data?.users}
                 onStarred={() => handle.starWorkspace()}
                 onSettings={() => setSettingsModal(true)}
-                onDelete={() => setDeleteWorkspace(true)}
+                onDelete={() => {
+                    NotalUI.Alert.show({
+                        title: "Delete Workspace",
+                        titleIcon: <DeleteIcon size={24} fill="currentColor" />,
+                        desc: `Are you sure want to delete ${_workspace?.data?.title} workspace?`,
+                        showCloseButton: false,
+                        buttons: [
+                            <Button
+                                className="bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500 h-10"
+                                onClick={() => NotalUI.Alert.close()}
+                                key={1}
+                            >
+                                <CrossIcon size={24} fill="currentColor" />
+                                Cancel
+                            </Button>,
+                            <Button
+                                onClick={() => {
+                                    handle.deleteWorkspace();
+                                    NotalUI.Alert.close();
+                                }}
+                                key={2}
+                            >
+                                <CheckIcon size={24} fill="currentColor" />
+                                Delete
+                            </Button>
+                        ]
+                    })
+                }}
                 // refactor onVisible.
                 onVisible={() => handle.editWorkspace({ workspaceVisible: _workspace?.data?.workspaceVisible ? !_workspace?.data?.workspaceVisible : true, thumbnail: _workspace?.data?.thumbnail })}
                 onAddField={() => setAddFieldModal({ visible: true, workspaceTitle: _workspace?.data?.title })}
@@ -299,16 +330,6 @@ const Workspace = (props) => {
                 setAddFieldModal({ ...addFieldModal, visible: false });
             }}
         />
-        <DeleteWorkspaceModal
-            open={deleteWorkspaceModal}
-            onClose={() => setDeleteWorkspace(false)}
-            onDelete={() => {
-                setDeleteWorkspace(false);
-                handle.deleteWorkspace();
-            }}
-        />
-
-        <AcceptCookies />
     </div>)
 }
 

@@ -28,7 +28,7 @@ const Notal = () => {
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
                 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet"></link>
-                <meta name="x" content="why are you reading this?" />
+                <meta name="x-author" content="Developed with <3 By Eren Kulaksiz" />
                 <meta name='application-name' content='Notal' />
                 <meta name='apple-mobile-web-app-capable' content='yes' />
                 <meta name='apple-mobile-web-app-status-bar-style' content='default' />

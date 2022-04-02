@@ -18,7 +18,7 @@ const HomeNavTitle = ({
             </div>
         </div>
         <h1 className="flex items-center text-lg md:text-2xl font-bold">{title}</h1>
-        {count?.workspaces && count?.workspaces > 0 && <Tooltip
+        {count?.workspaces > 0 && <Tooltip
             content="Total workspaces"
             direction="bottom"
             allContainerClassName="ml-2"
@@ -27,7 +27,7 @@ const HomeNavTitle = ({
                 {count?.workspaces}
             </div>
         </Tooltip>}
-        {count?.starred && count?.starred > 0 && <Tooltip
+        {count?.starred > 0 && <Tooltip
             content="Favorite workspaces"
             direction="bottom"
             allContainerClassName="ml-2"
@@ -37,7 +37,7 @@ const HomeNavTitle = ({
                 {count?.starred}
             </div>
         </Tooltip>}
-        {count?.private && count?.private > 0 && <Tooltip
+        {count?.private > 0 && <Tooltip
             content="Private workspaces"
             direction="bottom"
             allContainerClassName="ml-2"

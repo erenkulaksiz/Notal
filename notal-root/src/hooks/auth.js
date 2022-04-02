@@ -5,7 +5,10 @@ import Cookies from "js-cookie";
 
 const authContext = createContext();
 
+import { CheckIcon, InfoIcon, SendIcon } from "@icons";
+
 import { server } from '../config';
+import useNotalUI from "./notalui";
 
 export default function useAuth() {
     return useContext(authContext);
@@ -13,6 +16,7 @@ export default function useAuth() {
 
 export function AuthProvider(props) {
     const auth = getAuth();
+    const NotalUI = useNotalUI();
 
     const [user, setUser] = useState(null);
     const [error, setError] = useState(null);
@@ -20,18 +24,16 @@ export function AuthProvider(props) {
 
     useEffect(() => {
 
-        /*const tokenCheck = onAuthStateChanged(auth, async (user) => {
+        const tokenCheck = onAuthStateChanged(auth, async (user) => {
             if (!user) {
                 setUser(null);
-                cookie.remove("auth");
-                setLoading(false);
+                Cookies.remove("auth");
             } else {
                 const token = await user.getIdToken();
-                setLoading(false);
                 setUser(user);
-                cookie.set("auth", token, { expires: 1 });
+                Cookies.set("auth", token, { expires: 1 });
             }
-        });*/
+        });
 
         const tokenChange = onIdTokenChanged(auth, async (user) => {
             if (!user) {
@@ -39,6 +41,22 @@ export function AuthProvider(props) {
                 Cookies.remove("auth");
                 setLoading(false);
             } else {
+                if (!Cookies.get("auth")) {
+                    NotalUI.Toast.showMultiple([{
+                        title: "Welcome to Notal!",
+                        desc: "I'm building this platform to keep track of your projects simpler way. Please share your feedbacks with my email: erenkulaksz@gmail.com",
+                        icon: <SendIcon size={24} fill="currentColor" style={{ transform: "rotate(-36deg) scale(.8)", marginLeft: 2 }} />,
+                        className: "dark:bg-green-600 bg-green-500 text-white max-w-[400px]",
+                        closeable: true,
+                    }, {
+                        desc: `Logged in as ${user.email}`,
+                        icon: <InfoIcon size={24} fill="currentColor" />,
+                        className: "dark:bg-green-600 bg-green-500 text-white",
+                        duration: 4500,
+                        timeEnabled: true,
+                        closeable: true,
+                    }])
+                }
                 const token = await user.getIdToken();
                 setUser(user);
                 Cookies.set("auth", token, { expires: 1 });
@@ -48,7 +66,7 @@ export function AuthProvider(props) {
 
         return () => {
             tokenChange();
-            //tokenCheck();
+            tokenCheck();
         }
         //eslint-disable-next-line
     }, []);
@@ -120,6 +138,13 @@ export function AuthProvider(props) {
             await AuthService.user.logout();
             Cookies.remove("auth");
             setUser(null);
+
+            await NotalUI.Toast.show({
+                desc: "Logged out successfully.",
+                icon: <CheckIcon size={24} fill="currentColor" />,
+                className: "dark:bg-green-600 bg-green-500 text-white",
+                time: 4500,
+            });
         },
         getIdToken: async () => {
             try {
