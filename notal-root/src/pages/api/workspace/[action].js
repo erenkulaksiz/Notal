@@ -175,15 +175,11 @@ export default async function handler(req, res) {
         },
         getworkspace: async () => {
             console.log("!!!getting workspace with id: ", id);
-            if (!id) {
-                res.status(400).send({ success: false, error: "invalid-params" });
-                return;
-            }
+            if (!id) return reject("invalid-params");
+
             try {
                 const workspace = await workspacesCollection.findOne({ "id": id });
-                if (!workspace) {
-                    res.status(400).send({ success: false, error: "not-found" });
-                }
+                if (!workspace) return reject("not-found")
 
                 if (!workspace.users) {
                     // Add owner if theres no users exist
@@ -245,7 +241,7 @@ export default async function handler(req, res) {
 
                     const decodedToken = await checkBearer(req.headers['authorization']);
 
-                    if (!decodedToken) return reject("invalid-token");
+                    if (!decodedToken) return reject("user-workspace-private");
 
                     const user = await usersCollection.findOne({ uid: decodedToken.user_id });
                     if (workspace.owner === user.uid || user?.role === "admin") {
@@ -294,6 +290,9 @@ export default async function handler(req, res) {
         getworkspacedata: async () => {
             // get workspace data not including field and card data
             if (!id) return reject("invalid-params");
+
+            // #TODO: dont use try catch
+            // #TODO: dont send workspace data if workspace is not visible
 
             try {
                 const workspace = await workspacesCollection.findOne({ "id": id });

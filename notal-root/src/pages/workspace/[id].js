@@ -238,6 +238,9 @@ const Workspace = (props) => {
             <meta name='description' content={props?.workspace?.data?.owner?.username ? `${props?.workspace?.data?.owner?.username}'s workspace` : "Take your notes to next level with Notal"} />
             <meta name='twitter:image' content={props?.workspace?.data?.thumbnail?.type == "image" ? props?.workspace?.data?.thumbnail?.file : "https://notal.app/icon_big.png'"} />
             <meta property='og:image' content={props?.workspace?.data?.thumbnail?.type == "image" ? props?.workspace?.data?.thumbnail?.file : "https://notal.app/icon_big.png'"} />
+            <meta name='apple-mobile-web-app-title' content={props?.workspace?.data?.title ? props?.workspace?.data?.title : "Notal"} />
+            <meta name='twitter:title' content={props?.workspace?.data?.title ? props?.workspace?.data?.title : "Notal"} />
+            <meta property='og:title' content={props?.workspace?.data?.title ? props?.workspace?.data?.title : "Notal"} />
         </Head>
 
         <Navbar

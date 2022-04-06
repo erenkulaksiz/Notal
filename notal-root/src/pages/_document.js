@@ -32,7 +32,6 @@ const Notal = () => {
                 <meta name='application-name' content='Notal' />
                 <meta name='apple-mobile-web-app-capable' content='yes' />
                 <meta name='apple-mobile-web-app-status-bar-style' content='default' />
-                <meta name='apple-mobile-web-app-title' content='Notal' />
                 <meta name='format-detection' content='telephone=no' />
                 <meta name='mobile-web-app-capable' content='yes' />
                 <link rel="apple-touch-icon" href="https://notal.app/apple-touch-icon.png"></link>
@@ -42,10 +41,8 @@ const Notal = () => {
                 <link rel='shortcut icon' href='/favicon.ico' />
                 <meta name='twitter:card' content='summary' />
                 <meta name='twitter:url' content='https://notal.app' />
-                <meta name='twitter:title' content='Notal' />
                 <meta name='twitter:creator' content='@erencode' />
                 <meta property='og:type' content='website' />
-                <meta property='og:title' content='Notal' />
                 <meta property='og:site_name' content='Notal' />
                 <meta property='og:url' content='https://notal.app' />
                 <meta property="theme-color" content="#292524" />
