@@ -26,10 +26,14 @@ export const CheckToken = async ({ token, props, user }) => {
     }
 };
 
+/**
+ * Auth elleyicisi
+ * 
+ * @param {string} token
+ * @returns {object} { success:boolean, error: object, data:object }
+ */
 export const ValidateToken = async ({ token }) => {
-    if (!token) {
-        return { error: "no-token", success: false }
-    }
+    if (!token) return { error: "no-token", success: false }
 
     const data = await fetch(`${server}/api/validate`, {
         'Content-Type': 'application/json',
@@ -58,6 +62,21 @@ export const GetWorkspace = async ({ id, token }) => {
 
     if (data.success) {
         return { ...data, data: data.data };
+    }
+    return { success: false, error: data.error }
+}
+
+export const GetWorkspaceData = async ({ id, token }) => {
+
+    const data = await fetch(`${server}/api/workspace/getworkspacedata`, {
+        'Content-Type': 'application/json',
+        method: "POST",
+        headers: { 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ id }),
+    }).then(response => response.json());
+
+    if (data.success) {
+        return { success: true, ...data };
     }
     return { success: false, error: data.error }
 }

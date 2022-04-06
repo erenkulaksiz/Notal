@@ -16,8 +16,17 @@ const { db } = await connectToDatabase();
 const workspacesCollection = db.collection("workspaces");
 const usersCollection = db.collection("users");
 
-const checkBearer = () => {
-
+const checkBearer = async (bearer) => {
+    const bearerToken = bearer?.split(' ')[1];
+    if (typeof bearerToken == "undefined") return false;
+    try {
+        const decodedToken = await admin.auth().verifyIdToken(bearerToken);
+        if (typeof decodedToken == "undefined") return false;
+        return decodedToken;
+    } catch (error) {
+        console.log("verifyIdToken Error CheckToken: ", error);
+        return false;
+    }
 }
 
 export default async function handler(req, res) {
@@ -38,7 +47,7 @@ export default async function handler(req, res) {
 
     const body = JSON.parse(req.body);
 
-    const { uid, title, desc, starred, id, workspaceId, color, fieldId, filterBy, workspaceVisible, tag, thumbnail, field, username, userId } = body ?? "";
+    const { uid, title, desc, starred, id, workspaceId, color, fieldId, sortBy, workspaceVisible, tag, thumbnail, field, username, userId } = body ?? "";
 
     const workspaceAction = {
         createworkspace: async () => {
@@ -110,42 +119,16 @@ export default async function handler(req, res) {
             }
         },
         getworkspaces: async () => {
-            const bearer = req.headers['authorization'];
-            if (typeof bearer !== "undefined") {
-                const bearerToken = bearer?.split(' ')[1];
+            const decodedToken = await checkBearer(req.headers['authorization']);
 
-                await admin.auth().verifyIdToken(bearerToken).then(async (decodedToken) => {
-                    const user = await usersCollection.findOne({ uid: decodedToken.user_id });
+            if (!decodedToken) return reject("invalid-token");
 
-                    if (uid) { // if no uid present, find workspaces based on decodedtoken
-                        if (uid === user.uid || user?.role === "admin") {
-                            try {
-                                const workspaces = await workspacesCollection.find({ owner: uid }).toArray();
-                                res.status(200).send({
-                                    success: true,
-                                    data: workspaces.map(el => {
-                                        return {
-                                            _id: el._id,
-                                            id: el?.id,
-                                            createdAt: el.createdAt,
-                                            desc: el.desc,
-                                            title: el.title,
-                                            owner: el.owner,
-                                            starred: el.starred,
-                                            updatedAt: el.updatedAt,
-                                            workspaceVisible: el.workspaceVisible,
-                                            thumbnail: el.thumbnail,
-                                        }
-                                    })
-                                });
-                            } catch (error) {
-                                return reject(error);
-                            }
-                        } else {
-                            return reject();
-                        }
-                    } else {
-                        const workspaces = await workspacesCollection.find({ owner: decodedToken.uid }).toArray();
+            const user = await usersCollection.findOne({ uid: decodedToken.user_id });
+
+            if (uid) { // if no uid present, find workspaces based on decodedtoken
+                if (uid === user.uid || user?.role === "admin") {
+                    try {
+                        const workspaces = await workspacesCollection.find({ owner: uid }).toArray();
                         res.status(200).send({
                             success: true,
                             data: workspaces.map(el => {
@@ -163,12 +146,31 @@ export default async function handler(req, res) {
                                 }
                             })
                         });
+                    } catch (error) {
+                        return reject(error);
                     }
-                }).catch(error => {
-                    return reject({ code: error.code });
-                });
+                } else {
+                    return reject();
+                }
             } else {
-                return reject();
+                const workspaces = await workspacesCollection.find({ owner: decodedToken.uid }).toArray();
+                res.status(200).send({
+                    success: true,
+                    data: workspaces.map(el => {
+                        return {
+                            _id: el._id,
+                            id: el?.id,
+                            createdAt: el.createdAt,
+                            desc: el.desc,
+                            title: el.title,
+                            owner: el.owner,
+                            starred: el.starred,
+                            updatedAt: el.updatedAt,
+                            workspaceVisible: el.workspaceVisible,
+                            thumbnail: el.thumbnail,
+                        }
+                    })
+                });
             }
         },
         getworkspace: async () => {
@@ -177,7 +179,6 @@ export default async function handler(req, res) {
                 res.status(400).send({ success: false, error: "invalid-params" });
                 return;
             }
-            const bearer = req.headers['authorization'];
             try {
                 const workspace = await workspacesCollection.findOne({ "id": id });
                 if (!workspace) {
@@ -241,85 +242,101 @@ export default async function handler(req, res) {
                     }
                 } else {
                     // check bearer
-                    if (typeof bearer !== 'undefined') {
-                        const bearerToken = bearer?.split(' ')[1];
 
-                        await admin.auth().verifyIdToken(bearerToken).then(async (decodedToken) => {
-                            const user = await usersCollection.findOne({ uid: decodedToken.user_id });
-                            if (workspace.owner === user.uid || user?.role === "admin") {
-                                try {
-                                    const workspaceUsers = workspace.users ?? [];
-                                    console.log("users: ", workspaceUsers);
-                                    const wUsers = await usersCollection.find({ "uid": { $in: workspaceUsers } }).toArray();
+                    const decodedToken = await checkBearer(req.headers['authorization']);
 
-                                    console.log("!!!wuser: ", wUsers);
+                    if (!decodedToken) return reject("invalid-token");
 
-                                    const newWUsers = wUsers.map(el => {
-                                        return {
-                                            uid: el.uid,
-                                            username: el.username,
-                                            updatedAt: el.updatedAt,
-                                            createdAt: el.createdAt,
-                                            fullname: el.fullname,
-                                            avatar: el.avatar,
-                                        }
-                                    });
+                    const user = await usersCollection.findOne({ uid: decodedToken.user_id });
+                    if (workspace.owner === user.uid || user?.role === "admin") {
+                        try {
+                            const workspaceUsers = workspace.users ?? [];
+                            console.log("users: ", workspaceUsers);
+                            const wUsers = await usersCollection.find({ "uid": { $in: workspaceUsers } }).toArray();
 
-                                    res.status(200).send({
-                                        success: true,
-                                        data: {
-                                            ...workspace,
-                                            ownerUser: {
-                                                username: user.username,
-                                                fullname: user.fullname ?? "",
-                                                avatar: user.avatar ?? ""
-                                            },
-                                            users: newWUsers,
-                                        }
-                                    });
-                                } catch (error) {
-                                    res.status(400).send({ success: false, error: new Error(error).message });
+                            console.log("!!!wuser: ", wUsers);
+
+                            const newWUsers = wUsers.map(el => {
+                                return {
+                                    uid: el.uid,
+                                    username: el.username,
+                                    updatedAt: el.updatedAt,
+                                    createdAt: el.createdAt,
+                                    fullname: el.fullname,
+                                    avatar: el.avatar,
                                 }
-                            } else {
-                                res.status(400).send({ success: false, error: "invalid-params" });
-                            }
-                        }).catch(error => {
-                            res.status(400).json({ success: false, error: error.code == "auth/argument-error" ? "user-workspace-private" : error.code });
-                            return; // dont run code below
-                        });
+                            });
+
+                            res.status(200).send({
+                                success: true,
+                                data: {
+                                    ...workspace,
+                                    ownerUser: {
+                                        username: user.username,
+                                        fullname: user.fullname ?? "",
+                                        avatar: user.avatar ?? ""
+                                    },
+                                    users: newWUsers,
+                                }
+                            });
+                        } catch (error) {
+                            res.status(400).send({ success: false, error: new Error(error).message });
+                        }
                     } else {
-                        res.status(400).send({ success: false, error: "user-workspace-private" });
+                        res.status(400).send({ success: false, error: "invalid-params" });
                     }
                 }
-            }
-            catch (error) {
+            } catch (error) {
                 console.log("error with workspace fetch: ", new Error(error).message);
                 res.status(400).send({ success: false, error: "not-found" });
             }
         },
-        removeworkspace: async () => {
-            if (!uid || !id) { // id: workspace
-                res.status(400).send({ success: false, error: "invalid-params" });
-                return;
-            }
+        getworkspacedata: async () => {
+            // get workspace data not including field and card data
+            if (!id) return reject("invalid-params");
+
             try {
-                await workspacesCollection.deleteOne({ "_id": ObjectId(id) })
+                const workspace = await workspacesCollection.findOne({ "id": id });
+                if (!workspace) return reject("not-found");
+
+                const workspaceOwner = await usersCollection.findOne({ "uid": workspace.owner });
+                if (!workspaceOwner) return reject("owner-not-found");
+
+                return accept({
+                    title: workspace?.title,
+                    desc: workspace?.desc,
+                    thumbnail: workspace?.thumbnail,
+                    owner: {
+                        username: workspaceOwner?.username,
+                        fullname: workspaceOwner?.fullname ?? "",
+                        avatar: workspaceOwner?.avatar ?? "",
+                    },
+                    starred: workspace?.starred,
+                    updatedAt: workspace?.updatedAt,
+                    workspaceVisible: workspace?.workspaceVisible,
+
+                });
+            } catch (error) {
+                return reject(error);
+            }
+        },
+        removeworkspace: async () => {
+            if (!uid || !id) return reject("invalid-params");
+            try {
+                return await workspacesCollection.deleteOne({ "_id": ObjectId(id) })
                     .then(() => {
-                        res.status(200).send({ success: true });
+                        return accept();
                     });
             } catch (error) {
-                res.status(400).send({ success: false, error: new Error(error).message });
+                return reject(error);
             }
         },
         starworkspace: async () => {
-            if (!uid || !id) {
-                res.status(400).send({ success: false, error: "invalid-params" });
-                return;
-            }
+            if (!uid || !id) return reject("invalid-params");
 
             try {
                 const workspace = await workspacesCollection.findOne({ "_id": ObjectId(id) })
-                await workspacesCollection.updateOne({ "_id": ObjectId(id) },
+                return await workspacesCollection.updateOne({ "_id": ObjectId(id) },
                     {
                         $set: {
                             starred: !workspace.starred,
@@ -327,17 +344,14 @@ export default async function handler(req, res) {
                         }
                     })
                     .then(() => {
-                        res.status(200).send({ success: true });
+                        return accept();
                     });
             } catch (error) {
-                res.status(400).send({ success: false, error: new Error(error).message });
+                return reject(error);
             }
         },
         editworkspace: async () => {
-            if (!id || !uid) {
-                res.status(400).send({ success: false, error: "invalid-params" });
-                return;
-            } // uid: owner, id: workspace
+            if (!id || !uid) return reject("invalid-params");
 
             try {
                 if (thumbnail?.type != "image") {
@@ -395,17 +409,14 @@ export default async function handler(req, res) {
             }
         },
         addfield: async () => {
-            if (!id || !uid || !filterBy) {
-                res.status(400).send({ success: false, error: "invalid-params" });
-                return;
-            }
-            if (title.length > 28) {
-                return reject("title-maxlength");
-            }
+            if (!id || !uid || !sortBy) return reject("invalid-params");
+
+            if (title.length > 28) return reject("title-maxlength");
+
             try {
                 const bearer = req.headers['authorization'];
-                if (typeof bearer !== 'undefined') {
-                    const bearerToken = bearer?.split(' ')[1];
+                const bearerToken = bearer?.split(' ')[1];
+                if (typeof bearerToken !== 'undefined') {
                     await admin.auth().verifyIdToken(bearerToken).then(async (decodedToken) => {
                         const user = await usersCollection.findOne({ uid });
                         if (user.uid == decodedToken.user_id) {
@@ -427,7 +438,7 @@ export default async function handler(req, res) {
                                         title,
                                         createdAt: Date.now(),
                                         updatedAt: Date.now(),
-                                        filterBy,
+                                        sortBy,
                                         owner: uid,
                                         cards: [],
                                         _id: ObjectId(),
@@ -444,18 +455,14 @@ export default async function handler(req, res) {
                         }
                     })
                 } else {
-                    res.status(400).send({ success: false, error: "invalid-params" });
+                    res.status(400).send({ success: false, error: "no-token" });
                 }
             } catch (error) {
                 res.status(400).send({ success: false, error: new Error(error).message });
             }
         },
         removefield: async () => {
-            if (!id || !uid || !workspaceId) {
-                res.status(400).send({ success: false, error: "invalid-params" });
-                return;
-            }
-
+            if (!id || !uid || !workspaceId) return reject("invalid-params");
             console.log("Workspace id: ", workspaceId, " id of field: ", id);
 
             try {
@@ -466,86 +473,56 @@ export default async function handler(req, res) {
                         }
                     }
                 });
-                res.status(200).send({ success: true });
+                return accept();
             } catch (error) {
-                res.status(400).send({ success: false, error: new Error(error).message });
+                return reject(error);
             }
         },
         addcard: async () => {
-
             // id: field id
+            if (!id || !uid || !workspaceId || !title) return reject("invalid-params");
+            if (color && color.length > 7) return reject("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+            if (thumbnail && thumbnail?.type == "gradient" && (thumbnail?.colors?.start?.length > 7 || thumbnail?.colors?.end?.length > 7)) return reject("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+            if (title?.length > 40) return reject("title-maxlength");
+            if (desc?.length > 356) return reject("desc-maxlength");
 
-            console.log(color, title, desc, workspaceId, uid, id);
-            if (!id || !uid || !workspaceId || !title) {
-                res.status(400).send({ success: false, error: "invalid-params" });
-                return;
-            }
-            if (color && color.length > 7) {
-                res.status(400).send({ success: false, error: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" });
-                return;
-            }
-            if (thumbnail && thumbnail?.type == "gradient" && (thumbnail?.colors?.start?.length > 7 || thumbnail?.colors?.end?.length > 7)) {
-                res.status(400).send({ success: false, error: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" });
-                return;
-            }
-            if (title?.length > 40) {
-                return reject("title-maxlength");
-            }
-            if (desc?.length > 356) {
-                return reject("desc-maxlength");
-            }
+            const decodedToken = await checkBearer(req.headers['authorization']);
 
-            try {
-                const bearer = req.headers['authorization'];
-                if (typeof bearer !== 'undefined') {
-                    const bearerToken = bearer?.split(' ')[1];
-                    await admin.auth().verifyIdToken(bearerToken).then(async (decodedToken) => {
-                        const user = await usersCollection.findOne({ uid });
-                        if (user.uid == decodedToken.user_id) {
-                            workspacesCollection.findOneAndUpdate({ "_id": ObjectId(workspaceId), "fields._id": ObjectId(id) },
-                                {
-                                    $push: {
-                                        "fields.$.cards": {
-                                            title,
-                                            desc,
-                                            color,
-                                            createdAt: Date.now(),
-                                            updatedAt: Date.now(),
-                                            tag: {
-                                                tag: tag.tag,
-                                                tagColor: tag.tagColor,
-                                            },
-                                            owner: uid,
-                                            _id: ObjectId(),
-                                        }
-                                    }
-                                }, (err) => {
-                                    if (!err) {
-                                        res.status(200).send({ success: true });
-                                    } else {
-                                        res.status(400).send({ success: false, error: new Error(err).message });
-                                    }
-                                }
-                            )
-                        } else {
-                            res.status(400).send({ success: false, error: "invalid-params" });
+            if (!decodedToken) return reject("invalid-token");
+
+            const user = await usersCollection.findOne({ uid });
+            if (user.uid == decodedToken.user_id) {
+                workspacesCollection.findOneAndUpdate({ "_id": ObjectId(workspaceId), "fields._id": ObjectId(id) },
+                    {
+                        $push: {
+                            "fields.$.cards": {
+                                title,
+                                desc,
+                                color,
+                                createdAt: Date.now(),
+                                updatedAt: Date.now(),
+                                tag: {
+                                    tag: tag.tag,
+                                    tagColor: tag.tagColor,
+                                },
+                                owner: uid,
+                                _id: ObjectId(),
+                            }
                         }
-                    }).catch(error => {
-                        res.status(400).json({ success: false, error: error.code });
-                        return; // dont run code below
-                    });
-                } else {
-                    res.status(400).send({ success: false, error: "invalid-params" });
-                }
-            } catch (error) {
-                res.status(400).send({ success: false, error: new Error(error).message });
+                    }, (error) => {
+                        if (!error) {
+                            return accept();
+                        } else {
+                            return reject(error);
+                        }
+                    }
+                )
+            } else {
+                return reject("invalid-token");
             }
         },
         removecard: async () => {
-            if (!id || !uid || !workspaceId || !fieldId) {
-                res.status(400).send({ success: false, error: "invalid-params" });
-                return;
-            }
+            if (!id || !uid || !workspaceId || !fieldId) return reject("invalid-params");
 
             try {
                 await workspacesCollection.updateOne({ "_id": ObjectId(workspaceId), "fields._id": ObjectId(fieldId) }, {
@@ -553,41 +530,39 @@ export default async function handler(req, res) {
                         "fields.$.cards": {
                             _id: ObjectId(id),
                         }
+                    },
+                    $set: {
+                        "fields.$.updatedAt": Date.now(),
                     }
                 });
-                res.status(200).send({ success: true });
+                return accept();
             } catch (error) {
-                res.status(400).send({ success: false, error: new Error(error).message });
+                return reject(error);
             }
         },
         editfield: async () => {
-            if (!id || !uid || !workspaceId || !field) {
-                res.status(400).send({ success: false, error: "invalid-params" });
-                return;
-            }
+            if (!uid || !workspaceId || !field) return reject("invalid-params");
 
             try {
                 await workspacesCollection.updateOne(
-                    { "_id": ObjectId(workspaceId), "fields._id": ObjectId(id) },
+                    { "_id": ObjectId(workspaceId), "fields._id": ObjectId(field._id) },
                     {
                         $set: {
                             "fields.$.title": field?.title,
                             "fields.$.filterBy": field?.filterBy,
                             "fields.$.collapsed": field?.collapsed,
+                            "fields.$.updatedAt": Date.now(),
                         }
                     });
-                res.status(200).send({ success: true });
+                return accept();
             } catch (error) {
-                res.status(400).send({ success: false, error: new Error(error).message });
+                return reject(error);
             }
         },
         editcard: async () => {
             console.log("editcard", id, uid, workspaceId, title, fieldId);
 
-            if (!id || !uid || !workspaceId || !title || !fieldId) {
-                res.status(400).send({ success: false, error: "invalid-params" });
-                return;
-            }
+            if (!id || !uid || !workspaceId || !title || !fieldId) return reject("invalid-params");
 
             try {
                 await workspacesCollection.updateOne(
@@ -606,38 +581,26 @@ export default async function handler(req, res) {
                         arrayFilters: [{ "i._id": ObjectId(fieldId) }, { "j._id": ObjectId(id) }]
                     }
                 );
-                res.status(200).send({ success: true });
+                return accept();
             } catch (error) {
-                res.status(400).send({ success: false, error: new Error(error).message });
+                return reject(error);
             }
         },
         adduser: async () => {
             console.log("adduser", id, uid, username);
 
-            if (!id || !uid || !username) {
-                res.status(400).send({ success: false, error: "invalid-params" });
-                return;
-            }
+            if (!id || !uid || !username) return reject("invalid-params");
 
             try {
                 const user = await usersCollection.findOne({ "username": username });
 
-                if (!user) {
-                    res.status(400).send({ success: false, error: "user-not-found" });
-                    return;
-                }
+                if (!user) return reject("user-not-found");
 
                 const workspace = await workspacesCollection.findOne({ "_id": ObjectId(id) });
 
-                if (!workspace) {
-                    res.status(400).send({ success: false, error: "workspace-not-found" });
-                    return;
-                }
+                if (!workspace) return reject("workspace-not-found");
 
-                if (workspace?.users.findIndex(el => el == user.uid) != -1) {
-                    res.status(400).send({ success: false, error: "user-already-added" });
-                    return;
-                }
+                if (workspace?.users.findIndex(el => el == user.uid) != -1) return reject("user-already-added")
 
                 await workspacesCollection.updateOne(
                     {
@@ -652,9 +615,9 @@ export default async function handler(req, res) {
                         }
                     }
                 );
-                res.status(200).send({ success: true });
+                return accept();
             } catch (error) {
-                res.status(400).send({ success: false, error: new Error(error).message });
+                return reject(error);
             }
         },
         removeuser: async () => {
@@ -674,18 +637,23 @@ export default async function handler(req, res) {
                         $pull: {
                             users: userId,
                         },
+                        $set: {
+                            updatedAt: Date.now(),
+                        }
                     }
                 );
-                res.status(200).send({ success: true });
+                return accept()
             } catch (error) {
-                res.status(400).send({ success: false, error: new Error(error).message });
+                return reject(error);
             }
         }
     }
 
-    if (!workspaceAction[WORKSPACE_ACTION?.toLowerCase()]) {
-        return res.status(400).send({ success: false, error: "invalid-params" });
+    const WPAction = workspaceAction[WORKSPACE_ACTION?.toLowerCase()]
+
+    if (!WPAction) {
+        return reject("invalid-params");
     } else {
-        await workspaceAction[WORKSPACE_ACTION?.toLowerCase()]();
+        return await WPAction();
     }
 }

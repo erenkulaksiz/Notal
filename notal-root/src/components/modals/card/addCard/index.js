@@ -164,7 +164,8 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
         </Modal.Body>
         <Modal.Footer className="justify-between" animate>
             <Button
-                className="w-[49%] bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500 h-10"
+                className="w-[49%] h-10"
+                light="bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500"
                 onClick={close}
             >
                 <CrossIcon size={24} fill="currentColor" />

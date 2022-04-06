@@ -6,13 +6,8 @@ export const fetchWorkspaces = ({ token, uid }) => fetch(`${server}/api/workspac
     headers: { 'Authorization': `Bearer ${token || ""}` },
     body: JSON.stringify({ uid }),
 })
-    .then(response => {
-        if (response.status >= 400 && response.status < 600) {
-            throw new Error("Bad response from server");
-        }
-        return response.json();
-    })
-    .catch(error => { return { success: false, error: { code: "workspace_error", errorMessage: error } } });
+    .then(response => response.json())
+    .catch((error) => { return { success: false, error } });
 
 /*
 export const fetchValidate = ({ url, token }) => fetch(`${server}/${url}`, {

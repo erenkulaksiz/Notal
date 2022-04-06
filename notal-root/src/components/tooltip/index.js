@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 import {
@@ -13,6 +13,23 @@ import useClickAway from '@hooks/clickaway';
 import useClickAnyWhere from '@hooks/clickanywhere';
 */
 
+
+/**
+ * 
+ * @param {children} any
+ * @param {content} any
+ * @param {allContainerClassName} string
+ * @param {containerClassName} string
+ * @param {hideArrow} boolean false
+ * @param {direction} string "top" | "bottom" | "right" | "left"
+ * @param {animated} boolean true
+ * @param {blockContent} boolean true - blocks pointer events
+ * @param {closeAuto} boolean true - closes tooltip after time
+ * @param {useFocus} boolean false - uses focus instead of hover
+ * @param {style} object - passed string object to tooltip container
+ * @param {noPadding} boolean - false - removes default padding container has
+ * @returns {React.ReactNode}
+ */
 const Tooltip = ({
     children,
     content,

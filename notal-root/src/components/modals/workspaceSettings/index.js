@@ -211,7 +211,8 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                     { title: "Workspace", id: "workspace" },
                     { title: "Thumbnail", id: "thumbnail" },
                     { title: "Users", id: "users" }
-                ]}>
+                ]}
+            >
                 <Tab.TabView index={0} className="pt-4 grid grid-cols-1 gap-2">
                     <label htmlFor="workspaceTitle">Workspace Title</label>
                     <Input

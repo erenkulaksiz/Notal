@@ -65,6 +65,8 @@ const Home = (props) => {
             <meta name='twitter:description' content='Take your notes to next level with Notal' />
             <meta property='og:description' content='Take your notes to next level with Notal' />
             <meta name='description' content='Take your notes to next level with Notal' />
+            <meta name='twitter:image' content='https://notal.app/icon_big.png' />
+            <meta property='og:image' content='https://notal.app/icon_big.png' />
         </Head>
 
         <Navbar

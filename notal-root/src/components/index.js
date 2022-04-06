@@ -41,8 +41,10 @@ export { default as WorkspaceSidebar } from "./workspace/sidebar";
 export { default as WorkspaceSidebarItem } from "./workspace/sidebarItem";
 // Modals
 export { default as AlertModal } from "./modals/alert";
-export { default as AddFieldModal } from "./modals/addField";
-export { default as AddCardModal } from "./modals/addCard";
+export { default as AddCardModal } from "./modals/card/addCard";
+export { default as EditCardModal } from "./modals/card/editCard";
 export { default as AddWorkspaceModal } from "./modals/addWorkspace";
+export { default as AddFieldModal } from "./modals/field/addField";
+export { default as EditFieldModal } from "./modals/field/editField";
 export { default as WorkspaceSettingsModal } from "./modals/workspaceSettings";
 export { default as LoginModal } from "./modals/login";

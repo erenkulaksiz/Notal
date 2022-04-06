@@ -36,15 +36,15 @@ const WorkspaceFieldCard = ({ card, onDelete, onSettings, preview, isOwner, fiel
                                 blockContent={false}
                                 direction="left"
                                 content={<div className="flex flex-row">
-                                    <Button size="md" className="px-2" onClick={onSettings} light>
+                                    <Button size="md" className="px-2" onClick={onSettings} light title="Card Settings" aria-label="Card Settings">
                                         <SettingsIcon size={24} className="fill-neutral-800 dark:fill-white" />
                                     </Button>
-                                    <Button size="md" className="px-2 ml-1" onClick={onDelete} light>
+                                    <Button size="md" className="px-2 ml-1" onClick={onDelete} light title="Delete Card" aria-label="Delete Card">
                                         <DeleteIcon size={24} className="fill-neutral-800 dark:fill-white" />
                                     </Button>
                                 </div>}
                             >
-                                <Button light size="sm" className="px-1">
+                                <Button light size="sm" className="px-1" title="Show More Card Options" aria-label="Show More Card Options">
                                     <MoreIcon size={24} className="fill-neutral-800 dark:fill-white" style={{ transform: "scale(.7)" }} />
                                 </Button>
                             </Tooltip>

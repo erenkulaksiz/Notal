@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import AuthService from "../service/AuthService";
 import { getAuth, onIdTokenChanged, onAuthStateChanged } from "firebase/auth";
 import Cookies from "js-cookie";
+import { useRouter } from "next/router";
 
 const authContext = createContext();
 
@@ -16,6 +17,7 @@ export default function useAuth() {
 
 export function AuthProvider(props) {
     const auth = getAuth();
+    const router = useRouter();
     const NotalUI = useNotalUI();
 
     const [user, setUser] = useState(null);
@@ -138,6 +140,7 @@ export function AuthProvider(props) {
             await AuthService.user.logout();
             Cookies.remove("auth");
             setUser(null);
+            router.replace(router.asPath);
 
             await NotalUI.Toast.show({
                 desc: "Logged out successfully.",
@@ -183,15 +186,15 @@ export function AuthProvider(props) {
             return await AuthService.workspace.removeUser({ id, userId });
         },
         field: {
-            addField: async ({ id, title, filterBy }) => {
+            addField: async ({ id, title, sortBy }) => {
                 // id: workspaceId
-                return await AuthService.workspace.field.addField({ id, title, filterBy });
+                return await AuthService.workspace.field.addField({ id, title, sortBy });
             },
             removeField: async ({ id, workspaceId }) => {
                 return await AuthService.workspace.field.removeField({ id, workspaceId });
             },
-            editField: async ({ id, workspaceId, field }) => {
-                return await AuthService.workspace.field.editField({ id, field, workspaceId });
+            editField: async ({ workspaceId, field }) => {
+                return await AuthService.workspace.field.editField({ field, workspaceId });
             },
             editCard: async ({ id, workspaceId, fieldId, title, desc, color }) => {
                 return await AuthService.workspace.card.editCard({ id, workspaceId, fieldId, title, desc, color });

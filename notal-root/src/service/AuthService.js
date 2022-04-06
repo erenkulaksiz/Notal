@@ -302,7 +302,7 @@ const AuthService = {
             }
         },
         field: {
-            addField: async ({ title, id, filterBy, owner }) => {
+            addField: async ({ title, id, sortBy, owner }) => {
                 // id: workspaceId
                 const auth = getAuth();
                 const token = await auth.currentUser.getIdToken();
@@ -311,7 +311,7 @@ const AuthService = {
                     title,
                     id,
                     uid: auth?.currentUser?.uid,
-                    filterBy,
+                    sortBy,
                     owner
                 }, {
                     token,
@@ -343,15 +343,18 @@ const AuthService = {
                     return { success: false, error: data?.error }
                 }
             },
-            editField: async ({ id, workspaceId, field }) => {
+            editField: async ({ workspaceId, field }) => {
                 const auth = getAuth();
                 const token = await auth.currentUser.getIdToken();
 
                 const data = await fetchWithAuth({
-                    id,
                     uid: auth?.currentUser?.uid,
                     workspaceId,
-                    field,
+                    field: {
+                        title: field.title,
+                        filterBy: field.filterBy,
+                        collapsed: field.collapsed,
+                    },
                 }, {
                     token,
                     action: "editfield"

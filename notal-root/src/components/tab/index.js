@@ -3,7 +3,7 @@ import { LayoutGroup, motion } from "framer-motion";
 import BuildComponent from "@utils/buildComponent";
 
 const TabButton = ({ children, selected, hover, onMouseEnter, onMouseLeave, setSelected, setHover, ...rest }) => {
-    return (<button {...rest}
+    return (<button
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
         onKeyDown={({ key }) =>
@@ -12,7 +12,9 @@ const TabButton = ({ children, selected, hover, onMouseEnter, onMouseLeave, setS
                     setSelected();
                     setHover(-1);
                 } : null
-        }>
+        }
+        {...rest}
+    >
         <span className="z-20 relative">
             {children}
         </span>
@@ -89,6 +91,8 @@ const Tab = ({ children, selected, views, onSelect, id, className, headerClassNa
                     onMouseLeave={() => setHover(-1)}
                     hover={hover == index}
                     setHover={(i) => setHover(i)}
+                    title={view.title}
+                    aria-label={view.title}
                 >
                     {view.title}
                 </TabButton>)}

@@ -179,6 +179,8 @@ const Navbar = ({
                         className="ml-1 px-0 h-6 w-6 dark:bg-neutral-800 bg-neutral-100 fill-black dark:fill-white shadow-xl"
                         light="hover:bg-neutral-300 hover:dark:bg-neutral-700 focus:dark:bg-neutral-600 focus:bg-neutral-400"
                         as="a"
+                        title="Home"
+                        aria-label="Home"
                     >
                         <HomeFilledIcon size={24} fill="currentFill" style={{ transform: "scale(.7)" }} />
                     </Button>
@@ -196,6 +198,8 @@ const Navbar = ({
                     size="sm"
                     className="mr-2"
                     as="a"
+                    title="Home"
+                    aria-label="Home"
                 >
                     <span className="w-full justify-end flex items-center dark:text-white text-black">
                         <HomeFilledIcon size={24} fill="currentColor" style={{ transform: "scale(0.8)" }} />
@@ -203,14 +207,16 @@ const Navbar = ({
                     </span>
                 </Button>
             </Link>}
-            {(!auth.authUser && isClient) && <Switch
-                onChange={e => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-                value={resolvedTheme == "dark"}
-                icon={resolvedTheme == "dark" ? <LightIcon size={24} fill="black" style={{ transform: "scale(0.7)" }} /> : <DarkIcon size={24} fill="black" style={{ transform: "scale(0.7)" }} />}
-                className="mr-2"
-                role="switch"
-                id="changeTheme"
-            />}
+            {(!auth.authUser && isClient) && <Tooltip content="Change Theme" direction="bottom">
+                <Switch
+                    onChange={e => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+                    value={resolvedTheme == "dark"}
+                    icon={resolvedTheme == "dark" ? <LightIcon size={24} fill="black" style={{ transform: "scale(0.7)" }} /> : <DarkIcon size={24} fill="black" style={{ transform: "scale(0.7)" }} />}
+                    className="mr-2"
+                    role="switch"
+                    id="changeTheme"
+                />
+            </Tooltip>}
             {(!auth.authLoading && auth?.authUser) || user ? <details className="relative inline-block bg-transparent">
                 <summary
                     style={{

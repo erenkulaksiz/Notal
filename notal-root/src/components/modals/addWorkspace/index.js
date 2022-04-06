@@ -258,7 +258,7 @@ const AddWorkspaceModal = ({ open, onClose, onAdd }) => {
                         <input type="file" ref={thumbnailRef} style={{ display: "none" }} onChange={onThumbnailChange} accept="image/png, image/jpeg" />
                     </div>}
                     {newWorkspace?.thumbnail?.type == "singleColor" && <div className="flex flex-col items-start">
-                        <label htmlFor="cardColor">Card Color</label>
+                        <label htmlFor="cardColor">Workspace Color</label>
                         <Tooltip
                             useFocus
                             noPadding
@@ -357,7 +357,8 @@ const AddWorkspaceModal = ({ open, onClose, onAdd }) => {
         </Modal.Body>
         <Modal.Footer className="justify-between" animate>
             <Button
-                className="w-[49%] bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500 h-10"
+                className="w-[49%] h-10"
+                light="bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500"
                 onClick={() => !thumbnailLoading && close()}
             >
                 <CrossIcon size={24} fill="currentColor" />

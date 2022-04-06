@@ -43,13 +43,11 @@ const Notal = () => {
                 <meta name='twitter:card' content='summary' />
                 <meta name='twitter:url' content='https://notal.app' />
                 <meta name='twitter:title' content='Notal' />
-                <meta name='twitter:image' content='https://notal.app/icon_big.png' />
                 <meta name='twitter:creator' content='@erencode' />
                 <meta property='og:type' content='website' />
                 <meta property='og:title' content='Notal' />
                 <meta property='og:site_name' content='Notal' />
                 <meta property='og:url' content='https://notal.app' />
-                <meta property='og:image' content='https://notal.app/icon_big.png' />
                 <meta property="theme-color" content="#292524" />
                 <script
                     async

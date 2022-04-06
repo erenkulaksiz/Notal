@@ -14,7 +14,8 @@ import {
 
 import {
     ValidateToken,
-    CheckToken
+    CheckToken,
+    GetWorkspaceData
 } from "@utils";
 
 import {
@@ -26,7 +27,8 @@ import {
     AddFieldModal,
     AddCardModal,
     WorkspaceSettingsModal,
-    Button
+    Button,
+    EditFieldModal
 } from "@components";
 
 import { fetchWorkspace } from "@utils/fetcher";
@@ -45,14 +47,13 @@ const Workspace = (props) => {
     );
 
     // Modals
-    const [privateModal, setPrivateModal] = useState({ visible: false, desc: "" });
 
     const [addFieldModal, setAddFieldModal] = useState({ visible: false, workspaceTitle: "" });
     const [addCardModal, setAddCardModal] = useState({ visible: false, fieldId: "", fieldTitle: "" });
     const [editCardModal, setEditCardModal] = useState({ visible: false, card: {}, fieldId: "" });
 
     const [settingsModal, setSettingsModal] = useState(false);
-    const [editField, setEditField] = useState({ visible: false, title: "" });
+    const [editField, setEditField] = useState({ visible: false, title: "", fieldId: "" });
 
     // Workspace
     const [loadingWorkspace, setLoadingWorkspace] = useState(true);
@@ -124,19 +125,30 @@ const Workspace = (props) => {
             console.log("starData:", data);
             window.gtag("event", "starWorkspace", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
         },
-        addField: async ({ title, filterBy }) => {
+        addField: async ({ title, sortBy }) => {
             const currFields = _workspace?.data?.fields || [];
-            await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: [...currFields, { _id: "1", title, updatedAt: Date.now(), createdAt: Date.now(), filterBy, owner: auth.authUser.uid, cards: [] }] } }, false)
-            const data = await auth.workspace.field.addField({ title, id: _workspace?.data?._id, filterBy });
+            await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: [...currFields, { _id: "1", title, updatedAt: Date.now(), createdAt: Date.now(), sortBy, owner: auth.authUser.uid, cards: [] }] } }, false)
+            const data = await auth.workspace.field.addField({ title, id: _workspace?.data?._id, sortBy });
             workspaceData.mutate(); // Refresh data in order to get new ID's
             console.log("addField data: ", data);
             window.gtag("event", "addField", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
         },
-        editField: async ({ id, title }) => {
-            const data = await auth.workspace.field.editField({ id, title, workspaceId: _workspace._id });
+        editField: async ({ fieldId, title }) => {
+            const currFields = _workspace?.data?.fields || [];
+            const fieldIndex = currFields.findIndex(field => field._id == fieldId);
+            currFields[fieldIndex].title = title;
+
+            await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: currFields } }, false);
+
+            const data = await auth.workspace.field.editField({ field: currFields[fieldIndex], workspaceId: _workspace?.data?._id });
 
             if (data.success) {
-                router.replace(router.asPath);
+                NotalUI.Toast.show({
+                    title: "Success",
+                    desc: "Field updated successfully",
+                    icon: <CheckIcon size={24} fill="currentColor" />,
+                    className: "dark:bg-green-600 bg-green-500 text-white max-w-[400px]",
+                })
             } else if (data?.error) {
                 console.error("error on edit field: ", data.error);
             }
@@ -220,10 +232,12 @@ const Workspace = (props) => {
 
     return (<div className="mx-auto h-full flex flex-col transition-colors duration-100">
         <Head>
-            <title>{loadingWorkspace ? "Loading..." : _workspace?.data?.title ?? "Not Found"}</title>
-            <meta name='twitter:description' content='Take your notes to next level with Notal' />
-            <meta property='og:description' content='Take your notes to next level with Notal' />
-            <meta name='description' content='Take your notes to next level with Notal' />
+            <title>{loadingWorkspace ? (props?.workspace?.data?.title ? props?.workspace?.data?.title : "Loading...") : _workspace?.data?.title ?? "Not Found"}</title>
+            <meta name='twitter:description' content={props?.workspace?.data?.owner?.username ? `${props?.workspace?.data?.owner?.username}'s workspace` : "Take your notes to next level with Notal"} />
+            <meta property='og:description' content={props?.workspace?.data?.owner?.username ? `${props?.workspace?.data?.owner?.username}'s workspace` : "Take your notes to next level with Notal"} />
+            <meta name='description' content={props?.workspace?.data?.owner?.username ? `${props?.workspace?.data?.owner?.username}'s workspace` : "Take your notes to next level with Notal"} />
+            <meta name='twitter:image' content={props?.workspace?.data?.thumbnail?.type == "image" ? props?.workspace?.data?.thumbnail?.file : "https://notal.app/icon_big.png'"} />
+            <meta property='og:image' content={props?.workspace?.data?.thumbnail?.type == "image" ? props?.workspace?.data?.thumbnail?.file : "https://notal.app/icon_big.png'"} />
         </Head>
 
         <Navbar
@@ -289,6 +303,7 @@ const Workspace = (props) => {
                         onAddCard={() => setAddCardModal({ ...addCardModal, visible: true, fieldId: field._id, fieldTitle: field.title })}
                         onDeleteCard={({ id }) => handle.deleteCard({ id, fieldId: field._id })}
                         onCollapse={() => handle.collapseField({ id: field._id })}
+                        onSettings={() => setEditField({ ...editField, visible: true, title: field?.title, fieldId: field._id })}
                         isOwner={isOwner}
                         workspaceUsers={_workspace?.data?.users}
                     />
@@ -298,7 +313,15 @@ const Workspace = (props) => {
             </div>
             {notFound && <WorkspaceNotFound />}
         </div>
-
+        <EditFieldModal
+            open={editField.visible}
+            title={editField.title}
+            onClose={() => setEditField({ ...editField, visible: false })}
+            onEdit={({ title }) => {
+                handle.editField({ title, fieldId: editField.fieldId });
+                setEditField({ ...editField, visible: false });
+            }}
+        />
         <WorkspaceSettingsModal
             open={settingsModal}
             workspace={_workspace?.data}
@@ -326,7 +349,7 @@ const Workspace = (props) => {
             workspaceTitle={addFieldModal.workspaceTitle}
             onClose={() => setAddFieldModal({ ...addFieldModal, visible: false })}
             onAdd={({ title }) => {
-                handle.addField({ title, filterBy: "index" });
+                handle.addField({ title, sortBy: "index" });
                 setAddFieldModal({ ...addFieldModal, visible: false });
             }}
         />
@@ -338,19 +361,20 @@ export default Workspace;
 export async function getServerSideProps(ctx) {
     const { req, res, query } = ctx;
     let validate = {};
-    //let workspace = {};
+    let workspace = {};
 
-    //const queryId = query?.id;
+    const queryId = query?.id;
 
     if (req) {
         const authCookie = req.cookies.auth;
 
-        [validate, /*workspace*/] = await Promise.all([
+        [validate, workspace] = await Promise.all([
             ValidateToken({ token: authCookie }),
-            //GetWorkspace({ id: queryId, token: authCookie })
+            GetWorkspaceData({ id: queryId, token: authCookie }),
         ]);
 
         console.log("validate:", validate?.success, validate?.data?.uid, validate?.error);
+        //console.log("workspace: ", workspace);
     }
-    return { props: { validate, /*workspace, query: queryId*/ } }
+    return { props: { validate, workspace, /*query: queryId*/ } }
 }

@@ -52,12 +52,12 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
             if (workspacesData?.data?.error) {
                 console.error("swr error workspacesData: ", workspacesData?.data);
             }
-            if (workspacesData?.data?.error?.code == "auth/id-token-expired") {
+            if (workspacesData?.data?.error?.code == "auth/id-token-expired" || workspacesData?.data?.error == "no-token") {
                 //const token = await auth.users.getIdToken();
                 setTimeout(() => {
                     router.replace(router.asPath);
                     workspacesData.mutate();
-                }, 5000);
+                }, 2000);
             } else {
                 if (workspacesData?.data?.success) {
                     _setWorkspaces(workspacesData?.data);
@@ -103,7 +103,15 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
             const newWorkspaces = _workspaces.data;
             newWorkspaces.splice(_workspaces.data.findIndex(el => el._id == id), 1);
             workspacesData.mutate({ ..._workspaces, data: [...newWorkspaces] }, false);
-            auth.workspace.deleteWorkspace({ id });
+            const res = await auth.workspace.deleteWorkspace({ id });
+            if (!res?.success) {
+                NotalUI.Toast.show({
+                    desc: "An error occurred while deleting workspace.",
+                    icon: <CrossIcon size={24} fill="currentColor" />,
+                    className: "dark:bg-red-600 bg-red-500 text-white"
+                });
+                console.log("del res -> ", res);
+            }
         },
         star: async ({ id }) => {
             const newWorkspaces = _workspaces.data;
@@ -111,7 +119,15 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
             newWorkspaces[workspaceIndex].starred = !newWorkspaces[workspaceIndex].starred;
             newWorkspaces[workspaceIndex].updatedAt = Date.now(); // update date
             workspacesData.mutate({ ..._workspaces, data: [...newWorkspaces] }, false);
-            auth.workspace.starWorkspace({ id });
+            const res = await auth.workspace.starWorkspace({ id });
+            if (!res?.success) {
+                NotalUI.Toast.show({
+                    desc: "An error occurred while starring workspace.",
+                    icon: <CrossIcon size={24} fill="currentColor" />,
+                    className: "dark:bg-red-600 bg-red-500 text-white"
+                });
+                console.log("del res -> ", res);
+            }
         },
     }
 

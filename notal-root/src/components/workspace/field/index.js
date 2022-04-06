@@ -99,21 +99,21 @@ const WorkspaceField = ({
                     blockContent={false}
                     direction="bottom"
                     content={<div className="flex flex-row">
-                        <Button size="md" className="px-2" light>
+                        <Button size="md" className="px-2" onClick={onSettings} light title="Field Settings" aria-label="Field Settings">
                             <SettingsIcon size={24} className="fill-neutral-800 dark:fill-white" />
                         </Button>
-                        <Button size="md" className="px-2 ml-1" onClick={onDelete} light>
+                        <Button size="md" className="px-2 ml-1" onClick={onDelete} light title="Delete Field" aria-label="Delete Field">
                             <DeleteIcon size={24} className="fill-neutral-800 dark:fill-white" />
                         </Button>
-                        <Button size="md" className="px-2 ml-1" onClick={onCollapse} light>
-                            {field.collapsed ?
+                        <Button size="md" className="px-2 ml-1" onClick={onCollapse} light title={field?.collapsed ? "Uncollapse Field" : "Collapse Field"} aria-label={field?.collapsed ? "Uncollapse Field" : "Collapse Field"}>
+                            {field?.collapsed ?
                                 <FoldIcon size={24} className="fill-neutral-800 dark:fill-white" style={{ transform: "rotate(90deg)" }} />
                                 :
                                 <UnfoldIcon size={24} className="fill-neutral-800 dark:fill-white" style={{ transform: "rotate(90deg)" }} />}
                         </Button>
                     </div>}
                 >
-                    {(hovered || !field?.collapsed) && <Button light size="sm" className="px-2 rounded-md active:scale-90">
+                    {(hovered || !field?.collapsed) && <Button light size="sm" className="px-2 rounded-md active:scale-90" title="Show More Field Options" aria-label="Show More Field Options">
                         <MoreIcon size={24} className="dark:fill-white fill-black" />
                     </Button>}
                 </Tooltip>}
