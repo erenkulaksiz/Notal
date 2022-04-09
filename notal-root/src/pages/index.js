@@ -86,6 +86,8 @@ const Landing = (props) => {
         <meta name='apple-mobile-web-app-title' content='Notal' />
         <meta name='twitter:title' content='Notal' />
         <meta property='og:title' content='Notal' />
+        <meta property='og:site_name' content='Notal' />
+        <meta property='og:url' content='https://notal.app' />
       </Head>
 
       <Navbar
@@ -109,28 +111,35 @@ const Landing = (props) => {
         </div>
         <div className="container px-8 sm:px-8 md:px-8 lg:px-8 xl:px-32 pt-56 z-10">
           <div className="relative z-50">
-            <h1 className="text-black drop-shadow-xl dark:text-white sm:text-4xl text-3xl font-bold font-sans">
+            <h1 className="dark:text-white text-black mr-2 relative flex flex-col drop-shadow-xl sm:text-4xl text-3xl font-bold font-sans">
               <Typewriter
                 options={{
                   strings: [
-                    'Organize & Plan your next project with Notal 🚀',
-                    'Create your team and work on workspaces as a team',
-                    'Personalize your workspace with thumbnails, colors and much more',
-                    'Share your bookmarks, workspaces and your profile'
+                    "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>Empowering</span> user and developer relations",
+                    "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>Empowering</span> planning to your projects",
+                    "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>Empowering</span> user feedbacks",
+                    "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>Empowering</span> roadmaps to your users",
+                    "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>Empowering</span> collaborating with your team to develop together",
                   ],
+                  pauseFor: 2500,
                   autoStart: true,
                   loop: true,
-                  delay: 90
+                  delay: 80,
+                  skipAddStyles: true,
+                  wrapperClassName: "notal-writer",
+                  cursorClassName: "notal-cursor",
                 }}
               />
-              {!isClient && <>Organize & Plan your
+              {!isClient && <>
+                Organize & Plan your
                 <span className="text-transparent ml-2 mr-2 bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600">
                   next
                 </span>
-                project with Notal 🚀</>}
+                project with Notal 🚀
+              </>}
             </h1>
             <h5 className="dark:text-neutral-400 text-gray-600 drop-shadow-lg mt-4 text-lg font-semibold">
-              {"Developer's solution from an developer. Keep focus on your project, not on your planning."}
+              {"Data between users and developers is important. Notal is the solution."}
             </h5>
             <Button rounded className="w-32 mt-4" aria-label="Discover more button">
               Discover More

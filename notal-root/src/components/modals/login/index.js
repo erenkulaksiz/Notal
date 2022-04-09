@@ -44,7 +44,6 @@ const LoginModal = ({ open, onClose, onLoginSuccess }) => {
         open={open}
         onClose={onClose}
         className="w-[90%] sm:w-[440px]"
-        blur
     >
         <Modal.Title animate>
             <div className="w-full flex flex-col justify-center items-center pt-6">

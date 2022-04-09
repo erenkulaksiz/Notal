@@ -301,6 +301,13 @@ export default async function handler(req, res) {
                 const workspaceOwner = await usersCollection.findOne({ "uid": workspace.owner });
                 if (!workspaceOwner) return reject("owner-not-found");
 
+                if (!workspace.workspaceVisible) {
+                    const decodedToken = await checkBearer(req.headers['authorization']);
+                    if (decodedToken.user_id != workspace.owner) {
+                        return reject("not-found");
+                    }
+                }
+
                 return accept({
                     title: workspace?.title,
                     desc: workspace?.desc,
@@ -310,6 +317,7 @@ export default async function handler(req, res) {
                         fullname: workspaceOwner?.fullname ?? "",
                         avatar: workspaceOwner?.avatar ?? "",
                     },
+                    id: workspace?.id,
                     starred: workspace?.starred,
                     updatedAt: workspace?.updatedAt,
                     workspaceVisible: workspace?.workspaceVisible,

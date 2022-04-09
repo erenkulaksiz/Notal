@@ -351,8 +351,9 @@ const AuthService = {
                     uid: auth?.currentUser?.uid,
                     workspaceId,
                     field: {
+                        _id: field._id,
                         title: field.title,
-                        filterBy: field.filterBy,
+                        sortBy: field.sortBy,
                         collapsed: field.collapsed,
                     },
                 }, {

@@ -70,6 +70,8 @@ const Home = (props) => {
             <meta name='apple-mobile-web-app-title' content='Notal' />
             <meta name='twitter:title' content='Notal' />
             <meta property='og:title' content='Notal' />
+            <meta property='og:site_name' content='Notal' />
+            <meta property='og:url' content='https://notal.app/home' />
         </Head>
 
         <Navbar

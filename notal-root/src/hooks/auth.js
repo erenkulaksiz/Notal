@@ -31,18 +31,7 @@ export function AuthProvider(props) {
                 setUser(null);
                 Cookies.remove("auth");
             } else {
-                const token = await user.getIdToken();
                 setUser(user);
-                Cookies.set("auth", token, { expires: 1 });
-            }
-        });
-
-        const tokenChange = onIdTokenChanged(auth, async (user) => {
-            if (!user) {
-                setUser(null);
-                Cookies.remove("auth");
-                setLoading(false);
-            } else {
                 if (!Cookies.get("auth")) {
                     NotalUI.Toast.showMultiple([{
                         title: "Welcome to Notal!",
@@ -59,6 +48,17 @@ export function AuthProvider(props) {
                         closeable: true,
                     }])
                 }
+                const token = await user.getIdToken();
+                Cookies.set("auth", token, { expires: 1 });
+            }
+        });
+
+        const tokenChange = onIdTokenChanged(auth, async (user) => {
+            if (!user) {
+                setUser(null);
+                Cookies.remove("auth");
+                setLoading(false);
+            } else {
                 const token = await user.getIdToken();
                 setUser(user);
                 Cookies.set("auth", token, { expires: 1 });

@@ -34,6 +34,7 @@ import {
 import { fetchWorkspace } from "@utils/fetcher";
 import BuildComponent from "@utils/buildComponent";
 import useNotalUI from "@hooks/notalui";
+import Handler from "@utils/handler";
 
 const Workspace = (props) => {
     const NotalUI = useNotalUI();
@@ -104,127 +105,6 @@ const Workspace = (props) => {
         })();
     }, [workspaceData]);
 
-    const handle = {
-        editWorkspace: async ({ title = _workspace?.data?.title, desc = _workspace?.data?.desc, workspaceVisible = _workspace?.data?.workspaceVisible ?? false, thumbnail }) => {
-            /*
-            // check for any changes
-            if (
-                _workspace?.data?.title == title
-                && _workspace?.data?.desc == desc
-                && _workspace?.data?.workspaceVisible == workspaceVisible
-                && _workspace?.data?.thumbnail != thumbnail) return;
-                */
-            await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, title, desc, workspaceVisible, thumbnail } }, false);
-            const data = await auth.workspace.editWorkspace({ id: _workspace?.data?._id, title, desc, workspaceVisible, thumbnail });
-            window.gtag("event", "editWorkspace", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
-            console.log("editData:", data);
-        },
-        starWorkspace: async () => {
-            await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, starred: !_workspace?.data?.starred } }, false);
-            const data = await auth.workspace.starWorkspace({ id: _workspace?.data?._id });
-            console.log("starData:", data);
-            window.gtag("event", "starWorkspace", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
-        },
-        addField: async ({ title, sortBy }) => {
-            const currFields = _workspace?.data?.fields || [];
-            await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: [...currFields, { _id: "1", title, updatedAt: Date.now(), createdAt: Date.now(), sortBy, owner: auth.authUser.uid, cards: [] }] } }, false)
-            const data = await auth.workspace.field.addField({ title, id: _workspace?.data?._id, sortBy });
-            workspaceData.mutate(); // Refresh data in order to get new ID's
-            console.log("addField data: ", data);
-            window.gtag("event", "addField", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
-        },
-        editField: async ({ fieldId, title }) => {
-            const currFields = _workspace?.data?.fields || [];
-            const fieldIndex = currFields.findIndex(field => field._id == fieldId);
-            currFields[fieldIndex].title = title;
-
-            await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: currFields } }, false);
-
-            const data = await auth.workspace.field.editField({ field: currFields[fieldIndex], workspaceId: _workspace?.data?._id });
-
-            if (data.success) {
-                NotalUI.Toast.show({
-                    title: "Success",
-                    desc: "Field updated successfully",
-                    icon: <CheckIcon size={24} fill="currentColor" />,
-                    className: "dark:bg-green-600 bg-green-500 text-white max-w-[400px]",
-                })
-            } else if (data?.error) {
-                console.error("error on edit field: ", data.error);
-            }
-        },
-        deleteField: async ({ id }) => {
-            const newFields = _workspace?.data?.fields;
-            newFields.splice(_workspace?.data?.fields.findIndex(el => el._id == id), 1);
-            await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: newFields } }, false);
-            const data = await auth.workspace.field.removeField({ id, workspaceId: _workspace?.data?._id });
-            console.log("deleteField data: ", data);
-            window.gtag("event", "deleteField", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
-        },
-        deleteWorkspace: async () => {
-            const data = await auth.workspace.deleteWorkspace({ id: _workspace?.data?._id });
-            if (data.success) router.replace("/home");
-            else if (data?.error) console.error("error on delete workspace: ", data.error);
-        },
-        addCardToField: async ({ fieldId, title, desc, color, tag }) => {
-            const newFields = _workspace?.data?.fields;
-            newFields[_workspace?.data?.fields?.findIndex(el => el._id == fieldId)].cards?.push({ title, desc, color, createdAt: Date.now(), updatedAt: Date.now(), tag, owner: auth.authUser.uid });
-            await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: newFields } }, false);
-            const data = await auth.workspace.field.addCard({
-                id: fieldId, workspaceId: _workspace?.data?._id, title, desc, color, tag
-            });
-            console.log("addCardToField data: ", data);
-            workspaceData.mutate();
-            window.gtag("event", "addCardToField", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
-        },
-        deleteCard: async ({ id, fieldId }) => {
-            const newFields = _workspace?.data?.fields;
-            const cardIndex = newFields[_workspace?.data?.fields.findIndex(el => el._id == fieldId)].cards.findIndex(el => el._id == id);
-            newFields[_workspace?.data?.fields.findIndex(el => el._id == fieldId)].cards.splice(cardIndex, 1);
-            await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: newFields } }, false);
-            const data = await auth.workspace.field.removeCard({ id, fieldId, workspaceId: _workspace?.data?._id });
-            console.log("removeCard data: ", data);
-            if (data.success != true) {
-                console.log("delete card error: ", data?.error);
-            }
-        },
-        editCard: async ({ title, desc, color, id, fieldId }) => {
-            const data = await auth.workspace.field.editCard({
-                id,
-                fieldId,
-                workspaceId: _workspace._id,
-                title,
-                desc,
-                color,
-            });
-
-            if (data.success) {
-                router.replace(router.asPath);
-            } else {
-                console.log("edit card error: ", data?.error);
-            }
-        },
-        collapseField: async ({ id }) => {
-            const newFields = _workspace?.data?.fields;
-            const fieldIndex = _workspace?.data?.fields.findIndex(el => el._id == id);
-            if (newFields[fieldIndex]["collapsed"]) {
-                newFields[fieldIndex]["collapsed"] = false;
-            } else {
-                newFields[fieldIndex]["collapsed"] = true;
-            }
-            await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: newFields } }, false);
-            await auth.workspace.field.editField({
-                id,
-                field: {
-                    title: newFields[fieldIndex]?.title,
-                    filterBy: newFields[fieldIndex]?.filterBy,
-                    collapsed: !!newFields[fieldIndex]?.collapsed,
-                },
-                workspaceId: _workspace?.data?._id,
-            });
-        }
-    }
-
     const BuildWorkspaceContainer = BuildComponent({
         name: "Workspace Container",
         defaultClasses: "relative flex flex-1 flex-row overflow-y-auto pt-1 pb-2 pl-2 overflow-x-visible",
@@ -232,15 +112,17 @@ const Workspace = (props) => {
 
     return (<div className="mx-auto h-full flex flex-col transition-colors duration-100">
         <Head>
-            <title>{loadingWorkspace ? (props?.workspace?.data?.title ? props?.workspace?.data?.title : "Loading...") : _workspace?.data?.title ?? "Not Found"}</title>
-            <meta name='twitter:description' content={props?.workspace?.data?.owner?.username ? `${props?.workspace?.data?.owner?.username}'s workspace` : "Take your notes to next level with Notal"} />
-            <meta property='og:description' content={props?.workspace?.data?.owner?.username ? `${props?.workspace?.data?.owner?.username}'s workspace` : "Take your notes to next level with Notal"} />
-            <meta name='description' content={props?.workspace?.data?.owner?.username ? `${props?.workspace?.data?.owner?.username}'s workspace` : "Take your notes to next level with Notal"} />
-            <meta name='twitter:image' content={props?.workspace?.data?.thumbnail?.type == "image" ? props?.workspace?.data?.thumbnail?.file : "https://notal.app/icon_big.png'"} />
-            <meta property='og:image' content={props?.workspace?.data?.thumbnail?.type == "image" ? props?.workspace?.data?.thumbnail?.file : "https://notal.app/icon_big.png'"} />
-            <meta name='apple-mobile-web-app-title' content={props?.workspace?.data?.title ? props?.workspace?.data?.title : "Notal"} />
-            <meta name='twitter:title' content={props?.workspace?.data?.title ? props?.workspace?.data?.title : "Notal"} />
-            <meta property='og:title' content={props?.workspace?.data?.title ? props?.workspace?.data?.title : "Notal"} />
+            <title>{loadingWorkspace ? (props?.workspace?.data?.title ? `${props?.workspace?.data?.title} · notal.app` : "Loading...") : `${_workspace?.data?.title} • notal.app` ?? "Not Found"}</title>
+            <meta name='twitter:description' content={props?.workspace?.data?.owner?.username ? `@${props?.workspace?.data?.owner?.username}'s workspace` : "Take your notes to next level with Notal"} />
+            <meta property='og:description' content={props?.workspace?.data?.owner?.username ? `@${props?.workspace?.data?.owner?.username}'s workspace` : "Take your notes to next level with Notal"} />
+            <meta name='description' content={props?.workspace?.data?.owner?.username ? `@${props?.workspace?.data?.owner?.username}'s workspace` : "Take your notes to next level with Notal"} />
+            <meta name='twitter:image' content={props?.workspace?.data?.thumbnail?.type == "image" ? props?.workspace?.data?.thumbnail?.file : "https://notal.app/icon_big.png"} />
+            <meta property='og:image' content={props?.workspace?.data?.thumbnail?.type == "image" ? props?.workspace?.data?.thumbnail?.file : "https://notal.app/icon_big.png"} />
+            <meta name='apple-mobile-web-app-title' content={props?.workspace?.data?.title ? `${props?.workspace?.data?.title} • notal.app` : "Notal"} />
+            <meta name='twitter:title' content={props?.workspace?.data?.title ? `${props?.workspace?.data?.title} • notal.app` : "Notal"} />
+            <meta property='og:title' content={props?.workspace?.data?.title ? `${props?.workspace?.data?.title} • notal.app` : "Notal"} />
+            <meta property='og:site_name' content={props?.workspace?.data?.title ? `${props?.workspace?.data?.title} • notal.app` : "Notal"} />
+            <meta property='og:url' content={props?.workspace?.data?.id ? `https://notal.app/workspace/${props?.workspace?.data?.id}` : `https://notal.app/workspace/${id}`} />
         </Head>
 
         <Navbar
@@ -260,7 +142,7 @@ const Workspace = (props) => {
                 workspaceStarred={_workspace?.data?.starred}
                 workspaceVisible={_workspace?.data?.workspaceVisible}
                 workspaceUsers={_workspace?.data?.users}
-                onStarred={() => handle.starWorkspace()}
+                onStarred={() => Handler.workspace({ workspaceData, auth, _workspace, props }).star()}
                 onSettings={() => setSettingsModal(true)}
                 onDelete={() => {
                     NotalUI.Alert.show({
@@ -279,7 +161,7 @@ const Workspace = (props) => {
                             </Button>,
                             <Button
                                 onClick={() => {
-                                    handle.deleteWorkspace();
+                                    Handler.workspace({ workspaceData, auth, _workspace, props }).delete(router);
                                     NotalUI.Alert.close();
                                 }}
                                 key={2}
@@ -291,7 +173,14 @@ const Workspace = (props) => {
                     })
                 }}
                 // refactor onVisible.
-                onVisible={() => handle.editWorkspace({ workspaceVisible: _workspace?.data?.workspaceVisible ? !_workspace?.data?.workspaceVisible : true, thumbnail: _workspace?.data?.thumbnail })}
+                onVisible={() => {
+                    //handle.editWorkspace({ workspaceVisible: _workspace?.data?.workspaceVisible ? !_workspace?.data?.workspaceVisible : true, thumbnail: _workspace?.data?.thumbnail })
+                    Handler.workspace({ workspaceData, auth, _workspace, props })
+                        .edit({
+                            workspaceVisible: _workspace?.data?.workspaceVisible ? !_workspace?.data?.workspaceVisible : true,
+                            thumbnail: _workspace?.data?.thumbnail
+                        })
+                }}
                 onAddField={() => setAddFieldModal({ visible: true, workspaceTitle: _workspace?.data?.title })}
             />}
             <div className={BuildWorkspaceContainer.classes}>
@@ -302,10 +191,10 @@ const Workspace = (props) => {
                     <WorkspaceField
                         field={field}
                         key={field._id}
-                        onDelete={() => handle.deleteField({ id: field._id })}
+                        onDelete={() => Handler.workspace({ workspaceData, auth, _workspace, props }).field.delete({ id: field._id })}
                         onAddCard={() => setAddCardModal({ ...addCardModal, visible: true, fieldId: field._id, fieldTitle: field.title })}
-                        onDeleteCard={({ id }) => handle.deleteCard({ id, fieldId: field._id })}
-                        onCollapse={() => handle.collapseField({ id: field._id })}
+                        onDeleteCard={({ id }) => Handler.workspace({ workspaceData, auth, _workspace, props }).card.delete({ id, fieldId: field._id })}
+                        onCollapse={() => Handler.workspace({ workspaceData, auth, _workspace, props }).field.collapse({ id: field._id })}
                         onSettings={() => setEditField({ ...editField, visible: true, title: field?.title, fieldId: field._id })}
                         isOwner={isOwner}
                         workspaceUsers={_workspace?.data?.users}
@@ -321,7 +210,7 @@ const Workspace = (props) => {
             title={editField.title}
             onClose={() => setEditField({ ...editField, visible: false })}
             onEdit={({ title }) => {
-                handle.editField({ title, fieldId: editField.fieldId });
+                Handler.workspace({ workspaceData, auth, _workspace, props }).field.edit({ title, fieldId: editField.fieldId });
                 setEditField({ ...editField, visible: false });
             }}
         />
@@ -330,7 +219,7 @@ const Workspace = (props) => {
             workspace={_workspace?.data}
             onClose={() => setSettingsModal(false)}
             onSubmit={({ title, desc, thumbnail }) => {
-                handle.editWorkspace({ title, desc, thumbnail });
+                Handler.workspace({ workspaceData, auth, _workspace, props }).edit({ title, desc, thumbnail });
                 setSettingsModal(false);
             }}
             onUserChange={() => {
@@ -343,7 +232,7 @@ const Workspace = (props) => {
             fieldTitle={addCardModal.fieldTitle}
             onClose={() => setAddCardModal({ ...addCardModal, visible: false })}
             onAdd={({ title, desc, color, tag }) => {
-                handle.addCardToField({ fieldId: addCardModal.fieldId, title, desc, color, tag });
+                Handler.workspace({ workspaceData, auth, _workspace, props }).card.add({ title, desc, color, tag, fieldId: addCardModal.fieldId });
                 setAddCardModal({ ...addCardModal, visible: false });
             }}
         />
@@ -352,7 +241,7 @@ const Workspace = (props) => {
             workspaceTitle={addFieldModal.workspaceTitle}
             onClose={() => setAddFieldModal({ ...addFieldModal, visible: false })}
             onAdd={({ title }) => {
-                handle.addField({ title, sortBy: "index" });
+                Handler.workspace({ workspaceData, auth, _workspace, props }).field.add({ title, sortBy: "index" });
                 setAddFieldModal({ ...addFieldModal, visible: false });
             }}
         />

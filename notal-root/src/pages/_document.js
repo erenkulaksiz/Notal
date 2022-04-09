@@ -1,4 +1,4 @@
-import Document, { Html, Head, Main, NextScript } from 'next/document';
+import { Html, Head, Main, NextScript } from 'next/document';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -42,9 +42,8 @@ const Notal = () => {
                 <meta name='twitter:card' content='summary' />
                 <meta name='twitter:url' content='https://notal.app' />
                 <meta name='twitter:creator' content='@erencode' />
+                <meta name="twitter:site" content="@notalapp" />
                 <meta property='og:type' content='website' />
-                <meta property='og:site_name' content='Notal' />
-                <meta property='og:url' content='https://notal.app' />
                 <meta property="theme-color" content="#292524" />
                 <script
                     async

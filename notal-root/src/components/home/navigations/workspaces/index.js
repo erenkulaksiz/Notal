@@ -27,6 +27,7 @@ import {
     DeleteIcon
 } from '@icons';
 import { FilterWorkspaces } from "@utils/filterWorkspaces";
+import Handler from "@utils/handler";
 
 const HomeNavWorkspaces = ({ validate, isValidating }) => {
     const auth = useAuth();
@@ -78,58 +79,6 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
     useEffect(() => {
         (!_workspaces?.error && !loadingWorkspaces) && _setWorkspacesFiltered([...FilterWorkspaces({ workspaces: _workspaces?.data, filter })]);
     }, [filter, _workspaces]);
-
-    const workspace = {
-        create: async ({ title, desc, starred, workspaceVisible, thumbnail }) => {
-            // check how many workspaces user has on client, first
-            if (_workspaces?.data?.length >= 20) {
-                NotalUI.Toast.show({
-                    title: "Cannot create workspace",
-                    desc: "Maximum of 20 workspaces is allowed at the moment.",
-                    icon: <CrossIcon size={24} fill="currentColor" />,
-                    className: "dark:bg-red-600 bg-red-500 text-white"
-                });
-                return;
-            }
-            workspacesData.mutate({ ..._workspaces, data: [..._workspaces.data, { updatedAt: Date.now(), createdAt: Date.now(), title, desc, starred, workspaceVisible, thumbnail }] }, false);
-            const res = await auth.workspace.createWorkspace({ title, desc, starred, workspaceVisible, thumbnail });
-            if (res.success == true) {
-                workspacesData.mutate(); // get refreshed workspaces
-            } else if (res.success = false) {
-                console.log("RES ERR -> ", res);
-            }
-        },
-        delete: async ({ id }) => {
-            const newWorkspaces = _workspaces.data;
-            newWorkspaces.splice(_workspaces.data.findIndex(el => el._id == id), 1);
-            workspacesData.mutate({ ..._workspaces, data: [...newWorkspaces] }, false);
-            const res = await auth.workspace.deleteWorkspace({ id });
-            if (!res?.success) {
-                NotalUI.Toast.show({
-                    desc: "An error occurred while deleting workspace.",
-                    icon: <CrossIcon size={24} fill="currentColor" />,
-                    className: "dark:bg-red-600 bg-red-500 text-white"
-                });
-                console.log("del res -> ", res);
-            }
-        },
-        star: async ({ id }) => {
-            const newWorkspaces = _workspaces.data;
-            const workspaceIndex = newWorkspaces.findIndex(el => el._id == id)
-            newWorkspaces[workspaceIndex].starred = !newWorkspaces[workspaceIndex].starred;
-            newWorkspaces[workspaceIndex].updatedAt = Date.now(); // update date
-            workspacesData.mutate({ ..._workspaces, data: [...newWorkspaces] }, false);
-            const res = await auth.workspace.starWorkspace({ id });
-            if (!res?.success) {
-                NotalUI.Toast.show({
-                    desc: "An error occurred while starring workspace.",
-                    icon: <CrossIcon size={24} fill="currentColor" />,
-                    className: "dark:bg-red-600 bg-red-500 text-white"
-                });
-                console.log("del res -> ", res);
-            }
-        },
-    }
 
     return (<div className="flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
         <HomeNavTitle
@@ -191,7 +140,7 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
                     workspace={element}
                     key={index}
                     index={index}
-                    onStar={() => workspace.star({ id: element._id })}
+                    onStar={() => Handler.home({ NotalUI, workspacesData, auth, _workspaces }).workspace.star({ id: element._id })}
                     onDelete={() => {
                         NotalUI.Alert.show({
                             title: "Delete Workspace",
@@ -209,7 +158,7 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
                                 </Button>,
                                 <Button
                                     onClick={() => {
-                                        workspace.delete({ id: element._id });
+                                        Handler.home({ NotalUI, workspacesData, auth, _workspaces }).workspace.delete({ id: element._id });
                                         NotalUI.Alert.close();
                                     }}
                                     key={2}
@@ -354,9 +303,7 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
         <AddWorkspaceModal
             open={newWorkspaceModal}
             onClose={() => setNewWorkspaceModal(false)}
-            onAdd={({ title, desc, starred, workspaceVisible, thumbnail }) => {
-                workspace.create({ title, desc, starred, workspaceVisible, thumbnail });
-            }}
+            onAdd={({ title, desc, starred, workspaceVisible, thumbnail }) => Handler.home({ NotalUI, workspacesData, auth, _workspaces }).workspace.create({ title, desc, starred, workspaceVisible, thumbnail })}
         />
     </div >)
 }

@@ -17,13 +17,13 @@ const HomeSidebar = ({
 }) => {
     const BuildSidebar = BuildComponent({
         name: "Home Sidebar Navigation",
-        defaultClasses: "flex shadow-xl flex-col bg-white dark:bg-neutral-800 z-50 top-0 sticky",
+        defaultClasses: "flex shadow-xl flex-col bg-white dark:bg-neutral-800 z-50 top-0 pl-[2px] sticky",
     })
 
     return (<motion.nav
         variants={{
             open: { maxWidth: "10rem", minWidth: "10rem", width: "10rem" },
-            close: { minWidth: "2.4rem", width: "2.4rem" }
+            close: { minWidth: "2.5rem", width: "2.5rem" }
         }}
         initial={navCollapse ? "close" : "open"}
         animate={navCollapse ? "close" : "open"}
