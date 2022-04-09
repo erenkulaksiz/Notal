@@ -7,9 +7,9 @@ const Footer = ({ children, className, animate = false }) => {
 
     const BuildFooter = BuildComponent({
         name: "Modal Footer",
-        defaultClasses: "w-full flex items-center",
+        defaultClasses: "w-full flex items-center justify-end",
         extraClasses: className
-    })
+    });
 
     return (<motion.div
         className={BuildFooter.classes}

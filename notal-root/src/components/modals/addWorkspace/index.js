@@ -153,7 +153,7 @@ const AddWorkspaceModal = ({ open, onClose, onAdd }) => {
     return (<Modal open={open} onClose={() => !thumbnailLoading && close()} className="w-[90%] sm:w-[400px] p-4 px-5 relative">
         <Modal.Title animate>
             <AddIcon size={24} fill="currentColor" />
-            <span className="text-lg font-medium">Add Workspace</span>
+            <span className="text-lg font-medium ml-1">Add Workspace</span>
         </Modal.Title>
         <Modal.Body className="flex flex-col pb-2 min-h-[400px]" animate>
             {thumbnailLoading && <div className="absolute left-0 right-0 bottom-0 top-0 flex items-center justify-center bg-neutral-300/40 dark:bg-neutral-800/40 rounded-xl z-50">

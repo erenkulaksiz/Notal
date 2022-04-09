@@ -54,7 +54,7 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
             <div className="flex flex-col w-full justify-center items-center">
                 <div className="flex flex-row items-center">
                     <AddIcon size={24} fill="currentColor" />
-                    <span className="text-lg font-medium">{`Add card to ${fieldTitle}`}</span>
+                    <span className="text-lg font-medium ml-1">{`Add card to ${fieldTitle}`}</span>
                 </div>
                 <WorkspaceFieldCard
                     preview

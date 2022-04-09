@@ -16,8 +16,9 @@ const BuildComponent = ({
     conditionalClasses = [], // The classes that component potentially recieve - array[object]
     selectedClasses = [] // The selected classes that component has - array[string]
 }) => {
-    let allClasses = defaultClasses; // set initial data. eg: 'bg-white'
-    if (extraClasses) allClasses += ` ${extraClasses}`; // add extra classes to the default classes
+    let allClasses = ""; // set initial data. eg: 'bg-white'
+    if (defaultClasses) allClasses += defaultClasses;
+    if (extraClasses) allClasses += defaultClasses ? ` ${extraClasses}` : extraClasses; // add extra classes to the default classes
     if (conditionalClasses.length > 0) {
         // if we have conditional classes, we will have selected classes too.
         selectedClasses.forEach((selectedClass, index) => {

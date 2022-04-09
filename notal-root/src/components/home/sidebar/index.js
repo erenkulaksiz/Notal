@@ -17,7 +17,7 @@ const HomeSidebar = ({
 }) => {
     const BuildSidebar = BuildComponent({
         name: "Home Sidebar Navigation",
-        defaultClasses: "flex shadow-xl flex-col bg-white dark:bg-neutral-800 z-50 top-0 pl-[2px] sticky",
+        defaultClasses: "flex shadow-xl flex-col bg-white dark:bg-neutral-800 z-50 top-0 sticky",
     })
 
     return (<motion.nav

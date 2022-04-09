@@ -70,10 +70,24 @@ export default async function handler(req, res) {
                     return reject("max-workspaces");
                 }
 
-                // create workspace UID
-                const nanoid = customAlphabet('1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 10);
-                const id = await nanoid();
-                console.log("generated ID for workspace: ", id, " owner: ", uid);
+                let givenId = false;
+                let length = 4; // default id length
+
+                while (givenId == false) {
+                    // create workspace UID
+                    const nanoid = customAlphabet('1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', length);
+                    const id = await nanoid();
+
+                    const checkIdExist = await workspacesCollection.findOne({ "id": id });
+                    if (checkIdExist) {
+                        length++;
+                        return;
+                    }
+                    givenId = id;
+                    // if id exist
+                }
+
+                console.log("generated ID for workspace: ", givenId, " owner: ", uid);
 
                 return await workspacesCollection.insertOne({
                     title,
@@ -85,7 +99,7 @@ export default async function handler(req, res) {
                     workspaceVisible,
                     thumbnail,
                     users: [uid], // Add owner as default user 
-                    id,
+                    id: givenId,
                 }).then(async (result) => {
                     const resId = result.insertedId;
                     console.log("updating id: ", resId);

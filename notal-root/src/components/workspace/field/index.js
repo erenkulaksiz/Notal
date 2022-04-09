@@ -42,7 +42,7 @@ const WorkspaceField = ({
 
     const BuildFieldTitle = BuildComponent({
         name: "Workspace Field",
-        defaultClasses: "p-2 pr-1 w-full flex flex-row backdrop-blur-sm dark:bg-neutral-900/50 bg-white/50 pb-2 overflow-visible border-b-2 border-b-neutral-100 dark:border-b-neutral-800",
+        defaultClasses: "p-2 pr-1 w-full flex flex-row dark:bg-neutral-900 bg-white pb-2 overflow-visible border-b-2 border-b-neutral-100 dark:border-b-neutral-800",
         conditionalClasses: [{ true: "z-40", false: "z-10" }],
         selectedClasses: [hovered],
     });
@@ -62,7 +62,7 @@ const WorkspaceField = ({
     })
 
     return (<motion.div // min-w-[280px] 
-        className="h-full relative rounded shadow flex flex-col items-start dark:bg-neutral-800 bg-neutral-100 p-0.5 mr-1.5"
+        className="h-full relative rounded shadow flex flex-col items-start dark:bg-neutral-800 bg-neutral-100/40 p-0.5 mr-1.5"
         animate={field?.collapsed && !hovered ? "collapse" : "normal"}
         variants={{
             collapse: {

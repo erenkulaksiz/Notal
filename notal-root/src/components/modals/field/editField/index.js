@@ -31,7 +31,7 @@ const EditFieldModal = ({ open, onClose, title, onEdit }) => {
     return (<Modal open={open} onClose={close} className="w-[90%] sm:w-[400px] p-4 px-5">
         <Modal.Title animate>
             <EditIcon size={24} fill="currentColor" />
-            <span className="text-lg font-medium">{`Editing Field ${title}`}</span>
+            <span className="text-lg font-medium ml-1">{`${title} Field Settings`}</span>
         </Modal.Title>
         <Modal.Body animate className="grid grid-cols-1 gap-2 pb-2">
             <label htmlFor="editTitle">Field Title</label>
@@ -43,7 +43,7 @@ const EditFieldModal = ({ open, onClose, title, onEdit }) => {
                 id="editTitle"
                 maxLength={32}
             />
-            <label htmlFor="sortBy">Sort By</label>
+            {/*<label htmlFor="sortBy">Sort By</label>*/}
         </Modal.Body>
         <Modal.Footer animate className="justify-between">
             <Button

@@ -24,11 +24,10 @@ const HomeWorkspaceCard = ({ workspace, onStar, onDelete, index, skeleton = fals
             <motion.div
                 variants={{
                     hidden: { y: -30, opacity: 0 },
-                    show: (index) => ({ y: 0, opacity: 1, transition: { delay: .015 * (index + 1) } }),
+                    show: { y: 0, opacity: 1, transition: { delay: .015 * (index + 1) } },
                 }}
                 //exit={{ y: -30, opacity: 0 }}
                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                custom={index}
                 className="relative xl:max-w-[500px] w-full h-32 shadow-xl rounded-xl p-3 flex flex-col justify-end"
             >
                 <div className="flex flex-row justify-between group-hover:scale-[97%] transition-all ease-in-out z-20">

@@ -141,34 +141,34 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
                     key={index}
                     index={index}
                     onStar={() => Handler.home({ NotalUI, workspacesData, auth, _workspaces }).workspace.star({ id: element._id })}
-                    onDelete={() => {
-                        NotalUI.Alert.show({
-                            title: "Delete Workspace",
-                            titleIcon: <DeleteIcon size={24} fill="currentColor" />,
-                            desc: `Are you sure want to delete ${element?.title} workspace?`,
-                            showCloseButton: false,
-                            buttons: [
-                                <Button
-                                    className="bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500 h-10"
-                                    onClick={() => NotalUI.Alert.close()}
-                                    key={1}
-                                >
-                                    <CrossIcon size={24} fill="currentColor" />
-                                    Cancel
-                                </Button>,
-                                <Button
-                                    onClick={() => {
-                                        Handler.home({ NotalUI, workspacesData, auth, _workspaces }).workspace.delete({ id: element._id });
-                                        NotalUI.Alert.close();
-                                    }}
-                                    key={2}
-                                >
-                                    <CheckIcon size={24} fill="currentColor" />
-                                    Delete
-                                </Button>
-                            ]
-                        })
-                    }}
+                    onDelete={() => NotalUI.Alert.show({
+                        title: "Delete Workspace",
+                        titleIcon: <DeleteIcon size={24} fill="currentColor" />,
+                        desc: `Are you sure want to delete ${element?.title} workspace?`,
+                        showCloseButton: false,
+                        buttons: [
+                            <Button
+                                className="w-[49%] bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500 h-10"
+                                onClick={() => NotalUI.Alert.close()}
+                                key={1}
+                            >
+                                <CrossIcon size={24} fill="currentColor" />
+                                Cancel
+                            </Button>,
+                            <Button
+                                onClick={() => {
+                                    Handler.home({ NotalUI, workspacesData, auth, _workspaces }).workspace.delete({ id: element._id });
+                                    NotalUI.Alert.close();
+                                }}
+                                key={2}
+                                className="w-[49%]"
+                            >
+                                <CheckIcon size={24} fill="currentColor" />
+                                Delete
+                            </Button>
+                        ]
+                    })
+                    }
                 />)}
             </AnimatePresence>
 

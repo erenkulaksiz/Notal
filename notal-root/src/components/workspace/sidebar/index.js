@@ -20,7 +20,7 @@ const WorkspaceSidebar = ({
         addfield: () => onAddField(),
     }
 
-    return (<nav className="flex flex-col justify-between items-center py-2 h-full sticky backdrop-blur-md top-0 w-14 dark:bg-neutral-800/50 bg-white/50 shadow-xl dark:shadow-neutral-800 shadow-neutral-300 pt-2 z-40">
+    return (<nav className="flex flex-col justify-between items-center py-2 h-full sticky top-0 w-14 dark:bg-neutral-800/50 bg-white/50 shadow-xl dark:shadow-neutral-800 shadow-neutral-300/50 pt-2 z-40">
         <div>
             {WorkspaceButtons.map((item, index) => (<WorkspaceSidebarItem
                 item={item}

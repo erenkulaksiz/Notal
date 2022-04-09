@@ -20,8 +20,10 @@ import {
 } from "@icons";
 import { CardColors } from "@utils/constants";
 import useAuth from "@hooks/auth";
+import useNotalUI from "@hooks/notalui";
 
 const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspace }) => {
+    const NotalUI = useNotalUI();
     const auth = useAuth();
     const michael = "https://i.pinimg.com/474x/78/8f/f7/788ff7a1a2c291a33ea995dc8de5dbcc.jpg";
     const [editWorkspace, setEditWorkspace] = useState({ title: "", desc: "", thumbnail: { type: "image", file: michael, color: "#666666", colors: { start: "#0eeaed", end: "#00575e" } } });
@@ -29,7 +31,6 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
     const [tab, setTab] = useState(0);
     const thumbnailRef = useRef();
     const [addWorkspaceOwner, setAddWorkspaceOwner] = useState("");
-
 
     useEffect(() => {
         console.log("thumb: ", workspace?.thumbnail);
@@ -218,7 +219,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                 views={[
                     { title: "Workspace", id: "workspace" },
                     { title: "Thumbnail", id: "thumbnail" },
-                    { title: "Users", id: "users" }
+                    /*{ title: "Users", id: "users" }*/
                 ]}
             >
                 <Tab.TabView index={0} className="pt-4 grid grid-cols-1 gap-2">
@@ -369,7 +370,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                         </div>
                     </div>}
                 </Tab.TabView>
-                <Tab.TabView index={2} className="pt-4 grid grid-cols-1 gap-2">
+                {/*<Tab.TabView index={2} className="pt-4 grid grid-cols-1 gap-2">
                     <p className="border-b-2 border-b-solid border-b-neutral-200 dark:border-b-neutral-800 pb-2">Add up to 20 users to your workspace to work with together.</p>
                     <label>Workspace Owner</label>
                     <div className="w-full h-16 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
@@ -405,7 +406,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                             Add User
                         </Button>
                     </div>
-                </Tab.TabView>
+                    </Tab.TabView>*/}
             </Tab>
         </Modal.Body>
         <Modal.Footer className="justify-between" animate>
