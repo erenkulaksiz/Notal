@@ -113,16 +113,15 @@ const Workspace = (props) => {
     return (<div className="mx-auto h-full flex flex-col transition-colors duration-100">
         <Head>
             <title>{loadingWorkspace ? (props?.workspace?.data?.title ? `${props?.workspace?.data?.title} · notal.app` : "Loading...") : `${_workspace?.data?.title} • notal.app` ?? "Not Found"}</title>
-            <meta name='twitter:description' content={props?.workspace?.data?.owner?.username ? `@${props?.workspace?.data?.owner?.username}'s workspace` : "Take your notes to next level with Notal"} />
-            <meta property='og:description' content={props?.workspace?.data?.owner?.username ? `@${props?.workspace?.data?.owner?.username}'s workspace` : "Take your notes to next level with Notal"} />
-            <meta name='description' content={props?.workspace?.data?.owner?.username ? `@${props?.workspace?.data?.owner?.username}'s workspace` : "Take your notes to next level with Notal"} />
-            <meta name='twitter:image' content={props?.workspace?.data?.thumbnail?.type == "image" ? props?.workspace?.data?.thumbnail?.file : "https://notal.app/icon_big.png"} />
-            <meta property='og:image' content={props?.workspace?.data?.thumbnail?.type == "image" ? props?.workspace?.data?.thumbnail?.file : "https://notal.app/icon_big.png"} />
-            <meta name='apple-mobile-web-app-title' content={props?.workspace?.data?.title ? `${props?.workspace?.data?.title} • notal.app` : "Notal"} />
-            <meta name='twitter:title' content={props?.workspace?.data?.title ? `${props?.workspace?.data?.title} • notal.app` : "Notal"} />
-            <meta property='og:title' content={props?.workspace?.data?.title ? `${props?.workspace?.data?.title} • notal.app` : "Notal"} />
-            <meta property='og:site_name' content={props?.workspace?.data?.title ? `${props?.workspace?.data?.title} • notal.app` : "Notal"} />
-            <meta property='og:url' content={props?.workspace?.data?.id ? `https://notal.app/workspace/${props?.workspace?.data?.id}` : `https://notal.app/workspace/${id}`} />
+            <meta property='twitter:description' name='twitter:description' content={props?.workspace?.data?.owner?.username ? `@${props?.workspace?.data?.owner?.username}'s workspace` : "Take your notes to next level with Notal"} />
+            <meta property='og:description' name='og:description' content={props?.workspace?.data?.owner?.username ? `@${props?.workspace?.data?.owner?.username}'s workspace` : "Take your notes to next level with Notal"} />
+            <meta property='description' name="description" content={props?.workspace?.data?.owner?.username ? `@${props?.workspace?.data?.owner?.username}'s workspace` : "Take your notes to next level with Notal"} />
+            <meta property='twitter:image' name="twitter:image" content={props?.workspace?.data?.thumbnail?.type == "image" ? props?.workspace?.data?.thumbnail?.file : "https://notal.app/icon_big.png"} />
+            <meta property='og:image' name="og:image" content={props?.workspace?.data?.thumbnail?.type == "image" ? props?.workspace?.data?.thumbnail?.file : "https://notal.app/icon_big.png"} />
+            <meta property='apple-mobile-web-app-title' name="apple-mobile-web-app-title" content={props?.workspace?.data?.title ? `${props?.workspace?.data?.title} • notal.app` : "Notal"} />
+            <meta property='twitter:title' name="twitter:title" content={props?.workspace?.data?.title ? `${props?.workspace?.data?.title} • notal.app` : "Notal"} />
+            <meta property='og:title' name="og:title" content={props?.workspace?.data?.title ? `${props?.workspace?.data?.title} • notal.app` : "Notal"} />
+            <meta property='og:url' name="og:url" content={props?.workspace?.data?.id ? `https://notal.app/workspace/${props?.workspace?.data?.id}` : `https://notal.app/workspace/${id}`} />
         </Head>
 
         <Navbar
