@@ -37,7 +37,15 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
             title: workspace?.title,
             desc: workspace?.desc,
             workspaceVisible: workspace?.workspaceVisible,
-            thumbnail: workspace?.thumbnail,
+            thumbnail: {
+                ...workspace?.thumbnail,
+                file: workspace?.thumbnail?.file || michael,
+                color: workspace?.thumbnail?.color || "#ff0000",
+                colors: {
+                    start: workspace?.thumbnail?.colors?.start || "#00d0ff",
+                    end: workspace?.thumbnail?.colors?.end || "#16b88f",
+                }
+            },
             users: workspace?.users,
             owner: workspace?.owner,
         });
@@ -269,6 +277,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                         <label htmlFor="cardColor">Card Color</label>
                         <Tooltip
                             useFocus
+                            noPadding
                             blockContent={false}
                             containerClassName="px-0 py-0"
                             direction="right"
@@ -300,6 +309,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                             <label htmlFor="cardStartColor">Start Color</label>
                             <Tooltip
                                 useFocus
+                                noPadding
                                 blockContent={false}
                                 containerClassName="px-0 py-0"
                                 direction="right"
