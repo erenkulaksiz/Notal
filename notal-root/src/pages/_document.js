@@ -19,7 +19,7 @@ class CriticalCssHead extends Head {
         return allFiles && allFiles.length > 0 ? allFiles.filter(isCss).map(renderCss) : null;
     }
 }
-
+//                <meta property="application-name" name="application-name" content='Notal' />
 const Notal = () => {
     return (
         <Html lang='en'>
@@ -29,7 +29,6 @@ const Notal = () => {
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
                 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet"></link>
                 <meta property="x-author" name="x-author" content="Developed with <3 By Eren Kulaksiz" />
-                <meta property="application-name" name="application-name" content='Notal' />
                 <meta property="apple-mobile-web-app-capable" name="apple-mobile-web-app-capable" content='yes' />
                 <meta property='apple-mobile-web-app-status-bar-style' name="apple-mobile-web-app-status-bar-style" content='default' />
                 <meta property='format-detection' name="format-detection" content='telephone=no' />
@@ -44,7 +43,7 @@ const Notal = () => {
                 <meta property='twitter:creator' name="twitter:creator" content='@erencode' />
                 <meta property="twitter:site" name="twitter:site" content="@notalapp" />
                 <meta property='og:type' name="og:type" content='website' />
-                <meta property='og:site_name' name="og:site_name" content='Notal' />
+                <meta property='og:site_name' name="og:site_name" content='notal.app' />
                 <meta property="theme-color" name="theme-color" content="#292524" />
                 <script
                     async
