@@ -47,7 +47,7 @@ const TabHeader = ({ children, headerClassName }) => {
 
     const BuildTabHeader = BuildComponent({
         name: "Notal UI Tab Header",
-        defaultClasses: "w-full h-10 flex flex-row relative border-2 border-solid dark:border-neutral-700 border-neutral-200 rounded-lg",
+        defaultClasses: "w-full h-10 flex flex-row relative border-2 border-solid dark:border-neutral-800 border-neutral-200 rounded-lg",
         extraClasses: headerClassName
     });
 
@@ -60,7 +60,7 @@ const TabView = ({ children, className }) => {
 
     const BuildTabView = BuildComponent({
         name: "Notal UI Tab View",
-        defaultClasses: "w-full h-full",
+        defaultClasses: "w-full",
         extraClasses: className
     });
 
@@ -69,35 +69,43 @@ const TabView = ({ children, className }) => {
     </div>)
 }
 
-const Tab = ({ children, selected, views, onSelect, id, className, headerClassName }) => {
+const Tab = ({ children, selected, views, onSelect, id, className, headerClassName, headerContainerClassName, }) => {
     const [hover, setHover] = useState(-1);
 
     const BuildTab = BuildComponent({
         name: "Notal UI Tab",
-        defaultClasses: "w-full h-full relative",
+        defaultClasses: "w-full relative",
         extraClasses: className
+    });
+
+    const BuildTabHeaderContainer = BuildComponent({
+        name: "Notal UI Tab Header Container",
+        defaultClasses: "flex",
+        extraClasses: headerContainerClassName,
     })
 
     return (<div className={BuildTab.classes}>
-        <TabHeader headerClassName={headerClassName}>
-            <LayoutGroup id={id}>
-                {views.map((view, index) => <TabButton
-                    className="w-full h-full group relative"
-                    key={index}
-                    selected={selected == index}
-                    setSelected={() => onSelect({ index })}
-                    onClick={() => onSelect({ index })}
-                    onMouseEnter={() => setHover(index)}
-                    onMouseLeave={() => setHover(-1)}
-                    hover={hover == index}
-                    setHover={(i) => setHover(i)}
-                    title={view.title}
-                    aria-label={view.title}
-                >
-                    {view.title}
-                </TabButton>)}
-            </LayoutGroup>
-        </TabHeader>
+        <div className={BuildTabHeaderContainer.classes}>
+            <TabHeader headerClassName={headerClassName}>
+                <LayoutGroup id={id}>
+                    {views.map((view, index) => <TabButton
+                        className="w-full h-full group relative text-sm sm:text-md"
+                        key={index}
+                        selected={selected == index}
+                        setSelected={() => onSelect({ index })}
+                        onClick={() => onSelect({ index })}
+                        onMouseEnter={() => setHover(index)}
+                        onMouseLeave={() => setHover(-1)}
+                        hover={hover == index}
+                        setHover={(i) => setHover(i)}
+                        title={view.title}
+                        aria-label={view.title}
+                    >
+                        {view.title}
+                    </TabButton>)}
+                </LayoutGroup>
+            </TabHeader>
+        </div>
         {children?.map(child => child.props.index == selected && child)}
     </div>)
 }

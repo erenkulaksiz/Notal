@@ -8,7 +8,8 @@ import {
     HomeWorkspaceCard,
     Tooltip,
     Tab,
-    Loading
+    Loading,
+    ColorPicker
 } from "@components";
 import {
     CrossIcon,
@@ -31,6 +32,8 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
     const [tab, setTab] = useState(0);
     const thumbnailRef = useRef();
     const [addWorkspaceOwner, setAddWorkspaceOwner] = useState("");
+
+    const [editErr, setEditErr] = useState({ title: false, desc: false });
 
     useEffect(() => {
         console.log("thumb: ", workspace?.thumbnail);
@@ -66,10 +69,23 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
             users: workspace?.users,
             owner: workspace?.owner,
         });
+        setEditErr({ title: false, desc: false });
         setAddWorkspaceOwner("");
     }
 
     const submit = async () => {
+        if (editWorkspace.title.length < 3) {
+            setEditErr({ ...editErr, title: "Title must be minimum 3 characters long." });
+            return;
+        }
+        if (editWorkspace.title.length > 32) {
+            setEditErr({ ...editErr, title: "Title must be maximum 32 characters long." });
+            return;
+        }
+        if (editWorkspace.desc.length > 96) {
+            setEditErr({ ...editErr, desc: "Description must be maximum 96 characters long." });
+            return;
+        }
         if (editWorkspace.thumbnail.type != "image") {
             if (editWorkspace.thumbnail.type == "singleColor") {
                 onSubmit({
@@ -205,7 +221,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                     workspace={{
                         workspaceVisible: workspace?.workspaceVisible,
                         starred: workspace?.starred,
-                        title: editWorkspace.title,
+                        title: editWorkspace.title || "Enter a title",
                         desc: editWorkspace.desc,
                         thumbnail: editWorkspace.thumbnail,
                         _id: workspace?._id,
@@ -232,6 +248,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                         id="workspaceTitle"
                         maxLength={32}
                     />
+                    {editErr.title != false && <span className="text-red-500">{editErr.title}</span>}
                     <label htmlFor="workspaceTitle">Workspace Description</label>
                     <Input
                         fullWidth
@@ -241,6 +258,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                         id="workspaceDesc"
                         maxLength={96}
                     />
+                    {editErr.desc != false && <span className="text-red-500">{editErr.desc}</span>}
                 </Tab.TabView>
                 <Tab.TabView index={1} className="pt-4 grid grid-cols-1 gap-2">
                     <label htmlFor="thumbnailType">Workspace Thumbnail</label>
@@ -276,97 +294,34 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                     </div>}
                     {editWorkspace?.thumbnail?.type == "singleColor" && <div className="flex flex-col items-start">
                         <label htmlFor="cardColor">Card Color</label>
-                        <Tooltip
-                            useFocus
-                            noPadding
-                            blockContent={false}
-                            containerClassName="px-0 py-0"
-                            direction="right"
-                            content={<div className="flex flex-col relative">
-                                <HexColorPicker color={editWorkspace.thumbnail.color} onChange={(color) => setEditWorkspace({ ...editWorkspace, thumbnail: { ...editWorkspace.thumbnail, color } })} />
-                                <div className="flex flex-row flex-wrap">
-                                    {CardColors.map((color, index) => <button
-                                        key={index}
-                                        className="w-6 h-6 m-1 rounded-lg"
-                                        style={{ backgroundColor: color.code }}
-                                        onClick={() => setEditWorkspace({ ...editWorkspace, thumbnail: { ...editWorkspace.thumbnail, color: color.code } })}
-                                    />)}
-                                </div>
-                            </div>}
-                        >
-                            <input
-                                type="text"
-                                id="cardColor"
-                                value={editWorkspace.thumbnail.color}
-                                className="p-0 w-20 h-7 rounded mr-2"
-                                style={{ backgroundColor: editWorkspace.thumbnail.color || "gray" }}
-                                onChange={(e) => setNewWorkspace({ ...editWorkspace, thumbnail: { ...editWorkspace.thumbnail, color: e.target.value } })}
-                                maxLength={7}
-                            />
-                        </Tooltip>
+                        <ColorPicker
+                            color={editWorkspace?.thumbnail?.color}
+                            onColorChange={(color) => {
+                                setEditWorkspace({ ...editWorkspace, thumbnail: { ...editWorkspace.thumbnail, color } })
+                            }}
+                            id="cardColor"
+                        />
                     </div>}
                     {editWorkspace?.thumbnail?.type == "gradient" && <div className="flex items-center">
                         <div>
                             <label htmlFor="cardStartColor">Start Color</label>
-                            <Tooltip
-                                useFocus
-                                noPadding
-                                blockContent={false}
-                                containerClassName="px-0 py-0"
-                                direction="right"
-                                content={<div className="flex flex-col relative">
-                                    <HexColorPicker color={editWorkspace?.thumbnail?.colors?.start} onChange={(color) => setEditWorkspace({ ...editWorkspace, thumbnail: { ...editWorkspace.thumbnail, colors: { ...editWorkspace.thumbnail.colors, start: color } } })} />
-                                    <div className="flex flex-row flex-wrap">
-                                        {CardColors.map((color, index) => <button
-                                            key={index}
-                                            className="w-6 h-6 m-1 rounded-lg"
-                                            style={{ backgroundColor: color.code }}
-                                            onClick={() => setEditWorkspace({ ...editWorkspace, thumbnail: { ...newWorkspace.thumbnail, colors: { ...editWorkspace.thumbnail.colors, start: color.code } } })}
-                                        />)}
-                                    </div>
-                                </div>}
-                            >
-                                <input
-                                    type="text"
-                                    id="cardStartColor"
-                                    value={editWorkspace?.thumbnail?.colors?.start}
-                                    className="p-0 w-20 h-7 rounded mr-2"
-                                    style={{ backgroundColor: editWorkspace?.thumbnail?.colors?.start || "gray" }}
-                                    onChange={(e) => setEditWorkspace({ ...editWorkspace, thumbnail: { ...editWorkspace.thumbnail, colors: { ...editWorkspace.thumbnail.colors, start: e.target.value } } })}
-                                    maxLength={7}
-                                />
-                            </Tooltip>
+                            <ColorPicker
+                                color={editWorkspace?.thumbnail?.colors?.start}
+                                onColorChange={(color) => {
+                                    setEditWorkspace({ ...editWorkspace, thumbnail: { ...editWorkspace.thumbnail, colors: { ...editWorkspace.thumbnail.colors, start: color } } })
+                                }}
+                                id="cardStartColor"
+                            />
                         </div>
                         <div>
                             <label htmlFor="cardEndColor">End Color</label>
-                            <Tooltip
-                                useFocus
-                                noPadding
-                                blockContent={false}
-                                containerClassName="px-0 py-0"
-                                direction="right"
-                                content={<div className="flex flex-col relative">
-                                    <HexColorPicker color={editWorkspace?.thumbnail?.colors?.end} onChange={(color) => setEditWorkspace({ ...editWorkspace, thumbnail: { ...editWorkspace.thumbnail, colors: { ...editWorkspace.thumbnail.colors, end: color } } })} />
-                                    <div className="flex flex-row flex-wrap">
-                                        {CardColors.map((color, index) => <button
-                                            key={index}
-                                            className="w-6 h-6 m-1 rounded-lg"
-                                            style={{ backgroundColor: color.code }}
-                                            onClick={() => setEditWorkspace({ ...editWorkspace, thumbnail: { ...editWorkspace.thumbnail, colors: { ...editWorkspace.thumbnail.colors, end: color.code } } })}
-                                        />)}
-                                    </div>
-                                </div>}
-                            >
-                                <input
-                                    type="text"
-                                    id="cardEndColor"
-                                    value={editWorkspace?.thumbnail?.colors?.end}
-                                    className="p-0 w-20 h-7 rounded mr-2"
-                                    style={{ backgroundColor: editWorkspace?.thumbnail?.colors?.end || "gray" }}
-                                    onChange={(e) => setEditWorkspace({ ...editWorkspace, thumbnail: { ...editWorkspace.thumbnail, colors: { ...editWorkspace.thumbnail.colors, end: e.target.value } } })}
-                                    maxLength={7}
-                                />
-                            </Tooltip>
+                            <ColorPicker
+                                color={editWorkspace?.thumbnail?.colors?.end}
+                                onColorChange={(color) => {
+                                    setEditWorkspace({ ...editWorkspace, thumbnail: { ...editWorkspace.thumbnail, colors: { ...editWorkspace.thumbnail.colors, end: color } } })
+                                }}
+                                id="cardEndColor"
+                            />
                         </div>
                     </div>}
                 </Tab.TabView>
@@ -411,16 +366,17 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
         </Modal.Body>
         <Modal.Footer className="justify-between" animate>
             <Button
-                className="w-[49%] bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500 h-10"
+                className="bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500 h-10"
                 onClick={() => !thumbnailLoading && close()}
+                fullWidth="w-[49%]"
             >
                 <CrossIcon size={24} fill="currentColor" />
                 Cancel
             </Button>
             <Button
-                className="w-[49%] h-10"
                 onClick={() => !thumbnailLoading && submit()}
                 loading={thumbnailLoading}
+                fullWidth="w-[49%]"
             >
                 <CheckIcon size={24} fill="currentColor" />
                 Edit Workspace

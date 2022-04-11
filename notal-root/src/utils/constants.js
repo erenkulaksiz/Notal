@@ -158,23 +158,6 @@ export const HomeRoutes = [{
     Component: ({ props, isValidating }) => <HomeNavWorkspaces {...props} isValidating={isValidating} />
 },
 {
-    id: "bookmarks",
-    name: "Bookmarks",
-    icon: {
-        default: <BookmarkOutlineIcon size={24} fill="currentColor" style={{ transform: "scale(0.8)" }} />,
-        selected: <BookmarkFilledIcon size={24} fill="currentColor" style={{ transform: "scale(0.8)" }} />
-    },
-    Component: (props) => <HomeNavBookmarks {...props} />
-},
-{
-    id: "roadmap",
-    name: "Roadmap",
-    icon: {
-        default: <LayersOutlineIcon size={24} fill="currentColor" style={{ transform: "scale(0.8)" }} />,
-        selected: <LayersIcon size={24} fill="currentColor" style={{ transform: "scale(0.8)" }} />
-    },
-},
-{
     id: "teams",
     name: "Teams",
     icon: {

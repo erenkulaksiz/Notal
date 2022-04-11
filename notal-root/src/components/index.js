@@ -4,6 +4,7 @@ export { default as AddWorkspaceBanner } from "./home/addWorkspaceBanner";
 export { default as AddWorkspaceButton } from "./home/addWorkspaceBtn";
 export { default as Button } from "./button";
 export { default as Checkbox } from "./checkbox";
+export { default as ColorPicker } from "./colorpicker";
 export { default as Dropdown } from "./dropdown";
 export { default as FieldCardIndicator } from "./workspace/fieldCardIndicator";
 export { default as Footer } from "./footer";

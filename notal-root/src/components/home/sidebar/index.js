@@ -23,7 +23,7 @@ const HomeSidebar = ({
     return (<motion.nav
         variants={{
             open: { maxWidth: "10rem", minWidth: "10rem", width: "10rem" },
-            close: { minWidth: "2.5rem", width: "2.5rem" }
+            close: { minWidth: "2.4rem", width: "2.4rem" }
         }}
         initial={navCollapse ? "close" : "open"}
         animate={navCollapse ? "close" : "open"}

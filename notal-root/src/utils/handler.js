@@ -4,7 +4,8 @@ const Handler = {
         workspaceData,
         auth,
         _workspace,
-        props
+        props,
+        NotalUI
     }) => {
         return {
             edit: async ({ title = _workspace?.data?.title, desc = _workspace?.data?.desc, workspaceVisible = _workspace?.data?.workspaceVisible ?? false, thumbnail }) => {
@@ -18,19 +19,45 @@ const Handler = {
                     */
                 await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, title, desc, workspaceVisible, thumbnail } }, false);
                 const data = await auth.workspace.editWorkspace({ id: _workspace?.data?._id, title, desc, workspaceVisible, thumbnail });
-                window.gtag("event", "editWorkspace", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
                 console.log("editData:", data);
+                if (data.success) {
+                    workspaceData.mutate();
+                    window.gtag("event", "editWorkspace", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
+                } else {
+                    NotalUI.Alert.show({
+                        title: "Error",
+                        desc: data?.error
+                    });
+                    workspaceData.mutate();
+                }
             },
             star: async () => {
                 await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, starred: !_workspace?.data?.starred } }, false);
                 const data = await auth.workspace.starWorkspace({ id: _workspace?.data?._id });
                 console.log("starData:", data);
-                window.gtag("event", "starWorkspace", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
+                if (data.success) {
+                    window.gtag("event", "starWorkspace", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
+                } else {
+                    NotalUI.Alert.show({
+                        title: "Error",
+                        desc: data?.error
+                    });
+                    workspaceData.mutate();
+                }
             },
             delete: async (router) => {
                 const data = await auth.workspace.deleteWorkspace({ id: _workspace?.data?._id });
-                if (data.success) router.replace("/home");
-                else if (data?.error) console.error("error on delete workspace: ", data.error);
+
+                if (data.success) {
+                    router.replace("/home");
+                } else {
+                    console.error("error on delete workspace: ", data.error);
+                    NotalUI.Alert.show({
+                        title: "Error",
+                        desc: data?.error
+                    });
+                    workspaceData.mutate();
+                }
             },
             field: {
                 add: async ({ title, sortBy }) => {
@@ -54,9 +81,17 @@ const Handler = {
                         }
                     }, false)
                     const data = await auth.workspace.field.addField({ title, id: _workspace?.data?._id, sortBy });
-                    workspaceData.mutate(); // Refresh data in order to get new ID's
                     console.log("addField data: ", data);
-                    window.gtag("event", "addField", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
+                    if (data?.success) {
+                        workspaceData.mutate(); // Refresh data in order to get new ID's
+                        window.gtag("event", "addField", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
+                    } else {
+                        NotalUI.Alert.show({
+                            title: "Error",
+                            desc: data?.error
+                        });
+                        workspaceData.mutate();
+                    }
                 },
                 edit: async ({ fieldId, title }) => {
                     const currFields = _workspace?.data?.fields || [];
@@ -67,8 +102,12 @@ const Handler = {
 
                     const data = await auth.workspace.field.editField({ field: currFields[fieldIndex], workspaceId: _workspace?.data?._id });
 
-                    if (data?.error) {
+                    if (!data?.success) {
                         console.error("error on edit field: ", data.error);
+                        NotalUI.Alert.show({
+                            title: "Error",
+                            desc: data?.error,
+                        });
                     }
                 },
                 delete: async ({ id }) => {
@@ -78,6 +117,13 @@ const Handler = {
                     const data = await auth.workspace.field.removeField({ id, workspaceId: _workspace?.data?._id });
                     console.log("deleteField data: ", data);
                     window.gtag("event", "deleteField", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
+                    if (!data?.success) {
+                        NotalUI.Alert.show({
+                            title: "Error",
+                            desc: "Couldn't perform the action you want. Please check the console and contact via erenkulaksz@gmail.com"
+                        });
+                        workspaceData.mutate();
+                    }
                 },
                 collapse: async ({ id }) => {
                     const newFields = _workspace?.data?.fields;
@@ -88,7 +134,7 @@ const Handler = {
                         newFields[fieldIndex]["collapsed"] = true;
                     }
                     await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: newFields } }, false);
-                    await auth.workspace.field.editField({
+                    const data = await auth.workspace.field.editField({
                         id,
                         field: {
                             _id: newFields[fieldIndex]?._id,
@@ -98,6 +144,13 @@ const Handler = {
                         },
                         workspaceId: _workspace?.data?._id,
                     });
+                    if (!data?.success) {
+                        NotalUI.Alert.show({
+                            title: "Error",
+                            desc: "Couldn't perform the action you want. Please check the console and contact via erenkulaksz@gmail.com"
+                        });
+                        workspaceData.mutate();
+                    }
                 }
             },
             card: {
@@ -120,11 +173,16 @@ const Handler = {
                         id: fieldId, workspaceId: _workspace?.data?._id, title, desc, color, tag
                     });
                     console.log("addCardToField data: ", data);
-                    workspaceData.mutate();
-                    if (data.success != true) {
+                    if (data?.success) {
+                        workspaceData.mutate();
+                        window.gtag("event", "addCardToField", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
+                    } else {
+                        NotalUI.Alert.show({
+                            title: "Error",
+                            desc: "Couldn't perform the action you want. Please check the console and contact via erenkulaksz@gmail.com"
+                        });
                         console.log("add card error: ", data?.error);
                     }
-                    window.gtag("event", "addCardToField", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
                 },
                 delete: async ({ id, fieldId }) => {
                     const newFields = _workspace?.data?.fields;
@@ -133,8 +191,13 @@ const Handler = {
                     await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: newFields } }, false);
                     const data = await auth.workspace.field.removeCard({ id, fieldId, workspaceId: _workspace?.data?._id });
                     console.log("removeCard data: ", data);
-                    if (data.success != true) {
+                    if (!data.success) {
+                        NotalUI.Alert.show({
+                            title: "Error",
+                            desc: "Couldn't perform the action you want. Please check the console and contact via erenkulaksz@gmail.com"
+                        });
                         console.log("delete card error: ", data?.error);
+                        workspaceData.mutate();
                     }
                 },
             }
@@ -177,8 +240,13 @@ const Handler = {
                     const res = await auth.workspace.createWorkspace({ title, desc, starred, workspaceVisible, thumbnail });
                     if (res.success == true) {
                         workspacesData.mutate(); // get refreshed workspaces
-                    } else if (res.success = false) {
+                    } else if (res.success == false) {
                         console.log("RES ERR create workspace -> ", res);
+                        NotalUI.Alert.show({
+                            title: "Error",
+                            desc: res?.error
+                        });
+                        workspacesData.mutate();
                     }
                 },
                 delete: async ({ id }) => {

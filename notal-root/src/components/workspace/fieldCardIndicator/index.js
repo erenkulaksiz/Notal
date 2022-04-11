@@ -3,7 +3,7 @@ const FieldCardIndicator = ({ cardCount }) => {
         return <div />
     }
 
-    return (<div className="shadow flex items-center justify-center w-8 h-8 p-2 text-lg font-bold bg-white dark:bg-neutral-900 rounded-lg">
+    return (<div className="flex items-center justify-center w-8 h-8 p-2 text-lg font-bold bg-white dark:bg-neutral-800 border-2 dark:border-neutral-800 rounded-lg">
         {cardCount}
     </div>)
 }

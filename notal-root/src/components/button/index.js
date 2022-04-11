@@ -43,6 +43,7 @@ const Button = ({
         extraClasses: className,
         conditionalClasses: [
             {
+                default: fullWidth,
                 false: "w-auto",
                 true: "w-full"
             },

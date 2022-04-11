@@ -21,7 +21,7 @@ const checkBearer = async (bearer) => {
     if (typeof bearerToken == "undefined") return false;
     try {
         const decodedToken = await admin.auth().verifyIdToken(bearerToken);
-        if (typeof decodedToken == "undefined") return false;
+        if (typeof decodedToken == "undefined" || !decodedToken) return false;
         return decodedToken;
     } catch (error) {
         console.log("verifyIdToken Error CheckToken: ", error);
@@ -36,7 +36,8 @@ export default async function handler(req, res) {
     }
 
     const accept = (data = {}, status = 200) => {
-        return res.status(status).send({ success: true, data });
+        if (data) return res.status(status).send({ success: true, data });
+        return res.status(status).send({ success: true });
     }
 
     if (req.method !== 'POST') {
@@ -61,6 +62,14 @@ export default async function handler(req, res) {
             if (desc?.length > 96) {
                 return reject("desc-maxlength");
             }
+            if (title?.length < 3) {
+                return reject("title-minlength");
+            }
+            if (thumbnail?.type == "singleColor" && thumbnail?.color.length > 7) {
+                return reject("invalid-color");
+            } else if (thumbnail?.type == "gradient" && (thumbnail?.colors?.start?.length > 7 || thumbnail?.colors?.end?.length > 7)) {
+                return reject("invalid-color");
+            }
 
             try {
                 // first check how many workspaces user have
@@ -84,7 +93,7 @@ export default async function handler(req, res) {
                         return;
                     }
                     givenId = id;
-                    // if id exist
+                    // if id doesnt exist
                 }
 
                 console.log("generated ID for workspace: ", givenId, " owner: ", uid);
@@ -119,13 +128,13 @@ export default async function handler(req, res) {
                                 expires: '03-09-2491'
                             });
                             return await workspacesCollection.updateOne({ _id: ObjectId(resId) }, { $set: { thumbnail: { type: "image", file: url[0] } } })
-                                .then(() => { return res.status(200).send({ success: true }); })
+                                .then(() => { return accept() })
                                 .catch(error => { return reject(error) });
                         } else {
-                            return res.status(200).send({ success: true });
+                            return accept();
                         }
                     } else {
-                        return res.status(200).send({ success: true });
+                        return accept();
                     }
                 });
             } catch (error) {
@@ -374,6 +383,21 @@ export default async function handler(req, res) {
         editworkspace: async () => {
             if (!id || !uid) return reject("invalid-params");
 
+            if (title?.length > 32) {
+                return reject("title-maxlength");
+            }
+            if (desc?.length > 96) {
+                return reject("desc-maxlength");
+            }
+            if (title?.length < 3) {
+                return reject("title-minlength");
+            }
+            if (thumbnail?.type == "singleColor" && thumbnail?.color.length > 7) {
+                return reject("invalid-color");
+            } else if (thumbnail?.type == "gradient" && (thumbnail?.colors?.start?.length > 7 || thumbnail?.colors?.end?.length > 7)) {
+                return reject("invalid-color");
+            }
+
             try {
                 if (thumbnail?.type != "image") {
                     await workspacesCollection.updateOne({ "_id": ObjectId(id) }, {
@@ -433,6 +457,7 @@ export default async function handler(req, res) {
             if (!id || !uid || !sortBy) return reject("invalid-params");
 
             if (title.length > 28) return reject("title-maxlength");
+            if (title.length < 2) return reject("title-minlength");
 
             try {
                 const bearer = req.headers['authorization'];
@@ -502,8 +527,8 @@ export default async function handler(req, res) {
         addcard: async () => {
             // id: field id
             if (!id || !uid || !workspaceId || !title) return reject("invalid-params");
-            if (color && color.length > 7) return reject("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
-            if (thumbnail && thumbnail?.type == "gradient" && (thumbnail?.colors?.start?.length > 7 || thumbnail?.colors?.end?.length > 7)) return reject("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+            if (color && color.length > 7) return reject("https://youtu.be/dQw4w9WgXcQ");
+            if (thumbnail && thumbnail?.type == "gradient" && (thumbnail?.colors?.start?.length > 7 || thumbnail?.colors?.end?.length > 7)) return reject("https://youtu.be/dQw4w9WgXcQ");
             if (title?.length > 40) return reject("title-maxlength");
             if (desc?.length > 356) return reject("desc-maxlength");
 
@@ -531,11 +556,8 @@ export default async function handler(req, res) {
                             }
                         }
                     }, (error) => {
-                        if (!error) {
-                            return accept();
-                        } else {
-                            return reject(error);
-                        }
+                        if (error) return reject(error);
+                        return accept();
                     }
                 )
             } else {
@@ -563,6 +585,8 @@ export default async function handler(req, res) {
         },
         editfield: async () => {
             if (!uid || !workspaceId || !field) return reject("invalid-params");
+
+            if (field && field?.title?.length < 3) return reject("field-title-min");
 
             try {
                 await workspacesCollection.updateOne(

@@ -7,7 +7,8 @@ import {
     WorkspaceFieldCard,
     Tooltip,
     Checkbox,
-    Tab
+    Tab,
+    ColorPicker
 } from "@components";
 import {
     AddIcon,
@@ -74,6 +75,7 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
                 id="workspaceTab"
                 views={[
                     { title: "Card", id: "card" },
+                    { title: "Tag", id: "Tag" },
                     /*{ title: "Subtasks", id: "subtasks" },
                     { title: "Image", id: "image" },
                     { title: "Notes", id: "notes" },
@@ -105,39 +107,14 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
                     />
                     <label htmlFor="cardColor">Card Color</label>
                     <div className="flex items-center">
-                        {useColor && <Tooltip
-                            useFocus
-                            noPadding
-                            blockContent={false}
-                            containerClassName="px-0"
-                            direction="right"
-                            content={<div className="flex flex-col relative">
-                                <HexColorPicker color={addCard.color} onChange={(color) => setAddCard({ ...addCard, color })} />
-                                <div className="flex flex-row flex-wrap">
-                                    {CardColors.map((color, index) => <button
-                                        key={index}
-                                        className="w-6 h-6 m-1 rounded-lg"
-                                        style={{ backgroundColor: color.code }}
-                                        onClick={() => setAddCard({ ...addCard, color: color.code })}
-                                    />)}
-                                </div>
-                            </div>}
-                        >
-                            <input
-                                type="text"
-                                id="cardColor"
-                                value={addCard.color}
-                                className="p-0 w-20 h-7 rounded mr-2"
-                                style={{ backgroundColor: addCard.color || "gray" }}
-                                onChange={(e) => {
-                                    setAddCard({ ...addCard, color: e.target.value });
-                                    if (e.target.value == "") {
-                                        setUseColor(false);
-                                    }
-                                }}
-                                maxLength={7}
-                            />
-                        </Tooltip>}
+                        {useColor && <ColorPicker
+                            color={addCard.color}
+                            onColorChange={(color) => {
+                                if (color?.length == 0) setUseColor(false);
+                                setAddCard({ ...addCard, color });
+                            }}
+                            id="cardColor"
+                        />}
                         <Checkbox
                             id="useCardColor"
                             value={!useColor}
@@ -149,7 +126,7 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
                     {addCardErrors.color != false && <span className="text-red-500">{addCardErrors.color}</span>}
                 </Tab.TabView>
                 <Tab.TabView index={1} className="pt-4 grid grid-cols-1 gap-2">
-                    sdfds
+                    <label>Card Tag</label>
                 </Tab.TabView>
                 <Tab.TabView index={2} className="pt-4 grid grid-cols-1 gap-2">
                     sdfds
@@ -167,6 +144,7 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
                 className="w-[49%] h-10"
                 light="bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500"
                 onClick={close}
+                fullWidth="w-[49%]"
             >
                 <CrossIcon size={24} fill="currentColor" />
                 Cancel
@@ -174,6 +152,7 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
             <Button
                 className="w-[49%] h-10"
                 onClick={submit}
+                fullWidth="w-[49%]"
             >
                 <CheckIcon size={24} fill="currentColor" />
                 Add Card

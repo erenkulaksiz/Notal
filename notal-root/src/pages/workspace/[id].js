@@ -28,13 +28,29 @@ import {
     AddCardModal,
     WorkspaceSettingsModal,
     Button,
-    EditFieldModal
+    EditFieldModal,
+    Tab
 } from "@components";
 
 import { fetchWorkspace } from "@utils/fetcher";
 import BuildComponent from "@utils/buildComponent";
 import useNotalUI from "@hooks/notalui";
 import Handler from "@utils/handler";
+
+const WorkspaceTabs = [
+    {
+        name: "Kanban Board",
+        id: "kanban"
+    },
+    {
+        name: "Roadmap",
+        id: "roadmap"
+    },
+    {
+        name: "Bookmarks",
+        id: "bookmarks"
+    }
+];
 
 const Workspace = (props) => {
     const NotalUI = useNotalUI();
@@ -61,6 +77,8 @@ const Workspace = (props) => {
     const [_workspace, _setWorkspace] = useState({});
     const [_workspaceValidating, _setWorkspaceValidating] = useState(true);
 
+    const [tab, setTab] = useState(0);
+
     const isOwner = (_workspace?.data ? (_workspace?.data?.owner == props?.validate?.uid) : false);
     const notFound = (_workspace?.error == "not-found" || _workspace?.error == "invalid-params" || _workspace?.error == "user-workspace-private")
 
@@ -68,6 +86,24 @@ const Workspace = (props) => {
     useEffect(() => {
         _setWorkspaceValidating(workspaceData.isValidating);
     }, [workspaceData.isValidating]);
+
+    useEffect(() => {
+        if (router.query.r) {
+            // r route exist, check if its inside workspacetabs
+            const routeIndex = WorkspaceTabs.findIndex(el => el.id == router.query.r);
+            if (routeIndex != -1) {
+                setTab(routeIndex);
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        if (tab == 0) {
+            router.push("/workspace/" + id, undefined, { shallow: true });
+        } else {
+            router.push("/workspace/" + id + "?r=" + WorkspaceTabs[tab].id, undefined, { shallow: true });
+        }
+    }, [tab]);
 
     useEffect(() => {
         console.log("workspace props: ", props);
@@ -107,7 +143,7 @@ const Workspace = (props) => {
 
     const BuildWorkspaceContainer = BuildComponent({
         name: "Workspace Container",
-        defaultClasses: "relative flex flex-1 flex-row overflow-y-auto pt-1 pb-2 pl-2 overflow-x-visible",
+        defaultClasses: "relative flex flex-1 flex-row overflow-y-auto overflow-x-visible",
     });
 
     return (<div className="mx-auto h-full flex flex-col transition-colors duration-100">
@@ -141,7 +177,7 @@ const Workspace = (props) => {
                 workspaceStarred={_workspace?.data?.starred}
                 workspaceVisible={_workspace?.data?.workspaceVisible}
                 workspaceUsers={_workspace?.data?.users}
-                onStarred={() => Handler.workspace({ workspaceData, auth, _workspace, props }).star()}
+                onStarred={() => Handler.workspace({ workspaceData, auth, _workspace, props, NotalUI }).star()}
                 onSettings={() => setSettingsModal(true)}
                 onDelete={() => {
                     NotalUI.Alert.show({
@@ -160,7 +196,7 @@ const Workspace = (props) => {
                             </Button>,
                             <Button
                                 onClick={() => {
-                                    Handler.workspace({ workspaceData, auth, _workspace, props }).delete(router);
+                                    Handler.workspace({ workspaceData, auth, _workspace, props, NotalUI }).delete(router);
                                     NotalUI.Alert.close();
                                 }}
                                 key={2}
@@ -175,7 +211,7 @@ const Workspace = (props) => {
                 // refactor onVisible.
                 onVisible={() => {
                     //handle.editWorkspace({ workspaceVisible: _workspace?.data?.workspaceVisible ? !_workspace?.data?.workspaceVisible : true, thumbnail: _workspace?.data?.thumbnail })
-                    Handler.workspace({ workspaceData, auth, _workspace, props })
+                    Handler.workspace({ workspaceData, auth, _workspace, props, NotalUI })
                         .edit({
                             workspaceVisible: _workspace?.data?.workspaceVisible ? !_workspace?.data?.workspaceVisible : true,
                             thumbnail: _workspace?.data?.thumbnail
@@ -184,24 +220,46 @@ const Workspace = (props) => {
                 onAddField={() => setAddFieldModal({ visible: true, workspaceTitle: _workspace?.data?.title })}
             />}
             <div className={BuildWorkspaceContainer.classes}>
-                {loadingWorkspace && [1, 2, 3, 4].map((item) => (
-                    <WorkspaceField skeleton key={item} /> // show skeleton loaders
-                ))}
-                {!loadingWorkspace && _workspace?.data?.fields?.map((field) => (
-                    <WorkspaceField
-                        field={field}
-                        key={field._id}
-                        onDelete={() => Handler.workspace({ workspaceData, auth, _workspace, props }).field.delete({ id: field._id })}
-                        onAddCard={() => setAddCardModal({ ...addCardModal, visible: true, fieldId: field._id, fieldTitle: field.title })}
-                        onDeleteCard={({ id }) => Handler.workspace({ workspaceData, auth, _workspace, props }).card.delete({ id, fieldId: field._id })}
-                        onCollapse={() => Handler.workspace({ workspaceData, auth, _workspace, props }).field.collapse({ id: field._id })}
-                        onSettings={() => setEditField({ ...editField, visible: true, title: field?.title, fieldId: field._id })}
-                        isOwner={isOwner}
-                        workspaceUsers={_workspace?.data?.users}
-                    />
-                ))}
-                {(!loadingWorkspace && !notFound && !_workspaceValidating && (!_workspace?.data?.fields || _workspace?.data?.fields?.length == 0))
-                    && <WorkspaceAddFieldBanner />}
+                <Tab
+                    selected={tab}
+                    onSelect={({ index }) => setTab(index)}
+                    id="workspaceIdTab"
+                    views={WorkspaceTabs.map(el => { return { ...el, title: el.name } })}
+                    headerClassName="dark:bg-transparent bg-white sm:w-1/2 w-full"
+                    className="flex-1 flex flex-col"
+                    headerContainerClassName="pl-2 pt-2 pr-2"
+                >
+                    <Tab.TabView index={0} className="relative flex flex-1 flex-row overflow-y-auto pt-2 pl-2 pb-1 overflow-x-visible">
+                        {loadingWorkspace && [1, 2, 3, 4].map((item) => (
+                            <WorkspaceField skeleton key={item} /> // show skeleton loaders
+                        ))}
+                        {!loadingWorkspace && _workspace?.data?.fields?.map((field) => (
+                            <WorkspaceField
+                                field={field}
+                                key={field._id}
+                                onDelete={() => Handler.workspace({ workspaceData, auth, _workspace, props, NotalUI }).field.delete({ id: field._id })}
+                                onAddCard={() => setAddCardModal({ ...addCardModal, visible: true, fieldId: field._id, fieldTitle: field.title })}
+                                onDeleteCard={({ id }) => Handler.workspace({ workspaceData, auth, _workspace, props, NotalUI }).card.delete({ id, fieldId: field._id })}
+                                onCollapse={() => Handler.workspace({ workspaceData, auth, _workspace, props, NotalUI }).field.collapse({ id: field._id })}
+                                onSettings={() => setEditField({ ...editField, visible: true, title: field?.title, fieldId: field._id })}
+                                isOwner={isOwner}
+                                workspaceUsers={_workspace?.data?.users}
+                            />
+                        ))}
+                        {(
+                            !loadingWorkspace
+                            && !notFound
+                            && !_workspaceValidating
+                            && (!_workspace?.data?.fields || _workspace?.data?.fields?.length == 0)
+                        ) && <WorkspaceAddFieldBanner />}
+                    </Tab.TabView>
+                    <Tab.TabView index={1} className="p-3 pt-2">
+                        tabview!!
+                    </Tab.TabView>
+                    <Tab.TabView index={2} className="p-3 pt-2">
+                        tabview!!
+                    </Tab.TabView>
+                </Tab>
             </div>
             {notFound && <WorkspaceNotFound />}
         </div>
@@ -210,7 +268,7 @@ const Workspace = (props) => {
             title={editField.title}
             onClose={() => setEditField({ ...editField, visible: false })}
             onEdit={({ title }) => {
-                Handler.workspace({ workspaceData, auth, _workspace, props }).field.edit({ title, fieldId: editField.fieldId });
+                Handler.workspace({ workspaceData, auth, _workspace, props, NotalUI }).field.edit({ title, fieldId: editField.fieldId });
                 setEditField({ ...editField, visible: false });
             }}
         />
@@ -219,7 +277,7 @@ const Workspace = (props) => {
             workspace={_workspace?.data}
             onClose={() => setSettingsModal(false)}
             onSubmit={({ title, desc, thumbnail }) => {
-                Handler.workspace({ workspaceData, auth, _workspace, props }).edit({ title, desc, thumbnail });
+                Handler.workspace({ workspaceData, auth, _workspace, props, NotalUI }).edit({ title, desc, thumbnail });
                 setSettingsModal(false);
             }}
             onUserChange={() => {
@@ -232,7 +290,7 @@ const Workspace = (props) => {
             fieldTitle={addCardModal.fieldTitle}
             onClose={() => setAddCardModal({ ...addCardModal, visible: false })}
             onAdd={({ title, desc, color, tag }) => {
-                Handler.workspace({ workspaceData, auth, _workspace, props }).card.add({ title, desc, color, tag, fieldId: addCardModal.fieldId });
+                Handler.workspace({ workspaceData, auth, _workspace, props, NotalUI }).card.add({ title, desc, color, tag, fieldId: addCardModal.fieldId });
                 setAddCardModal({ ...addCardModal, visible: false });
             }}
         />
@@ -241,7 +299,7 @@ const Workspace = (props) => {
             workspaceTitle={addFieldModal.workspaceTitle}
             onClose={() => setAddFieldModal({ ...addFieldModal, visible: false })}
             onAdd={({ title }) => {
-                Handler.workspace({ workspaceData, auth, _workspace, props }).field.add({ title, sortBy: "index" });
+                Handler.workspace({ workspaceData, auth, _workspace, props, NotalUI }).field.add({ title, sortBy: "index" });
                 setAddFieldModal({ ...addFieldModal, visible: false });
             }}
         />

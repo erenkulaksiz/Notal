@@ -12,7 +12,8 @@ import {
     Select,
     Tooltip,
     Loading,
-    Tab
+    Tab,
+    ColorPicker
 } from "@components";
 
 import {
@@ -49,6 +50,14 @@ const AddWorkspaceModal = ({ open, onClose, onAdd }) => {
     const submit = async () => {
         if (newWorkspace.title.length < 3) {
             setNewWorkspaceErr({ ...newWorkspaceErr, title: "Title must be minimum 3 characters long." });
+            return;
+        }
+        if (newWorkspace.title.length > 32) {
+            setNewWorkspaceErr({ ...newWorkspaceErr, title: "Title must be maximum 32 characters long." });
+            return;
+        }
+        if (newWorkspace.desc.length > 96) {
+            setNewWorkspaceErr({ ...newWorkspaceErr, desc: "Description must be maximum 96 characters long." });
             return;
         }
         if (newWorkspace.thumbnail.type != "image") {
@@ -165,7 +174,7 @@ const AddWorkspaceModal = ({ open, onClose, onAdd }) => {
                     preview
                     workspace={{
                         workspaceVisible: newWorkspace.workspaceVisible,
-                        title: newWorkspace.title,
+                        title: newWorkspace.title || "Enter a title",
                         desc: newWorkspace.desc,
                         starred: newWorkspace.starred,
                         thumbnail: newWorkspace.thumbnail
@@ -201,6 +210,7 @@ const AddWorkspaceModal = ({ open, onClose, onAdd }) => {
                         id="workspaceDescription"
                         maxLength={96}
                     />
+                    {newWorkspaceErr.desc != false && <span className="text-red-500">{newWorkspaceErr.desc}</span>}
                     <div className="py-1 grid grid-cols-1 gap-2">
                         <div className="flex flex-row items-center">
                             {newWorkspace.starred ? <StarFilledIcon size={24} fill="currentColor" style={{ transform: "scale(0.7)" }} className="-ml-1" /> :
@@ -259,97 +269,34 @@ const AddWorkspaceModal = ({ open, onClose, onAdd }) => {
                     </div>}
                     {newWorkspace?.thumbnail?.type == "singleColor" && <div className="flex flex-col items-start">
                         <label htmlFor="cardColor">Workspace Color</label>
-                        <Tooltip
-                            useFocus
-                            noPadding
-                            blockContent={false}
-                            containerClassName="px-0 py-0"
-                            direction="right"
-                            content={<div className="flex flex-col relative">
-                                <HexColorPicker color={newWorkspace.thumbnail.color} onChange={(color) => setNewWorkspace({ ...newWorkspace, thumbnail: { ...newWorkspace.thumbnail, color } })} />
-                                <div className="flex flex-row flex-wrap">
-                                    {CardColors.map((color, index) => <button
-                                        key={index}
-                                        className="w-6 h-6 m-1 rounded-lg"
-                                        style={{ backgroundColor: color.code }}
-                                        onClick={() => setNewWorkspace({ ...newWorkspace, thumbnail: { ...newWorkspace.thumbnail, color: color.code } })}
-                                    />)}
-                                </div>
-                            </div>}
-                        >
-                            <input
-                                type="text"
-                                id="cardColor"
-                                value={newWorkspace.thumbnail.color}
-                                className="p-0 w-20 h-7 rounded mr-2"
-                                style={{ backgroundColor: newWorkspace.thumbnail.color || "gray" }}
-                                onChange={(e) => setAddCard({ ...newWorkspace, thumbnail: { ...newWorkspace.thumbnail, color: e.target.value } })}
-                                maxLength={7}
-                            />
-                        </Tooltip>
+                        <ColorPicker
+                            id="cardColor"
+                            color={newWorkspace?.thumbnail?.color}
+                            onColorChange={(color) => {
+                                setNewWorkspace({ ...newWorkspace, thumbnail: { ...newWorkspace.thumbnail, color } })
+                            }}
+                        />
                     </div>}
                     {newWorkspace?.thumbnail?.type == "gradient" && <div className="flex items-center">
                         <div>
                             <label htmlFor="cardStartColor">Start Color</label>
-                            <Tooltip
-                                useFocus
-                                noPadding
-                                blockContent={false}
-                                containerClassName="px-0 py-0"
-                                direction="right"
-                                content={<div className="flex flex-col relative">
-                                    <HexColorPicker color={newWorkspace?.thumbnail?.colors?.start} onChange={(color) => setNewWorkspace({ ...newWorkspace, thumbnail: { ...newWorkspace.thumbnail, colors: { ...newWorkspace.thumbnail.colors, start: color } } })} />
-                                    <div className="flex flex-row flex-wrap">
-                                        {CardColors.map((color, index) => <button
-                                            key={index}
-                                            className="w-6 h-6 m-1 rounded-lg"
-                                            style={{ backgroundColor: color.code }}
-                                            onClick={() => setNewWorkspace({ ...newWorkspace, thumbnail: { ...newWorkspace.thumbnail, colors: { ...newWorkspace.thumbnail.colors, start: color.code } } })}
-                                        />)}
-                                    </div>
-                                </div>}
-                            >
-                                <input
-                                    type="text"
-                                    id="cardStartColor"
-                                    value={newWorkspace?.thumbnail?.colors?.start}
-                                    className="p-0 w-20 h-7 rounded mr-2"
-                                    style={{ backgroundColor: newWorkspace?.thumbnail?.colors?.start || "gray" }}
-                                    onChange={(e) => setAddCard({ ...newWorkspace, thumbnail: { ...newWorkspace.thumbnail, colors: { ...newWorkspace.thumbnail.colors, start: e.target.value } } })}
-                                    maxLength={7}
-                                />
-                            </Tooltip>
+                            <ColorPicker
+                                id="cardStartColor"
+                                color={newWorkspace?.thumbnail?.colors?.start}
+                                onColorChange={(color) => {
+                                    setNewWorkspace({ ...newWorkspace, thumbnail: { ...newWorkspace.thumbnail, colors: { ...newWorkspace.thumbnail.colors, start: color } } })
+                                }}
+                            />
                         </div>
                         <div>
                             <label htmlFor="cardEndColor">End Color</label>
-                            <Tooltip
-                                useFocus
-                                noPadding
-                                blockContent={false}
-                                containerClassName="px-0 py-0"
-                                direction="right"
-                                content={<div className="flex flex-col relative">
-                                    <HexColorPicker color={newWorkspace?.thumbnail?.colors?.end} onChange={(color) => setNewWorkspace({ ...newWorkspace, thumbnail: { ...newWorkspace.thumbnail, colors: { ...newWorkspace.thumbnail.colors, end: color } } })} />
-                                    <div className="flex flex-row flex-wrap">
-                                        {CardColors.map((color, index) => <button
-                                            key={index}
-                                            className="w-6 h-6 m-1 rounded-lg"
-                                            style={{ backgroundColor: color.code }}
-                                            onClick={() => setNewWorkspace({ ...newWorkspace, thumbnail: { ...newWorkspace.thumbnail, colors: { ...newWorkspace.thumbnail.colors, end: color.code } } })}
-                                        />)}
-                                    </div>
-                                </div>}
-                            >
-                                <input
-                                    type="text"
-                                    id="cardEndColor"
-                                    value={newWorkspace.thumbnail.colors.end}
-                                    className="p-0 w-20 h-7 rounded mr-2"
-                                    style={{ backgroundColor: newWorkspace?.thumbnail?.colors?.end || "gray" }}
-                                    onChange={(e) => setAddCard({ ...newWorkspace, thumbnail: { ...newWorkspace.thumbnail, colors: { ...newWorkspace.thumbnail.colors, end: e.target.value } } })}
-                                    maxLength={7}
-                                />
-                            </Tooltip>
+                            <ColorPicker
+                                id="cardEndColor"
+                                color={newWorkspace?.thumbnail?.colors?.end}
+                                onColorChange={(color) => {
+                                    setNewWorkspace({ ...newWorkspace, thumbnail: { ...newWorkspace.thumbnail, colors: { ...newWorkspace.thumbnail.colors, end: color } } })
+                                }}
+                            />
                         </div>
                     </div>}
                 </Tab.TabView>
@@ -357,17 +304,17 @@ const AddWorkspaceModal = ({ open, onClose, onAdd }) => {
         </Modal.Body>
         <Modal.Footer className="justify-between" animate>
             <Button
-                className="w-[49%] h-10"
                 light="bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500"
                 onClick={() => !thumbnailLoading && close()}
+                fullWidth="w-[49%]"
             >
                 <CrossIcon size={24} fill="currentColor" />
                 Cancel
             </Button>
             <Button
-                className="w-[49%] h-10"
                 onClick={() => !thumbnailLoading && submit()}
                 loading={thumbnailLoading}
+                fullWidth="w-[49%]"
             >
                 <CheckIcon size={24} fill="currentColor" />
                 Add Workspace

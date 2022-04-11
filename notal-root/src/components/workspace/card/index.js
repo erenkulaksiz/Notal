@@ -6,7 +6,7 @@ import { Button, Tooltip } from "@components";
 import BuildComponent from "@utils/buildComponent";
 
 const CardColor = ({ color }) => {
-    return (<div className="w-[.4em] h-full absolute" style={{ backgroundColor: color }} />)
+    return (<div className="w-[.4em] h-full absolute rounded-tl rounded-bl" style={{ backgroundColor: color }} />)
 }
 
 const WorkspaceFieldCard = ({ card, onDelete, onSettings, preview, isOwner, fieldCollapsed, cardOwner }) => {
@@ -18,7 +18,7 @@ const WorkspaceFieldCard = ({ card, onDelete, onSettings, preview, isOwner, fiel
         selectedClasses: [!fieldCollapsed]
     })
 
-    return (<div className="relative w-full group min-h-min flex flex-row dark:bg-neutral-900 bg-white border-solid border-b-2 border-b-neutral-100 dark:border-b-neutral-800">
+    return (<div className="relative w-full rounded group min-h-min flex flex-row dark:bg-neutral-900 bg-white border-solid border-b-2 border-b-neutral-100 dark:border-b-neutral-800">
         <CardColor color={card.color} />
         <div className="flex flex-1 p-2 pl-4 min-w-full">
             <div className="flex flex-col overflow-ellipsis w-full">
@@ -58,7 +58,7 @@ const WorkspaceFieldCard = ({ card, onDelete, onSettings, preview, isOwner, fiel
                     <time dateTime={card.updatedAt}>{`Created ${prettyMilliseconds(Date.now() - card.createdAt, { compact: true })} ago • Updated ${prettyMilliseconds(Date.now() - card.updatedAt, { compact: true })} ago`}</time>
                 </span>}
                 {card.owner && <Link href="/profile/[username]" as={`/profile/${cardOwner?.username || "not-found"}`} passHref>
-                    <a className="items-center flex-row group-hover:flex hidden mt-2">
+                    <a className="items-center flex-row group-hover:flex hidden">
                         <div className="p-[2px] w-8 h-8 rounded-full cursor-pointer bg-gradient-to-tr from-blue-700 to-pink-700">
                             <img
                                 src={cardOwner?.avatar}

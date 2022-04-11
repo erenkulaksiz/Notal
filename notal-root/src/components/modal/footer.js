@@ -7,7 +7,7 @@ const Footer = ({ children, className, animate = false }) => {
 
     const BuildFooter = BuildComponent({
         name: "Modal Footer",
-        defaultClasses: "w-full flex items-center justify-end",
+        defaultClasses: "w-full flex items-center",
         extraClasses: className
     });
 

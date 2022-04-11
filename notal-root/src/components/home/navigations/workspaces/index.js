@@ -148,9 +148,10 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
                         showCloseButton: false,
                         buttons: [
                             <Button
-                                className="w-[49%] bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500 h-10"
+                                className="bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500 h-10"
                                 onClick={() => NotalUI.Alert.close()}
                                 key={1}
+                                fullWidth="w-[49%]"
                             >
                                 <CrossIcon size={24} fill="currentColor" />
                                 Cancel
@@ -161,7 +162,7 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
                                     NotalUI.Alert.close();
                                 }}
                                 key={2}
-                                className="w-[49%]"
+                                fullWidth="w-[49%]"
                             >
                                 <CheckIcon size={24} fill="currentColor" />
                                 Delete

@@ -24,8 +24,8 @@ const AlertModal = ({
     const BuildModalFooter = BuildComponent({
         name: "Modal Footer",
         conditionalClasses: [{
-            default: `flex-1 justify-between flex-row flex`,
-            false: "flex flex-1 items-start justify-end"
+            default: `justify-between flex-row flex w-full`,
+            false: "flex items-end justify-end"
         }],
         selectedClasses: [buttons]
     });
@@ -49,16 +49,16 @@ const AlertModal = ({
                 {desc}
             </h1>}
         </Modal.Body>
-        <Modal.Footer animate={animate}>
+        <Modal.Footer className="justify-end" animate={animate}>
             <div className={BuildModalFooter.classes}>
                 {buttons != false && buttons.map((button, index) => <Fragment key={index}>{button}</Fragment>)}
-                {closeable && showCloseButton && <Button
-                    className="h-10 w-1/2"
-                    onClick={onClose}
-                >
-                    Close
-                </Button>}
             </div>
+            {closeable && showCloseButton && <Button
+                className="h-10 w-1/2"
+                onClick={onClose}
+            >
+                Close
+            </Button>}
         </Modal.Footer>
     </Modal>)
 }
