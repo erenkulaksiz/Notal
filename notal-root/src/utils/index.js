@@ -1,6 +1,7 @@
 import { InfoIcon } from "@icons";
 import Cookie from "js-cookie";
 import { server } from '../config';
+import { Button } from "@components";
 
 /**
  * Get whether render is on clientside or serverside.
