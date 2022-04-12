@@ -46,9 +46,14 @@ export default async function handler(req, res) {
 
     const WORKSPACE_ACTION = req.query.action;
 
-    const body = JSON.parse(req.body);
+    let body = {};
+    try {
+        body = JSON.parse(req.body);
+    } catch (error) {
+        return reject();
+    }
 
-    const { uid, title, desc, starred, id, workspaceId, color, fieldId, sortBy, workspaceVisible, tag, thumbnail, field, username, userId } = body ?? "";
+    const { uid, title, desc, starred, id, workspaceId, color, fieldId, sortBy, workspaceVisible, tag, thumbnail, field, username, userId } = body ?? {};
 
     const workspaceAction = {
         createworkspace: async () => {
@@ -314,9 +319,6 @@ export default async function handler(req, res) {
             // get workspace data not including field and card data
             if (!id) return reject("invalid-params");
 
-            // #TODO: dont use try catch
-            // #TODO: dont send workspace data if workspace is not visible
-
             try {
                 const workspace = await workspacesCollection.findOne({ "id": id });
                 if (!workspace) return reject("not-found");
@@ -343,6 +345,7 @@ export default async function handler(req, res) {
                     id: workspace?.id,
                     starred: workspace?.starred,
                     updatedAt: workspace?.updatedAt,
+                    createdAt: workspace?.createdAt,
                     workspaceVisible: workspace?.workspaceVisible,
 
                 });
@@ -566,6 +569,10 @@ export default async function handler(req, res) {
         },
         removecard: async () => {
             if (!id || !uid || !workspaceId || !fieldId) return reject("invalid-params");
+
+            const decodedToken = await checkBearer(req.headers['authorization']);
+
+            if (!decodedToken) return reject("invalid-token");
 
             try {
                 await workspacesCollection.updateOne({ "_id": ObjectId(workspaceId), "fields._id": ObjectId(fieldId) }, {

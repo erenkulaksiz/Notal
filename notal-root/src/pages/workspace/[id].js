@@ -173,7 +173,10 @@ const Workspace = (props) => {
         />
 
         <div className="relative flex flex-row flex-1 bg-white dark:bg-neutral-900 overflow-y-auto">
-            {(!loadingWorkspace && !_workspace?.error && isOwner) && <WorkspaceSidebar
+            <WorkspaceSidebar
+                error={_workspace?.error}
+                isOwner={isOwner}
+                loadingWorkspace={loadingWorkspace}
                 workspaceStarred={_workspace?.data?.starred}
                 workspaceVisible={_workspace?.data?.workspaceVisible}
                 workspaceUsers={_workspace?.data?.users}
@@ -187,9 +190,10 @@ const Workspace = (props) => {
                         showCloseButton: false,
                         buttons: [
                             <Button
-                                className="w-[49%] bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500 h-10"
                                 onClick={() => NotalUI.Alert.close()}
                                 key={1}
+                                fullWidth="w-[49%]"
+                                light="bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500"
                             >
                                 <CrossIcon size={24} fill="currentColor" />
                                 Cancel
@@ -200,7 +204,7 @@ const Workspace = (props) => {
                                     NotalUI.Alert.close();
                                 }}
                                 key={2}
-                                className="w-[49%]"
+                                fullWidth="w-[49%]"
                             >
                                 <CheckIcon size={24} fill="currentColor" />
                                 Delete
@@ -218,7 +222,7 @@ const Workspace = (props) => {
                         })
                 }}
                 onAddField={() => setAddFieldModal({ visible: true, workspaceTitle: _workspace?.data?.title })}
-            />}
+            />
             <div className={BuildWorkspaceContainer.classes}>
                 <Tab
                     selected={tab}
@@ -227,9 +231,9 @@ const Workspace = (props) => {
                     views={WorkspaceTabs.map(el => { return { ...el, title: el.name } })}
                     headerClassName="dark:bg-transparent bg-white sm:w-1/2 w-full"
                     className="flex-1 flex flex-col"
-                    headerContainerClassName="pl-2 pt-2 pr-2"
+                    headerContainerClassName={loadingWorkspace ? "hidden" : "pl-2 pt-2 pr-2"}
                 >
-                    <Tab.TabView index={0} className="relative flex flex-1 flex-row overflow-y-auto pt-2 pl-2 pb-1 overflow-x-visible">
+                    <Tab.TabView index={0} className="relative flex flex-1 flex-row overflow-y-auto p-2 pr-0 overflow-x-visible">
                         {loadingWorkspace && [1, 2, 3, 4].map((item) => (
                             <WorkspaceField skeleton key={item} /> // show skeleton loaders
                         ))}
@@ -254,10 +258,10 @@ const Workspace = (props) => {
                         ) && <WorkspaceAddFieldBanner />}
                     </Tab.TabView>
                     <Tab.TabView index={1} className="p-3 pt-2">
-                        tabview!!
+                        roadmap
                     </Tab.TabView>
                     <Tab.TabView index={2} className="p-3 pt-2">
-                        tabview!!
+                        bookmarks
                     </Tab.TabView>
                 </Tab>
             </div>

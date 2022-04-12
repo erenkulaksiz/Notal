@@ -209,7 +209,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
     return (<Modal open={open} onClose={() => !thumbnailLoading && close()} className="w-[90%] sm:w-[400px] p-4 px-5">
         <Modal.Title animate>
             <SettingsIcon size={24} fill="currentColor" />
-            <span className="text-lg font-medium">Workspace Settings</span>
+            <span className="text-lg font-medium">{`Workspace ${workspace?.title} Settings`}</span>
         </Modal.Title>
         <Modal.Body className="pb-2 pt-4">
             {thumbnailLoading && <div className="absolute left-0 right-0 bottom-0 top-0 flex items-center justify-center bg-neutral-300/40 dark:bg-neutral-800/40 rounded-xl z-50">
@@ -366,7 +366,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
         </Modal.Body>
         <Modal.Footer className="justify-between" animate>
             <Button
-                className="bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500 h-10"
+                light="bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500 h-10"
                 onClick={() => !thumbnailLoading && close()}
                 fullWidth="w-[49%]"
             >

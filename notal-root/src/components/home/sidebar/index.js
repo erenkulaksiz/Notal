@@ -8,19 +8,35 @@ import {
     HomeRoutes
 } from '@utils/constants';
 import BuildComponent from "@utils/buildComponent";
+import LocalSettings from "@utils/localstorage";
 
 const HomeSidebar = ({
-    navCollapse,
     current,
-    onViewingChange,
-    onCollapse
+    onViewingChange
 }) => {
+    const [navCollapse, setNavCollapse] = useState(undefined);
+
     const BuildSidebar = BuildComponent({
         name: "Home Sidebar Navigation",
         defaultClasses: "flex shadow-xl flex-col bg-white dark:bg-neutral-800 z-50 top-0 sticky",
     })
 
-    return (<motion.nav
+    const onNavCollapse = () => {
+        LocalSettings.set("homeNavCollapsed", !navCollapse);
+        setNavCollapse(!navCollapse);
+    }
+
+    useEffect(() => {
+        const homeNavCollapsed = LocalSettings.get("homeNavCollapsed");
+        if (typeof homeNavCollapsed == "undefined") {
+            LocalSettings.set("homeNavCollapsed", false);
+            setNavCollapse(false);
+        } else {
+            setNavCollapse(JSON.parse(homeNavCollapsed));
+        }
+    }, []);
+
+    return (typeof navCollapse != "undefined" && <motion.nav
         variants={{
             open: { maxWidth: "10rem", minWidth: "10rem", width: "10rem" },
             close: { minWidth: "2.4rem", width: "2.4rem" }
@@ -35,7 +51,7 @@ const HomeSidebar = ({
         <div className="w-full h-10 flex justify-end">
             <button
                 className="absolute -right-3 top-2"
-                onClick={onCollapse}
+                onClick={() => onNavCollapse()}
             >
                 <AnimatePresence initial={false}>
                     <motion.div

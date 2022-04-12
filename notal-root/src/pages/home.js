@@ -20,6 +20,7 @@ import {
 } from '@utils';
 import { HomeRoutes } from '@utils/constants';
 import useNotalUI from '@hooks/notalui';
+import LocalSettings from '@utils/localstorage';
 
 const Home = (props) => {
     const auth = useAuth();
@@ -28,25 +29,8 @@ const Home = (props) => {
 
     const [_workspacesValidating, _setWorkspacesValidating] = useState(true);
 
-    const [navCollapse, setNavCollapse] = useState(undefined);
-
     // View/Filter
     const [homeViewing, setHomeViewing] = useState("workspaces");
-
-    useEffect(() => {
-        const homeNavCollapsed = localStorage.getItem("homeNavCollapsed");
-        if (typeof homeNavCollapsed == "undefined") {
-            localStorage.setItem("homeNavCollapsed", false);
-            setNavCollapse(false);
-        } else {
-            setNavCollapse(JSON.parse(homeNavCollapsed));
-        }
-    }, []);
-
-    const onNavCollapse = () => {
-        localStorage.setItem("homeNavCollapsed", !navCollapse);
-        setNavCollapse(!navCollapse);
-    }
 
     useEffect(() => {
         console.log("home props: ", props);
@@ -80,14 +64,10 @@ const Home = (props) => {
         />
 
         <main className="relative flex flex-1 flex-row bg-white dark:bg-neutral-900 overflow-y-auto overflow-x-hidden">
-            <AnimatePresence initial={false}>
-                {typeof navCollapse != "undefined" && isClient && <HomeSidebar
-                    navCollapse={navCollapse}
-                    current={homeViewing}
-                    onViewingChange={({ nav }) => setHomeViewing(nav.id)}
-                    onCollapse={() => onNavCollapse()}
-                />}
-            </AnimatePresence>
+            {isClient && <HomeSidebar
+                current={homeViewing}
+                onViewingChange={({ nav }) => setHomeViewing(nav.id)}
+            />}
             {HomeRoutes.map((Route) => {
                 if (homeViewing != Route.id) return;
 

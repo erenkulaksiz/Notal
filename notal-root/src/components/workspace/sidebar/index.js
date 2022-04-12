@@ -2,6 +2,17 @@ import Link from "next/link";
 import { WorkspaceSidebarItem, Tooltip } from "@components";
 import { WorkspaceButtons } from "@utils/constants";
 
+const WorkspaceSkeletonSidebar = () => {
+    const SkeletonButton = () => {
+        return (<div className="flex items-center justify-center w-10 h-10 animate-pulse dark:bg-neutral-800 bg-neutral-200 rounded-lg mt-2">
+        </div>)
+    }
+
+    return (<div className="flex flex-col items-center w-14 h-full dark:bg-neutral-800/50 bg-white/50">
+        {WorkspaceButtons.map((el, index) => <SkeletonButton key={index} />)}
+    </div>)
+}
+
 const WorkspaceSidebar = ({
     onStarred,
     onSettings,
@@ -11,7 +22,14 @@ const WorkspaceSidebar = ({
     workspaceStarred,
     workspaceVisible,
     workspaceUsers,
+    loadingWorkspace,
+    error,
+    isOwner
 }) => {
+
+    if (loadingWorkspace) return <WorkspaceSkeletonSidebar />
+    if (error || !isOwner) return null;
+
     const action = {
         favorite: () => onStarred(),
         settings: () => onSettings(),

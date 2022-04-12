@@ -6,15 +6,19 @@ import { CheckIcon, CookieIcon } from "@icons";
 
 import { isClient } from "@utils";
 
+import LocalSettings from "@utils/localstorage";
+
 const AcceptCookies = () => {
     const router = useRouter();
 
     if (!isClient) return null;
-    if (localStorage.getItem("cookies") == "true") return null;
+
+    if (LocalSettings.get("cookies") == true) return null;
 
     const onAccept = () => {
         //Cookies.set('cookies', 'true');
-        localStorage.setItem('cookies', 'true');
+        LocalSettings.set("cookies", true);
+
         setTimeout(() => router.replace(router.asPath), 500);
     }
 

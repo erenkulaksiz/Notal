@@ -35,6 +35,8 @@ export const CheckToken = async ({ token, props, user }) => {
 export const ValidateToken = async ({ token }) => {
     if (!token) return { error: "no-token", success: false }
 
+    console.log("Validating token length: ", token.length);
+
     const data = await fetch(`${server}/api/validate`, {
         'Content-Type': 'application/json',
         method: "POST",
@@ -56,7 +58,7 @@ export const GetWorkspace = async ({ id, token }) => {
     const data = await fetch(`${server}/api/workspace`, {
         'Content-Type': 'application/json',
         method: "POST",
-        headers: { 'Authorization': 'Bearer ' + token },
+        headers: { 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ id, action: "GET_WORKSPACE" }),
     }).then(response => response.json());
 
@@ -67,7 +69,6 @@ export const GetWorkspace = async ({ id, token }) => {
 }
 
 export const GetWorkspaceData = async ({ id, token }) => {
-
     const data = await fetch(`${server}/api/workspace/getworkspacedata`, {
         'Content-Type': 'application/json',
         method: "POST",
@@ -143,11 +144,6 @@ export const WorkboxInit = (NotalUI) => {
             // `event.wasWaitingBeforeRegister` will be false if this is the first time the updated service worker is waiting.
             // When `event.wasWaitingBeforeRegister` is true, a previously updated service worker is still waiting.
             // You may want to customize the UI prompt accordingly.
-            wb.addEventListener('controlling', event => {
-                window.location.reload()
-            });
-            wb.messageSkipWaiting();
-
             NotalUI.Toast.show({
                 title: "An update is available",
                 desc: "A new version of Notal is available. Refresh to use latest version.",
@@ -159,8 +155,11 @@ export const WorkboxInit = (NotalUI) => {
                         <Button
                             className="p-1 px-2 rounded hover:opacity-70"
                             onClick={() => {
-                                router.reload();
                                 NotalUI.Toast.close(index);
+                                wb.addEventListener('controlling', event => {
+                                    window.location.reload()
+                                });
+                                wb.messageSkipWaiting();
                             }}
                             size="sm"
                             light

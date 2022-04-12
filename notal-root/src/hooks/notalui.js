@@ -1,6 +1,118 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { AnimatePresence, AnimateSharedLayout, motion } from "framer-motion";
 
+{/*<Button onClick={() =>
+                NotalUI.Alert.show({
+                    title: "Selam!",
+                    titleIcon: <InfoIcon size={24} fill="currentColor" />,
+                    desc: "ov yee selamlarrrrrselamlarrrrrselamlarrrrrselamlarrrrrselamlarrrrrselamlarrrrrselamlarrrrr",
+                    blur: true
+                })
+            }>
+                modal
+            </Button>
+
+            <Button onClick={() => NotalUI.Toast.show({
+                title: "selam!!",
+                desc: "your process is complete",
+                icon: <CheckIcon size={24} fill="currentColor" />,
+                //timeEnabled: false,
+                className: "bg-green-800 text-white"
+            })}
+            >
+                1
+            </Button>
+
+            <Button
+                onClick={() =>
+                    NotalUI.Toast.show({
+                        title: "An update is available",
+                        desc: "A new version of Notal is available. Refresh to use latest version.",
+                        icon: <InfoIcon size={24} fill="currentColor" />,
+                        className: "dark:bg-yellow-600 bg-yellow-500 text-white",
+                        timeEnabled: false,
+                        buttons: (index) => {
+                            return [
+                                <Button
+                                    className="p-1 px-2 rounded hover:opacity-70"
+                                    onClick={() => {
+                                        router.reload();
+                                        NotalUI.Toast.close(index);
+                                    }}
+                                    size="sm"
+                                    light
+                                >
+                                    Refresh
+                                </Button>,
+                            ]
+                        },
+                    })
+                }
+            >
+                2
+            </Button>
+
+            <Button
+                onClick={() =>
+                    NotalUI.Toast.show({
+                        desc: "Successfully logged in as xxx",
+                        icon: <InfoIcon size={24} fill="currentColor" />,
+                        className: "dark:bg-green-600 bg-green-500 text-white",
+                        time: 3500,
+                    })
+                }
+            >
+                log
+            </Button>
+            
+
+            <Button
+                onClick={() =>
+                    NotalUI.Toast.show({
+                        title: "selamlarrr",
+                        desc: "seaaaaa",
+                        timeEnabled: false,
+                    })}
+            >
+                3
+            </Button>
+
+            <Button
+                onClick={() =>
+                    NotalUI.Alert.show({
+                        title: "selamlarrr",
+                    })}
+            >
+                m2
+            </Button>
+
+            <Button
+                onClick={() => NotalUI.Toast.closeAll()}
+            >
+                close all
+                </Button>*/}
+
+{/* <Button
+                onClick={() =>
+                    NotalUI.Toast.showMultiple([{
+                        title: "Welcome to Notal!",
+                        desc: "I'm building this platform to keep track of your projects simpler way. Please share your feedback with email erenkulaksz@gmail.com",
+                        icon: <SendIcon size={24} fill="currentColor" style={{ transform: "rotate(-36deg) scale(.8)", marginLeft: 2 }} />,
+                        className: "dark:bg-green-600 bg-green-500 text-white max-w-[400px]",
+                        closeable: true,
+                    }, {
+                        desc: `Logged in as sea`,
+                        icon: <InfoIcon size={24} fill="currentColor" />,
+                        className: "dark:bg-green-600 bg-green-500 text-white",
+                        duration: 4500,
+                        timeEnabled: true,
+                        closeable: true,
+                    }])
+                }
+            >
+                log
+            </Button>*/}
+
 import {
     AcceptCookies,
     AlertModal,

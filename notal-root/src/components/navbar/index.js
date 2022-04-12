@@ -31,6 +31,7 @@ import {
     Tooltip
 } from "@components";
 import useAuth from "@hooks/auth";
+import LocalSettings from "@utils/localstorage";
 
 const Navbar = ({
     user,
@@ -49,7 +50,7 @@ const Navbar = ({
     const [navbarCollapse, setNavbarCollapse] = useState(undefined);
 
     const onNavbarCollapse = () => {
-        localStorage.setItem("navbarCollapsed", !navbarCollapse);
+        LocalSettings.set("navbarCollapsed", !navbarCollapse);
         setNavbarCollapse(!navbarCollapse);
     }
 
@@ -63,9 +64,9 @@ const Navbar = ({
     useEffect(() => {
         if (!showCollapse) return setNavbarCollapse(false);
 
-        const navbarCollapsed = localStorage.getItem("navbarCollapsed");
+        const navbarCollapsed = LocalSettings.get("navbarCollapsed");
         if (typeof navbarCollapsed == "undefined") {
-            localStorage.setItem("navbarCollapsed", false);
+            LocalSettings.set("navbarCollapsed", false);
             setNavbarCollapse(false);
         } else {
             setNavbarCollapse(JSON.parse(navbarCollapsed));
