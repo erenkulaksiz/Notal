@@ -41,6 +41,10 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
             setAddCardErrors({ ...addCardErrors, color: "Color length must be between 1 and 7." });
             return;
         }
+        if (addCard.desc.length > 356) {
+            setAddCardErrors({ ...addCardErrors, title: "Card title must be maximum 356 characters long." });
+            return;
+        }
         onAdd({
             title: addCard.title,
             desc: addCard.desc,
@@ -88,7 +92,6 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
                         placeholder="Card Title"
                         onChange={(e) => setAddCard({ ...addCard, title: e.target.value })}
                         value={addCard.title}
-                        autoFocus
                         id="cardTitle"
                         maxLength={40}
                     />

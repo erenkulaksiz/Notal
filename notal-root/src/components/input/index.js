@@ -1,3 +1,4 @@
+import { createElement } from "react";
 import BuildComponent from "@utils/buildComponent";
 
 const Input = ({
@@ -15,6 +16,7 @@ const Input = ({
     id,
     maxLength,
 }) => {
+    const InputElement = textarea ? "textarea" : "input";
 
     const BuildInputContainer = BuildComponent({
         name: "Input Container",
@@ -65,8 +67,7 @@ const Input = ({
 
     return (<div className={BuildInputContainer.classes}>
         {icon && <span className="z-20 absolute left-2 fill-inherit" style={{ transform: "scale(0.8)" }}>{icon}</span>}
-        {textarea && <textarea id={id} value={value} type="text" onChange={onChange} className={BuildInput.classes} placeholder={placeholder} maxLength={maxLength} />}
-        {!textarea && <input id={id} value={value} type="text" autoFocus={autoFocus} onChange={onChange} className={BuildInput.classes} placeholder={placeholder} maxLength={maxLength} />}
+        <InputElement id={id} value={value} type={!textarea && "text"} key={id} autoFocus={autoFocus} onChange={onChange} className={BuildInput.classes} placeholder={placeholder} maxLength={maxLength} />
     </div>)
 }
 

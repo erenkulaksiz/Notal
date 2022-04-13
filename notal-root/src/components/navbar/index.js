@@ -69,7 +69,7 @@ const Navbar = ({
             LocalSettings.set("navbarCollapsed", false);
             setNavbarCollapse(false);
         } else {
-            setNavbarCollapse(JSON.parse(navbarCollapsed));
+            setNavbarCollapse(navbarCollapsed);
         }
     }, []);
 

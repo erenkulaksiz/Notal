@@ -43,7 +43,15 @@ const TabButton = ({ children, selected, hover, onMouseEnter, onMouseLeave, setS
     </button >)
 }
 
-const TabHeader = ({ children, headerClassName }) => {
+const TabHeader = ({ children, headerClassName, loadingWorkspace }) => {
+
+    const TabHeaderSkeleton = () => {
+        return (<div className="w-full h-10 flex flex-row dark:bg-neutral-800 p-2 rounded-lg">
+            {[1, 2, 3].map(item => <div key={item} className="w-[20%] rounded mr-2 dark:bg-neutral-900 animate-pulse h-full"></div>)}
+        </div>)
+    }
+
+    if (loadingWorkspace) return <TabHeaderSkeleton />
 
     const BuildTabHeader = BuildComponent({
         name: "Notal UI Tab Header",
@@ -69,7 +77,17 @@ const TabView = ({ children, className }) => {
     </div>)
 }
 
-const Tab = ({ children, selected, views, onSelect, id, className, headerClassName, headerContainerClassName, }) => {
+const Tab = ({
+    children,
+    selected,
+    views,
+    onSelect,
+    id,
+    className,
+    headerClassName,
+    headerContainerClassName,
+    loadingWorkspace = false,
+}) => {
     const [hover, setHover] = useState(-1);
 
     const BuildTab = BuildComponent({
@@ -86,7 +104,10 @@ const Tab = ({ children, selected, views, onSelect, id, className, headerClassNa
 
     return (<div className={BuildTab.classes}>
         <div className={BuildTabHeaderContainer.classes}>
-            <TabHeader headerClassName={headerClassName}>
+            <TabHeader
+                headerClassName={headerClassName}
+                loadingWorkspace={loadingWorkspace}
+            >
                 <LayoutGroup id={id}>
                     {views.map((view, index) => <TabButton
                         className="w-full h-full group relative text-sm sm:text-md"

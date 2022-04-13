@@ -29,7 +29,8 @@ import {
     WorkspaceSettingsModal,
     Button,
     EditFieldModal,
-    Tab
+    Tab,
+    EditCardModal
 } from "@components";
 
 import { fetchWorkspace } from "@utils/fetcher";
@@ -231,7 +232,8 @@ const Workspace = (props) => {
                     views={WorkspaceTabs.map(el => { return { ...el, title: el.name } })}
                     headerClassName="dark:bg-transparent bg-white sm:w-1/2 w-full"
                     className="flex-1 flex flex-col"
-                    headerContainerClassName={loadingWorkspace ? "hidden" : "pl-2 pt-2 pr-2"}
+                    headerContainerClassName="pl-2 pt-2 pr-2"
+                    loadingWorkspace={loadingWorkspace}
                 >
                     <Tab.TabView index={0} className="relative flex flex-1 flex-row overflow-y-auto p-2 pr-0 overflow-x-visible">
                         {loadingWorkspace && [1, 2, 3, 4].map((item) => (
@@ -243,6 +245,7 @@ const Workspace = (props) => {
                                 key={field._id}
                                 onDelete={() => Handler.workspace({ workspaceData, auth, _workspace, props, NotalUI }).field.delete({ id: field._id })}
                                 onAddCard={() => setAddCardModal({ ...addCardModal, visible: true, fieldId: field._id, fieldTitle: field.title })}
+                                onEditCard={({ card }) => setEditCardModal({ ...editCardModal, visible: true, card, fieldId: field._id })}
                                 onDeleteCard={({ id }) => Handler.workspace({ workspaceData, auth, _workspace, props, NotalUI }).card.delete({ id, fieldId: field._id })}
                                 onCollapse={() => Handler.workspace({ workspaceData, auth, _workspace, props, NotalUI }).field.collapse({ id: field._id })}
                                 onSettings={() => setEditField({ ...editField, visible: true, title: field?.title, fieldId: field._id })}
@@ -267,6 +270,17 @@ const Workspace = (props) => {
             </div>
             {notFound && <WorkspaceNotFound />}
         </div>
+        <EditCardModal
+            open={editCardModal.visible}
+            card={editCardModal.card}
+            onClose={() => setEditCardModal({ ...editCardModal, visible: false })}
+            onEdit={({ title, desc, id }) => {
+                // i think it gives edited card data here...
+                Handler.workspace({ workspaceData, auth, _workspace, props, NotalUI }).card.edit({ id, title, desc, fieldId: editCardModal.fieldId })
+                setEditCardModal({ ...editCardModal, visible: false });
+                //#TODO: finish this
+            }}
+        />
         <EditFieldModal
             open={editField.visible}
             title={editField.title}

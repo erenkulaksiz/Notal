@@ -12,10 +12,20 @@ const LocalSettings = {
         const Local = localStorage.getItem("settings");
         if (typeof Local == "undefined" || !Local) { // set defaults if not exist
             localStorage.setItem("settings", JSON.stringify(DefaultSettings));
+            return DefaultSettings; // return default data
         }
         if (typeof DefaultSettings[item] != "undefined") { // check for valid setting
-            const LocalItem = JSON.parse(Local);
-            return LocalItem[item];
+            try {
+                const LocalItem = JSON.parse(Local);
+                if (typeof LocalItem[item] == "undefined") {
+                    localStorage.setItem("settings", JSON.stringify(DefaultSettings));
+                    return DefaultSettings;
+                }
+                return LocalItem[item];
+            } catch (error) {
+                localStorage.setItem("settings", JSON.stringify(DefaultSettings));
+                return DefaultSettings;
+            }
         }
         return false;
     },
@@ -26,9 +36,13 @@ const LocalSettings = {
             localStorage.setItem("settings", JSON.stringify(DefaultSettings));
         }
         // After applying defaults
-        const NewLocal = JSON.parse(Local);
-        NewLocal[key] = value;
-        localStorage.setItem("settings", JSON.stringify(NewLocal));
+        try {
+            const NewLocal = JSON.parse(Local);
+            NewLocal[key] = value;
+            localStorage.setItem("settings", JSON.stringify(NewLocal));
+        } catch (error) {
+            localStorage.setItem("settings", JSON.stringify(DefaultSettings));
+        }
     }
 }
 

@@ -32,7 +32,7 @@ const HomeSidebar = ({
             LocalSettings.set("homeNavCollapsed", false);
             setNavCollapse(false);
         } else {
-            setNavCollapse(JSON.parse(homeNavCollapsed));
+            setNavCollapse(homeNavCollapsed);
         }
     }, []);
 

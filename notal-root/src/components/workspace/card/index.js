@@ -6,10 +6,18 @@ import { Button, Tooltip } from "@components";
 import BuildComponent from "@utils/buildComponent";
 
 const CardColor = ({ color }) => {
-    return (<div className="w-[.4em] h-full absolute rounded-tl rounded-bl" style={{ backgroundColor: color }} />)
+    return (<div className="flex w-1 rounded-tl rounded-bl" style={{ backgroundColor: color }} />)
 }
 
-const WorkspaceFieldCard = ({ card, onDelete, onSettings, preview, isOwner, fieldCollapsed, cardOwner }) => {
+const WorkspaceFieldCard = ({
+    card,
+    onDelete,
+    onSettings,
+    preview,
+    isOwner,
+    fieldCollapsed,
+    cardOwner,
+}) => {
 
     const BuildTitle = BuildComponent({
         name: "Workspace Field Card Title",
@@ -20,7 +28,7 @@ const WorkspaceFieldCard = ({ card, onDelete, onSettings, preview, isOwner, fiel
 
     return (<div className="relative w-full rounded group min-h-min flex flex-row dark:bg-neutral-900 bg-white border-solid border-b-2 border-b-neutral-100 dark:border-b-neutral-800">
         <CardColor color={card.color} />
-        <div className="flex flex-1 p-2 pl-4 min-w-full">
+        <div className="flex flex-1 p-2 px-3 w-full">
             <div className="flex flex-col overflow-ellipsis w-full">
                 <div className="flex flex-row justify-between items-center">
                     <span className={BuildTitle.classes}>

@@ -124,17 +124,17 @@ export const WorkboxInit = (NotalUI) => {
         // add event listeners to handle any of PWA lifecycle event
         // https://developers.google.com/web/tools/workbox/reference-docs/latest/module-workbox-window.Workbox#events
         wb.addEventListener('installed', event => {
-            console.log(`Event ${event.type} is triggered.`)
+            //console.log(`Event ${event.type} is triggered.`)
             console.log(event)
         })
 
         wb.addEventListener('controlling', event => {
-            console.log(`Event ${event.type} is triggered.`)
+            //console.log(`Event ${event.type} is triggered.`)
             console.log(event)
         })
 
         wb.addEventListener('activated', event => {
-            console.log(`Event ${event.type} is triggered.`)
+            //console.log(`Event ${event.type} is triggered.`)
             console.log(event)
         })
 

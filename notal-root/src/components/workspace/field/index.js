@@ -30,6 +30,7 @@ const WorkspaceField = ({
     onDelete,
     onCollapse,
     onAddCard,
+    onEditCard,
     onDeleteCard,
     isOwner,
     workspaceUsers
@@ -128,6 +129,7 @@ const WorkspaceField = ({
                     onDelete={() => onDeleteCard({ id: card._id })}
                     isOwner={isOwner}
                     cardOwner={workspaceUsers.filter(el => el.uid == card.owner)[0]}
+                    onSettings={() => onEditCard({ card })}
                 />
             )}
             {(field?.cards?.length == 0 || !field?.cards)

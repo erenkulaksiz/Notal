@@ -184,6 +184,12 @@ const Handler = {
                         console.log("add card error: ", data?.error);
                     }
                 },
+                edit: async ({ title, desc, id, fieldId }) => {
+                    const newFields = _workspace?.data?.fields;
+                    const cards = newFields[_workspace?.data?.fields?.findIndex(el => el._id == fieldId)].cards;
+                    cards[cards.findIndex(el => el._id == card._id)] = card; // update card completely
+                    await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: newFields } }, false);
+                },
                 delete: async ({ id, fieldId }) => {
                     const newFields = _workspace?.data?.fields;
                     const cardIndex = newFields[_workspace?.data?.fields.findIndex(el => el._id == fieldId)].cards.findIndex(el => el._id == id);

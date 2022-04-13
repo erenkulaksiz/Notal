@@ -44,13 +44,13 @@ const EditFieldModal = ({ open, onClose, title, onEdit }) => {
             <span className="text-lg font-medium ml-1">{`Field ${title} Settings`}</span>
         </Modal.Title>
         <Modal.Body animate className="grid grid-cols-1 gap-2 pb-2">
-            <label htmlFor="editTitle">Field Title</label>
+            <label htmlFor="editFieldTitle">Field Title</label>
             <Input
                 fullWidth
                 placeholder="Field Title"
                 onChange={(e) => setEditField({ ...editField, title: e.target.value })}
                 value={editField.title}
-                id="editTitle"
+                id="editFieldTitle"
                 maxLength={32}
             />
             {/*<label htmlFor="sortBy">Sort By</label>*/}
