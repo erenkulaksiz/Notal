@@ -25,3 +25,11 @@ div#__next > div:first-child {
 div#__next {
   position: relative;
 }
+
+.bg-yellow-600 {
+  background-color: rgb(202 138 4);
+}
+
+.bg-yellow-500 {
+  background-color: rgb(234 179 8);
+}
