@@ -9,13 +9,15 @@ import useAuth from "@hooks/auth";
 import IconWhite from "@public/icon_white.webp";
 import IconGalactic from "@public/icon_galactic.webp";
 
+import { Log } from "@utils";
+
 const LoginModal = ({ open, onClose, onLoginSuccess }) => {
     const auth = useAuth();
     const { resolvedTheme } = useTheme();
     const [oauthError, setOauthError] = useState("");
 
     const onLoginWithGoogle = async () => {
-        console.log("trying to login with google");
+        Log.debug("trying to login with google");
         const login = await auth.login.google();
         if (login?.authError?.errorCode == "auth/account-exists-with-different-credential") {
             setOauthError(`This account exist with different credential. Please try another method.`);
@@ -29,7 +31,7 @@ const LoginModal = ({ open, onClose, onLoginSuccess }) => {
 
     const onLoginWithGithub = async () => {
         const login = await auth.login.github();
-        console.log("github login errors:", login.authError);
+        Log.debug("github login errors:", login.authError);
         if (login?.authError?.errorCode == "auth/account-exists-with-different-credential") {
             setOauthError(`This account exist with different credential. Please try another method.`);
             return;

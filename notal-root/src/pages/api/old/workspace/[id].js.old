@@ -21,14 +21,14 @@ export default async function handler(req, res) {
     if (req.method !== "POST") return reject();
     if (!id) return reject();
 
-    console.log("Getting workspace id: ", id);
+    Log.debug("Getting workspace id: ", id);
 
     const workspace = await workspacesCollection.findOne({ "_id": ObjectId(id) });
 
     if (!workspace) return res.status(400).send({ success: false, error: "not-found" });
 
     if (workspace.workspaceVisible) {
-        console.log("Getting workspace id: ", id);
+        Log.debug("Getting workspace id: ", id);
         const user = await usersCollection.findOne({ "uid": workspace.owner });
         if (!user) return res.status(400).send({
             success: false,
@@ -54,7 +54,7 @@ export default async function handler(req, res) {
         const bearerToken = bearer.split(' ')[1];
         if (typeof bearerToken == "undefined") return reject();
 
-        console.log("Getting workspace id: ", id, " uid:", uid);
+        Log.debug("Getting workspace id: ", id, " uid:", uid);
         return admin.auth().verifyIdToken(bearerToken).then(async (decodedToken) => {
             if (decodedToken.user_id !== uid) return res.status(400).send({ success: false, error: "user-workspace-private" });
 

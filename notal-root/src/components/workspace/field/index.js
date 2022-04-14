@@ -43,7 +43,7 @@ const WorkspaceField = ({
 
     const BuildFieldTitle = BuildComponent({
         name: "Workspace Field",
-        defaultClasses: "p-2 pr-1 rounded-md w-full flex flex-row dark:bg-neutral-900 bg-white pb-2 overflow-visible border-b-2 border-b-neutral-100 dark:border-b-neutral-800",
+        defaultClasses: "p-2 pr-1 rounded-md w-full flex flex-row dark:bg-neutral-900 bg-white pb-2 overflow-visible border-b-2 border-b-neutral-200 dark:border-b-neutral-800",
         conditionalClasses: [{ true: "z-40", false: "z-10" }],
         selectedClasses: [hovered],
     });

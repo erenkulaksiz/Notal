@@ -6,7 +6,13 @@ import { Button, Tooltip } from "@components";
 import BuildComponent from "@utils/buildComponent";
 
 const CardColor = ({ color }) => {
-    return (<div className="flex w-1 rounded-tl rounded-bl" style={{ backgroundColor: color }} />)
+    return (<div className="flex w-[.4em] rounded-tl rounded-bl shadow" style={{ backgroundColor: color }} />)
+}
+
+const CardTag = ({ color, title }) => {
+    return (<div className="p-1 border-2 flex text-xs rounded-lg dark:border-neutral-800 border-neutral-200" style={{ borderColor: color }}>
+        {title}
+    </div>)
 }
 
 const WorkspaceFieldCard = ({
@@ -26,11 +32,14 @@ const WorkspaceFieldCard = ({
         selectedClasses: [!fieldCollapsed]
     })
 
-    return (<div className="relative w-full rounded group min-h-min flex flex-row dark:bg-neutral-900 bg-white border-solid border-b-2 border-b-neutral-100 dark:border-b-neutral-800">
+    return (<div className="relative w-full rounded group min-h-min flex flex-row dark:bg-neutral-900 bg-white border-solid border-b-2 border-b-neutral-200 dark:border-b-neutral-800">
         <CardColor color={card.color} />
         <div className="flex flex-1 p-2 px-3 w-full">
-            <div className="flex flex-col overflow-ellipsis w-full">
-                <div className="flex flex-row justify-between items-center">
+            <div className="flex flex-col items-start overflow-ellipsis w-full">
+                {card?.tags?.length > 0 && !fieldCollapsed && <div className="flex flex-row gap-2 flex-wrap">
+                    {card?.tags?.map((tag, index) => <CardTag key={index} color={tag.color} title={tag.title} />)}
+                </div>}
+                <div className="flex flex-row w-full justify-between items-center">
                     <span className={BuildTitle.classes}>
                         {card.title}
                     </span>
@@ -59,7 +68,7 @@ const WorkspaceFieldCard = ({
                         </div>}
                     </div>
                 </div>
-                {card?.desc && !fieldCollapsed && <span className="dark:text-neutral-300 text-neutral-800 text-sm mt-1 break-words">
+                {card?.desc && !fieldCollapsed && <span className="dark:text-neutral-300 text-neutral-800 w-full text-sm mt-1 break-words">
                     {card.desc}
                 </span>}
                 {card.updatedAt && <span className="text-xs dark:text-neutral-600 text-neutral-400 mt-2 group-hover:flex hidden" title={`Created ${new Date(card.createdAt).getDate()} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][new Date(card.createdAt).getMonth()]}, ${new Date(card.createdAt).getFullYear()} ${new Date(card.createdAt).getHours().toString().padStart(2, '0')}:${new Date(card.createdAt).getMinutes().toString().padStart(2, '0')} • Updated ${new Date(card.updatedAt).getDate()} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][new Date(card.updatedAt).getMonth()]}, ${new Date(card.updatedAt).getFullYear()} ${new Date(card.updatedAt).getHours().toString().padStart(2, '0')}:${new Date(card.updatedAt).getMinutes().toString().padStart(2, '0')}`}>

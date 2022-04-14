@@ -22,6 +22,8 @@ import { HomeRoutes } from '@utils/constants';
 import useNotalUI from '@hooks/notalui';
 import LocalSettings from '@utils/localstorage';
 
+import { Log } from "@utils";
+
 const Home = (props) => {
     const auth = useAuth();
     const router = useRouter();
@@ -33,7 +35,7 @@ const Home = (props) => {
     const [homeViewing, setHomeViewing] = useState("workspaces");
 
     useEffect(() => {
-        console.log("home props: ", props);
+        Log.debug("home props: ", props);
         (async () => {
             const token = await auth.users.getIdToken();
             const res = await CheckToken({ token: token.res, props, user: auth?.authUser });
@@ -64,7 +66,7 @@ const Home = (props) => {
         />
 
         <main className="relative flex flex-1 flex-row bg-white dark:bg-neutral-900 overflow-y-auto overflow-x-hidden">
-            {isClient && <HomeSidebar
+            {isClient && false && <HomeSidebar
                 current={homeViewing}
                 onViewingChange={({ nav }) => setHomeViewing(nav.id)}
             />}
@@ -101,7 +103,7 @@ export async function getServerSideProps(ctx) {
             //GetWorkspaces({ uid: validate?.data?.uid, token: authCookie }),
         ]);
 
-        console.log("validate:", validate?.success, validate?.data?.uid, validate?.error);
+        Log.debug("validate:", validate?.success, validate?.data?.uid, validate?.error);
     }
     return { props: { validate } }
 }

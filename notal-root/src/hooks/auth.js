@@ -11,6 +11,8 @@ import { CheckIcon, InfoIcon, SendIcon } from "@icons";
 import { server } from '../config';
 import useNotalUI from "./notalui";
 
+import { Log } from "@utils";
+
 export default function useAuth() {
     return useContext(authContext);
 }
@@ -76,7 +78,7 @@ export function AuthProvider(props) {
     const login = {
         google: async () => {
             const { error, user } = await AuthService.login.loginWithGoogle();
-            //console.log("user (loginwithgoogle auth.js)", user);
+            //Log.debug("user (loginwithgoogle auth.js)", user);
             setUser(user ?? null);
             setError(error?.code ?? "");
 
@@ -90,8 +92,8 @@ export function AuthProvider(props) {
         },
         github: async () => {
             const { error, user } = await AuthService.login.loginWithGithub();
-            //console.log("loginWithGithub User: ", user);
-            //console.log("loginWithGithub Error: ", error);
+            //Log.debug("loginWithGithub User: ", user);
+            //Log.debug("loginWithGithub Error: ", error);
             setUser(user ?? null);
             setError(error?.code ?? null);
             return { authError: error ?? null, authUser: user ?? null }
@@ -154,7 +156,7 @@ export function AuthProvider(props) {
                 const res = await AuthService.user.getIdToken();
                 return res;
             } catch (error) {
-                //console.log("error with authService.getIdToken", error);
+                //Log.debug("error with authService.getIdToken", error);
                 return { success: false, errorMessage: error }
             }
         },
@@ -196,12 +198,12 @@ export function AuthProvider(props) {
             editField: async ({ workspaceId, field }) => {
                 return await AuthService.workspace.field.editField({ field, workspaceId });
             },
-            editCard: async ({ id, workspaceId, fieldId, title, desc, color }) => {
-                return await AuthService.workspace.card.editCard({ id, workspaceId, fieldId, title, desc, color });
+            editCard: async ({ id, workspaceId, fieldId, title, desc, color, tag }) => {
+                return await AuthService.workspace.card.editCard({ id, workspaceId, fieldId, title, desc, color, tag });
             },
-            addCard: async ({ id, workspaceId, title, desc, color, tag }) => {
+            addCard: async ({ id, workspaceId, title, desc, color, tags }) => {
                 // id as field id
-                return await AuthService.workspace.card.addCard({ id, workspaceId, title, desc, color, tag });
+                return await AuthService.workspace.card.addCard({ id, workspaceId, title, desc, color, tags });
             },
             removeCard: async ({ id, workspaceId, fieldId }) => {
                 return await AuthService.workspace.card.removeCard({ id, workspaceId, fieldId });

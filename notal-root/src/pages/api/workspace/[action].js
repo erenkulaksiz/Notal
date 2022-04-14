@@ -6,6 +6,8 @@ const { customAlphabet } = require('nanoid')
 
 const googleService = JSON.parse(process.env.NEXT_PUBLIC_GOOGLE_SERVICE);
 
+import { Log } from "@utils";
+
 if (!admin.apps.length) {
     admin.initializeApp({
         credential: admin.credential.cert(googleService),
@@ -24,7 +26,7 @@ const checkBearer = async (bearer) => {
         if (typeof decodedToken == "undefined" || !decodedToken) return false;
         return decodedToken;
     } catch (error) {
-        console.log("verifyIdToken Error CheckToken: ", error);
+        Log.debug("verifyIdToken Error CheckToken: ", error);
         return false;
     }
 }
@@ -53,7 +55,7 @@ export default async function handler(req, res) {
         return reject();
     }
 
-    const { uid, title, desc, starred, id, workspaceId, color, fieldId, sortBy, workspaceVisible, tag, thumbnail, field, username, userId } = body ?? {};
+    const { uid, title, desc, starred, id, workspaceId, color, fieldId, sortBy, workspaceVisible, tags, thumbnail, field, username, userId } = body ?? {};
 
     const workspaceAction = {
         createworkspace: async () => {
@@ -101,7 +103,7 @@ export default async function handler(req, res) {
                     // if id doesnt exist
                 }
 
-                console.log("generated ID for workspace: ", givenId, " owner: ", uid);
+                Log.debug("generated ID for workspace: ", givenId, " owner: ", uid);
 
                 return await workspacesCollection.insertOne({
                     title,
@@ -116,8 +118,8 @@ export default async function handler(req, res) {
                     id: givenId,
                 }).then(async (result) => {
                     const resId = result.insertedId;
-                    console.log("updating id: ", resId);
-                    console.log("thumbnail: ", thumbnail);
+                    Log.debug("updating id: ", resId);
+                    Log.debug("thumbnail: ", thumbnail);
 
                     if (thumbnail?.type == "image") {
                         // move from temp to real location
@@ -202,7 +204,7 @@ export default async function handler(req, res) {
             }
         },
         getworkspace: async () => {
-            console.log("!!!getting workspace with id: ", id);
+            Log.debug("!!!getting workspace with id: ", id);
             if (!id) return reject("invalid-params");
 
             try {
@@ -231,10 +233,10 @@ export default async function handler(req, res) {
 
                 if (workspace.workspaceVisible) {
                     const workspaceUsers = workspace.users ?? [];
-                    console.log("users: ", workspaceUsers);
+                    Log.debug("users: ", workspaceUsers);
                     const wUsers = await usersCollection.find({ "uid": { $in: workspaceUsers } }).toArray();
 
-                    console.log("!!!wuser: ", wUsers);
+                    Log.debug("!!!wuser: ", wUsers);
 
                     const newWUsers = wUsers.map(el => {
                         return {
@@ -275,10 +277,10 @@ export default async function handler(req, res) {
                     if (workspace.owner === user.uid || user?.role === "admin") {
                         try {
                             const workspaceUsers = workspace.users ?? [];
-                            console.log("users: ", workspaceUsers);
+                            Log.debug("users: ", workspaceUsers);
                             const wUsers = await usersCollection.find({ "uid": { $in: workspaceUsers } }).toArray();
 
-                            console.log("!!!wuser: ", wUsers);
+                            Log.debug("!!!wuser: ", wUsers);
 
                             const newWUsers = wUsers.map(el => {
                                 return {
@@ -311,7 +313,7 @@ export default async function handler(req, res) {
                     }
                 }
             } catch (error) {
-                console.log("error with workspace fetch: ", new Error(error).message);
+                Log.debug("error with workspace fetch: ", new Error(error).message);
                 res.status(400).send({ success: false, error: "not-found" });
             }
         },
@@ -471,10 +473,10 @@ export default async function handler(req, res) {
                         if (user.uid == decodedToken.user_id) {
 
                             const _workspace = await workspacesCollection.findOne({ "_id": ObjectId(id) });
-                            console.log("workspace: ", _workspace);
+                            Log.debug("workspace: ", _workspace);
                             const _workspaceUsers = _workspace.users ?? [];
 
-                            console.log("workspaceUsers", _workspaceUsers);
+                            Log.debug("workspaceUsers", _workspaceUsers);
 
                             if (_workspaceUsers?.findIndex(el => el == uid) == -1 || _workspaceUsers.length == 0) {
                                 // this user doesnt exist on workspace
@@ -512,7 +514,7 @@ export default async function handler(req, res) {
         },
         removefield: async () => {
             if (!id || !uid || !workspaceId) return reject("invalid-params");
-            console.log("Workspace id: ", workspaceId, " id of field: ", id);
+            Log.debug("Workspace id: ", workspaceId, " id of field: ", id);
 
             try {
                 await workspacesCollection.updateOne({ "_id": ObjectId(workspaceId) }, {
@@ -550,10 +552,7 @@ export default async function handler(req, res) {
                                 color,
                                 createdAt: Date.now(),
                                 updatedAt: Date.now(),
-                                tag: {
-                                    tag: tag.tag,
-                                    tagColor: tag.tagColor,
-                                },
+                                tags,
                                 owner: uid,
                                 _id: ObjectId(),
                             }
@@ -612,9 +611,9 @@ export default async function handler(req, res) {
             }
         },
         editcard: async () => {
-            console.log("editcard", id, uid, workspaceId, title, fieldId);
+            Log.debug("editcard", id, uid, workspaceId, title, desc, color, fieldId);
 
-            if (!id || !uid || !workspaceId || !title || !fieldId) return reject("invalid-params");
+            if (!id || !uid || !workspaceId || !title || !fieldId || !color) return reject("invalid-params");
 
             try {
                 await workspacesCollection.updateOne(
@@ -639,7 +638,7 @@ export default async function handler(req, res) {
             }
         },
         adduser: async () => {
-            console.log("adduser", id, uid, username);
+            Log.debug("adduser", id, uid, username);
 
             if (!id || !uid || !username) return reject("invalid-params");
 
@@ -673,7 +672,7 @@ export default async function handler(req, res) {
             }
         },
         removeuser: async () => {
-            console.log("removeuser", id, uid);
+            Log.debug("removeuser", id, uid);
 
             if (!id || !uid || !userId) {
                 res.status(400).send({ success: false, error: "invalid-params" });

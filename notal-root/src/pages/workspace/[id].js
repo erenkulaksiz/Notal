@@ -38,6 +38,8 @@ import BuildComponent from "@utils/buildComponent";
 import useNotalUI from "@hooks/notalui";
 import Handler from "@utils/handler";
 
+import { Log } from "@utils";
+
 const WorkspaceTabs = [
     {
         name: "Kanban Board",
@@ -107,7 +109,7 @@ const Workspace = (props) => {
     }, [tab]);
 
     useEffect(() => {
-        console.log("workspace props: ", props);
+        Log.debug("workspace props: ", props);
         (async () => {
             const token = await auth.users.getIdToken();
             const res = await CheckToken({ token: token.res, props, user: auth?.authUser });
@@ -119,7 +121,7 @@ const Workspace = (props) => {
 
     useEffect(() => {
         (async () => {
-            console.log("newData: ", workspaceData?.data?.data);
+            Log.debug("newData: ", workspaceData?.data?.data);
             if (workspaceData?.data?.error) {
                 console.error("swr error workspaceData: ", workspaceData?.data);
             }
@@ -134,7 +136,7 @@ const Workspace = (props) => {
                     _setWorkspace(workspaceData.data);
                     setLoadingWorkspace(false);
                 }
-                //console.log("workspace:", workspaceData?.data);
+                //Log.debug("workspace:", workspaceData?.data);
             }
             if (workspaceData.error) {
                 console.error("Error with workspace: ", workspaceData.error);
@@ -230,7 +232,7 @@ const Workspace = (props) => {
                     onSelect={({ index }) => setTab(index)}
                     id="workspaceIdTab"
                     views={WorkspaceTabs.map(el => { return { ...el, title: el.name } })}
-                    headerClassName="dark:bg-transparent bg-white sm:w-1/2 w-full"
+                    headerClassName="dark:bg-transparent bg-white sm:w-1/2 md:w-[40%] w-full"
                     className="flex-1 flex flex-col"
                     headerContainerClassName="pl-2 pt-2 pr-2"
                     loadingWorkspace={loadingWorkspace}
@@ -276,7 +278,12 @@ const Workspace = (props) => {
             onClose={() => setEditCardModal({ ...editCardModal, visible: false })}
             onEdit={({ title, desc, id }) => {
                 // i think it gives edited card data here...
-                Handler.workspace({ workspaceData, auth, _workspace, props, NotalUI }).card.edit({ id, title, desc, fieldId: editCardModal.fieldId })
+                Handler.workspace({ workspaceData, auth, _workspace, props, NotalUI }).card.edit({
+                    id,
+                    title,
+                    desc,
+                    fieldId: editCardModal.fieldId
+                })
                 setEditCardModal({ ...editCardModal, visible: false });
                 //#TODO: finish this
             }}
@@ -307,8 +314,8 @@ const Workspace = (props) => {
             open={addCardModal.visible}
             fieldTitle={addCardModal.fieldTitle}
             onClose={() => setAddCardModal({ ...addCardModal, visible: false })}
-            onAdd={({ title, desc, color, tag }) => {
-                Handler.workspace({ workspaceData, auth, _workspace, props, NotalUI }).card.add({ title, desc, color, tag, fieldId: addCardModal.fieldId });
+            onAdd={({ title, desc, color, tags }) => {
+                Handler.workspace({ workspaceData, auth, _workspace, props, NotalUI }).card.add({ title, desc, color, tags, fieldId: addCardModal.fieldId });
                 setAddCardModal({ ...addCardModal, visible: false });
             }}
         />
@@ -341,8 +348,8 @@ export async function getServerSideProps(ctx) {
             GetWorkspaceData({ id: queryId, token: authCookie }),
         ]);
 
-        console.log("validate:", validate?.success, validate?.data?.uid, validate?.error);
-        //console.log("workspace: ", workspace);
+        Log.debug("validate:", validate?.success, validate?.data?.uid, validate?.error);
+        //Log.debug("workspace: ", workspace);
     }
     return { props: { validate, workspace, /*query: queryId*/ } }
 }

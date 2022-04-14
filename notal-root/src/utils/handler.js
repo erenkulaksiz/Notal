@@ -1,3 +1,4 @@
+import { Log } from "@utils";
 
 const Handler = {
     workspace: ({
@@ -19,7 +20,7 @@ const Handler = {
                     */
                 await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, title, desc, workspaceVisible, thumbnail } }, false);
                 const data = await auth.workspace.editWorkspace({ id: _workspace?.data?._id, title, desc, workspaceVisible, thumbnail });
-                console.log("editData:", data);
+                Log.debug("editData:", data);
                 if (data.success) {
                     workspaceData.mutate();
                     window.gtag("event", "editWorkspace", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
@@ -34,7 +35,7 @@ const Handler = {
             star: async () => {
                 await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, starred: !_workspace?.data?.starred } }, false);
                 const data = await auth.workspace.starWorkspace({ id: _workspace?.data?._id });
-                console.log("starData:", data);
+                Log.debug("starData:", data);
                 if (data.success) {
                     window.gtag("event", "starWorkspace", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
                 } else {
@@ -81,7 +82,7 @@ const Handler = {
                         }
                     }, false)
                     const data = await auth.workspace.field.addField({ title, id: _workspace?.data?._id, sortBy });
-                    console.log("addField data: ", data);
+                    Log.debug("addField data: ", data);
                     if (data?.success) {
                         workspaceData.mutate(); // Refresh data in order to get new ID's
                         window.gtag("event", "addField", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
@@ -115,7 +116,7 @@ const Handler = {
                     newFields.splice(_workspace?.data?.fields.findIndex(el => el._id == id), 1);
                     await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: newFields } }, false);
                     const data = await auth.workspace.field.removeField({ id, workspaceId: _workspace?.data?._id });
-                    console.log("deleteField data: ", data);
+                    Log.debug("deleteField data: ", data);
                     window.gtag("event", "deleteField", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
                     if (!data?.success) {
                         NotalUI.Alert.show({
@@ -154,7 +155,7 @@ const Handler = {
                 }
             },
             card: {
-                add: async ({ fieldId, title, desc, color, tag }) => {
+                add: async ({ fieldId, title, desc, color, tags }) => {
                     const newFields = _workspace?.data?.fields;
                     newFields[_workspace?.data?.fields?.findIndex(el => el._id == fieldId)].cards?.push(
                         {
@@ -164,15 +165,15 @@ const Handler = {
                             color,
                             createdAt: Date.now(),
                             updatedAt: Date.now(),
-                            tag,
+                            tags,
                             owner: auth.authUser.uid
                         }
                     );
                     await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: newFields } }, false);
                     const data = await auth.workspace.field.addCard({
-                        id: fieldId, workspaceId: _workspace?.data?._id, title, desc, color, tag
+                        id: fieldId, workspaceId: _workspace?.data?._id, title, desc, color, tags
                     });
-                    console.log("addCardToField data: ", data);
+                    Log.debug("addCardToField data: ", data);
                     if (data?.success) {
                         workspaceData.mutate();
                         window.gtag("event", "addCardToField", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
@@ -181,14 +182,22 @@ const Handler = {
                             title: "Error",
                             desc: "Couldn't perform the action you want. Please check the console and contact via erenkulaksz@gmail.com"
                         });
-                        console.log("add card error: ", data?.error);
+                        Log.debug("add card error: ", data?.error);
                     }
                 },
-                edit: async ({ title, desc, id, fieldId }) => {
+                edit: async ({ title, desc, id, fieldId, color = "#ff0000", tag = {} }) => {
                     const newFields = _workspace?.data?.fields;
                     const cards = newFields[_workspace?.data?.fields?.findIndex(el => el._id == fieldId)].cards;
-                    cards[cards.findIndex(el => el._id == card._id)] = card; // update card completely
+                    cards[cards.findIndex(el => el._id == id)] = {
+                        ...cards[cards.findIndex(el => el._id == id)],
+                        title,
+                        desc,
+                        color,
+                        tag,
+                    }; // update card completely
                     await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: newFields } }, false);
+                    const data = await auth.workspace.field.editCard({ id, workspaceId: _workspace?.data?._id, fieldId, title, desc, color, tag });
+                    Log.debug("edit card data: ", data);
                 },
                 delete: async ({ id, fieldId }) => {
                     const newFields = _workspace?.data?.fields;
@@ -196,13 +205,13 @@ const Handler = {
                     newFields[_workspace?.data?.fields.findIndex(el => el._id == fieldId)].cards.splice(cardIndex, 1);
                     await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: newFields } }, false);
                     const data = await auth.workspace.field.removeCard({ id, fieldId, workspaceId: _workspace?.data?._id });
-                    console.log("removeCard data: ", data);
+                    Log.debug("removeCard data: ", data);
                     if (!data.success) {
                         NotalUI.Alert.show({
                             title: "Error",
                             desc: "Couldn't perform the action you want. Please check the console and contact via erenkulaksz@gmail.com"
                         });
-                        console.log("delete card error: ", data?.error);
+                        Log.debug("delete card error: ", data?.error);
                         workspaceData.mutate();
                     }
                 },
@@ -247,7 +256,7 @@ const Handler = {
                     if (res.success == true) {
                         workspacesData.mutate(); // get refreshed workspaces
                     } else if (res.success == false) {
-                        console.log("RES ERR create workspace -> ", res);
+                        Log.debug("RES ERR create workspace -> ", res);
                         NotalUI.Alert.show({
                             title: "Error",
                             desc: res?.error
@@ -266,7 +275,7 @@ const Handler = {
                             icon: <CrossIcon size={24} fill="currentColor" />,
                             className: "dark:bg-red-600 bg-red-500 text-white"
                         });
-                        console.log("del res -> ", res);
+                        Log.debug("del res -> ", res);
                     }
                 },
                 star: async ({ id }) => {
@@ -282,7 +291,7 @@ const Handler = {
                             icon: <CrossIcon size={24} fill="currentColor" />,
                             className: "dark:bg-red-600 bg-red-500 text-white"
                         });
-                        console.log("del res -> ", res);
+                        Log.debug("del res -> ", res);
                     }
                 },
             }

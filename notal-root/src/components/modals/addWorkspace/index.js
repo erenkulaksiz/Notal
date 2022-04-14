@@ -29,6 +29,8 @@ import {
 
 import useAuth from "@hooks/auth";
 
+import { Log } from "@utils";
+
 const AddWorkspaceModal = ({ open, onClose, onAdd }) => {
     const auth = useAuth();
     const michael = "https://i.pinimg.com/474x/78/8f/f7/788ff7a1a2c291a33ea995dc8de5dbcc.jpg";
@@ -92,7 +94,7 @@ const AddWorkspaceModal = ({ open, onClose, onAdd }) => {
         } else {
             // image upload
             if (newWorkspace.thumbnail.fileData) {
-                console.log(newWorkspace.thumbnail.fileData);
+                Log.debug(newWorkspace.thumbnail.fileData);
                 const file = Math.round((newWorkspace.thumbnail.fileData.size / 1024));
                 if (file >= 4096) {
                     alert("maximum upload size is 4mb");
@@ -105,7 +107,7 @@ const AddWorkspaceModal = ({ open, onClose, onAdd }) => {
                     if (res.success) {
                         setThumbnailLoading(false);
                         // send res data to server now
-                        console.log("thumbnail upload success! res: ", res);
+                        Log.debug("thumbnail upload success! res: ", res);
 
                         onAdd({
                             title: newWorkspace.title,
@@ -119,7 +121,7 @@ const AddWorkspaceModal = ({ open, onClose, onAdd }) => {
                         })
                         close();
                     } else {
-                        console.log("thumbnail upload error: ", res);
+                        Log.debug("thumbnail upload error: ", res);
                         setThumbnailLoading(false);
                     }
                 } else {

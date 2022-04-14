@@ -15,7 +15,7 @@ const WorkspaceSidebarItem = ({
             className="justify-center"
             size="h-10"
             rounded="rounded-md"
-            light="outline-none focus:outline-2 bg-neutral-100/50 shadow dark:bg-neutral-800/20 backdrop-blur-sm"
+            light="outline-none focus:outline-2 bg-neutral-100 dark:bg-neutral-800 backdrop-blur-sm"
             title={item.multi ? item.name[state[item.id]] : item.name}
             aria-label={item.multi ? item.name[state[item.id]] : item.name}
         >

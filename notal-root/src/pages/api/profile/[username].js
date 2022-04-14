@@ -4,6 +4,8 @@ const googleService = JSON.parse(process.env.NEXT_PUBLIC_GOOGLE_SERVICE);
 const { connectToDatabase } = require('../../../../lib/mongodb');
 const { db } = await connectToDatabase();
 
+import { Log } from "@utils";
+
 if (!admin.apps.length) {
     admin.initializeApp({
         credential: admin.credential.cert(googleService),
@@ -34,7 +36,7 @@ export default async function handler(req, res) {
                     await admin.auth().verifyIdToken(bearerToken).then(async (decodedToken) => {
                         if (decodedToken.uid === user.uid) {
                             try {
-                                console.log("Verified token!");
+                                Log.debug("Verified token!");
                                 workspaces = await workspacesCollection.find({ owner: user.uid }).toArray();
                             } catch (error) {
                                 workspaces = "auth-error";

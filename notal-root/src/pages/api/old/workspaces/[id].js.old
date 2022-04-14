@@ -24,7 +24,7 @@ export default async function handler(req, res) {
 
     if (req.method == "DELETE") {
         return await admin.auth().verifyIdToken(bearerToken).then(async (decodedToken) => {
-            console.log("Deleting workspace USERID", decodedToken.user_id, " ID", id);
+            Log.debug("Deleting workspace USERID", decodedToken.user_id, " ID", id);
             const workspace = await workspacesCollection.findOne({ "_id": ObjectId(id) });
             if (!workspace) return reject();
             if (workspace.owner !== decodedToken.user_id) return reject();
@@ -33,7 +33,7 @@ export default async function handler(req, res) {
                     return res.status(200).send({ success: true });
                 });
         }).catch(error => {
-            console.log("error: ", error);
+            Log.debug("error: ", error);
             return res.status(400).json({ success: false, error: { code: error.code } });
         });
     }

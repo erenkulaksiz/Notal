@@ -11,12 +11,14 @@ import {
 } from "@components";
 import useAuth from "@hooks/auth";
 
+import { Log } from "@utils";
+
 const PrivacyPolicy = (props) => {
     const auth = useAuth();
     const router = useRouter();
 
     useEffect(() => {
-        console.log("home props: ", props);
+        Log.debug("home props: ", props);
         (async () => {
             const token = await auth.users.getIdToken();
             const res = await CheckToken({ token: token.res, props, user: auth?.authUser });
@@ -348,7 +350,7 @@ export async function getServerSideProps(ctx) {
             ValidateToken({ token: authCookie })
         ]);
 
-        console.log("validate:", validate?.success, validate?.data?.uid, validate?.error);
+        Log.debug("validate:", validate?.success, validate?.data?.uid, validate?.error);
     }
     return { props: { validate } }
 }

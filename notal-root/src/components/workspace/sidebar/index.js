@@ -50,7 +50,7 @@ const WorkspaceSidebar = ({
                 }}
             />))}
         </div>
-        <div className="w-full h-full flex flex-col justify-end relative">
+        <div className="h-full flex flex-col justify-end relative">
             {workspaceUsers && workspaceUsers.map((user, index) => <Tooltip
                 content={
                     <div className="items-center flex-row flex">
@@ -67,10 +67,11 @@ const WorkspaceSidebar = ({
                         </div>
                     </div>
                 }
+                hideArrow
                 key={index}
-                direction="right"
+                direction="workspaceSidebarRight"
                 containerClassName="px-2"
-                allContainerClassName="absolute flex w-full h-8 hover:z-40 absolute"
+                allContainerClassName="absolute flex h-8 hover:z-40"
                 style={{ bottom: index * 12 }}
             >
                 <Link href="/profile/[username]" as={`/profile/${user?.username || "not-found"}`} passHref>

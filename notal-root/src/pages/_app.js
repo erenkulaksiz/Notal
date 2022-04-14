@@ -9,6 +9,8 @@ import ProgressBar from "@badrap/bar-of-progress";
 import { AuthProvider } from "@hooks/auth";
 import { NotalUIProvider } from "@hooks/notalui";
 
+import { Log } from "@utils";
+
 const progress = new ProgressBar({
   size: 3,
   color: "#036AE6",
@@ -18,7 +20,7 @@ const progress = new ProgressBar({
 
 export function reportWebVitals({ id, name, label, value }) {
   if (name == "FCP" || name == "LCP") {
-    console.log(name, value);
+    Log.debug(name, value);
   }
   if (process.env.NODE_ENV !== "production") {
     return; // don't report vitals on production

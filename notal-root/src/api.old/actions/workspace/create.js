@@ -10,6 +10,8 @@ if (!admin.apps.length) {
     });
 }
 
+import { Log } from "@utils";
+
 const { db } = await connectToDatabase();
 const workspacesCollection = db.collection("workspaces");
 
@@ -31,8 +33,8 @@ const CreateWorkspace = ({ req, res, uid, title, desc, starred, workspaceVisible
             thumbnail,
         }).then(async (result) => {
             const resId = result.insertedId;
-            console.log("updating id: ", resId);
-            console.log("thumbnail: ", thumbnail);
+            Log.debug("updating id: ", resId);
+            Log.debug("thumbnail: ", thumbnail);
 
             if (thumbnail?.type == "image") {
                 // move from temp to real location

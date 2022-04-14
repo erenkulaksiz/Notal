@@ -5,6 +5,8 @@ import { server } from "../config";
 
 import Router from "next/router";
 
+import { Log } from "@utils";
+
 const fetchWithAuth = async ({ ...rest }, { token, action }) => {
     return await fetch(`${server}/api/workspace/${action}`, {
         'Content-Type': 'application/json',
@@ -69,7 +71,7 @@ const AuthService = {
                     const email = error.email;
                     const credential = GithubAuthProvider.credentialFromError(error);
 
-                    console.log("github login error");
+                    Log.debug("github login error");
 
                     return { error: { errorMessage, errorCode } }
                 });
@@ -135,17 +137,17 @@ const AuthService = {
             const storageRef = stRef(storage, `avatars/${auth?.currentUser?.uid}`);
 
             return await uploadBytes(storageRef, avatar).then((snapshot) => {
-                console.log(snapshot);
+                Log.debug(snapshot);
 
                 return getDownloadURL(snapshot.ref).then(async (downloadURL) => {
-                    console.log('File available at', downloadURL);
+                    Log.debug('File available at', downloadURL);
 
                     const avatarRes = await fetch(`${server}/api/editProfile`, {
                         'Content-Type': 'application/json',
                         method: "POST",
                         body: JSON.stringify({ avatar: downloadURL, type: "avatar", uid: auth?.currentUser?.uid }),
                     }).then(response => response.json());
-                    console.log("avatar res: ", avatarRes);
+                    Log.debug("avatar res: ", avatarRes);
 
                     return { success: true, url: downloadURL }
                 });
@@ -185,18 +187,18 @@ const AuthService = {
             const storageRef = stRef(storage, `thumbnails/temp/workspace_${auth.currentUser.uid}`);
 
             return await uploadBytes(storageRef, thumbnail).then((snapshot) => {
-                console.log(snapshot);
+                Log.debug(snapshot);
 
                 return getDownloadURL(snapshot.ref).then(async (downloadURL) => {
                     /*
-                    console.log('File available at', downloadURL);
+                    Log.debug('File available at', downloadURL);
 
                     const avatarRes = await fetch(`${server}/api/workspace`, {
                         'Content-Type': 'application/json',
                         method: "POST",
                         body: JSON.stringify({ avatar: downloadURL, action: "TEMP_THUMBNAIL", uid: auth?.currentUser?.uid }),
                     }).then(response => response.json());
-                    console.log("avatar res: ", avatarRes);
+                    Log.debug("avatar res: ", avatarRes);
 
                     */ // no need to send to the server at first
                     return { success: true, url: downloadURL }
@@ -369,7 +371,7 @@ const AuthService = {
             },
         },
         card: {
-            addCard: async ({ id, workspaceId, title, desc, color, tag }) => {
+            addCard: async ({ id, workspaceId, title, desc, color, tags }) => {
                 // id field id
                 const auth = getAuth();
                 const token = await auth.currentUser.getIdToken();
@@ -381,7 +383,7 @@ const AuthService = {
                     title,
                     desc,
                     color,
-                    tag
+                    tags
                 }, {
                     token,
                     action: "addcard",

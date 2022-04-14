@@ -30,6 +30,8 @@ import {
 
 import { withPublic } from "@hooks/route";
 
+import { Log } from "@utils";
+
 const Landing = (props) => {
   const router = useRouter();
   const auth = useAuth();
@@ -52,7 +54,7 @@ const Landing = (props) => {
 
   useEffect(() => {
     if (validateData.data) {
-      console.log("validate res: ", validateData.data);
+      Log.debug("validate res: ", validateData.data);
       if (!_validate) {
         _setValidate(validateData.data);
       }
@@ -64,7 +66,7 @@ const Landing = (props) => {
   */
 
   useEffect(() => {
-    console.log("home props: ", props);
+    Log.debug("home props: ", props);
     (async () => {
       const token = await auth.users.getIdToken();
       const res = await CheckToken({ token: token.res, props, user: auth?.authUser });
@@ -187,7 +189,7 @@ export async function getServerSideProps(ctx) {
       ValidateToken({ token: authCookie })
     ]);
 
-    console.log("validate:", validate?.success, validate?.data?.uid, validate?.error);
+    Log.debug("validate:", validate?.success, validate?.data?.uid, validate?.error);
   }
   return { props: { validate } }
 }

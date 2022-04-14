@@ -1,5 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { AnimatePresence, AnimateSharedLayout, motion } from "framer-motion";
+import { useRouter } from "next/router";
+
+import { Log } from "@utils";
 
 {/*<Button onClick={() =>
                 NotalUI.Alert.show({
@@ -125,9 +128,10 @@ const notalUIContext = createContext();
 
 const NotalUI_WB_HOC = ({ children }, props) => {
     const NotalUI = useNotalUI();
+    const router = useRouter();
 
     useEffect(() => {
-        WorkboxInit(NotalUI);
+        WorkboxInit(NotalUI, router);
     }, []);
 
     // inject accept cookies and workbox
@@ -244,7 +248,7 @@ export function NotalUIProvider(props) {
 
             setToastBuffer([...allToasts]);
 
-            console.log(allToasts);
+            Log.debug(allToasts);
         },
         close: (index) => {
             const newToastArr = [...toastBuffer];

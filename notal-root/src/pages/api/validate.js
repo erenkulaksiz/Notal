@@ -13,6 +13,8 @@ if (!admin.apps.length) {
 const { wordlist } = require('../../utils/wordlist');
 const wordlistLength = wordlist.length;
 
+import { Log } from "@utils";
+
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         res.status(400).send({ success: false })
@@ -70,12 +72,12 @@ export default async function handler(req, res) {
                 });
             }
         }).catch(error => {
-            console.log("Token failure!", error)
+            Log.debug("Token failure!", error)
             res.status(400).json({ success: false, error: "auth/argument-error" });
             return; // dont run code below
         });
     } catch (error) {
-        console.log("error validating, err:", error);
+        Log.debug("error validating, err:", error);
         res.status(200).send({ success: false, error });
     }
 }

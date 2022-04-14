@@ -34,7 +34,7 @@ export default async function handler(req, res) {
         const { uid } = body ?? {};
         if (!uid) return reject();
 
-        console.log("Creating workspace for UID", uid);
+        Log.debug("Creating workspace for UID", uid);
         return await admin.auth().verifyIdToken(bearerToken).then(async (decodedToken) => {
             if (decodedToken.user_id !== uid) return reject();
 
@@ -60,7 +60,7 @@ export default async function handler(req, res) {
         });
     } else if (req.method == "GET") {
         return await admin.auth().verifyIdToken(bearerToken).then(async (decodedToken) => {
-            console.log("Getting workspaces for UID", decodedToken.user_id);
+            Log.debug("Getting workspaces for UID", decodedToken.user_id);
             const workspaces = await workspacesCollection.find({ owner: decodedToken.user_id }).toArray();
             return res.status(200).send({
                 success: true,

@@ -46,8 +46,8 @@ const TabButton = ({ children, selected, hover, onMouseEnter, onMouseLeave, setS
 const TabHeader = ({ children, headerClassName, loadingWorkspace }) => {
 
     const TabHeaderSkeleton = () => {
-        return (<div className="w-full h-10 flex flex-row dark:bg-neutral-800 p-2 rounded-lg">
-            {[1, 2, 3].map(item => <div key={item} className="w-[20%] rounded mr-2 dark:bg-neutral-900 animate-pulse h-full"></div>)}
+        return (<div className="w-full h-10 flex flex-row dark:bg-neutral-800 bg-neutral-100 p-2 rounded-lg">
+            {[1, 2, 3].map(item => <div key={item} className="w-[20%] rounded mr-2 dark:bg-neutral-900 bg-neutral-200 animate-pulse h-full"></div>)}
         </div>)
     }
 

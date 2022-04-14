@@ -23,6 +23,8 @@ import { CardColors } from "@utils/constants";
 import useAuth from "@hooks/auth";
 import useNotalUI from "@hooks/notalui";
 
+import { Log } from "@utils";
+
 const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspace }) => {
     const NotalUI = useNotalUI();
     const auth = useAuth();
@@ -36,7 +38,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
     const [editErr, setEditErr] = useState({ title: false, desc: false });
 
     useEffect(() => {
-        console.log("thumb: ", workspace?.thumbnail);
+        Log.debug("thumb: ", workspace?.thumbnail);
         setEditWorkspace({
             title: workspace?.title,
             desc: workspace?.desc,
@@ -116,7 +118,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
         } else if (editWorkspace.thumbnail.type == "image") {
             // image upload
             if (editWorkspace.thumbnail.fileData) {
-                console.log(editWorkspace.thumbnail.fileData);
+                Log.debug(editWorkspace.thumbnail.fileData);
                 const file = Math.round((editWorkspace.thumbnail.fileData.size / 1024));
                 if (file >= 4096) {
                     alert("maximum upload size is 4mb");
@@ -129,7 +131,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                     if (res.success) {
                         setThumbnailLoading(false);
                         // send res data to server now
-                        console.log("thumbnail upload success! res: ", res);
+                        Log.debug("thumbnail upload success! res: ", res);
 
                         onSubmit({
                             title: editWorkspace.title,
@@ -142,7 +144,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                         })
                         close();
                     } else {
-                        console.log("thumbnail upload error: ", res);
+                        Log.debug("thumbnail upload error: ", res);
                         setThumbnailLoading(false);
                     }
                 } else {
@@ -183,7 +185,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
             id: workspace._id,
             username,
         });
-        console.log("res::", res);
+        Log.debug("res::", res);
         if (res?.success) {
             onUserChange();
         } else if (res?.error == "user-not-found") {
@@ -202,7 +204,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
             onUserChange();
         } else {
             alert("error check console");
-            console.log(res);
+            Log.debug(res);
         }
     }
 
@@ -235,7 +237,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                 views={[
                     { title: "Workspace", id: "workspace" },
                     { title: "Thumbnail", id: "thumbnail" },
-                    /*{ title: "Users", id: "users" }*/
+                    { title: "Users", id: "users" }
                 ]}
             >
                 <Tab.TabView index={0} className="pt-4 grid grid-cols-1 gap-2">
@@ -293,7 +295,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                         <input type="file" ref={thumbnailRef} style={{ display: "none" }} onChange={onThumbnailChange} accept="image/png, image/jpeg" />
                     </div>}
                     {editWorkspace?.thumbnail?.type == "singleColor" && <div className="flex flex-col items-start">
-                        <label htmlFor="cardColor">Card Color</label>
+                        <label htmlFor="cardColor">Workspace Color</label>
                         <ColorPicker
                             color={editWorkspace?.thumbnail?.color}
                             onColorChange={(color) => {
@@ -325,7 +327,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                         </div>
                     </div>}
                 </Tab.TabView>
-                {/*<Tab.TabView index={2} className="pt-4 grid grid-cols-1 gap-2">
+                <Tab.TabView index={2} className="pt-4 grid grid-cols-1 gap-2">
                     <p className="border-b-2 border-b-solid border-b-neutral-200 dark:border-b-neutral-800 pb-2">Add up to 20 users to your workspace to work with together.</p>
                     <label>Workspace Owner</label>
                     <div className="w-full h-16 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
@@ -361,7 +363,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                             Add User
                         </Button>
                     </div>
-                    </Tab.TabView>*/}
+                </Tab.TabView>
             </Tab>
         </Modal.Body>
         <Modal.Footer className="justify-between" animate>
