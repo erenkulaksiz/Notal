@@ -10,7 +10,7 @@ if (!admin.apps.length) {
     });
 }
 
-import { Log } from "@utils";
+import Log from "@utils/logger"
 
 const { db } = await connectToDatabase();
 const workspacesCollection = db.collection("workspaces");

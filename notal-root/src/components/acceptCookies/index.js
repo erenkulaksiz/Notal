@@ -31,7 +31,7 @@ const AcceptCookies = () => {
         </div>
         <p className="text-sm">
             {"We use cookies to authenticate, analyze traffic and show personalized content. By clicking 'Accept Cookies' or continuing using this website you accept our use of cookies."}
-            <Link href="/privacy-policy">
+            <Link href="/privacy-policy" passHref>
                 <a className="ml-1 text-blue-600">More Information</a>
             </Link>
         </p>

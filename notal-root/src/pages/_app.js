@@ -9,7 +9,7 @@ import ProgressBar from "@badrap/bar-of-progress";
 import { AuthProvider } from "@hooks/auth";
 import { NotalUIProvider } from "@hooks/notalui";
 
-import { Log } from "@utils";
+import Log from "@utils/logger"
 
 const progress = new ProgressBar({
   size: 3,

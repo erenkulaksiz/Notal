@@ -5,7 +5,7 @@ import { server } from "../config";
 
 import Router from "next/router";
 
-import { Log } from "@utils";
+import Log from "@utils/logger"
 
 const fetchWithAuth = async ({ ...rest }, { token, action }) => {
     return await fetch(`${server}/api/workspace/${action}`, {
@@ -371,7 +371,7 @@ const AuthService = {
             },
         },
         card: {
-            addCard: async ({ id, workspaceId, title, desc, color, tags }) => {
+            addCard: async ({ id, workspaceId, title, desc, color, tags, image }) => {
                 // id field id
                 const auth = getAuth();
                 const token = await auth.currentUser.getIdToken();
@@ -383,7 +383,8 @@ const AuthService = {
                     title,
                     desc,
                     color,
-                    tags
+                    tags,
+                    image
                 }, {
                     token,
                     action: "addcard",
@@ -438,6 +439,34 @@ const AuthService = {
                     return { success: false, error: data?.error }
                 }
             },
+            uploadCardImageTemp: async ({ image }) => {
+                // temporarily uploads image for later use.
+                const auth = getAuth();
+                const token = await auth.currentUser.getIdToken();
+                const storage = getStorage();
+                const storageRef = stRef(storage, `cardImages/temp/user_${auth.currentUser.uid}`);
+
+                return await uploadBytes(storageRef, image).then((snapshot) => {
+                    Log.debug(snapshot);
+
+                    return getDownloadURL(snapshot.ref).then(async (downloadURL) => {
+                        /*
+                        Log.debug('File available at', downloadURL);
+
+                        const avatarRes = await fetch(`${server}/api/workspace`, {
+                            'Content-Type': 'application/json',
+                            method: "POST",
+                            body: JSON.stringify({ avatar: downloadURL, action: "TEMP_THUMBNAIL", uid: auth?.currentUser?.uid }),
+                        }).then(response => response.json());
+                        Log.debug("avatar res: ", avatarRes);
+
+                        */ // no need to send to the server at first
+                        return { success: true, url: downloadURL }
+                    });
+                }).catch(error => {
+                    return { success: false, error }
+                });
+            }
         }
     },
 };

@@ -2,6 +2,7 @@ import { InfoIcon } from "@icons";
 import Cookie from "js-cookie";
 import { server } from '../config';
 import { Button } from "@components";
+import Log from "./logger";
 
 /**
  * Get whether render is on clientside or serverside.
@@ -161,6 +162,8 @@ export const WorkboxInit = (NotalUI, router) => {
                                 className="p-1 px-2 rounded hover:opacity-70"
                                 onClick={() => {
                                     NotalUI.Toast.close(index);
+                                    /*
+                                    */
                                     wb.addEventListener('controlling', event => {
                                         window.location.reload()
                                     });
@@ -220,18 +223,5 @@ export const WorkboxInit = (NotalUI, router) => {
 
         // never forget to call register as auto register is turned off in next.config.js
         wb.register()
-    }
-}
-
-export const Log = {
-    activated: process.env.NEXT_PUBLIC_DEBUG_LOG == "true",
-    debug: (...args) => {
-        if (!Log.activated && isClient) return;
-        // open debugging serverside 
-        console.log(`[DEBUG] [${Date.now()}] `, ...args);
-    },
-    error: (...args) => {
-        if (!Log.activated && isClient) return;
-        console.log(`❌ [ERROR] [${Date.now()}] `, ...args);
     }
 }

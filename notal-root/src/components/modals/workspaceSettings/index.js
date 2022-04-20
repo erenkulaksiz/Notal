@@ -17,13 +17,14 @@ import {
     SettingsIcon,
     CloudUploadIcon,
     AddIcon,
-    DeleteIcon
+    DeleteIcon,
+    AtIcon
 } from "@icons";
 import { CardColors } from "@utils/constants";
 import useAuth from "@hooks/auth";
 import useNotalUI from "@hooks/notalui";
 
-import { Log } from "@utils";
+import Log from "@utils/logger"
 
 const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspace }) => {
     const NotalUI = useNotalUI();
@@ -36,6 +37,8 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
     const [addWorkspaceOwner, setAddWorkspaceOwner] = useState("");
 
     const [editErr, setEditErr] = useState({ title: false, desc: false });
+
+    const [addWorkspaceOwnerErr, setAddWorkspaceOwnerErr] = useState(false);
 
     useEffect(() => {
         Log.debug("thumb: ", workspace?.thumbnail);
@@ -73,6 +76,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
         });
         setEditErr({ title: false, desc: false });
         setAddWorkspaceOwner("");
+        setAddWorkspaceOwnerErr(false);
     }
 
     const submit = async () => {
@@ -144,11 +148,20 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                         })
                         close();
                     } else {
-                        Log.debug("thumbnail upload error: ", res);
+                        Log.error("thumbnail upload error: ", res);
                         setThumbnailLoading(false);
+                        NotalUI.Alert.show({
+                            title: "Error",
+                            message: "Something went wrong, check console!",
+                            type: "error",
+                        })
                     }
                 } else {
-                    alert("only png, jpeg and jpg is allowed");
+                    NotalUI.Alert.show({
+                        title: "Error",
+                        desc: "Only png, jpeg and jpg is allowed",
+                        type: "error"
+                    });
                 }
             } else {
                 onSubmit({
@@ -181,17 +194,52 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
     }
 
     const addUser = async ({ username }) => {
+
+        if (!username) {
+            setAddWorkspaceOwnerErr("Please enter a valid username.");
+            return;
+        } else {
+            setAddWorkspaceOwnerErr(false);
+        }
+
         const res = await auth.workspace.addUser({
             id: workspace._id,
             username,
         });
-        Log.debug("res::", res);
+        Log.debug("add user res::", res);
         if (res?.success) {
             onUserChange();
         } else if (res?.error == "user-not-found") {
-            alert("user not found");
+            NotalUI.Toast.show({
+                title: "Error",
+                desc: `Cannot found user with username @${username}`,
+                type: "error",
+            });
         } else if (res?.error == "user-already-added") {
-            alert("user already added");
+            NotalUI.Toast.show({
+                title: "Error",
+                desc: `User @${username} is already added to this workspace`,
+                type: "error",
+            });
+        } else if (res?.error == "workspace-max-users") {
+            NotalUI.Toast.show({
+                title: "Error",
+                desc: "Maximum 20 users is allowed to this workspace",
+                type: "error",
+            });
+        } else if (res?.error == "owner-cant-be-added") {
+            NotalUI.Toast.show({
+                title: "Error",
+                desc: `Sorry @${username}, you cant add yourself :D`,
+                type: "error",
+            });
+        } else {
+            NotalUI.Toast.show({
+                title: "Error",
+                desc: "Something went wrong, please check console",
+                type: "error",
+            });
+            Log.error(res?.error);
         }
     }
 
@@ -330,23 +378,41 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                 <Tab.TabView index={2} className="pt-4 grid grid-cols-1 gap-2">
                     <p className="border-b-2 border-b-solid border-b-neutral-200 dark:border-b-neutral-800 pb-2">Add up to 20 users to your workspace to work with together.</p>
                     <label>Workspace Owner</label>
-                    <div className="w-full h-16 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
-                        {workspaceOwner?.username}
+                    <div className="flex items-center p-2 w-full h-16 bg-neutral-100 dark:bg-neutral-800 rounded-xl">
+                        <div className="flex flex-row items-center">
+                            <a className="w-8 h-8 flex items-center justify-center border-2 border-solid rounded-full border-white dark:border-neutral-800">
+                                <img
+                                    src={workspaceOwner?.avatar}
+                                    className="w-7 h-7 cursor-pointer rounded-full"
+                                    alt="Avatar"
+                                />
+                            </a>
+                            <span className="ml-1">@{workspaceOwner?.username}</span>
+                        </div>
                     </div>
                     {workspaceUsers?.length != 0 && <div className="flex gap-2 flex-col">
                         <label>Workspace Users ({workspaceUsers?.length})</label>
                         {workspaceUsers?.map((user, index) => (<div
                             key={index}
-                            className="flex flex-row justify-between items-center w-full h-16 bg-neutral-100 dark:bg-neutral-800 p-2 rounded-lg text-black dark:text-white"
+                            className="flex flex-row justify-between items-center w-full h-16 bg-neutral-100 dark:bg-neutral-800 p-2 rounded-xl text-black dark:text-white"
                         >
-                            <span>{user?.username}</span>
+                            <div className="flex flex-row items-center">
+                                <a className="w-8 h-8 flex items-center justify-center border-2 border-solid rounded-full border-white dark:border-neutral-800">
+                                    <img
+                                        src={user?.avatar}
+                                        className="w-7 h-7 cursor-pointer rounded-full"
+                                        alt="Avatar"
+                                    />
+                                </a>
+                                <span className="ml-1">@{user?.username}</span>
+                            </div>
                             <Button
                                 onClick={() => deleteUser({ id: user?.uid })}
                                 size="sm"
                                 className="px-2"
                                 light
                             >
-                                <DeleteIcon size={24} className="fill-red-700 dark:fill-red-600" />
+                                <DeleteIcon size={24} className="fill-red-700 dark:fill-red-500" />
                             </Button>
                         </div>))}
                     </div>}
@@ -357,12 +423,15 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                             placeholder="Username"
                             value={addWorkspaceOwner}
                             onChange={(e) => setAddWorkspaceOwner(e.target.value)}
+                            icon={<AtIcon size={24} className="fill-current" />}
+                            maxLength={32}
                         />
                         <Button className="ml-2" onClick={() => addUser({ username: addWorkspaceOwner })}>
                             <AddIcon size={24} fill="currentColor" />
                             Add User
                         </Button>
                     </div>
+                    {addWorkspaceOwnerErr && <div className="text-red-500">{addWorkspaceOwnerErr}</div>}
                 </Tab.TabView>
             </Tab>
         </Modal.Body>

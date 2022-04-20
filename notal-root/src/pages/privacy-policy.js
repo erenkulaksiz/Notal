@@ -11,7 +11,7 @@ import {
 } from "@components";
 import useAuth from "@hooks/auth";
 
-import { Log } from "@utils";
+import Log from "@utils/logger"
 
 const PrivacyPolicy = (props) => {
     const auth = useAuth();

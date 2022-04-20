@@ -13,7 +13,7 @@ if (!admin.apps.length) {
 const { wordlist } = require('../../utils/wordlist');
 const wordlistLength = wordlist.length;
 
-import { Log } from "@utils";
+import Log from "@utils/logger"
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
@@ -21,7 +21,14 @@ export default async function handler(req, res) {
         return
     }
 
-    const token = JSON.parse(req.body).token || "";
+    let token = "";
+
+    try {
+        token = JSON.parse(req.body).token || "";
+    } catch (error) {
+        Log.error(error);
+        return res.status(400).send({ success: false, error: "error-with-token" });
+    }
 
     if (!token) {
         res.status(400).send({ success: false, error: "no-token" })

@@ -2,8 +2,37 @@ import { useEffect, createElement } from "react";
 import { motion } from "framer-motion";
 
 import BuildComponent from "@utils/buildComponent";
-import { Cross2Icon } from "@icons";
 
+import {
+    CrossIcon,
+    InfoIcon,
+    Cross2Icon,
+    CheckIcon
+} from "@icons";
+
+const ToastTypes = {
+    default: {
+        className: "dark:bg-neutral-700 bg-neutral-200"
+    },
+    error: {
+        icon: <CrossIcon size={24} fill="currentColor" />,
+        className: "dark:bg-red-600 bg-red-500 text-white"
+    },
+    info: {
+        icon: <InfoIcon size={24} fill="currentColor" />,
+        className: "dark:bg-blue-600 bg-blue-500 text-white"
+    },
+    success: {
+        icon: <CheckIcon size={24} fill="currentColor" />,
+        className: "dark:bg-green-600 bg-green-500 text-white"
+    }
+}
+
+/**
+ * 
+ * @param {title} string 
+ * @returns 
+ */
 const Toast = ({
     title,
     desc,
@@ -16,6 +45,7 @@ const Toast = ({
     id,
     onRender,
     rendered,
+    type,
 }) => {
 
     useEffect(() => {
@@ -31,9 +61,13 @@ const Toast = ({
     const BuildToast = BuildComponent({
         name: "NotalUI Toast Container",
         defaultClasses: "flex flex-row pointer-events-auto items-center m-2 p-2 rounded-lg shadow-xl",
-        extraClasses: className,
-        conditionalClasses: [{ true: "cursor-pointer" }],
-        selectedClasses: [closeable]
+        conditionalClasses: [{ true: "cursor-pointer" }, {
+            default: className || ToastTypes.default.className,
+            error: ToastTypes.error.className,
+            info: ToastTypes.info.className,
+            success: ToastTypes.success.className,
+        }],
+        selectedClasses: [closeable, type]
     });
 
     return (
@@ -52,6 +86,11 @@ const Toast = ({
         >
             {icon && <div className="mr-2 h-full flex">
                 {icon}
+            </div>}
+            {!icon && type && ToastTypes[type]?.icon && <div className="mr-2 h-full flex">
+                {type && <div className="flex items-center justify-center">
+                    {ToastTypes[type].icon}
+                </div>}
             </div>}
             <div className="flex flex-col">
                 {title && <span className="text-lg">{title}</span>}

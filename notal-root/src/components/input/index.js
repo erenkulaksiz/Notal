@@ -3,6 +3,7 @@ import BuildComponent from "@utils/buildComponent";
 
 const Input = ({
     onChange,
+    onEnterPress,
     value,
     fullWidth = false,
     placeholder,
@@ -67,7 +68,22 @@ const Input = ({
 
     return (<div className={BuildInputContainer.classes}>
         {icon && <span className="z-20 absolute left-2 fill-inherit" style={{ transform: "scale(0.8)" }}>{icon}</span>}
-        <InputElement id={id} value={value} type={!textarea && "text"} key={id} autoFocus={autoFocus} onChange={onChange} className={BuildInput.classes} placeholder={placeholder} maxLength={maxLength} />
+        <InputElement
+            id={id}
+            value={value}
+            type={!textarea ? "text" : ""}
+            key={id}
+            autoFocus={autoFocus}
+            onChange={onChange}
+            className={BuildInput.classes}
+            placeholder={placeholder}
+            maxLength={maxLength}
+            onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                    onEnterPress();
+                }
+            }}
+        />
     </div>)
 }
 

@@ -63,7 +63,7 @@ const WorkspaceField = ({
     })
 
     return (<motion.div // min-w-[280px] 
-        className="h-full relative rounded-lg shadow flex flex-col items-start dark:bg-neutral-800 bg-neutral-200 p-0.5 mr-1.5"
+        className="h-full relative rounded-lg shadow flex flex-col items-start dark:bg-neutral-800 bg-neutral-200 p-0.5"
         animate={field?.collapsed && !hovered ? "collapse" : "normal"}
         variants={{
             collapse: {

@@ -28,10 +28,12 @@ import {
     LoginModal,
     Switch,
     Loading,
-    Tooltip
+    Tooltip,
+    Checkbox
 } from "@components";
 import useAuth from "@hooks/auth";
 import LocalSettings from "@utils/localstorage";
+import Log from "@utils/logger";
 
 const Navbar = ({
     user,

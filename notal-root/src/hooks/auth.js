@@ -11,7 +11,7 @@ import { CheckIcon, InfoIcon, SendIcon } from "@icons";
 import { server } from '../config';
 import useNotalUI from "./notalui";
 
-import { Log } from "@utils";
+import Log from "@utils/logger"
 
 export default function useAuth() {
     return useContext(authContext);
@@ -35,23 +35,17 @@ export function AuthProvider(props) {
             } else {
                 setUser(user);
                 if (!Cookies.get("auth")) {
-                    NotalUI.Toast.showMultiple([{
-                        title: "Welcome to Notal!",
-                        desc: "I'm building this platform to keep track of your projects simpler way. Please share your feedbacks with my email: erenkulaksz@gmail.com",
-                        icon: <SendIcon size={24} fill="currentColor" style={{ transform: "rotate(-36deg) scale(.8)", marginLeft: 2 }} />,
-                        className: "dark:bg-green-600 bg-green-500 text-white max-w-[400px]",
-                        closeable: true,
-                    }, {
+                    NotalUI.Toast.show({
                         desc: `Logged in as ${user.email}`,
                         icon: <InfoIcon size={24} fill="currentColor" />,
                         className: "dark:bg-green-600 bg-green-500 text-white",
                         duration: 4500,
                         timeEnabled: true,
                         closeable: true,
-                    }])
+                    })
                 }
                 const token = await user.getIdToken();
-                Cookies.set("auth", token, { expires: 1 });
+                Cookies.set("auth", token, { expires: 365 });
             }
         });
 
@@ -201,13 +195,16 @@ export function AuthProvider(props) {
             editCard: async ({ id, workspaceId, fieldId, title, desc, color, tag }) => {
                 return await AuthService.workspace.card.editCard({ id, workspaceId, fieldId, title, desc, color, tag });
             },
-            addCard: async ({ id, workspaceId, title, desc, color, tags }) => {
+            addCard: async ({ id, workspaceId, title, desc, color, tags, image }) => {
                 // id as field id
-                return await AuthService.workspace.card.addCard({ id, workspaceId, title, desc, color, tags });
+                return await AuthService.workspace.card.addCard({ id, workspaceId, title, desc, color, tags, image });
             },
             removeCard: async ({ id, workspaceId, fieldId }) => {
                 return await AuthService.workspace.card.removeCard({ id, workspaceId, fieldId });
             },
+            uploadCardImageTemp: async ({ image }) => {
+                return await AuthService.workspace.card.uploadCardImageTemp({ image });
+            }
             /*
             cardSwap: async ({ cardId, fieldId, swapType, workspaceId, toFieldId, toCardId }) => {
                 return await AuthService.cardSwap({ cardId, fieldId, swapType, workspaceId, toFieldId, toCardId });

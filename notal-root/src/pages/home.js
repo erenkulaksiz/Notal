@@ -22,7 +22,7 @@ import { HomeRoutes } from '@utils/constants';
 import useNotalUI from '@hooks/notalui';
 import LocalSettings from '@utils/localstorage';
 
-import { Log } from "@utils";
+import Log from "@utils/logger"
 
 const Home = (props) => {
     const auth = useAuth();

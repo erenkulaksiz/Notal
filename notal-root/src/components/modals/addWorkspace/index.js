@@ -29,7 +29,7 @@ import {
 
 import useAuth from "@hooks/auth";
 
-import { Log } from "@utils";
+import Log from "@utils/logger"
 
 const AddWorkspaceModal = ({ open, onClose, onAdd }) => {
     const auth = useAuth();

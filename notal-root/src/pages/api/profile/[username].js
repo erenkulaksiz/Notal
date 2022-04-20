@@ -4,7 +4,7 @@ const googleService = JSON.parse(process.env.NEXT_PUBLIC_GOOGLE_SERVICE);
 const { connectToDatabase } = require('../../../../lib/mongodb');
 const { db } = await connectToDatabase();
 
-import { Log } from "@utils";
+import Log from "@utils/logger"
 
 if (!admin.apps.length) {
     admin.initializeApp({

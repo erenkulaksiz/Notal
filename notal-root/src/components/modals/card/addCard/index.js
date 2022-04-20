@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
     Modal,
     Button,
@@ -7,16 +7,26 @@ import {
     Tooltip,
     Checkbox,
     Tab,
-    ColorPicker
+    ColorPicker,
+    Loading
 } from "@components";
 import {
     AddIcon,
     CrossIcon,
     CheckIcon,
-    CloudUploadIcon
+    CloudUploadIcon,
+    DeleteIcon
 } from "@icons";
 
+import useNotalUI from "@hooks/notalui";
+import useAuth from "@hooks/auth";
+
+import Log from "@utils/logger";
+
 const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
+    const NotalUI = useNotalUI();
+    const auth = useAuth();
+
     const [addCard, setAddCard] = useState({ title: "", desc: "", color: "#ffffff", tag: { tag: "", tagColor: "" } })
     const [addCardErrors, setAddCardErrors] = useState({ title: false, desc: false, color: false, tag: false });
 
@@ -26,6 +36,9 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
     const [cardNewTag, setCardNewTag] = useState({ title: "", color: "#ff0000" });
 
     const [tab, setTab] = useState(0);
+    const [cardImageLoading, setCardImageLoading] = useState(false);
+
+    const cardImageRef = useRef();
 
     useEffect(() => {
         if (useColor) {
@@ -36,14 +49,14 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
     const close = () => {
         onClose();
         setAddCardErrors({ title: false, desc: false, color: false, tag: false });
-        setAddCard({ ...addCard, title: "", desc: "", /*color: "",*/ tags: [] });
+        setAddCard({ ...addCard, title: "", desc: "", /*color: "",*/ tags: [], image: {} });
         setCardNewTag({ title: "", color: "#ff0000" });
         setUseTagColor(true);
         setUseColor(true);
         setTab(0);
     }
 
-    const submit = () => {
+    const submit = async () => {
         if (addCard.title.length < 3) {
             setAddCardErrors({ ...addCardErrors, title: "Card title must be minimum 3 characters long." });
             return;
@@ -60,25 +73,106 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
             setAddCardErrors({ ...addCardErrors, title: "Card title must be maximum 356 characters long." });
             return;
         }
-        onAdd({
-            title: addCard.title,
-            desc: addCard.desc,
-            color: useColor ? addCard.color : "",
-            tags: addCard.tags,
-        });
-        close();
+        if (addCard?.image && addCard?.image?.file && addCard?.image?.fileData) {
+            const file = Math.round((addCard?.image?.fileData.size / 1024));
+            if (file >= 4096) {
+                alert("maximum upload size is 4mb");
+                return;
+            }
+            if (addCard?.image?.fileData.type == "image/jpeg" || addCard?.image?.fileData.type == "image/png" || addCard?.image?.fileData.type == "image/jpg") {
+                setCardImageLoading(true);
+
+                const res = await auth.workspace.field.uploadCardImageTemp({ image: addCard.image.fileData });
+
+                if (res.success) {
+                    setCardImageLoading(false);
+                    // send res data to server now
+                    Log.debug("card image upload success! res: ", res);
+
+                    onAdd({
+                        title: addCard.title,
+                        desc: addCard.desc,
+                        color: useColor ? addCard.color : "",
+                        tags: addCard.tags,
+                        image: {
+                            file: addCard?.image?.file,
+                        }
+                    });
+                    close();
+                } else {
+                    Log.error("thumbnail upload error: ", res);
+                    setThumbnailLoading(false);
+                }
+            } else {
+                NotalUI.Alert.show({
+                    title: "Error",
+                    desc: "Only png, jpeg and jpg is allowed",
+                    type: "error"
+                });
+            }
+            close();
+        } else {
+            onAdd({
+                title: addCard.title,
+                desc: addCard.desc,
+                color: useColor ? addCard.color : "",
+                tags: addCard.tags,
+            });
+            close();
+        }
     }
 
     const CardTag = ({ color, title, onRemove }) => {
-        return (<div className="px-1 border-2 flex items-center text-xs rounded-lg dark:border-neutral-800 border-neutral-200" style={{ borderColor: color, }}>
+        return (<a href="#" onClick={onRemove} className="hover:opacity-70 px-1 border-2 flex items-center text-xs rounded-lg dark:border-neutral-800 border-neutral-200" style={{ borderColor: color, }}>
             {title}
-            <button className="hover:opacity-70" onClick={onRemove}>
+            <button onClick={onRemove}>
                 <CrossIcon size={24} className="fill-neutral-800 dark:fill-white" style={{ transform: "scale(.8)" }} />
             </button>
-        </div>)
+        </a>)
     }
 
-    return (<Modal open={open} onClose={close} className="w-[90%] sm:w-[400px] p-4 px-5">
+    const addTag = () => {
+        if (cardNewTag?.title.length < 3) {
+            setAddCardErrors({ ...addCardErrors, tag: "Tag must be minimum 3 characters long." });
+            return;
+        }
+        if (addCard?.tags && addCard?.tags.length >= 10) {
+            setAddCardErrors({ ...addCardErrors, tag: "Maximum of 10 tags is allowed at the moment." });
+            return;
+        }
+        if (cardNewTag?.title.length > 16) {
+            setAddCardErrors({ ...addCardErrors, tag: "Tag must be maximum 16 characters long." });
+            return;
+        }
+        if (useTagColor && cardNewTag?.color.length > 1 && cardNewTag?.color?.charAt(0) !== "#") {
+            setAddCardErrors({ ...addCardErrors, tag: "Please enter a valid color value." });
+            return;
+        }
+        setAddCardErrors({ ...addCardErrors, tag: false });
+        const newAddCard = addCard?.tags ?? [];
+        newAddCard.push({ title: cardNewTag.title, color: useTagColor ? cardNewTag.color : "" });
+        setAddCard({ ...addCard, tags: newAddCard });
+        setCardNewTag({ ...cardNewTag, title: "" });
+    }
+
+    const onCardImageChange = (e) => {
+        if (e.target.files && e.target.files[0]) {
+            let reader = new FileReader();
+            let file = e.target.files[0];
+            reader.onloadend = () => {
+                setAddCard({
+                    ...addCard,
+                    image: {
+                        file: reader.result,
+                        fileData: file,
+                    }
+                })
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    return (<Modal open={open} onClose={() => !cardImageLoading && close()} className="w-[90%] sm:w-[400px] min-h-[550px] justify-between p-4 px-5">
         <Modal.Title animate>
             <div className="flex flex-col w-full justify-center items-center">
                 <div className="flex flex-row items-center">
@@ -92,12 +186,17 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
                         desc: addCard.desc,
                         color: useColor ? addCard.color : "",
                         tags: addCard.tags,
+                        image: {
+                            file: addCard?.image?.file,
+                        }
                     }}
                 />
             </div>
         </Modal.Title>
-        <Modal.Body className="flex flex-col pb-2 pt-2" animate>
-            {/*<Input fullWidth icon={<UserIcon size={24} />} containerClassName="fill-neutral-600" placeholder="Workspace Title" />*/}
+        <Modal.Body className="flex flex-col pb-2 pt-2 flex-1" animate>
+            {cardImageLoading && <div className="absolute left-0 right-0 bottom-0 top-0 flex items-center justify-center bg-neutral-300/40 dark:bg-neutral-800/40 rounded-xl z-50">
+                <Loading size="xl" />
+            </div>}
             <Tab
                 selected={tab}
                 onSelect={({ index }) => setTab(index)}
@@ -154,7 +253,7 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
                     {addCardErrors.color != false && <span className="text-red-500">{addCardErrors.color}</span>}
                 </Tab.TabView>
                 <Tab.TabView index={1} className="pt-4 grid grid-cols-1 gap-2">
-                    {addCard?.tags?.length > 0 && <label>Card Tags</label>}
+                    {addCard?.tags?.length > 0 && <label>Card Tags ({addCard?.tags?.length})</label>}
                     {addCard?.tags?.length > 0 && <div className="w-full flex flex-row flex-wrap border-2 border-solid border-neutral-200 dark:border-neutral-700 rounded-xl py-2 px-2 gap-2">
                         {addCard?.tags?.map((card, index) => <CardTag
                             title={card.title}
@@ -190,21 +289,12 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
                             placeholder="New Card Tag"
                             onChange={(e) => setCardNewTag({ ...cardNewTag, title: e.target.value })}
                             value={cardNewTag.title}
-                            id="cardNewTag"
+                            id="newCardTagTitle"
                             maxLength={16}
+                            onEnterPress={() => addTag()}
                         />
                         <Button
-                            onClick={() => {
-                                if (cardNewTag.title.length < 3) {
-                                    setAddCardErrors({ ...addCardErrors, tag: "Tag must be minimum 3 characters long." });
-                                    return;
-                                }
-                                setAddCardErrors({ ...addCardErrors, tag: false });
-                                const newAddCard = addCard?.tags ?? [];
-                                newAddCard.push({ title: cardNewTag.title, color: useTagColor ? cardNewTag.color : "" });
-                                setAddCard({ ...addCard, tags: newAddCard });
-                                setCardNewTag({ ...cardNewTag, title: "" });
-                            }}
+                            onClick={() => addTag()}
                         >
                             <AddIcon size={24} fill="currentColor" />
                             Add Tag
@@ -213,17 +303,26 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
                     {addCardErrors.tag != false && <span className="text-red-500">{addCardErrors.tag}</span>}
                 </Tab.TabView>
                 <Tab.TabView index={2} className="pt-4 grid grid-cols-1 gap-2">
-                    <label>Card Image</label>
+                    <label htmlFor="cardImageUpload">Card Image</label>
                     <div
                         className="flex flex-col text-blue-400 items-center justify-center w-full h-16 border-2 border-solid border-blue-400 group hover:border-blue-300 hover:text-blue-300 rounded-xl cursor-pointer"
                         onClick={() => {
-
+                            cardImageRef.current.click();
                         }}
                     >
                         <CloudUploadIcon size={24} fill="currentColor" />
                         Upload Card Image
-                        <input type="file" style={{ display: "none" }} accept="image/png, image/jpeg" />
+                        <input type="file" id="cardImageUpload" ref={cardImageRef} onChange={onCardImageChange} style={{ display: "none" }} accept="image/png, image/jpeg" />
                     </div>
+                    {addCard?.image?.file && <Button
+                        light="dark:bg-red-600 bg-red-500"
+                        onClick={() => {
+                            setAddCard({ ...addCard, image: {} });
+                        }}
+                    >
+                        <DeleteIcon size={24} fill="currentColor" />
+                        Remove Card Image
+                    </Button>}
                 </Tab.TabView>
                 <Tab.TabView index={3} className="pt-4 grid grid-cols-1 gap-2">
                     sdfds
@@ -237,7 +336,7 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
             <Button
                 className="w-[49%] h-10"
                 light="bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500"
-                onClick={close}
+                onClick={() => !cardImageLoading && close()}
                 fullWidth="w-[49%]"
             >
                 <CrossIcon size={24} fill="currentColor" />
@@ -245,7 +344,7 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
             </Button>
             <Button
                 className="w-[49%] h-10"
-                onClick={submit}
+                onClick={() => !cardImageLoading && submit()}
                 fullWidth="w-[49%]"
             >
                 <CheckIcon size={24} fill="currentColor" />

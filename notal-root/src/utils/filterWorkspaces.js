@@ -17,7 +17,7 @@ export const FilterWorkspaces = ({ workspaces, filter }) => {
 }
 
 export const FILTER_MAP = {
-    all: () => true,
+    all: (el) => el,
     favorites: el => el.starred,
     privateWorkspaces: el => !!el?.workspaceVisible == false,
     createdAt: (a, b) => a?.createdAt - b?.createdAt,

@@ -30,7 +30,7 @@ import {
 
 import { withPublic } from "@hooks/route";
 
-import { Log } from "@utils";
+import Log from "@utils/logger"
 
 const Landing = (props) => {
   const router = useRouter();
@@ -131,13 +131,13 @@ const Landing = (props) => {
                   cursorClassName: "notal-cursor",
                 }}
               />
-              {!isClient && <>
+              {!isClient && <div>
                 Organize & Plan your
                 <span className="text-transparent ml-2 mr-2 bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600">
                   next
                 </span>
                 project with Notal 🚀
-              </>}
+              </div>}
             </h1>
             <h5 className="dark:text-neutral-400 text-gray-600 drop-shadow-lg mt-4 text-lg font-semibold">
               {"Data between users and developers is important. Notal is the solution."}

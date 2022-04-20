@@ -35,6 +35,7 @@ const Content = ({ children, blur, className }) => {
         }}
         onClick={e => e.stopPropagation()}
         className={BuildModalContent.classes}
+        tabIndex="-1"
     >
         {children}
     </motion.div>)

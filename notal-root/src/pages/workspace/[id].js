@@ -38,7 +38,7 @@ import BuildComponent from "@utils/buildComponent";
 import useNotalUI from "@hooks/notalui";
 import Handler from "@utils/handler";
 
-import { Log } from "@utils";
+import Log from "@utils/logger"
 
 const WorkspaceTabs = [
     {
@@ -237,8 +237,8 @@ const Workspace = (props) => {
                     headerContainerClassName="pl-2 pt-2 pr-2"
                     loadingWorkspace={loadingWorkspace}
                 >
-                    <Tab.TabView index={0} className="relative flex flex-1 flex-row overflow-y-auto p-2 pr-0 overflow-x-visible">
-                        {loadingWorkspace && [1, 2, 3, 4].map((item) => (
+                    <Tab.TabView index={0} className="relative flex flex-1 flex-row overflow-y-auto p-2 overflow-x-visible gap-2">
+                        {loadingWorkspace && [1, 2, 3].map((item) => (
                             <WorkspaceField skeleton key={item} /> // show skeleton loaders
                         ))}
                         {!loadingWorkspace && _workspace?.data?.fields?.map((field) => (
@@ -314,8 +314,8 @@ const Workspace = (props) => {
             open={addCardModal.visible}
             fieldTitle={addCardModal.fieldTitle}
             onClose={() => setAddCardModal({ ...addCardModal, visible: false })}
-            onAdd={({ title, desc, color, tags }) => {
-                Handler.workspace({ workspaceData, auth, _workspace, props, NotalUI }).card.add({ title, desc, color, tags, fieldId: addCardModal.fieldId });
+            onAdd={({ title, desc, color, tags, image }) => {
+                Handler.workspace({ workspaceData, auth, _workspace, props, NotalUI }).card.add({ title, desc, color, tags, fieldId: addCardModal.fieldId, image });
                 setAddCardModal({ ...addCardModal, visible: false });
             }}
         />

@@ -9,7 +9,7 @@ import useAuth from "@hooks/auth";
 import IconWhite from "@public/icon_white.webp";
 import IconGalactic from "@public/icon_galactic.webp";
 
-import { Log } from "@utils";
+import Log from "@utils/logger"
 
 const LoginModal = ({ open, onClose, onLoginSuccess }) => {
     const auth = useAuth();

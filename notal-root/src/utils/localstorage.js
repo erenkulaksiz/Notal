@@ -14,20 +14,17 @@ const LocalSettings = {
             localStorage.setItem("settings", JSON.stringify(DefaultSettings));
             return DefaultSettings; // return default data
         }
-        if (typeof DefaultSettings[item] != "undefined") { // check for valid setting
-            try {
-                const LocalItem = JSON.parse(Local);
-                if (typeof LocalItem[item] == "undefined") {
-                    localStorage.setItem("settings", JSON.stringify(DefaultSettings));
-                    return DefaultSettings;
-                }
-                return LocalItem[item];
-            } catch (error) {
+        try {
+            const LocalItem = JSON.parse(Local);
+            if (typeof LocalItem[item] == "undefined" && item != "DEBUG_LOG") {
                 localStorage.setItem("settings", JSON.stringify(DefaultSettings));
                 return DefaultSettings;
             }
+            return LocalItem[item];
+        } catch (error) {
+            localStorage.setItem("settings", JSON.stringify(DefaultSettings));
+            return DefaultSettings;
         }
-        return false;
     },
     set: (key, value) => {
         if (!isClient) return undefined;

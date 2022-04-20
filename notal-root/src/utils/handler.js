@@ -1,4 +1,4 @@
-import { Log } from "@utils";
+import Log from "@utils/logger"
 
 const Handler = {
     workspace: ({
@@ -27,7 +27,7 @@ const Handler = {
                 } else {
                     NotalUI.Alert.show({
                         title: "Error",
-                        desc: data?.error
+                        desc: data?.error,
                     });
                     workspaceData.mutate();
                 }
@@ -41,7 +41,7 @@ const Handler = {
                 } else {
                     NotalUI.Alert.show({
                         title: "Error",
-                        desc: data?.error
+                        desc: data?.error,
                     });
                     workspaceData.mutate();
                 }
@@ -55,7 +55,7 @@ const Handler = {
                     console.error("error on delete workspace: ", data.error);
                     NotalUI.Alert.show({
                         title: "Error",
-                        desc: data?.error
+                        desc: data?.error,
                     });
                     workspaceData.mutate();
                 }
@@ -89,7 +89,7 @@ const Handler = {
                     } else {
                         NotalUI.Alert.show({
                             title: "Error",
-                            desc: data?.error
+                            desc: data?.error,
                         });
                         workspaceData.mutate();
                     }
@@ -155,7 +155,7 @@ const Handler = {
                 }
             },
             card: {
-                add: async ({ fieldId, title, desc, color, tags }) => {
+                add: async ({ fieldId, title, desc, color, tags, image }) => {
                     const newFields = _workspace?.data?.fields;
                     newFields[_workspace?.data?.fields?.findIndex(el => el._id == fieldId)].cards?.push(
                         {
@@ -166,23 +166,36 @@ const Handler = {
                             createdAt: Date.now(),
                             updatedAt: Date.now(),
                             tags,
-                            owner: auth.authUser.uid
+                            owner: auth.authUser.uid,
+                            image,
                         }
                     );
                     await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: newFields } }, false);
                     const data = await auth.workspace.field.addCard({
-                        id: fieldId, workspaceId: _workspace?.data?._id, title, desc, color, tags
+                        id: fieldId, workspaceId: _workspace?.data?._id, title, desc, color, tags, image
                     });
                     Log.debug("addCardToField data: ", data);
                     if (data?.success) {
                         workspaceData.mutate();
                         window.gtag("event", "addCardToField", { login: props.validate.data.email, workspaceId: _workspace?.data?._id });
+                    } else if (data?.error == "tag-title-maxlength") {
+                        NotalUI.Toast.show({
+                            title: "Error",
+                            desc: "Maximum tag title length is 16 characters.",
+                            type: "error",
+                        });
+                    } else if (data?.error == "tag-color-invalid") {
+                        NotalUI.Toast.show({
+                            title: "Error",
+                            desc: "Invalid color value. Please start color value with #",
+                            type: "error",
+                        });
                     } else {
                         NotalUI.Alert.show({
                             title: "Error",
                             desc: "Couldn't perform the action you want. Please check the console and contact via erenkulaksz@gmail.com"
                         });
-                        Log.debug("add card error: ", data?.error);
+                        Log.error("add card error: ", data?.error);
                     }
                 },
                 edit: async ({ title, desc, id, fieldId, color = "#ff0000", tag = {} }) => {

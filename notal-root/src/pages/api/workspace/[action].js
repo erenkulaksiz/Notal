@@ -6,7 +6,7 @@ const { customAlphabet } = require('nanoid')
 
 const googleService = JSON.parse(process.env.NEXT_PUBLIC_GOOGLE_SERVICE);
 
-import { Log } from "@utils";
+import Log from "@utils/logger"
 
 if (!admin.apps.length) {
     admin.initializeApp({
@@ -34,10 +34,12 @@ const checkBearer = async (bearer) => {
 export default async function handler(req, res) {
 
     const reject = (reason = "invalid-params", status = 400) => {
+        Log.debug("reject: ", reason);
         return res.status(status).send({ success: false, error: reason });
     }
 
     const accept = (data = {}, status = 200) => {
+        Log.debug("accept: ", data, status);
         if (data) return res.status(status).send({ success: true, data });
         return res.status(status).send({ success: true });
     }
@@ -55,7 +57,7 @@ export default async function handler(req, res) {
         return reject();
     }
 
-    const { uid, title, desc, starred, id, workspaceId, color, fieldId, sortBy, workspaceVisible, tags, thumbnail, field, username, userId } = body ?? {};
+    const { uid, title, desc, starred, id, workspaceId, color, fieldId, sortBy, workspaceVisible, tags, thumbnail, field, username, userId, image } = body ?? {};
 
     const workspaceAction = {
         createworkspace: async () => {
@@ -63,28 +65,17 @@ export default async function handler(req, res) {
                 return reject();
             }
 
-            if (title?.length > 32) {
-                return reject("title-maxlength");
-            }
-            if (desc?.length > 96) {
-                return reject("desc-maxlength");
-            }
-            if (title?.length < 3) {
-                return reject("title-minlength");
-            }
-            if (thumbnail?.type == "singleColor" && thumbnail?.color.length > 7) {
-                return reject("invalid-color");
-            } else if (thumbnail?.type == "gradient" && (thumbnail?.colors?.start?.length > 7 || thumbnail?.colors?.end?.length > 7)) {
-                return reject("invalid-color");
-            }
+            if (title?.length > 32) return reject("title-maxlength")
+            if (desc?.length > 96) return reject("desc-maxlength")
+            if (title?.length < 3) return reject("title-minlength")
+            if (thumbnail?.type == "singleColor" && thumbnail?.color.length > 7) return reject("invalid-color");
+            else if (thumbnail?.type == "gradient" && (thumbnail?.colors?.start?.length > 7 || thumbnail?.colors?.end?.length > 7)) return reject("invalid-color");
 
             try {
                 // first check how many workspaces user have
                 const workspacesCount = await workspacesCollection.find({ owner: uid }).count();
 
-                if (workspacesCount >= 20) {
-                    return reject("max-workspaces");
-                }
+                if (workspacesCount >= 20) return reject("max-workspaces");
 
                 let givenId = false;
                 let length = 4; // default id length
@@ -235,8 +226,6 @@ export default async function handler(req, res) {
                     const workspaceUsers = workspace.users ?? [];
                     Log.debug("users: ", workspaceUsers);
                     const wUsers = await usersCollection.find({ "uid": { $in: workspaceUsers } }).toArray();
-
-                    Log.debug("!!!wuser: ", wUsers);
 
                     const newWUsers = wUsers.map(el => {
                         return {
@@ -534,8 +523,11 @@ export default async function handler(req, res) {
             if (!id || !uid || !workspaceId || !title) return reject("invalid-params");
             if (color && color.length > 7) return reject("https://youtu.be/dQw4w9WgXcQ");
             if (thumbnail && thumbnail?.type == "gradient" && (thumbnail?.colors?.start?.length > 7 || thumbnail?.colors?.end?.length > 7)) return reject("https://youtu.be/dQw4w9WgXcQ");
-            if (title?.length > 40) return reject("title-maxlength");
+            if (title?.length > 40) return reject("https://youtu.be/HAK0fKEDPi4");
             if (desc?.length > 356) return reject("desc-maxlength");
+            if (tags?.length > 10) return reject("tags-maxlength");
+
+            if (tags && !Array.isArray(tags)) return reject("tags-invalid");
 
             const decodedToken = await checkBearer(req.headers['authorization']);
 
@@ -543,25 +535,96 @@ export default async function handler(req, res) {
 
             const user = await usersCollection.findOne({ uid });
             if (user.uid == decodedToken.user_id) {
-                workspacesCollection.findOneAndUpdate({ "_id": ObjectId(workspaceId), "fields._id": ObjectId(id) },
-                    {
-                        $push: {
-                            "fields.$.cards": {
-                                title,
-                                desc,
-                                color,
-                                createdAt: Date.now(),
-                                updatedAt: Date.now(),
-                                tags,
-                                owner: uid,
-                                _id: ObjectId(),
-                            }
+
+                let newTags = [];
+
+                if (tags && tags.length > 0) {
+                    newTags = tags.map(el => {
+                        return {
+                            title: el.title,
+                            color: el.color,
+                            createdAt: Date.now(),
+                            updatedAt: Date.now(),
+                            _id: ObjectId(),
                         }
-                    }, (error) => {
-                        if (error) return reject(error);
+                    });
+                }
+
+                // check new tags with for each
+                if (tags && tags.length > 0) newTags.forEach(el => {
+                    if (el.title.length > 16) {
+                        return reject("tag-title-maxlength");
+                    }
+                    if (el.color && el.color.length > 7) {
+                        return reject("tag-color-maxlength");
+                    }
+                    if (el.color?.length > 1) {
+                        if (el.color.charAt(0) != "#") {
+                            return reject("tag-color-invalid");
+                        }
+                    }
+                });
+
+                if (image?.file) {
+                    // card has an image, first add the card and then update its image to real one
+                    const cardId = ObjectId();
+
+                    const storageRef = admin.storage().bucket("gs://notal-1df19.appspot.com");
+                    const file = storageRef.file(`cardImages/temp/user_${uid}`);
+                    const fileExist = await file.exists();
+                    if (fileExist[0]) {
+                        await file.move(`cardImages/card_${cardId}`);
+                        const newFile = storageRef.file(`cardImages/card_${cardId}`);
+                        //const meta = await newFile.getMetadata();
+                        const url = await newFile.getSignedUrl({
+                            action: 'read',
+                            expires: '03-09-2491'
+                        });
+
+                        await workspacesCollection.findOneAndUpdate({ "_id": ObjectId(workspaceId), "fields._id": ObjectId(id) },
+                            {
+                                $push: {
+                                    "fields.$.cards": {
+                                        title,
+                                        desc,
+                                        color,
+                                        createdAt: Date.now(),
+                                        updatedAt: Date.now(),
+                                        tags: newTags,
+                                        owner: uid,
+                                        _id: ObjectId(cardId),
+                                        image: {
+                                            file: url[0],
+                                        }
+                                    }
+                                }
+                            }, (error) => {
+                                if (error) return reject(error);
+                            });
                         return accept();
                     }
-                )
+                    return reject("no-image");
+                } else {
+                    workspacesCollection.findOneAndUpdate({ "_id": ObjectId(workspaceId), "fields._id": ObjectId(id) },
+                        {
+                            $push: {
+                                "fields.$.cards": {
+                                    title,
+                                    desc,
+                                    color,
+                                    createdAt: Date.now(),
+                                    updatedAt: Date.now(),
+                                    tags: newTags,
+                                    owner: uid,
+                                    _id: ObjectId(),
+                                }
+                            }
+                        }, (error) => {
+                            if (error) return reject(error);
+                            return accept();
+                        }
+                    )
+                }
             } else {
                 return reject("invalid-token");
             }
@@ -649,9 +712,10 @@ export default async function handler(req, res) {
 
                 const workspace = await workspacesCollection.findOne({ "_id": ObjectId(id) });
 
+                if (workspace.users >= 20) return reject("workspace-max-users");
                 if (!workspace) return reject("workspace-not-found");
-
-                if (workspace?.users.findIndex(el => el == user.uid) != -1) return reject("user-already-added")
+                if (workspace?.owner == user.uid) return reject("owner-cant-be-added");
+                if (workspace?.users.findIndex(el => el == user.uid) != -1) return reject("user-already-added");
 
                 await workspacesCollection.updateOne(
                     {
