@@ -425,6 +425,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                             onChange={(e) => setAddWorkspaceOwner(e.target.value)}
                             icon={<AtIcon size={24} className="fill-current" />}
                             maxLength={32}
+                            onEnterPress={() => addUser({ username: addWorkspaceOwner })}
                         />
                         <Button className="ml-2" onClick={() => addUser({ username: addWorkspaceOwner })}>
                             <AddIcon size={24} fill="currentColor" />

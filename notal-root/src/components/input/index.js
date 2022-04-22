@@ -80,7 +80,9 @@ const Input = ({
             maxLength={maxLength}
             onKeyDown={(e) => {
                 if (e.key === "Enter") {
-                    onEnterPress();
+                    if (typeof onEnterPress === "function") {
+                        onEnterPress();
+                    }
                 }
             }}
         />

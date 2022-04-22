@@ -218,6 +218,7 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
                         value={addCard.title}
                         id="cardTitle"
                         maxLength={40}
+                        onEnterPress={() => !cardImageLoading && submit()}
                     />
                     {addCardErrors.title != false && <span className="text-red-500">{addCardErrors.title}</span>}
                     <label htmlFor="cardDescription">Card Description</label>
