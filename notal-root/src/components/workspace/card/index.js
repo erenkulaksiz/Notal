@@ -3,7 +3,7 @@ import prettyMilliseconds from "pretty-ms";
 import Link from "next/link";
 import FsLightbox from 'fslightbox-react';
 
-import { MoreIcon, WarningIcon, SettingsIcon, DeleteIcon } from "@icons";
+import { MoreIcon, WarningIcon, SettingsIcon, DeleteIcon, DragIcon } from "@icons";
 import { Button, Tooltip } from "@components";
 import BuildComponent from "@utils/buildComponent";
 
@@ -34,7 +34,6 @@ const WorkspaceFieldCard = ({
     isOwner,
     fieldCollapsed,
     cardOwner,
-    innerRef,
     isDragging,
     provided,
 },) => {
@@ -59,9 +58,9 @@ const WorkspaceFieldCard = ({
 
     return (<div
         className={BuildCard.classes}
-        ref={provided.innerRef}
+        ref={provided?.innerRef}
         key={card._id}
-        {...provided.draggableProps}
+        {...provided?.draggableProps}
     >
         <CardColor color={card.color} />
         <div className="flex flex-1 p-2 px-3 w-full">
@@ -86,7 +85,7 @@ const WorkspaceFieldCard = ({
                         {card?.color == "#D28519" && <div className="py-1">
                             <WarningIcon size={24} fill="#D28519" style={{ transform: "scale(.7)" }} />
                         </div>}
-                        {(!preview && isOwner) && !fieldCollapsed && <div className="fill-neutral-200 dark:fill-neutral-600 relative">
+                        {(!preview && isOwner) && !fieldCollapsed && <div className="flex flex-row fill-neutral-200 dark:fill-neutral-600 relative">
                             <Tooltip
                                 containerClassName="px-1 p-1"
                                 blockContent={false}
@@ -106,11 +105,24 @@ const WorkspaceFieldCard = ({
                                     className="px-1"
                                     title="Show More Card Options"
                                     aria-label="Show More Card Options"
-                                    {...provided.dragHandleProps}
                                 >
                                     <MoreIcon size={24} className="fill-neutral-800 dark:fill-white" style={{ transform: "scale(.7)" }} />
                                 </Button>
                             </Tooltip>
+                            <Button
+                                light
+                                size="sm"
+                                className="px-1"
+                                title="Drag Card"
+                                aria-label="Drag Card"
+                                {...provided.dragHandleProps}
+                            >
+                                <DragIcon
+                                    size={24}
+                                    fill="currentColor"
+                                    style={{ transform: "scale(.7)" }}
+                                />
+                            </Button>
                         </div>}
                     </div>
                 </div>
