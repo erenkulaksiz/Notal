@@ -112,7 +112,7 @@ const Navbar = ({
         initial={navbarCollapse ? "hidden" : "show"}
         animate={navbarCollapse ? "hidden" : "show"}
         transition={{ type: "sticky", stifness: 500 }}
-        className="flex sticky flex-row p-4 top-0 z-50 max-h-16"
+        className="flex sticky flex-row p-4 top-0 z-50 max-h-16 w-full"
     >
         <div className="absolute left-0 right-0 top-0 bottom-0 dark:bg-black/30 bg-white/30 backdrop-blur-md -z-10 shadow-none dark:shadow-md" />
         <div className="w-1/2 flex items-center">
@@ -210,12 +210,15 @@ const Navbar = ({
                     </span>
                 </Button>
             </Link>}
-            {(!auth.authUser && isClient) && <Tooltip content="Change Theme" direction="bottom">
+            {(!auth.authUser && isClient) && <Tooltip
+                content="Change Theme"
+                direction="bottom"
+                allContainerClassName="mr-2"
+            >
                 <Switch
                     onChange={e => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
                     value={resolvedTheme == "dark"}
                     icon={resolvedTheme == "dark" ? <LightIcon size={24} fill="black" style={{ transform: "scale(0.7)" }} /> : <DarkIcon size={24} fill="black" style={{ transform: "scale(0.7)" }} />}
-                    className="mr-2"
                     role="switch"
                     id="changeTheme"
                 />

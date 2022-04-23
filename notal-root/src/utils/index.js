@@ -17,8 +17,8 @@ export const CheckToken = async ({ token, props, user }) => {
         || props.validate?.error == "validation-error"
         || (props.validate?.error == "no-token" && user)
     ) {
-        await Cookie.set("auth", token, { expires: 1 });
-        Log.debug("Have to reload!");
+        await Cookie.set("auth", token);
+        Log.debug("Have to reload! checkToken");
         return false;
     } else {
         if (!props.validate?.error) {

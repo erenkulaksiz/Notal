@@ -30,8 +30,8 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
     const [addCard, setAddCard] = useState({ title: "", desc: "", color: "#ffffff", tag: { tag: "", tagColor: "" } })
     const [addCardErrors, setAddCardErrors] = useState({ title: false, desc: false, color: false, tag: false });
 
-    const [useColor, setUseColor] = useState(true);
-    const [useTagColor, setUseTagColor] = useState(true);
+    const [useColor, setUseColor] = useState(false);
+    const [useTagColor, setUseTagColor] = useState(false);
 
     const [cardNewTag, setCardNewTag] = useState({ title: "", color: "#ff0000" });
 

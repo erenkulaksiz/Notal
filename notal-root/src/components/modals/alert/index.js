@@ -55,6 +55,7 @@ const AlertModal = ({
             </div>
             {closeable && showCloseButton && <Button
                 className="h-10 w-1/2"
+                light="bg-red-500 dark:bg-red-700"
                 onClick={onClose}
             >
                 Close

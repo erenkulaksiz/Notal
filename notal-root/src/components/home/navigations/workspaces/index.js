@@ -28,6 +28,7 @@ import {
 } from '@icons';
 import { FilterWorkspaces } from "@utils/filterWorkspaces";
 import Handler from "@utils/handler";
+import Log from "@utils/logger";
 
 const HomeNavWorkspaces = ({ validate, isValidating }) => {
     const auth = useAuth();
@@ -43,6 +44,8 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
     const [_workspacesFiltered, _setWorkspacesFiltered] = useState([]);
     const [_workspaceValidating, _setWorkspaceValidating] = useState(true);
 
+    const [showError, setShowError] = useState(false);
+
     const workspacesData = useSWR(
         ['api/fetchWorkspaces'],
         () => fetchWorkspaces({ token: Cookies.get("auth"), uid: validate?.data?.uid })
@@ -51,14 +54,12 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
     useEffect(() => {
         (async () => {
             if (workspacesData?.data?.error) {
-                console.error("swr error workspacesData: ", workspacesData?.data);
+                Log.error("swr error workspacesData: ", workspacesData?.data);
             }
             if (workspacesData?.data?.error?.code == "auth/id-token-expired" || workspacesData?.data?.error == "no-token") {
                 //const token = await auth.users.getIdToken();
-                setTimeout(() => {
-                    router.replace(router.asPath);
-                    workspacesData.mutate();
-                }, 2000);
+                router.replace(router.asPath);
+                workspacesData.mutate();
             } else {
                 if (workspacesData?.data?.success) {
                     _setWorkspaces(workspacesData?.data);
@@ -66,7 +67,15 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
                 }
             }
             if (workspacesData.error) {
-                console.error("swr err: ", workspacesData.error);
+                Log.error("swr err: ", workspacesData.error);
+                if (!showError) {
+                    setShowError(true);
+                    NotalUI.Alert.show({
+                        title: "Error",
+                        titleIcon: <CrossIcon size={24} fill="currentColor" />,
+                        desc: "Couln't connect to the server. Please reload the page and make sure you have internet connection.",
+                    });
+                }
             }
         })();
     }, [workspacesData]);

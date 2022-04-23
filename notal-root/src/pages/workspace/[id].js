@@ -68,28 +68,43 @@ const Workspace = (props) => {
     const { id } = router.query;
 
     const workspaceData = useSWR(
-        ["api/fetchWorkspace/" + id],
-        () => fetchWorkspace({ token: Cookies.get("auth"), id, uid: props?.validate?.data?.uid }) // get token from cookie
+        [`api/fetchWorkspace/${id}`],
+        () => fetchWorkspace({ token: Cookies.get("auth"), id, uid: props?.validate?.data?.uid })
     );
 
+    /**
+     * States
+     */
+
     // Modals
-
     const [addFieldModal, setAddFieldModal] = useState({ visible: false, workspaceTitle: "" });
-    const [addCardModal, setAddCardModal] = useState({ visible: false, fieldId: "", fieldTitle: "" });
-    const [editCardModal, setEditCardModal] = useState({ visible: false, card: {}, fieldId: "" });
-
     const [settingsModal, setSettingsModal] = useState(false);
-    const [editField, setEditField] = useState({ visible: false, title: "", fieldId: "" });
 
     // Workspace
     const [loadingWorkspace, setLoadingWorkspace] = useState(true);
     const [_workspace, _setWorkspace] = useState({});
     const [_workspaceValidating, _setWorkspaceValidating] = useState(true);
 
+    // Tab
     const [tab, setTab] = useState(0);
 
+    /**
+     * Workspace Data
+     */
     const isOwner = (_workspace?.data ? (_workspace?.data?.owner == props?.validate?.uid) : false);
     const notFound = (_workspace?.error == "not-found" || _workspace?.error == "invalid-params" || _workspace?.error == "user-workspace-private")
+
+    /**
+     * Drag Drop Callback
+     */
+    props.DragDropHandler.onDragEnd = (result) => {
+        Handler.workspace({ workspaceData, auth, _workspace, props, NotalUI }).card.reOrder({
+            destination: result.destination,
+            cardId: result.draggableId,
+            source: result.source,
+        });
+        Log.debug("result onDragDrop: ", result);
+    }
 
     // Check for validation
     useEffect(() => {
@@ -267,6 +282,28 @@ const Workspace = (props) => {
             </div>
             {notFound && <WorkspaceNotFound />}
         </div>
+        <AddFieldModal
+            open={addFieldModal.visible}
+            workspaceTitle={addFieldModal.workspaceTitle}
+            onClose={() => setAddFieldModal({ ...addFieldModal, visible: false })}
+            onAdd={({ title }) => {
+                Handler.workspace({ workspaceData, auth, _workspace, props, NotalUI }).field.add({ title, sortBy: "index" });
+                setAddFieldModal({ ...addFieldModal, visible: false });
+            }}
+        />
+        <WorkspaceSettingsModal
+            open={settingsModal}
+            workspace={_workspace?.data}
+            onClose={() => setSettingsModal(false)}
+            onSubmit={({ title, desc, thumbnail }) => {
+                Handler.workspace({ workspaceData, auth, _workspace, props, NotalUI }).edit({ title, desc, thumbnail });
+                setSettingsModal(false);
+            }}
+            onUserChange={() => {
+                workspaceData.mutate();
+                //setSettingsModal(false);
+            }}
+        />
     </div>)
 }
 

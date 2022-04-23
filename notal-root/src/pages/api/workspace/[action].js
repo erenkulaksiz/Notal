@@ -38,9 +38,9 @@ export default async function handler(req, res) {
         return res.status(status).send({ success: false, error: reason });
     }
 
-    const accept = (data = {}, status = 200) => {
-        Log.debug("accept: ", data, status);
-        if (data) return res.status(status).send({ success: true, data });
+    const accept = (data, status = 200, action) => {
+        Log.debug("accept: ", data, status, action);
+        if (data) return res.status(status).send({ success: true, data, });
         return res.status(status).send({ success: true });
     }
 
@@ -57,7 +57,7 @@ export default async function handler(req, res) {
         return reject();
     }
 
-    const { uid, title, desc, starred, id, workspaceId, color, fieldId, sortBy, workspaceVisible, tags, thumbnail, field, username, userId, image } = body ?? {};
+    const { uid, title, desc, starred, id, workspaceId, color, fieldId, sortBy, workspaceVisible, tags, thumbnail, field, userId, username, image } = body ?? {};
 
     const workspaceAction = {
         createworkspace: async () => {
@@ -126,7 +126,7 @@ export default async function handler(req, res) {
                                 expires: '03-09-2491'
                             });
                             return await workspacesCollection.updateOne({ _id: ObjectId(resId) }, { $set: { thumbnail: { type: "image", file: url[0] } } })
-                                .then(() => { return accept() })
+                                .then(() => accept())
                                 .catch(error => { return reject(error) });
                         } else {
                             return accept();
@@ -150,23 +150,20 @@ export default async function handler(req, res) {
                 if (uid === user.uid || user?.role === "admin") {
                     try {
                         const workspaces = await workspacesCollection.find({ owner: uid }).toArray();
-                        res.status(200).send({
-                            success: true,
-                            data: workspaces.map(el => {
-                                return {
-                                    _id: el._id,
-                                    id: el?.id,
-                                    createdAt: el.createdAt,
-                                    desc: el.desc,
-                                    title: el.title,
-                                    owner: el.owner,
-                                    starred: el.starred,
-                                    updatedAt: el.updatedAt,
-                                    workspaceVisible: el.workspaceVisible,
-                                    thumbnail: el.thumbnail,
-                                }
-                            })
-                        });
+                        return accept(workspaces.map(el => {
+                            return {
+                                _id: el._id,
+                                id: el?.id,
+                                createdAt: el.createdAt,
+                                desc: el.desc,
+                                title: el.title,
+                                owner: el.owner,
+                                starred: el.starred,
+                                updatedAt: el.updatedAt,
+                                workspaceVisible: el.workspaceVisible,
+                                thumbnail: el.thumbnail,
+                            }
+                        }));
                     } catch (error) {
                         return reject(error);
                     }
@@ -175,9 +172,8 @@ export default async function handler(req, res) {
                 }
             } else {
                 const workspaces = await workspacesCollection.find({ owner: decodedToken.uid }).toArray();
-                res.status(200).send({
-                    success: true,
-                    data: workspaces.map(el => {
+                return accept(
+                    workspaces.map(el => {
                         return {
                             _id: el._id,
                             id: el?.id,
@@ -191,7 +187,7 @@ export default async function handler(req, res) {
                             thumbnail: el.thumbnail,
                         }
                     })
-                });
+                );
             }
         },
         getworkspace: async () => {
@@ -240,20 +236,17 @@ export default async function handler(req, res) {
 
                     const user = await usersCollection.findOne({ "uid": workspace.owner });
                     if (user) {
-                        res.status(200).send({
-                            success: true,
-                            data: {
-                                ...workspace,
-                                ownerUser: {
-                                    username: user.username,
-                                    fullname: user.fullname ?? "",
-                                    avatar: user.avatar ?? ""
-                                },
-                                users: newWUsers
-                            }
+                        return accept({
+                            ...workspace,
+                            ownerUser: {
+                                username: user.username,
+                                fullname: user.fullname ?? "",
+                                avatar: user.avatar ?? ""
+                            },
+                            users: newWUsers
                         });
                     } else {
-                        res.status(400).send({ success: false, error: "please report this to erenkulaksz@gmail.com", reason: "workspace owner doesnt match" });
+                        return reject("workspace-owner-user-doesnt-match");
                     }
                 } else {
                     // check bearer
@@ -282,28 +275,25 @@ export default async function handler(req, res) {
                                 }
                             });
 
-                            res.status(200).send({
-                                success: true,
-                                data: {
-                                    ...workspace,
-                                    ownerUser: {
-                                        username: user.username,
-                                        fullname: user.fullname ?? "",
-                                        avatar: user.avatar ?? ""
-                                    },
-                                    users: newWUsers,
-                                }
-                            });
+                            return accept({
+                                ...workspace,
+                                ownerUser: {
+                                    username: user.username,
+                                    fullname: user.fullname ?? "",
+                                    avatar: user.avatar ?? ""
+                                },
+                                users: newWUsers
+                            })
                         } catch (error) {
-                            res.status(400).send({ success: false, error: new Error(error).message });
+                            return reject(error);
                         }
                     } else {
-                        res.status(400).send({ success: false, error: "invalid-params" });
+                        return reject();
                     }
                 }
             } catch (error) {
-                Log.debug("error with workspace fetch: ", new Error(error).message);
-                res.status(400).send({ success: false, error: "not-found" });
+                Log.error("error with workspace fetch: ", new Error(error).message);
+                return reject("not-found")
             }
         },
         getworkspacedata: async () => {
@@ -338,7 +328,6 @@ export default async function handler(req, res) {
                     updatedAt: workspace?.updatedAt,
                     createdAt: workspace?.createdAt,
                     workspaceVisible: workspace?.workspaceVisible,
-
                 });
             } catch (error) {
                 return reject(error);

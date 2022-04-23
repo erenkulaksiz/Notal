@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { Draggable } from 'react-beautiful-dnd';
 
 import {
     Button,
@@ -33,13 +34,12 @@ const WorkspaceField = ({
     onEditCard,
     onDeleteCard,
     isOwner,
-    workspaceUsers
-}) => {
+    workspaceUsers,
+    provided,
+}, ...rest) => {
     const [hovered, setHovered] = useState(false);
 
-    if (skeleton) {
-        return (<WorkspaceFieldSkeleton />)
-    }
+    if (skeleton) return <WorkspaceFieldSkeleton />;
 
     const BuildFieldTitle = BuildComponent({
         name: "Workspace Field",
@@ -62,9 +62,10 @@ const WorkspaceField = ({
         selectedClasses: [!!field?.collapsed && !hovered]
     })
 
-    return (<motion.div // min-w-[280px] 
+    return (<motion.div // min-w-[280px]
         className="h-full relative rounded-lg shadow flex flex-col items-start dark:bg-neutral-800 bg-neutral-200 p-0.5"
         animate={field?.collapsed && !hovered ? "collapse" : "normal"}
+        key={field._id}
         variants={{
             collapse: {
                 width: "140px",
@@ -80,6 +81,7 @@ const WorkspaceField = ({
         transition={{ type: "spring", damping: 15, mass: .25 }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
+        {...rest}
     //onClick={() => setHovered(!hovered)}
     >
         <div className={BuildFieldTitle.classes}>
@@ -120,17 +122,32 @@ const WorkspaceField = ({
                 </Tooltip>}
             </div>
         </div>
-        <div className="overflow-auto h-full w-full">
+        <div
+            className="overflow-auto h-full w-full"
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+        >
             {field?.cards && field?.cards.map((card, index) =>
-                <WorkspaceFieldCard
-                    card={card}
-                    fieldCollapsed={!!field?.collapsed && !hovered}
-                    key={card._id}
-                    onDelete={() => onDeleteCard({ id: card._id })}
-                    isOwner={isOwner}
-                    cardOwner={workspaceUsers.filter(el => el.uid == card.owner)[0]}
-                    onSettings={() => onEditCard({ card })}
-                />
+                <Draggable index={index} draggableId={card._id} isDragDisabled={!isOwner} key={card._id}>
+                    {(provided, snapshot) => (
+                        <>
+                            <WorkspaceFieldCard
+                                innerRef={provided.innerRef}
+                                {...provided.draggableProps}
+                                provided={provided}
+                                id={card._id}
+                                card={card}
+                                fieldCollapsed={!!field?.collapsed && !hovered && !snapshot.isDragging}
+                                onDelete={() => onDeleteCard({ id: card._id })}
+                                isOwner={isOwner}
+                                cardOwner={workspaceUsers.filter(el => el.uid == card.owner)[0]}
+                                onSettings={() => onEditCard({ card })}
+                                isDragging={snapshot.isDragging}
+                            />
+                            {provided.placeholder}
+                        </>
+                    )}
+                </Draggable>
             )}
             {(field?.cards?.length == 0 || !field?.cards)
                 && <WorkspaceAddCardBanner />}

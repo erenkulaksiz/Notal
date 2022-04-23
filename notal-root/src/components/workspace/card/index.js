@@ -12,8 +12,16 @@ const CardColor = ({ color }) => {
     return (<div className="flex min-w-[.4em] rounded-tl rounded-bl shadow" style={{ backgroundColor: color }} />)
 }
 
-const CardTag = ({ color, title }) => {
-    return (<div className="p-1 py-[2px] border-2 flex text-xs rounded-lg dark:border-neutral-800 border-neutral-300" style={{ borderColor: color }}>
+const CardTag = ({ color, title, small = false }) => {
+
+    const BuildCardTag = BuildComponent({
+        name: "Workspace Field Card Tag",
+        defaultClasses: "p-1 py-[2px] border-2 flex rounded-lg dark:border-neutral-800 border-neutral-300",
+        conditionalClasses: [{ true: "text-[.6em]", false: "text-xs" }],
+        selectedClasses: [small]
+    });
+
+    return (<div className={BuildCardTag.classes} style={{ borderColor: color }}>
         {title}
     </div>)
 }
@@ -26,7 +34,10 @@ const WorkspaceFieldCard = ({
     isOwner,
     fieldCollapsed,
     cardOwner,
-}) => {
+    innerRef,
+    isDragging,
+    provided,
+}, ...rest) => {
     const [isImageFS, setIsImageFS] = useState(false);
 
     const BuildTitle = BuildComponent({
@@ -36,13 +47,37 @@ const WorkspaceFieldCard = ({
         selectedClasses: [!fieldCollapsed]
     });
 
-    return (<div className="relative w-full rounded group min-h-min flex flex-row dark:bg-neutral-900 bg-white border-solid border-b-2 border-b-neutral-200 dark:border-b-neutral-800">
+    const BuildCard = BuildComponent({
+        name: "Workspace Field Card",
+        defaultClasses: "relative w-full rounded-lg group min-h-min flex flex-row dark:bg-neutral-900 bg-white",
+        conditionalClasses: [{
+            true: "border-dashed border-2 border-neutral-300 dark:border-neutral-700 shadow-xl",
+            false: "border-solid border-b-2 border-b-neutral-200 dark:border-b-neutral-800"
+        }],
+        selectedClasses: [isDragging]
+    });
+
+    return (<div
+        className={BuildCard.classes}
+        ref={innerRef}
+        {...rest}
+        key={card._id}
+    >
         <CardColor color={card.color} />
         <div className="flex flex-1 p-2 px-3 w-full">
             <div className="flex flex-col items-start overflow-ellipsis w-full">
-                {card?.tags?.length > 0 && Array.isArray(card?.tags) && !fieldCollapsed && <div className="flex flex-row gap-1 flex-wrap mb-1">
-                    {card?.tags?.map((tag, index) => tag?.title && <CardTag key={index} color={tag?.color} title={tag?.title} />)}
-                </div>}
+                {card?.tags?.length > 0
+                    && Array.isArray(card?.tags)
+                    && !fieldCollapsed
+                    && <div className="flex flex-row gap-1 flex-wrap mb-1">
+                        {card?.tags?.map((tag, index) => tag?.title
+                            && <CardTag
+                                key={tag._id}
+                                color={tag?.color}
+                                title={tag?.title}
+                            />
+                        )}
+                    </div>}
                 <div className="flex flex-row w-full justify-between items-center">
                     <div className={BuildTitle.classes}>
                         {card.title}
@@ -65,7 +100,15 @@ const WorkspaceFieldCard = ({
                                     </Button>
                                 </div>}
                             >
-                                <Button light size="sm" className="px-1" title="Show More Card Options" aria-label="Show More Card Options">
+                                <Button
+                                    light
+                                    size="sm"
+                                    className="px-1"
+                                    title="Show More Card Options"
+                                    aria-label="Show More Card Options"
+
+                                    {...provided.dragHandleProps}
+                                >
                                     <MoreIcon size={24} className="fill-neutral-800 dark:fill-white" style={{ transform: "scale(.7)" }} />
                                 </Button>
                             </Tooltip>
@@ -79,7 +122,7 @@ const WorkspaceFieldCard = ({
                     <div className="flex items-center justify-center w-full mt-2">
                         <img
                             src={card?.image?.file}
-                            className="object-cover rounded-lg w-full cursor-pointer hover:opacity-80 shadow-lg max-w-[200px]"
+                            className="object-cover rounded-lg w-full cursor-pointer hover:opacity-80 shadow-lg max-w-[250px]"
                             alt="saul goodman"
                             onClick={() => setIsImageFS(!isImageFS)}
                         />
@@ -108,9 +151,24 @@ const WorkspaceFieldCard = ({
                         </div>
                     </a>
                 </Link>}
+                {fieldCollapsed
+                    && card?.tags
+                    && card?.tags?.length > 0
+                    && Array.isArray(card?.tags)
+                    && <div className="flex flex-row gap-1 flex-wrap mt-1">
+                        {card?.tags?.slice(0, 1).map((tag, index) => tag?.title &&
+                            <CardTag
+                                key={tag._id || index}
+                                color={tag?.color}
+                                title={tag?.title}
+                                small
+                            />
+                        )}
+                    </div>
+                }
             </div>
         </div>
-    </div >)
+    </div>)
 }
 
 export default WorkspaceFieldCard;

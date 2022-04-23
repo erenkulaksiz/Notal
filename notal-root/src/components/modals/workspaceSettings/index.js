@@ -422,7 +422,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                             containerClassName="flex-1"
                             placeholder="Username"
                             value={addWorkspaceOwner}
-                            onChange={(e) => setAddWorkspaceOwner(e.target.value)}
+                            onChange={(e) => setAddWorkspaceOwner(e.target.value.replace(/[^\w\s]/gi, "").replace(/\s/g, '').toLowerCase())}
                             icon={<AtIcon size={24} className="fill-current" />}
                             maxLength={32}
                             onEnterPress={() => addUser({ username: addWorkspaceOwner })}

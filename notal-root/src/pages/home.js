@@ -65,7 +65,7 @@ const Home = (props) => {
             showCollapse
         />
 
-        <main className="relative flex flex-1 flex-row bg-white dark:bg-neutral-900 overflow-y-auto overflow-x-hidden">
+        <main className="relative w-full flex flex-1 flex-row bg-white dark:bg-neutral-900 overflow-y-auto overflow-x-hidden">
             {isClient && false && <HomeSidebar
                 current={homeViewing}
                 onViewingChange={({ nav }) => setHomeViewing(nav.id)}

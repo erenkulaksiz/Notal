@@ -228,6 +228,24 @@ const Handler = {
                         workspaceData.mutate();
                     }
                 },
+                reOrder: async ({ cardId, destination, source }) => {
+                    // destination: { index: 0, droppableId: "xxx" }
+
+                    const newFields = _workspace?.data?.fields;
+                    const newFieldIndex = newFields?.findIndex(el => el._id == source.droppableId);
+                    const newField = _workspace?.data?.fields[newFieldIndex];
+                    const copyCard = { ...newField?.cards[source.index] };
+
+                    newField?.cards?.splice(source.index, 1);
+
+                    const insertFieldIndex = newFields?.findIndex(el => el._id == destination.droppableId);
+                    const newInsertField = newFields[insertFieldIndex];
+
+                    newInsertField?.cards?.splice(destination.index, 0, copyCard);
+
+                    await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: newFields } }, false);
+                    console.log("copyCard: ", copyCard);
+                }
             }
         }
     },

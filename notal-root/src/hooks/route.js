@@ -1,11 +1,10 @@
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import React, { useEffect } from 'react';
+import Cookies from 'js-cookie';
 
 import { isClient } from '@utils';
-
 import { Loading } from '@components';
-
 import useAuth from './auth';
 
 const LoadingPage = <div className="w-full h-full justify-center items-center flex flex-col">
@@ -25,7 +24,7 @@ export function withPublic(Component) {
         const auth = useAuth();
         const router = isClient && useRouter();
 
-        if (props.validate?.success || auth?.authUser) {
+        if (props.validate?.success || auth?.authUser || Cookies.get("auth")) {
             isClient && router.replace("/home");
             return LoadingPage;
         }
@@ -43,7 +42,7 @@ export function withAuth(Component) {
         const auth = useAuth();
         const router = isClient && useRouter();
 
-        if (props.validate.success) {
+        if (props.validate.success || Cookies.get("auth")) {
             return <Component {...props} />
         } else {
             if (auth.authLoading) {

@@ -6,9 +6,13 @@ export const fetchWorkspaces = ({ token, uid }) => fetch(`${server}/api/workspac
     headers: { 'Authorization': `Bearer ${token || ""}` },
     body: JSON.stringify({ uid }),
 })
-    .then(response => response.json())
-    .catch((error) => { return { success: false, error } });
-
+    .then(response => {
+        try {
+            return response.json();
+        } catch (error) {
+            return { success: false, error }
+        }
+    });
 /*
 export const fetchValidate = ({ url, token }) => fetch(`${server}/${url}`, {
     'Content-Type': 'application/json',
@@ -27,4 +31,10 @@ export const fetchWorkspace = ({ token, id, uid }) => fetch(`${server}/api/works
     headers: { 'Authorization': `Bearer ${token || ""}` },
     body: JSON.stringify({ uid, id }),
 })
-    .then(response => response.json());
+    .then(response => {
+        try {
+            return response.json();
+        } catch (error) {
+            return { success: false, error }
+        }
+    });
