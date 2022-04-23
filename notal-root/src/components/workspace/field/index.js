@@ -36,7 +36,7 @@ const WorkspaceField = ({
     isOwner,
     workspaceUsers,
     provided,
-}, ...rest) => {
+}) => {
     const [hovered, setHovered] = useState(false);
 
     if (skeleton) return <WorkspaceFieldSkeleton />;
@@ -81,7 +81,6 @@ const WorkspaceField = ({
         transition={{ type: "spring", damping: 15, mass: .25 }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        {...rest}
     //onClick={() => setHovered(!hovered)}
     >
         <div className={BuildFieldTitle.classes}>
@@ -132,8 +131,6 @@ const WorkspaceField = ({
                     {(provided, snapshot) => (
                         <>
                             <WorkspaceFieldCard
-                                innerRef={provided.innerRef}
-                                {...provided.draggableProps}
                                 provided={provided}
                                 id={card._id}
                                 card={card}

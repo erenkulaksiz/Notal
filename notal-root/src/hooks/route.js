@@ -7,7 +7,7 @@ import { isClient } from '@utils';
 import { Loading } from '@components';
 import useAuth from './auth';
 
-const LoadingPage = <div className="w-full h-full justify-center items-center flex flex-col">
+const LoadingPage = <div className="w-full h-full justify-center items-center flex flex-1 flex-col">
     <Head>
         <title>Loading...</title>
     </Head>

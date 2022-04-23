@@ -38,7 +38,6 @@ const WorkspaceTabFields = ({
                     {(provided, snapshot) => (
                         <WorkspaceField
                             provided={provided}
-                            key={field._id}
                             field={field}
                             onDelete={() => Handler.workspace({ workspaceData, auth, _workspace, props, NotalUI }).field.delete({ id: field._id })}
                             onAddCard={() => setAddCardModal({ ...addCardModal, visible: true, fieldId: field._id, fieldTitle: field.title })}

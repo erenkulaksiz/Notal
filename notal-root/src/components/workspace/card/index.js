@@ -37,7 +37,7 @@ const WorkspaceFieldCard = ({
     innerRef,
     isDragging,
     provided,
-}, ...rest) => {
+},) => {
     const [isImageFS, setIsImageFS] = useState(false);
 
     const BuildTitle = BuildComponent({
@@ -59,9 +59,9 @@ const WorkspaceFieldCard = ({
 
     return (<div
         className={BuildCard.classes}
-        ref={innerRef}
-        {...rest}
+        ref={provided.innerRef}
         key={card._id}
+        {...provided.draggableProps}
     >
         <CardColor color={card.color} />
         <div className="flex flex-1 p-2 px-3 w-full">
@@ -106,7 +106,6 @@ const WorkspaceFieldCard = ({
                                     className="px-1"
                                     title="Show More Card Options"
                                     aria-label="Show More Card Options"
-
                                     {...provided.dragHandleProps}
                                 >
                                     <MoreIcon size={24} className="fill-neutral-800 dark:fill-white" style={{ transform: "scale(.7)" }} />
