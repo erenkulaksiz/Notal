@@ -2,7 +2,16 @@ import { useState } from "react";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import BuildComponent from "@utils/buildComponent";
 
-const TabButton = ({ children, selected, hover, onMouseEnter, onMouseLeave, setSelected, setHover, ...rest }) => {
+const TabButton = ({
+    children,
+    selected,
+    hover,
+    onMouseEnter,
+    onMouseLeave,
+    setSelected,
+    setHover,
+    ...props
+}) => {
     return (<button
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
@@ -13,7 +22,7 @@ const TabButton = ({ children, selected, hover, onMouseEnter, onMouseLeave, setS
                     setHover(-1);
                 } : null
         }
-        {...rest}
+        {...props}
     >
         <span className="z-20 relative">
             {children}
@@ -55,7 +64,7 @@ const TabHeader = ({ children, headerClassName, loadingWorkspace }) => {
 
     const BuildTabHeader = BuildComponent({
         name: "Notal UI Tab Header",
-        defaultClasses: "w-full h-10 flex flex-row relative border-2 border-solid dark:border-neutral-800 border-neutral-200 rounded-lg",
+        defaultClasses: "h-10 flex flex-1 flex-row relative border-2 border-solid dark:border-neutral-800 border-neutral-200 rounded-lg",
         extraClasses: headerClassName
     });
 
@@ -98,19 +107,19 @@ const Tab = ({
 
     const BuildTabHeaderContainer = BuildComponent({
         name: "Notal UI Tab Header Container",
-        defaultClasses: "flex",
+        defaultClasses: "flex overflow-x-auto overflow-y-hidden pb-1",
         extraClasses: headerContainerClassName,
     })
 
-    return (<div className={BuildTab.classes}>
+    return (<nav className={BuildTab.classes}>
         <div className={BuildTabHeaderContainer.classes}>
             <TabHeader
                 headerClassName={headerClassName}
                 loadingWorkspace={loadingWorkspace}
             >
                 <LayoutGroup id={id}>
-                    {views.map((view, index) => <TabButton
-                        className="w-full h-full group relative text-sm sm:text-md"
+                    {views && views?.map((view, index) => <TabButton
+                        className="flex items-center justify-center w-full min-w-[100px] h-full group relative text-sm sm:text-md"
                         key={index}
                         selected={selected == index}
                         setSelected={() => onSelect({ index })}
@@ -122,13 +131,20 @@ const Tab = ({
                         title={view.title}
                         aria-label={view.title}
                     >
-                        {view.title}
+                        <div className="flex flex-row items-center">
+                            {view.icon && <div>
+                                {view.icon && view.icon}
+                            </div>}
+                            <div>
+                                {view.title}
+                            </div>
+                        </div>
                     </TabButton>)}
                 </LayoutGroup>
             </TabHeader>
         </div>
         {children?.map(child => child.props.index == selected && child)}
-    </div>)
+    </nav>)
 }
 
 Tab.TabView = TabView;

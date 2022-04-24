@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import prettyMilliseconds from "pretty-ms";
 import Link from "next/link";
 import FsLightbox from 'fslightbox-react';
@@ -119,7 +119,7 @@ const WorkspaceFieldCard = ({
                             >
                                 <DragIcon
                                     size={24}
-                                    fill="currentColor"
+                                    className="fill-neutral-800 dark:fill-white"
                                     style={{ transform: "scale(.7)" }}
                                 />
                             </Button>
@@ -144,11 +144,11 @@ const WorkspaceFieldCard = ({
                         types={["image"]}
                     />
                 </>}
-                {card.updatedAt && <span className="text-xs dark:text-neutral-600 text-neutral-400 mt-2 group-hover:flex hidden" title={`Created ${new Date(card.createdAt).getDate()} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][new Date(card.createdAt).getMonth()]}, ${new Date(card.createdAt).getFullYear()} ${new Date(card.createdAt).getHours().toString().padStart(2, '0')}:${new Date(card.createdAt).getMinutes().toString().padStart(2, '0')} • Updated ${new Date(card.updatedAt).getDate()} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][new Date(card.updatedAt).getMonth()]}, ${new Date(card.updatedAt).getFullYear()} ${new Date(card.updatedAt).getHours().toString().padStart(2, '0')}:${new Date(card.updatedAt).getMinutes().toString().padStart(2, '0')}`}>
+                {card.updatedAt && <span className="text-xs dark:text-neutral-600 text-neutral-400 mt-2 hidden group-hover:flex" title={`Created ${new Date(card.createdAt).getDate()} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][new Date(card.createdAt).getMonth()]}, ${new Date(card.createdAt).getFullYear()} ${new Date(card.createdAt).getHours().toString().padStart(2, '0')}:${new Date(card.createdAt).getMinutes().toString().padStart(2, '0')} • Updated ${new Date(card.updatedAt).getDate()} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][new Date(card.updatedAt).getMonth()]}, ${new Date(card.updatedAt).getFullYear()} ${new Date(card.updatedAt).getHours().toString().padStart(2, '0')}:${new Date(card.updatedAt).getMinutes().toString().padStart(2, '0')}`}>
                     <time dateTime={card.updatedAt}>{`Created ${prettyMilliseconds(Date.now() - card.createdAt, { compact: true })} ago • Updated ${prettyMilliseconds(Date.now() - card.updatedAt, { compact: true })} ago`}</time>
                 </span>}
                 {card.owner && <Link href="/profile/[username]" as={`/profile/${cardOwner?.username || "not-found"}`} passHref>
-                    <a className="items-center flex-row mt-1 group-hover:flex hidden">
+                    <a className="items-center flex flex-row mt-1 hidden group-hover:flex">
                         <div className="p-[2px] w-8 h-8 rounded-full cursor-pointer bg-gradient-to-tr from-blue-700 to-pink-700">
                             <img
                                 src={cardOwner?.avatar}

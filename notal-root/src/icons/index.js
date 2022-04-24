@@ -1,6 +1,7 @@
 // Icons
 export { default as AddIcon } from "../../public/icons/add.svg";
 export { default as ArrowDownIcon } from "../../public/icons/arrow_down.svg";
+export { default as ArrowUpIcon } from "../../public/icons/arrow_up.svg";
 export { default as AtIcon } from "../../public/icons/at.svg";
 export { default as BackIcon } from "../../public/icons/back.svg";
 export { default as BookmarkOutlineIcon } from "../../public/icons/bookmark_outline.svg";

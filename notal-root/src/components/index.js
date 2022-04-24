@@ -41,6 +41,7 @@ export { default as WorkspaceNotFound } from "./workspace/notFound";
 export { default as WorkspaceSidebar } from "./workspace/sidebar";
 export { default as WorkspaceSidebarItem } from "./workspace/sidebarItem";
 export { default as WorkspaceTabFields } from "./workspace/tabs/field";
+export { default as WorkspaceTabRoadmap } from "./workspace/tabs/roadmap";
 export { default as WorkspaceTabChangelog } from "./workspace/tabs/changelog";
 // Modals
 export { default as AlertModal } from "./modals/alert";

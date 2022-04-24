@@ -9,7 +9,11 @@ import useAuth from "@hooks/auth";
 import {
     DeleteIcon,
     CrossIcon,
-    CheckIcon
+    CheckIcon,
+    DashboardOutlineIcon,
+    RoadIcon,
+    BookmarkOutlineIcon,
+    CodeIcon
 } from "@icons";
 
 import {
@@ -32,7 +36,8 @@ import {
     Tab,
     EditCardModal,
     WorkspaceTabFields,
-    WorkspaceTabChangelog
+    WorkspaceTabChangelog,
+    WorkspaceTabRoadmap
 } from "@components";
 
 import { fetchWorkspace } from "@utils/fetcher";
@@ -45,19 +50,23 @@ import Log from "@utils/logger"
 const WorkspaceTabs = [
     {
         title: "Board",
-        id: "kanban"
+        id: "kanban",
+        icon: <DashboardOutlineIcon size={24} className="fill-neutral-800 dark:fill-neutral-200" style={{ transform: "scale(.7)" }} />
     },
     {
         title: "Roadmap",
-        id: "roadmap"
+        id: "roadmap",
+        icon: <RoadIcon width={24} height={24} fill="currentColor" className="fill-neutral-800 dark:fill-neutral-200" style={{ transform: "scale(.6)" }} />
     },
     {
         title: "Bookmarks",
-        id: "bookmarks"
+        id: "bookmarks",
+        icon: <BookmarkOutlineIcon size={24} fill="currentColor" className="fill-neutral-800 dark:fill-neutral-200" style={{ transform: "scale(.7)" }} />
     },
     {
         title: "Changelog",
         id: "changelog",
+        icon: <CodeIcon size={24} fill="currentColor" className="fill-neutral-800 dark:fill-neutral-200" style={{ transform: "scale(.7)" }} />
     }
 ];
 
@@ -253,7 +262,7 @@ const Workspace = (props) => {
                     onSelect={({ index }) => setTab(index)}
                     id="workspaceIdTab"
                     views={WorkspaceTabs}
-                    headerClassName="dark:bg-transparent bg-white sm:w-1/2 md:w-[60%] max-w-[1466px] w-full"
+                    headerClassName="dark:bg-transparent bg-white flex-1 max-w-[700px]"
                     className="flex-1 flex flex-col"
                     headerContainerClassName="pl-2 pt-2 pr-2"
                     loadingWorkspace={loadingWorkspace}
@@ -269,13 +278,15 @@ const Workspace = (props) => {
                             props={props}
                         />
                     </Tab.TabView>
-                    <Tab.TabView index={1} className="p-3 pt-2">
-                        roadmap
+                    <Tab.TabView index={1} className="p-2 flex flex-1">
+                        <WorkspaceTabRoadmap
+                            loadingWorkspace={loadingWorkspace}
+                        />
                     </Tab.TabView>
-                    <Tab.TabView index={2} className="p-3 pt-2">
+                    <Tab.TabView index={2} className="p-2 flex flex-1">
                         bookmarks
                     </Tab.TabView>
-                    <Tab.TabView index={3} className="p-3 pt-2">
+                    <Tab.TabView index={3} className="p-2 flex flex-1">
                         <WorkspaceTabChangelog />
                     </Tab.TabView>
                 </Tab>

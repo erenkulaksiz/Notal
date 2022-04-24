@@ -33,7 +33,7 @@ const Button = ({
     });
 
     const iconClasses = allClass({
-        defaultClasses: "absolute",
+        defaultClasses: "absolute left-0",
         conditions: [iconSpace]
     });
 
