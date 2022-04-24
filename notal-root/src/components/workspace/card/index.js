@@ -148,7 +148,7 @@ const WorkspaceFieldCard = ({
                     <time dateTime={card.updatedAt}>{`Created ${prettyMilliseconds(Date.now() - card.createdAt, { compact: true })} ago • Updated ${prettyMilliseconds(Date.now() - card.updatedAt, { compact: true })} ago`}</time>
                 </span>}
                 {card.owner && <Link href="/profile/[username]" as={`/profile/${cardOwner?.username || "not-found"}`} passHref>
-                    <a className="items-center flex flex-row mt-1 hidden group-hover:flex">
+                    <a className="items-center flex-row mt-1 hidden group-hover:flex">
                         <div className="p-[2px] w-8 h-8 rounded-full cursor-pointer bg-gradient-to-tr from-blue-700 to-pink-700">
                             <img
                                 src={cardOwner?.avatar}

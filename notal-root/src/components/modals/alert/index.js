@@ -13,6 +13,7 @@ const AlertModal = ({
     buttons = false,
     animate,
     showCloseButton = true,
+    customContent = false,
 }) => {
     const BuildModalTitle = BuildComponent({
         name: "Modal Title",
@@ -38,18 +39,18 @@ const AlertModal = ({
         blur={blur}
         animate={animate}
     >
-        <Modal.Title animate={animate}>
+        {(titleIcon || title) && <Modal.Title animate={animate}>
             {titleIcon}
             {title && <span className={BuildModalTitle.classes}>
                 {title}
             </span>}
-        </Modal.Title>
-        <Modal.Body className="pt-2 pb-5" animate={animate}>
+        </Modal.Title>}
+        {desc && <Modal.Body className="pt-2 pb-5" animate={animate}>
             {desc && <h1 className="text-lg text-left break-words w-full">
                 {desc}
             </h1>}
-        </Modal.Body>
-        <Modal.Footer className="justify-end" animate={animate}>
+        </Modal.Body>}
+        {buttons != false || showCloseButton && <Modal.Footer className="justify-end" animate={animate}>
             <div className={BuildModalFooter.classes}>
                 {buttons != false && buttons.map((button, index) => <Fragment key={index}>{button}</Fragment>)}
             </div>
@@ -60,7 +61,8 @@ const AlertModal = ({
             >
                 Close
             </Button>}
-        </Modal.Footer>
+        </Modal.Footer>}
+        {customContent != false && customContent}
     </Modal>)
 }
 

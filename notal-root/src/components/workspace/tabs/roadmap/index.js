@@ -40,7 +40,7 @@ const WorkspaceTabRoadmap = ({
 
             </Tab>*/}
 
-            {[1, 2, 3].map(item => <div key={item} className="flex flex-row items-center p-2 px-4 w-full bg-white dark:bg-neutral-900 shadow rounded-xl">
+            {[1, 2, 3].map(item => <div key={item} className="flex flex-row items-center p-2 px-4 w-full bg-white dark:bg-neutral-900 shadow rounded-lg">
                 <Button
                     size="h-10 w-16"
                     className="px-2 items-center justify-center "
@@ -52,10 +52,10 @@ const WorkspaceTabRoadmap = ({
                     </span>
                 </Button>
                 <div className="flex flex-col ml-4">
-                    <h1 className="text-2xl font-medium">
+                    <h1 className="text-md sm:text-xl font-medium">
                         Update on docs 1
                     </h1>
-                    <span className="text-neutral-600">
+                    <span className="sm:text-md text-sm text-neutral-600">
                         LOREM IPSUM DOLOR AMET
                     </span>
                 </div>

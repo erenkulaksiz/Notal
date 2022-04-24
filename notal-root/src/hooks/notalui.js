@@ -166,6 +166,7 @@ export function NotalUIProvider(props) {
             blur = false,
             buttons = false,
             animate = true,
+            customContent = false,
         }) => {
             setAlert({
                 visible: true,
@@ -176,7 +177,8 @@ export function NotalUIProvider(props) {
                 blur,
                 buttons,
                 animate,
-                showCloseButton
+                showCloseButton,
+                customContent,
             });
         },
         close: () => {
@@ -239,6 +241,7 @@ export function NotalUIProvider(props) {
                 blur={alert.blur}
                 desc={alert.desc}
                 buttons={alert.buttons}
+                customContent={alert.customContent}
                 onClose={() => {
                     if (!alert.closeable) return;
 

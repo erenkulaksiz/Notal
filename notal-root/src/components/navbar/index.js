@@ -254,10 +254,21 @@ const Navbar = ({
                     </h2>
                     {user?.fullname && <h3 className="dark:text-neutral-400 text-neutral-500" title={user?.uid}>@{user?.username}</h3>}
                     <h4 className="text-current text-md">{user?.email}</h4>
-                    <Button fullWidth className="mt-2" icon={<UserIcon size={24} fill="white" />} gradient aria-label="Profile Button">
+                    <Button
+                        fullWidth
+                        className="mt-2"
+                        icon={<UserIcon size={24} fill="white" className="ml-2" />}
+                        gradient
+                        aria-label="Profile Button"
+                    >
                         <span>Profile</span>
                     </Button>
-                    <Button fullWidth className="mt-2" icon={<LogoutIcon size={24} fill="white" />} gradient aria-label="Sign Out Button"
+                    <Button
+                        fullWidth
+                        className="mt-2"
+                        icon={<LogoutIcon size={24} fill="white" className="ml-2" />}
+                        gradient
+                        aria-label="Sign Out Button"
                         onClick={async () => {
                             await auth.users.logout();
                             setTimeout(() => {

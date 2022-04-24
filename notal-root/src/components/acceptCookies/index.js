@@ -38,7 +38,7 @@ const AcceptCookies = () => {
         <Button
             fullWidth
             gradient
-            icon={<CheckIcon size={24} fill="currentColor" />}
+            icon={<CheckIcon size={24} fill="currentColor" className="ml-2" />}
             className="mt-2" onClick={() => onAccept()}
         >
             Accept Cookies

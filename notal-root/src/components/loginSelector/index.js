@@ -13,7 +13,7 @@ const LoginSelector = ({ onLoginWithEmail, onLoginWithGithub, onLoginWithGoogle,
             size="lg"
             className="w-full text-[1.2em]"
             gradient
-            icon={<GithubIcon size={24} fill="currentColor" />}
+            icon={<GithubIcon size={24} fill="currentColor" className="ml-4" />}
             aria-label="Sign in with GitHub button"
         >
             GitHub
@@ -23,7 +23,8 @@ const LoginSelector = ({ onLoginWithEmail, onLoginWithGithub, onLoginWithGoogle,
             size="lg"
             className="w-full text-[1.2em]"
             gradient
-            icon={<GoogleIcon width={24} height={24} fill="currentColor" />} aria-label="Sign in with Google button"
+            icon={<GoogleIcon width={24} height={24} fill="currentColor" className="ml-4" />}
+            aria-label="Sign in with Google button"
         >
             Google
         </Button>

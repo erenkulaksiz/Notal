@@ -31,10 +31,12 @@ import {
 import { withPublic } from "@hooks/route";
 
 import Log from "@utils/logger"
+import useNotalUI from "@hooks/notalui";
 
 const Landing = (props) => {
     const router = useRouter();
     const auth = useAuth();
+    const NotalUI = useNotalUI();
 
     const [featureHovered, setFeatureHovered] = useState(-1);
 
@@ -117,9 +119,9 @@ const Landing = (props) => {
                                 options={{
                                     strings: [
                                         "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>Empowering</span> user and developer relations",
-                                        "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>Empowering</span> planning to your projects",
+                                        "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>New level of</span> planning to your projects",
                                         "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>Empowering</span> user feedbacks",
-                                        "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>Empowering</span> roadmaps to your users",
+                                        "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>Featuring</span> roadmaps to your users",
                                         "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>Empowering</span> collaborating with your team to develop together",
                                     ],
                                     pauseFor: 2500,
@@ -142,7 +144,18 @@ const Landing = (props) => {
                         <h5 className="dark:text-neutral-400 text-gray-600 drop-shadow-lg mt-4 text-lg font-semibold">
                             {"Data between users and developers is important. Notal is the solution."}
                         </h5>
-                        <Button rounded className="w-32 mt-4" aria-label="Discover more button">
+                        <Button
+                            rounded
+                            className="w-32 mt-4"
+                            aria-label="Discover more button"
+                            onClick={() => NotalUI.Alert.show({
+                                customContent: <div className="flex flex-col mt-4">
+                                    <span>This project is still under construction. Thanks for your patience.</span>
+                                    <Button className="self-end" light onClick={() => NotalUI.Alert.close()}>Okay</Button>
+                                </div>,
+                                showCloseButton: false,
+                            })}
+                        >
                             Discover More
                         </Button>
                     </div>

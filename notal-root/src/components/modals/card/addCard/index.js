@@ -205,6 +205,7 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
                     { title: "Card", id: "card" },
                     { title: "Tags", id: "Tags" },
                     { title: "Image", id: "image" },
+                    { title: "Icon", id: "icon" },
                     /*{ title: "Subtasks", id: "subtasks" },
                     { title: "Notes", id: "notes" },
                     { title: "Details", id: "details" },*/

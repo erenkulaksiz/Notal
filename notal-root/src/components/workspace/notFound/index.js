@@ -29,7 +29,7 @@ const WorkspaceNotFound = () => {
             <h1 className="text-6xl font-bold text-center mt-4">[404]</h1>
             <h2 className="text-center mt-4">We couldnt find this workspace, or it is set to private.</h2>
             <Button
-                icon={<HomeFilledIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+                icon={<HomeFilledIcon height={24} width={24} style={{ fill: "currentColor" }} className="ml-4" />}
                 onClick={() => router.replace(auth.authUser ? "/home" : "/")}
                 className="mt-4 text-xl"
                 size="lg"
@@ -39,7 +39,7 @@ const WorkspaceNotFound = () => {
                 Home
             </Button>
             <Button
-                icon={<BackIcon height={24} width={24} style={{ fill: "currentColor" }} />}
+                icon={<BackIcon height={24} width={24} style={{ fill: "currentColor" }} className="ml-4" />}
                 onClick={() => router.back()}
                 className="mt-4 text-xl"
                 size="lg"
@@ -49,7 +49,7 @@ const WorkspaceNotFound = () => {
                 Back
             </Button>
         </div>
-    </div>)
+    </div >)
 }
 
 export default WorkspaceNotFound;
