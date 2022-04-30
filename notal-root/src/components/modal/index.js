@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ModalPortal } from '@components';
+import { Portal } from '@components';
 import {
     CrossIcon
 } from '@icons';
@@ -48,7 +48,7 @@ const Modal = ({
         };
     }, [open]);
 
-    return (show && <ModalPortal>
+    return (show && <Portal portalName="notal-modal">
         <Backdrop blur={blur} onClose={onClose} open={open} setShow={setShow}>
             <Content blur={blur} className={className} animate={animate}>
                 {closeBtn && <div className="absolute right-2 top-2 z-50">
@@ -59,7 +59,7 @@ const Modal = ({
                 {children}
             </Content>
         </Backdrop>
-    </ModalPortal>)
+    </Portal>)
 }
 
 Modal.Title = Title;

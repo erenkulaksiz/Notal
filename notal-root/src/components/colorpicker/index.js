@@ -1,6 +1,7 @@
 import { Tooltip } from "@components";
 import { HexColorPicker } from "react-colorful";
 import { CardColors } from "@utils/constants";
+import { formatString } from "@utils";
 
 const ColorPicker = ({ color, onColorChange, id }) => {
     return (<Tooltip
@@ -27,7 +28,7 @@ const ColorPicker = ({ color, onColorChange, id }) => {
             value={color}
             className="p-0 w-20 h-7 rounded mr-2"
             style={{ backgroundColor: color || "gray" }}
-            onChange={(e) => onColorChange(e.target.value.toUpperCase())}
+            onChange={(e) => onColorChange(`#${formatString(e.target.value).toUpperCase()}`)}
             maxLength={7}
         />
     </Tooltip>)

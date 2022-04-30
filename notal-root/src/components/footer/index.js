@@ -65,7 +65,6 @@ const Footer = ({ className }) => {
                         </Link>
                     </Tooltip>
                 </span>
-
                 <Link href="https://github.com/erenkulaksiz/Helios" passHref>
                     <a target="_blank" className="mt-2 flex flex-row items-center text-sm dark:text-white text-black">
                         powered by
@@ -124,7 +123,10 @@ const Footer = ({ className }) => {
         </div>
         <div className="w-full mt-10 flex flex-row justify-between">
             <div className="flex items-center">
-                <Tooltip content="Twitter @notalapp" direction="right">
+                <Tooltip
+                    content="@notalapp"
+                    direction="right"
+                >
                     <a href="https://twitter.com/notalapp" target="_blank" rel="noreferrer">
                         <TwitterIcon width={18} height={18} style={{ color: "currentColor" }} />
                     </a>

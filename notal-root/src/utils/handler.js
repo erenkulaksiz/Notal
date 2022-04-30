@@ -1,4 +1,5 @@
 import Log from "@utils/logger"
+import { CrossIcon } from "@icons";
 
 const Handler = {
     workspace: ({
@@ -230,6 +231,7 @@ const Handler = {
                 },
                 reOrder: async ({ cardId, destination, source }) => {
                     // destination: { index: 0, droppableId: "xxx" }
+                    //const data = await auth.workspace.card.reOrder({destination,source,id,workspaceId: _workspace?.data?._id});
 
                     const newFields = _workspace?.data?.fields;
                     const newFieldIndex = newFields?.findIndex(el => el._id == source.droppableId);
@@ -244,7 +246,6 @@ const Handler = {
                     newInsertField?.cards?.splice(destination.index, 0, copyCard);
 
                     await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: newFields } }, false);
-                    console.log("copyCard: ", copyCard);
                 }
             }
         }

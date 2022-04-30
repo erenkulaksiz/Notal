@@ -39,6 +39,7 @@ const AlertModal = ({
         blur={blur}
         animate={animate}
     >
+        {customContent != false && customContent}
         {(titleIcon || title) && <Modal.Title animate={animate}>
             {titleIcon}
             {title && <span className={BuildModalTitle.classes}>
@@ -50,10 +51,12 @@ const AlertModal = ({
                 {desc}
             </h1>}
         </Modal.Body>}
-        {buttons != false || showCloseButton && <Modal.Footer className="justify-end" animate={animate}>
+        {buttons != false && <Modal.Footer>
             <div className={BuildModalFooter.classes}>
-                {buttons != false && buttons.map((button, index) => <Fragment key={index}>{button}</Fragment>)}
+                {buttons.map((button, index) => <Fragment key={index}>{button}</Fragment>)}
             </div>
+        </Modal.Footer>}
+        {showCloseButton && <Modal.Footer className="justify-end" animate={animate}>
             {closeable && showCloseButton && <Button
                 className="h-10 w-1/2"
                 light="bg-red-500 dark:bg-red-700"
@@ -62,7 +65,6 @@ const AlertModal = ({
                 Close
             </Button>}
         </Modal.Footer>}
-        {customContent != false && customContent}
     </Modal>)
 }
 

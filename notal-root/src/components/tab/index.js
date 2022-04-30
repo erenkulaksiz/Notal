@@ -68,9 +68,9 @@ const TabHeader = ({ children, headerClassName, loadingWorkspace }) => {
         extraClasses: headerClassName
     });
 
-    return (<div className={BuildTabHeader.classes}>
+    return (<nav className={BuildTabHeader.classes}>
         {children}
-    </div>)
+    </nav>)
 }
 
 const TabView = ({ children, className }) => {
@@ -111,7 +111,7 @@ const Tab = ({
         extraClasses: headerContainerClassName,
     })
 
-    return (<nav className={BuildTab.classes}>
+    return (<div className={BuildTab.classes}>
         <div className={BuildTabHeaderContainer.classes}>
             <TabHeader
                 headerClassName={headerClassName}
@@ -144,7 +144,7 @@ const Tab = ({
             </TabHeader>
         </div>
         {children?.map(child => child.props.index == selected && child)}
-    </nav>)
+    </div>)
 }
 
 Tab.TabView = TabView;

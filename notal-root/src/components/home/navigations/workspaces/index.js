@@ -145,9 +145,14 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
             className="relative pb-4 px-4 mt-4 grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 items-start auto-rows-max"
         >
             <AnimatePresence>
+                {!loadingWorkspaces && <AddWorkspaceButton
+                    onClick={() => setNewWorkspaceModal(true)}
+                    workspaceLength={_workspacesFiltered?.length}
+                />}
+
                 {!loadingWorkspaces && _workspacesFiltered.map((element, index) => <HomeWorkspaceCard
                     workspace={element}
-                    key={index}
+                    key={element._id}
                     index={index}
                     onStar={() => Handler.home({ NotalUI, workspacesData, auth, _workspaces }).workspace.star({ id: element._id })}
                     onDelete={() => NotalUI.Alert.show({
@@ -183,10 +188,6 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
             </AnimatePresence>
 
             {loadingWorkspaces && [1, 2, 3, 4].map((item) => <HomeWorkspaceCard skeleton key={item} />)}
-            {!loadingWorkspaces && <AddWorkspaceButton
-                onClick={() => setNewWorkspaceModal(true)}
-                workspaceLength={_workspacesFiltered?.length}
-            />}
         </motion.div>
 
         {(!_workspaceValidating && !loadingWorkspaces && _workspacesFiltered.length == 0) && (

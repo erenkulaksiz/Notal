@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import useSWR from "swr";
 import Cookies from "js-cookie";
+import { Droppable } from "react-beautiful-dnd";
 
 import useAuth from "@hooks/auth";
 
@@ -58,6 +59,7 @@ const WorkspaceTabs = [
         id: "roadmap",
         icon: <RoadIcon width={24} height={24} fill="currentColor" className="fill-neutral-800 dark:fill-neutral-200" style={{ transform: "scale(.6)" }} />
     },
+    /*
     {
         title: "Bookmarks",
         id: "bookmarks",
@@ -68,6 +70,7 @@ const WorkspaceTabs = [
         id: "changelog",
         icon: <CodeIcon size={24} fill="currentColor" className="fill-neutral-800 dark:fill-neutral-200" style={{ transform: "scale(.7)" }} />
     }
+    */
 ];
 
 const Workspace = (props) => {
@@ -96,6 +99,8 @@ const Workspace = (props) => {
 
     // Tab
     const [tab, setTab] = useState(0);
+
+    const [showError, setShowError] = useState(false);
 
     /**
      * Workspace Data
@@ -170,6 +175,14 @@ const Workspace = (props) => {
             }
             if (workspaceData.error) {
                 console.error("Error with workspace: ", workspaceData.error);
+                if (!showError) {
+                    setShowError(true);
+                    NotalUI.Alert.show({
+                        title: "Error",
+                        titleIcon: <CrossIcon size={24} fill="currentColor" />,
+                        desc: "Couln't connect to the server. Please reload the page and make sure you have internet connection.",
+                    });
+                }
             }
         })();
     }, [workspaceData]);
@@ -267,7 +280,7 @@ const Workspace = (props) => {
                     headerContainerClassName="pl-2 pt-2 pr-2"
                     loadingWorkspace={loadingWorkspace}
                 >
-                    <Tab.TabView index={0} className="relative flex flex-1 flex-row overflow-y-auto p-2 overflow-x-visible gap-2">
+                    <Tab.TabView index={0} className="relative flex flex-1 flex-row overflow-y-auto p-2 overflow-x-visible">
                         <WorkspaceTabFields
                             _workspace={_workspace}
                             isOwner={isOwner}
@@ -281,6 +294,7 @@ const Workspace = (props) => {
                     <Tab.TabView index={1} className="p-2 flex flex-1">
                         <WorkspaceTabRoadmap
                             loadingWorkspace={loadingWorkspace}
+                            isOwner={isOwner}
                         />
                     </Tab.TabView>
                     <Tab.TabView index={2} className="p-2 flex flex-1">

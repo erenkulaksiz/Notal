@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import { HexColorPicker } from "react-colorful";
 import {
     Modal,
     Button,
@@ -20,9 +19,9 @@ import {
     DeleteIcon,
     AtIcon
 } from "@icons";
-import { CardColors } from "@utils/constants";
 import useAuth from "@hooks/auth";
 import useNotalUI from "@hooks/notalui";
+import { formatString } from "@utils";
 
 import Log from "@utils/logger"
 
@@ -422,7 +421,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                             containerClassName="flex-1"
                             placeholder="Username"
                             value={addWorkspaceOwner}
-                            onChange={(e) => setAddWorkspaceOwner(e.target.value.replace(/[^\w\s]/gi, "").replace(/\s/g, '').toLowerCase())}
+                            onChange={(e) => setAddWorkspaceOwner(formatString(e.target.value).toLowerCase())}
                             icon={<AtIcon size={24} className="fill-current" />}
                             maxLength={32}
                             onEnterPress={() => addUser({ username: addWorkspaceOwner })}

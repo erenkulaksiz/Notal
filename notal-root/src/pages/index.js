@@ -119,7 +119,7 @@ const Landing = (props) => {
                                 options={{
                                     strings: [
                                         "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>Empowering</span> user and developer relations",
-                                        "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>New level of</span> planning to your projects",
+                                        "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>New way of</span> planning to your projects",
                                         "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>Empowering</span> user feedbacks",
                                         "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>Featuring</span> roadmaps to your users",
                                         "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>Empowering</span> collaborating with your team to develop together",

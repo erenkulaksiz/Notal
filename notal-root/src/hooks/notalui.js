@@ -7,8 +7,8 @@ import Log from "@utils/logger";
 import {
     AcceptCookies,
     AlertModal,
+    Portal,
     Toast as ToastComponent,
-    ToastPortal
 } from "@components";
 import { isClient, WorkboxInit } from "@utils";
 
@@ -56,10 +56,10 @@ export function NotalUIProvider(props) {
             const toastTimeEnabled = toastBuffer.findIndex(el => lastToast.id == el.id);
             if (!interval) {
                 if (toastTimeEnabled == -1) return;
-                interval = setInterval(() => {
-                    // find latest toast with timeEnabled
-                    Toast.close(toastTimeEnabled);
-                }, toastBuffer[toastTimeEnabled].duration ?? 1000);
+                interval = setInterval(
+                    () => Toast.close(toastTimeEnabled),
+                    toastBuffer[toastTimeEnabled].duration || 1000
+                );
             }
         } else {
             clearInterval(interval);
@@ -191,7 +191,7 @@ export function NotalUIProvider(props) {
     return <notalUIContext.Provider value={value} {...props}>
         <NotalUI_WB_HOC>
             {props.children}
-            {isClient && showToastPortal && <ToastPortal>
+            {isClient && showToastPortal && <Portal portalName="notal-toast">
                 <AnimatePresence>
                     <AnimateSharedLayout>
                         <motion.div
@@ -233,7 +233,7 @@ export function NotalUIProvider(props) {
                         </motion.div>
                     </AnimateSharedLayout>
                 </AnimatePresence>
-            </ToastPortal>}
+            </Portal>}
             <AlertModal
                 open={alert.visible}
                 title={alert.title}

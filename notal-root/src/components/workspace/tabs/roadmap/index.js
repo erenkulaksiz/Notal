@@ -1,5 +1,13 @@
-import { Tab, Button } from "@components";
-import { ArrowUpIcon } from "@icons";
+import { useState } from "react";
+import {
+    AddRoadmapButton,
+    AddRoadmapModal,
+    WorkspaceRoadmap,
+} from "@components";
+import useNotalUI from "@hooks/notalui";
+import {
+    ArrowUpIcon,
+} from "@icons";
 
 const WorkspaceTabRoadmapSkeleton = () => {
     return (<div className="w-full h-full flex flex-1 flex-col">
@@ -16,9 +24,30 @@ const WorkspaceTabRoadmapSkeleton = () => {
 }
 
 const WorkspaceTabRoadmap = ({
-    loadingWorkspace
+    loadingWorkspace,
+    isOwner,
 }) => {
+    const NotalUI = useNotalUI();
+    const [addRoadmapModal, setAddRoadmapModal] = useState({ visible: false });
+
     if (loadingWorkspace) return <WorkspaceTabRoadmapSkeleton />
+
+    const Roadmaps = [
+        {
+            title: "update 1",
+            desc: "ddscccccrtipiton",
+            added: 1651355162213,
+            upvotes: 0,
+            upvoted: false,
+        },
+        {
+            title: "update 222",
+            desc: "desccssc",
+            added: 1651355162213,
+            upvotes: 0,
+            upvoted: false,
+        }
+    ]
 
     return (<div className="w-full h-full flex flex-1 flex-col">
         <div>
@@ -40,27 +69,23 @@ const WorkspaceTabRoadmap = ({
 
             </Tab>*/}
 
-            {[1, 2, 3].map(item => <div key={item} className="flex flex-row items-center p-2 px-4 w-full bg-white dark:bg-neutral-900 shadow rounded-lg">
-                <Button
-                    size="h-10 w-16"
-                    className="px-2 items-center justify-center "
-                    light="border-2 border-solid border-neutral-300 dark:border-neutral-800"
-                    icon={<ArrowUpIcon size={12} className="fill-neutral-400 dark:fill-white" style={{ transform: "scale(.6)" }} />}
-                >
-                    <span className="text-neutral-400 dark:text-white ml-6">
-                        0
-                    </span>
-                </Button>
-                <div className="flex flex-col ml-4">
-                    <h1 className="text-md sm:text-xl font-medium">
-                        Update on docs 1
-                    </h1>
-                    <span className="sm:text-md text-sm text-neutral-600">
-                        LOREM IPSUM DOLOR AMET
-                    </span>
-                </div>
-            </div>)}
+            {isOwner && <div className="w-full p-3 dark:bg-neutral-900 bg-white shadow rounded-xl">
+                <AddRoadmapButton
+                    onClick={() => setAddRoadmapModal({ ...addRoadmapModal, visible: true })}
+                />
+            </div>}
+
+            {Roadmaps.map((roadmap, index) => <WorkspaceRoadmap
+                key={index}
+                roadmap={roadmap}
+                isOwner={isOwner}
+            />)}
+
         </div>
+        <AddRoadmapModal
+            open={addRoadmapModal.visible}
+            onClose={() => setAddRoadmapModal({ ...addRoadmapModal, visible: false })}
+        />
     </div>)
 }
 

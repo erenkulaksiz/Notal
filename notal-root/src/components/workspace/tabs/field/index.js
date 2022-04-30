@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Droppable } from "react-beautiful-dnd";
+import { Droppable, Draggable } from "react-beautiful-dnd";
 
 import Handler from "@utils/handler";
 import {
@@ -20,6 +20,7 @@ const WorkspaceTabFields = ({
     notFound,
     _workspaceValidating,
     props,
+    provided
 }) => {
     const auth = useAuth();
     const NotalUI = useNotalUI();
@@ -29,7 +30,10 @@ const WorkspaceTabFields = ({
     const [editFieldModal, setEditFieldModal] = useState({ visible: false, title: "", fieldId: "" });
 
     return (
-        <>
+        <div
+            className="flex w-full max-h-full h-full gap-2"
+        //ref={provided.innerRef} // droppable
+        >
             {loadingWorkspace && [1, 2, 3].map((item) => (
                 <WorkspaceField skeleton key={item} /> // show skeleton loaders
             ))}
@@ -89,7 +93,7 @@ const WorkspaceTabFields = ({
                     setAddCardModal({ ...addCardModal, visible: false });
                 }}
             />
-        </>
+        </div>
     )
 }
 

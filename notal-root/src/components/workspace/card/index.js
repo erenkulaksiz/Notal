@@ -109,10 +109,8 @@ const WorkspaceFieldCard = ({
                                     <MoreIcon size={24} className="fill-neutral-800 dark:fill-white" style={{ transform: "scale(.7)" }} />
                                 </Button>
                             </Tooltip>
-                            <Button
-                                light
-                                size="sm"
-                                className="px-1"
+                            <button
+                                className="pl-2"
                                 title="Drag Card"
                                 aria-label="Drag Card"
                                 {...provided.dragHandleProps}
@@ -122,7 +120,7 @@ const WorkspaceFieldCard = ({
                                     className="fill-neutral-800 dark:fill-white"
                                     style={{ transform: "scale(.7)" }}
                                 />
-                            </Button>
+                            </button>
                         </div>}
                     </div>
                 </div>
@@ -133,7 +131,7 @@ const WorkspaceFieldCard = ({
                     <div className="flex items-center justify-center w-full mt-2">
                         <img
                             src={card?.image?.file}
-                            className="object-cover rounded-lg w-full cursor-pointer hover:opacity-80 shadow-lg max-w-[250px]"
+                            className="object-cover rounded-lg w-full cursor-pointer hover:opacity-80 shadow-lg max-w-[250px] max-h-[360px]"
                             alt="saul goodman"
                             onClick={() => setIsImageFS(!isImageFS)}
                         />

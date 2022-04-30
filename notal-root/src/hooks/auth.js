@@ -11,8 +11,6 @@ import { CheckIcon, InfoIcon, SendIcon } from "@icons";
 import { server } from '../config';
 import useNotalUI from "./notalui";
 
-import Log from "@utils/logger"
-
 export default function useAuth() {
     return useContext(authContext);
 }
@@ -42,7 +40,8 @@ export function AuthProvider(props) {
                         duration: 4500,
                         timeEnabled: true,
                         closeable: true,
-                    })
+                    });
+                    setTimeout(() => router.replace(router.asPath), 1000);
                 }
                 const token = await user.getIdToken();
                 Cookies.set("auth", token, { expires: 365 });
@@ -57,7 +56,7 @@ export function AuthProvider(props) {
             } else {
                 const token = await user.getIdToken();
                 setUser(user);
-                Cookies.set("auth", token, { expires: 1 });
+                Cookies.set("auth", token, { expires: 365 });
                 setLoading(false);
             }
         });

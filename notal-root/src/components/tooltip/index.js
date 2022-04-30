@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 import {
-    TooltipPortal
+    Portal
 } from '@components';
 
 import BuildComponent from '@utils/buildComponent';
@@ -12,7 +12,6 @@ import { isClient } from '@utils';
 import useClickAway from '@hooks/clickaway';
 import useClickAnyWhere from '@hooks/clickanywhere';
 */
-
 
 /**
  * 
@@ -151,8 +150,8 @@ const Tooltip = ({
     });
 
     return (<div
-        onMouseEnter={() => useFocus || setVisible(true)}
-        onMouseLeave={() => useFocus || setVisible(false)}
+        onMouseEnter={() => !useFocus && setVisible(true)}
+        onMouseLeave={() => !useFocus && setVisible(false)}
         onFocus={() => useFocus && setVisible(true)}
         onBlur={() => useFocus && setVisible(false)}
         ref={containerRef}
@@ -160,9 +159,10 @@ const Tooltip = ({
         style={style}
     >
         {children}
-        {(show && content) && <TooltipPortal
+        {(show && content) && <Portal
             parent={containerRef.current}
             className={BuildPortal.classes}
+            portalName="notal-tooltip"
         >
             <motion.div
                 initial="hidden"
@@ -175,7 +175,7 @@ const Tooltip = ({
                 {content}
                 {!hideArrow && <div className={BuildArrow.classes} />}
             </motion.div>
-        </TooltipPortal>}
+        </Portal>}
     </div>)
 }
 

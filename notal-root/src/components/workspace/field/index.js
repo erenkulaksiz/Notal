@@ -18,7 +18,8 @@ import {
     DeleteIcon,
     SettingsIcon,
     FoldIcon,
-    UnfoldIcon
+    UnfoldIcon,
+    DragIcon
 } from "@icons";
 
 import FieldCardIndicator from "../fieldCardIndicator";
@@ -36,6 +37,7 @@ const WorkspaceField = ({
     isOwner,
     workspaceUsers,
     provided,
+    //fieldDraggableProvided,
 }) => {
     const [hovered, setHovered] = useState(false);
 
@@ -81,6 +83,8 @@ const WorkspaceField = ({
         transition={{ type: "spring", damping: 15, mass: .25 }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
+    //{...fieldDraggableProvided.draggableProps}
+    //ref={fieldDraggableProvided.innerRef}
     //onClick={() => setHovered(!hovered)}
     >
         <div className={BuildFieldTitle.classes}>
@@ -108,10 +112,8 @@ const WorkspaceField = ({
                             <DeleteIcon size={24} className="fill-neutral-800 dark:fill-white" />
                         </Button>
                         <Button size="md" className="px-2 ml-1" onClick={onCollapse} light title={field?.collapsed ? "Uncollapse Field" : "Collapse Field"} aria-label={field?.collapsed ? "Uncollapse Field" : "Collapse Field"}>
-                            {field?.collapsed ?
-                                <FoldIcon size={24} className="fill-neutral-800 dark:fill-white" style={{ transform: "rotate(90deg)" }} />
-                                :
-                                <UnfoldIcon size={24} className="fill-neutral-800 dark:fill-white" style={{ transform: "rotate(90deg)" }} />}
+                            {field?.collapsed ? <FoldIcon size={24} className="fill-neutral-800 dark:fill-white" style={{ transform: "rotate(90deg)" }} />
+                                : <UnfoldIcon size={24} className="fill-neutral-800 dark:fill-white" style={{ transform: "rotate(90deg)" }} />}
                         </Button>
                     </div>}
                 >
@@ -119,6 +121,18 @@ const WorkspaceField = ({
                         <MoreIcon size={24} className="dark:fill-white fill-black" />
                     </Button>}
                 </Tooltip>}
+                {(hovered || !field?.collapsed) && <button
+                    className="py-2"
+                    title="Drag Field"
+                    aria-label="Drag Field"
+                //{...fieldDraggableProvided.dragHandleProps}
+                >
+                    <DragIcon
+                        size={24}
+                        className="fill-neutral-800 dark:fill-white"
+                        style={{ transform: "scale(.7)" }}
+                    />
+                </button>}
             </div>
         </div>
         <div
@@ -127,7 +141,12 @@ const WorkspaceField = ({
             ref={provided.innerRef}
         >
             {field?.cards && field?.cards.map((card, index) =>
-                <Draggable index={index} draggableId={card._id} isDragDisabled={!isOwner} key={card._id}>
+                <Draggable
+                    index={index}
+                    draggableId={card._id}
+                    isDragDisabled={!isOwner}
+                    key={card._id}
+                >
                     {(provided, snapshot) => (
                         <>
                             <WorkspaceFieldCard

@@ -9,6 +9,8 @@ import Log from "./logger";
  */
 export const isClient = (typeof window === 'undefined') ? false : true;
 
+export const formatString = (str) => str.replace(/[^\w\s]/gi, "").replace(/\s/g, '');
+
 export const CheckToken = async ({ token, props, user }) => {
     //Log.debug("jwtyi kontrol edicem bi canım");
     Log.debug("Checking token, " + (token ? "token exist" : "token doesnt exist") + " val: ", props.validate, " userVal: ", user)
@@ -125,6 +127,7 @@ export const WorkboxInit = (NotalUI, router) => {
 
     if (typeof window !== 'undefined' && 'serviceWorker' in navigator && window.workbox !== undefined) {
         const wb = window.workbox
+        wb.__WB_DISABLE_DEV_LOGS = true;
         // add event listeners to handle any of PWA lifecycle event
         // https://developers.google.com/web/tools/workbox/reference-docs/latest/module-workbox-window.Workbox#events
         wb.addEventListener('installed', event => {

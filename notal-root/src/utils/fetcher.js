@@ -1,4 +1,4 @@
-import { server } from "config";
+import { server } from "../config";
 
 export const fetchWorkspaces = ({ token, uid }) => fetch(`${server}/api/workspace/getworkspaces`, {
     'Content-Type': 'application/json',

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+
 import {
     Modal,
     Button,
@@ -22,6 +23,7 @@ import useNotalUI from "@hooks/notalui";
 import useAuth from "@hooks/auth";
 
 import Log from "@utils/logger";
+import { isClient } from "@utils";
 
 const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
     const NotalUI = useNotalUI();
@@ -205,7 +207,7 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
                     { title: "Card", id: "card" },
                     { title: "Tags", id: "Tags" },
                     { title: "Image", id: "image" },
-                    { title: "Icon", id: "icon" },
+                    //{ title: "Icon", id: "icon" },
                     /*{ title: "Subtasks", id: "subtasks" },
                     { title: "Notes", id: "notes" },
                     { title: "Details", id: "details" },*/
@@ -327,7 +329,7 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
                     </Button>}
                 </Tab.TabView>
                 <Tab.TabView index={3} className="pt-4 grid grid-cols-1 gap-2">
-                    sdfds
+                    dfg
                 </Tab.TabView>
                 <Tab.TabView index={4} className="pt-4 grid grid-cols-1 gap-2">
                     sdfds
