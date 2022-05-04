@@ -11,7 +11,7 @@ const fetchWithAuth = async ({ ...rest }, { token, action }) => {
         method: "POST",
         headers: { 'Authorization': `Bearer ${token || ""}` },
         body: JSON.stringify({ ...rest }),
-    }).then(response => response.json()).catch(error => { return error });
+    }).then(response => response.json()).catch(error => { return { error, success: false } });
 }
 
 /**

@@ -296,6 +296,7 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                         value={editWorkspace.title}
                         id="workspaceTitle"
                         maxLength={32}
+                        onEnterPress={() => !thumbnailLoading && submit()}
                     />
                     {editErr.title != false && <span className="text-red-500">{editErr.title}</span>}
                     <label htmlFor="workspaceTitle">Workspace Description</label>

@@ -83,6 +83,7 @@ const WorkspaceField = ({
         transition={{ type: "spring", damping: 15, mass: .25 }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
+        onBlur={() => setHovered(false)}
     //{...fieldDraggableProvided.draggableProps}
     //ref={fieldDraggableProvided.innerRef}
     //onClick={() => setHovered(!hovered)}
@@ -121,7 +122,7 @@ const WorkspaceField = ({
                         <MoreIcon size={24} className="dark:fill-white fill-black" />
                     </Button>}
                 </Tooltip>}
-                {(hovered || !field?.collapsed) && <button
+                {(hovered || !field?.collapsed) && isOwner && <button
                     className="py-2"
                     title="Drag Field"
                     aria-label="Drag Field"
@@ -165,8 +166,7 @@ const WorkspaceField = ({
                     )}
                 </Draggable>
             )}
-            {(field?.cards?.length == 0 || !field?.cards)
-                && <WorkspaceAddCardBanner />}
+            {(field?.cards?.length == 0 || !field?.cards) && <WorkspaceAddCardBanner />}
         </div>
         {isOwner && (hovered || !field?.collapsed) && <WorkspaceAddCardButton
             title={field.title}

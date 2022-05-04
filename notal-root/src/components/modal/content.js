@@ -3,6 +3,7 @@ import { motion } from "framer-motion"
 
 // Wrapper for modal content.
 const Content = ({ children, blur, className }) => {
+
     const BuildModalContent = BuildComponent({
         name: "Modal Content",
         defaultClasses: "z-50 relative box-border flex flex-col overflow-y-visible overflow-x-visible sm:overflow-visible shadow-2xl p-2 rounded-xl",

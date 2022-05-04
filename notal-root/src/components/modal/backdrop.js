@@ -1,6 +1,16 @@
+import BuildComponent from "@utils/buildComponent"
 import { motion } from "framer-motion"
 
-const Backdrop = ({ children, blur, onClose, open, setShow, onKeyDown }) => {
+const Backdrop = ({ children, blur, onClose, open, setShow, onKeyDown, className }) => {
+
+    const BuildModalBackdrop = BuildComponent({
+        name: "Modal Backdrop",
+        defaultClasses: "fixed top-0 right-0 bottom-0 left-0 flex items-center justify-center z-50",
+        extraClasses: className,
+        conditionalClasses: [{ true: "bg-black/50 backdrop-blur-sm", default: "bg-black/60" }],
+        selectedClasses: [blur],
+    })
+
     return (<motion.div
         variants={{
             show: {
@@ -17,7 +27,7 @@ const Backdrop = ({ children, blur, onClose, open, setShow, onKeyDown }) => {
         animate={open ? "show" : "hidden"}
         onAnimationComplete={() => !open && setShow(false)}
         onKeyDown={onKeyDown}
-        className={`fixed top-0 right-0 bottom-0 left-0 ${blur ? "bg-black/50 backdrop-blur-sm" : "bg-black/60"} flex items-center justify-center z-50`}
+        className={BuildModalBackdrop.classes}
         onClick={onClose}
     >
         {children}

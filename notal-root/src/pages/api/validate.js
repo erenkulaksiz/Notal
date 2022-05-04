@@ -13,6 +13,9 @@ if (!admin.apps.length) {
 const { wordlist } = require('../../utils/wordlist');
 const wordlistLength = wordlist.length;
 
+const { db } = await connectToDatabase();
+const usersCollection = db.collection("users");
+
 import Log from "@utils/logger"
 
 export default async function handler(req, res) {
@@ -35,9 +38,6 @@ export default async function handler(req, res) {
         return
     }
     try {
-        const { db } = await connectToDatabase();
-        const usersCollection = db.collection("users");
-
         await admin.auth().verifyIdToken(token).then(async (decodedToken) => {
             const user = await usersCollection.findOne({ uid: decodedToken.uid });
             if (!user) {
