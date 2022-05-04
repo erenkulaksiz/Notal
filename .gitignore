@@ -91,7 +91,6 @@ buck-out/
 web-build/
 dist/
 
-
 # PWA files
 **/public/sw.js
 **/public/workbox-*.js
