@@ -9,7 +9,7 @@ const Offline = () => {
 
     return (<div className="mx-auto sm:container min-h-screen items-center justify-center flex flex-col">
         <Head>
-            <title>Offline.</title>
+            <title>No internet - Offline.</title>
         </Head>
         <div className="flex flex-col justify-center items-center dark:bg-neutral-800 bg-neutral-200/50 shadow-xl p-8 px-16 rounded-xl">
             <h1 className="text-6xl font-bold text-center mt-4">[404]</h1>

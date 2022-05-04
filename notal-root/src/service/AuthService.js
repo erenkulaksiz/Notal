@@ -1,10 +1,8 @@
 import { getAuth, signInWithPopup, signInWithEmailAndPassword, GoogleAuthProvider, sendPasswordResetEmail, createUserWithEmailAndPassword, GithubAuthProvider, signInWithRedirect } from "firebase/auth";
 import { getStorage, ref as stRef, uploadBytes, getDownloadURL } from "firebase/storage";
-
-import { server } from "../config";
-
 import Router from "next/router";
 
+import { server } from "../config";
 import Log from "@utils/logger"
 
 const fetchWithAuth = async ({ ...rest }, { token, action }) => {
@@ -190,17 +188,6 @@ const AuthService = {
                 Log.debug(snapshot);
 
                 return getDownloadURL(snapshot.ref).then(async (downloadURL) => {
-                    /*
-                    Log.debug('File available at', downloadURL);
-
-                    const avatarRes = await fetch(`${server}/api/workspace`, {
-                        'Content-Type': 'application/json',
-                        method: "POST",
-                        body: JSON.stringify({ avatar: downloadURL, action: "TEMP_THUMBNAIL", uid: auth?.currentUser?.uid }),
-                    }).then(response => response.json());
-                    Log.debug("avatar res: ", avatarRes);
-
-                    */ // no need to send to the server at first
                     return { success: true, url: downloadURL }
                 });
             }).catch(error => {
@@ -450,22 +437,32 @@ const AuthService = {
                     Log.debug(snapshot);
 
                     return getDownloadURL(snapshot.ref).then(async (downloadURL) => {
-                        /*
-                        Log.debug('File available at', downloadURL);
-
-                        const avatarRes = await fetch(`${server}/api/workspace`, {
-                            'Content-Type': 'application/json',
-                            method: "POST",
-                            body: JSON.stringify({ avatar: downloadURL, action: "TEMP_THUMBNAIL", uid: auth?.currentUser?.uid }),
-                        }).then(response => response.json());
-                        Log.debug("avatar res: ", avatarRes);
-
-                        */ // no need to send to the server at first
                         return { success: true, url: downloadURL }
                     });
                 }).catch(error => {
                     return { success: false, error }
                 });
+            },
+            reOrder: async ({ id, destination, source, workspaceId }) => {
+                const auth = getAuth();
+                const token = await auth.currentUser.getIdToken();
+
+                const data = await fetchWithAuth({
+                    id,
+                    uid: auth?.currentUser?.uid,
+                    workspaceId,
+                    destination,
+                    source
+                }, {
+                    token,
+                    action: "reordercard"
+                });
+
+                if (data?.success) {
+                    return { success: true }
+                } else {
+                    return { success: false, error: data?.error }
+                }
             }
         }
     },

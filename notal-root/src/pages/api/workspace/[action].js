@@ -57,7 +57,7 @@ export default async function handler(req, res) {
         return reject();
     }
 
-    const { uid, title, desc, starred, id, workspaceId, color, fieldId, sortBy, workspaceVisible, tags, thumbnail, field, userId, username, image } = body ?? {};
+    const { uid, title, desc, starred, id, workspaceId, color, fieldId, sortBy, workspaceVisible, tags, thumbnail, field, userId, username, image, destination, source } = body ?? {};
 
     const workspaceAction = {
         createworkspace: async () => {
@@ -509,9 +509,8 @@ export default async function handler(req, res) {
         },
         addcard: async () => {
             // id: field id
-            if (!id || !uid || !workspaceId || !title) return reject("invalid-params");
+            if (!id || !uid || !workspaceId || (!title && !image.file)) return reject("invalid-params");
             if (color && color.length > 7) return reject("https://youtu.be/dQw4w9WgXcQ");
-            if (thumbnail && thumbnail?.type == "gradient" && (thumbnail?.colors?.start?.length > 7 || thumbnail?.colors?.end?.length > 7)) return reject("https://youtu.be/dQw4w9WgXcQ");
             if (title?.length > 40) return reject("https://youtu.be/HAK0fKEDPi4");
             if (desc?.length > 356) return reject("desc-maxlength");
             if (tags?.length > 10) return reject("tags-maxlength");
@@ -750,6 +749,13 @@ export default async function handler(req, res) {
             } catch (error) {
                 return reject(error);
             }
+        },
+        reordercard: async () => {
+            if (!id || !uid || !workspaceId || !destination || !source) return reject("invalid-params");
+
+            Log.debug("destination: ", destination, " source:", source, " workspaceId:", workspaceId, " cardId:", id);
+
+            return accept();
         }
     }
 

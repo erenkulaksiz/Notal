@@ -13,9 +13,7 @@ import {
     Navbar,
     LandingFeatureCard,
     Button,
-    Footer,
-    AcceptCookies,
-    LandingSection
+    Footer
 } from '@components';
 
 import {
@@ -37,35 +35,6 @@ const Landing = (props) => {
     const router = useRouter();
     const auth = useAuth();
     const NotalUI = useNotalUI();
-
-    const [featureHovered, setFeatureHovered] = useState(-1);
-
-    /*
-    const [_validate, _setValidate] = useState(null);
-  
-    const validateData = useSWR(
-      ["api/validate", Cookies.get("auth")],
-      (url, token) => fetchValidate({ url, token })
-    );
-  
-    useEffect(() => {
-      if (props?.validate?.success) {
-        _setValidate(props?.validate);
-      }
-    }, [props.validate]);
-  
-    useEffect(() => {
-      if (validateData.data) {
-        Log.debug("validate res: ", validateData.data);
-        if (!_validate) {
-          _setValidate(validateData.data);
-        }
-      }
-      if (validateData.error) {
-        console.error("Validate error swr: ", validateData);
-      }
-    }, [validateData]);
-    */
 
     useEffect(() => {
         Log.debug("home props: ", props);

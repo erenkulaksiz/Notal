@@ -18,7 +18,7 @@ const PrivacyPolicy = (props) => {
     const router = useRouter();
 
     useEffect(() => {
-        Log.debug("home props: ", props);
+        Log.debug("policy props: ", props);
         (async () => {
             const token = await auth.users.getIdToken();
             const res = await CheckToken({ token: token.res, props, user: auth?.authUser });

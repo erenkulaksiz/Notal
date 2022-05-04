@@ -19,7 +19,6 @@ class CriticalCssHead extends Head {
         return allFiles && allFiles.length > 0 ? allFiles.filter(isCss).map(renderCss) : null;
     }
 }
-//                <meta property="application-name" name="application-name" content='Notal' />
 const Notal = () => {
     return (
         <Html lang='en'>

@@ -42,11 +42,13 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
 
     const cardImageRef = useRef();
 
+    /*
     useEffect(() => {
         if (useColor) {
             setAddCard({ ...addCard, color: "#ffffff" });
         }
     }, [useColor]);
+    */
 
     const close = () => {
         onClose();
@@ -54,12 +56,12 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
         setAddCard({ ...addCard, title: "", desc: "", /*color: "",*/ tags: [], image: {} });
         setCardNewTag({ title: "", color: "#ff0000" });
         setUseTagColor(true);
-        setUseColor(true);
+        //setUseColor(false);
         setTab(0);
     }
 
     const submit = async () => {
-        if (addCard.title.length < 3) {
+        if (addCard.title.length < 3 && !addCard.image.file) {
             setAddCardErrors({ ...addCardErrors, title: "Card title must be minimum 3 characters long." });
             return;
         }
@@ -184,7 +186,7 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
                 <WorkspaceFieldCard
                     preview
                     card={{
-                        title: addCard.title || "Enter Card Title",
+                        title: addCard?.image?.file ? addCard?.title : (addCard?.title ? addCard?.title : "Enter Card Title"),
                         desc: addCard.desc,
                         color: useColor ? addCard.color : "",
                         tags: addCard.tags,

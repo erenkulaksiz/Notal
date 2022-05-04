@@ -1,7 +1,5 @@
 import { isClient } from "@utils";
 
-// #TODO: log api call time
-
 const Log = {
     activated: process.env.NEXT_PUBLIC_DEBUG_LOG == "true",
     formatDate: (thisdate) => {

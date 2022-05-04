@@ -203,6 +203,9 @@ export function AuthProvider(props) {
             },
             uploadCardImageTemp: async ({ image }) => {
                 return await AuthService.workspace.card.uploadCardImageTemp({ image });
+            },
+            cardReOrder: async ({ id, destination, source, workspaceId }) => {
+                return await AuthService.workspace.card.reOrder({ id, destination, source, workspaceId });
             }
             /*
             cardSwap: async ({ cardId, fieldId, swapType, workspaceId, toFieldId, toCardId }) => {

@@ -231,7 +231,9 @@ const Handler = {
                 },
                 reOrder: async ({ cardId, destination, source }) => {
                     // destination: { index: 0, droppableId: "xxx" }
-                    //const data = await auth.workspace.card.reOrder({destination,source,id,workspaceId: _workspace?.data?._id});
+                    const data = await auth.workspace.field.cardReOrder({ destination, source, id: cardId, workspaceId: _workspace?.data?._id });
+
+                    Log.debug("reorder data res:", data);
 
                     const newFields = _workspace?.data?.fields;
                     const newFieldIndex = newFields?.findIndex(el => el._id == source.droppableId);

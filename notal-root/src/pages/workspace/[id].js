@@ -280,7 +280,7 @@ const Workspace = (props) => {
                     headerContainerClassName="pl-2 pt-2 pr-2"
                     loadingWorkspace={loadingWorkspace}
                 >
-                    <Tab.TabView index={0} className="relative flex flex-1 flex-row overflow-y-auto p-2 overflow-x-visible">
+                    <Tab.TabView index={0} className="relative flex flex-1 flex-row overflow-y-auto overflow-x-visible p-2">
                         <WorkspaceTabFields
                             _workspace={_workspace}
                             isOwner={isOwner}

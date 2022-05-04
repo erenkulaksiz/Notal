@@ -24,7 +24,7 @@ export function reportWebVitals({ id, name, label, value }) {
         Log.debug(name, value);
     }
     if (process.env.NODE_ENV !== "production") {
-        return; // don't report vitals on production
+        return; // don't report vitals on development
     }
     window.gtag("event", name, {
         event_category:

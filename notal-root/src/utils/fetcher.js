@@ -12,7 +12,10 @@ export const fetchWorkspaces = ({ token, uid }) => fetch(`${server}/api/workspac
         } catch (error) {
             return { success: false, error }
         }
+    }).catch(error => {
+        return { success: false, error }
     });
+
 /*
 export const fetchValidate = ({ url, token }) => fetch(`${server}/${url}`, {
     'Content-Type': 'application/json',
@@ -37,4 +40,6 @@ export const fetchWorkspace = ({ token, id, uid }) => fetch(`${server}/api/works
         } catch (error) {
             return { success: false, error }
         }
+    }).catch(error => {
+        return { success: false, error }
     });

@@ -55,6 +55,7 @@ const WorkspaceTabFields = ({
                     )}
                 </Droppable>
             ))}
+            {<div className="pr-1" />}
             {(
                 !loadingWorkspace
                 && !notFound

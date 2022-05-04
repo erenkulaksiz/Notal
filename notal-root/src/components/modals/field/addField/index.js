@@ -39,6 +39,7 @@ const AddFieldModal = ({ open, onClose, onAdd, workspaceTitle }) => {
                 value={newField.title}
                 id="fieldTitle"
                 maxLength={28}
+                onEnterPress={() => submit()}
             />
             {newFieldErr.title != false && <span className="text-red-500">{newFieldErr.title}</span>}
         </Modal.Body>
