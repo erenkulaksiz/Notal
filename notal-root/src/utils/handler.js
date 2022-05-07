@@ -71,7 +71,7 @@ const Handler = {
                             fields: [
                                 ...currFields,
                                 {
-                                    _id: Date.now(),
+                                    _id: Date.now().toString(),
                                     title,
                                     updatedAt: Date.now(),
                                     createdAt: Date.now(),
@@ -160,7 +160,7 @@ const Handler = {
                     const newFields = _workspace?.data?.fields;
                     newFields[_workspace?.data?.fields?.findIndex(el => el._id == fieldId)].cards?.push(
                         {
-                            _id: Date.now(),
+                            _id: Date.now().toString(),
                             title,
                             desc,
                             color,
@@ -231,8 +231,6 @@ const Handler = {
                 },
                 reOrder: async ({ cardId, destination, source }) => {
                     // destination: { index: 0, droppableId: "xxx" }
-                    const data = await auth.workspace.field.cardReOrder({ destination, source, id: cardId, workspaceId: _workspace?.data?._id });
-
                     Log.debug("reorder data res:", data);
 
                     const newFields = _workspace?.data?.fields;
@@ -248,6 +246,10 @@ const Handler = {
                     newInsertField?.cards?.splice(destination.index, 0, copyCard);
 
                     await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: newFields } }, false);
+
+                    const data = await auth.workspace.field.cardReOrder({ destination, source, id: cardId, workspaceId: _workspace?.data?._id });
+
+                    //workspaceData.mutate();
                 }
             }
         }

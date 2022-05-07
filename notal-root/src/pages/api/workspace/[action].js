@@ -44,6 +44,19 @@ export default async function handler(req, res) {
         return res.status(status).send({ success: true });
     }
 
+    /**
+     * Checks whether the request made from workspace owner or not
+     * @param {string} workspaceId
+     * @returns {object} _workspace
+     */
+    const checkWorkspaceOwner = async (workspaceId) => {
+        const _workspace = await workspacesCollection.findOne({ "_id": ObjectId(workspaceId), _deleted: { $in: [null, false] } });
+        const _decodedToken = await checkBearer(req.headers['authorization']);
+        if (!_workspace || !_decodedToken) return false; // if either one doesnt exist, return false
+        if (_workspace.owner != _decodedToken.user_id) return false;
+        return _workspace;
+    }
+
     if (req.method !== 'POST') {
         return reject();
     }
@@ -80,6 +93,9 @@ export default async function handler(req, res) {
                 let givenId = false;
                 let length = 4; // default id length
 
+                /**
+                 * Dynamic ID generator
+                 */
                 while (givenId == false) {
                     // create workspace UID
                     const nanoid = customAlphabet('1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', length);
@@ -91,8 +107,8 @@ export default async function handler(req, res) {
                         return;
                     }
                     givenId = id;
-                    // if id doesnt exist
                 }
+                // if id doesnt exist
 
                 Log.debug("generated ID for workspace: ", givenId, " owner: ", uid);
 
@@ -140,13 +156,13 @@ export default async function handler(req, res) {
             }
         },
         getworkspaces: async () => {
+            // #TODO: refactor here
+
             const decodedToken = await checkBearer(req.headers['authorization']);
-
             if (!decodedToken) return reject("invalid-token");
-
             const user = await usersCollection.findOne({ uid: decodedToken.user_id });
 
-            if (uid) { // if no uid present, find workspaces based on decodedtoken
+            if (uid) {
                 if (uid === user.uid || user?.role === "admin") {
                     try {
                         const workspaces = await workspacesCollection.find({ owner: uid, _deleted: { $in: [null, false] } }).toArray();
@@ -170,7 +186,7 @@ export default async function handler(req, res) {
                 } else {
                     return reject();
                 }
-            } else {
+            } else { // if no uid present, find workspaces based on decodedtoken
                 const workspaces = await workspacesCollection.find({ owner: decodedToken.uid }).toArray();
                 return accept(
                     workspaces.map(el => {
@@ -191,8 +207,8 @@ export default async function handler(req, res) {
             }
         },
         getworkspace: async () => {
-            Log.debug("!!!getting workspace with id: ", id);
             if (!id) return reject("invalid-params");
+            Log.debug("!!!getting workspace with id: ", id);
 
             try {
                 const workspace = await workspacesCollection.findOne({ "id": id, _deleted: { $in: [null, false] } });
@@ -301,17 +317,19 @@ export default async function handler(req, res) {
             if (!id) return reject("invalid-params");
 
             try {
-                const workspace = await workspacesCollection.findOne({ "id": id, _deleted: { $in: [null, false] }, });
-                if (!workspace) return reject("not-found");
 
-                const workspaceOwner = await usersCollection.findOne({ "uid": workspace.owner });
+                const _workspace = await checkWorkspaceOwner(id);
+                if (!_workspace) return reject("not-found");
+
+                const workspaceOwner = await usersCollection.findOne({ "uid": _workspace.owner });
                 if (!workspaceOwner) return reject("owner-not-found");
 
-                if (!workspace.workspaceVisible) {
+                if (!_workspace.workspaceVisible) {
                     const decodedToken = await checkBearer(req.headers['authorization']);
-                    if (decodedToken.user_id != workspace.owner) {
+                    if (decodedToken.user_id != _workspace.owner) {
                         return reject("not-found");
                     }
+                    const _workspace = await checkWorkspaceOwner()
                 }
 
                 return accept({
@@ -336,15 +354,8 @@ export default async function handler(req, res) {
         removeworkspace: async () => {
             if (!uid || !id) return reject("invalid-params");
             try {
-                const workspace = await workspacesCollection.findOne({ "_id": ObjectId(id), _deleted: { $in: [null, false] } });
-
-                const decodedToken = await checkBearer(req.headers['authorization']);
-                if (!decodedToken) return reject("no-auth");
-
-                // check workspace
-
-                if (!workspace) return reject("workspace-not-found");
-                if (workspace.owner != decodedToken.user_id) return reject("no-auth");
+                const _workspace = await checkWorkspaceOwner(id);
+                if (!_workspace) return reject();
 
                 return await workspacesCollection.updateOne({ "_id": ObjectId(id) }, {
                     $set: {
@@ -399,14 +410,8 @@ export default async function handler(req, res) {
             }
 
             try {
-
-                const workspace = await workspacesCollection.findOne({ "_id": ObjectId(id), _deleted: { $in: [null, false] } });
-                const decodedToken = await checkBearer(req.headers['authorization']);
-                if (!decodedToken) return reject("no-auth");
-
-                // check workspace
-                if (!workspace) return reject("workspace-not-found");
-                if (workspace.owner != decodedToken.user_id) return reject("no-auth");
+                const _workspace = await checkWorkspaceOwner(id);
+                if (!_workspace) reject("workspace-not-found");
 
                 if (thumbnail?.type != "image") {
                     await workspacesCollection.updateOne({ "_id": ObjectId(id) }, {
@@ -535,13 +540,10 @@ export default async function handler(req, res) {
 
             if (tags && !Array.isArray(tags)) return reject("tags-invalid");
 
-            const _workspace = await workspacesCollection.findOne({ "_id": ObjectId(id), _deleted: { $in: [null, false] } });
-            const decodedToken = await checkBearer(req.headers['authorization']);
-            if (!decodedToken) return reject("no-auth");
+            const _workspace = await checkWorkspaceOwner(workspaceId);
 
             // check workspace
             if (!_workspace) return reject("workspace-not-found");
-            if (_workspace.owner != decodedToken.user_id) return reject("no-auth");
 
             let newTags = [];
 
@@ -584,7 +586,6 @@ export default async function handler(req, res) {
 
                 await file.move(`cardImages/card_${cardId}`);
                 const newFile = storageRef.file(`cardImages/card_${cardId}`);
-                //const meta = await newFile.getMetadata();
                 const url = await newFile.getSignedUrl({
                     action: 'read',
                     expires: '03-09-2491'
@@ -630,9 +631,8 @@ export default async function handler(req, res) {
         removecard: async () => {
             if (!id || !uid || !workspaceId || !fieldId) return reject("invalid-params");
 
-            const decodedToken = await checkBearer(req.headers['authorization']);
-
-            if (!decodedToken) return reject("invalid-token");
+            const _workspace = await checkWorkspaceOwner(workspaceId);
+            if (!_workspace) return reject();
 
             try {
                 await workspacesCollection.updateOne({ "_id": ObjectId(workspaceId), "fields._id": ObjectId(fieldId) }, {
@@ -652,8 +652,10 @@ export default async function handler(req, res) {
         },
         editfield: async () => {
             if (!uid || !workspaceId || !field) return reject("invalid-params");
-
             if (field && field?.title?.length < 3) return reject("field-title-min");
+
+            const _workspace = await checkWorkspaceOwner(workspaceId);
+            if (!_workspace) return reject();
 
             try {
                 await workspacesCollection.updateOne(
@@ -672,9 +674,12 @@ export default async function handler(req, res) {
             }
         },
         editcard: async () => {
+            if (!id || !uid || !workspaceId || !title || !fieldId || !color) return reject("invalid-params");
+
             Log.debug("editcard", id, uid, workspaceId, title, desc, color, fieldId);
 
-            if (!id || !uid || !workspaceId || !title || !fieldId || !color) return reject("invalid-params");
+            const _workspace = await checkWorkspaceOwner(workspaceId);
+            if (!_workspace) return reject();
 
             try {
                 await workspacesCollection.updateOne(
@@ -690,7 +695,10 @@ export default async function handler(req, res) {
                         }
                     },
                     {
-                        arrayFilters: [{ "i._id": ObjectId(fieldId) }, { "j._id": ObjectId(id) }]
+                        arrayFilters: [
+                            { "i._id": ObjectId(fieldId) },
+                            { "j._id": ObjectId(id) }
+                        ]
                     }
                 );
                 return accept();
@@ -702,6 +710,9 @@ export default async function handler(req, res) {
             Log.debug("adduser", id, uid, username);
 
             if (!id || !uid || !username) return reject("invalid-params");
+
+            const _workspace = await checkWorkspaceOwner(id);
+            if (!_workspace) return reject();
 
             try {
                 const user = await usersCollection.findOne({ "username": username });
@@ -734,12 +745,12 @@ export default async function handler(req, res) {
             }
         },
         removeuser: async () => {
-            Log.debug("removeuser", id, uid);
+            if (!id || !uid || !userId) return reject();
 
-            if (!id || !uid || !userId) {
-                res.status(400).send({ success: false, error: "invalid-params" });
-                return;
-            }
+            const _workspace = await checkWorkspaceOwner(id);
+            if (!_workspace) return reject();
+
+            Log.debug("removeuser", id, uid);
 
             try {
                 await workspacesCollection.updateOne(
@@ -763,9 +774,46 @@ export default async function handler(req, res) {
         reordercard: async () => {
             if (!id || !uid || !workspaceId || !destination || !source) return reject("invalid-params");
 
+            // #TODO: replace card index here
+
+            const _workspace = await checkWorkspaceOwner(workspaceId);
+            if (!_workspace) return reject();
+
             Log.debug("destination: ", destination, " source:", source, " workspaceId:", workspaceId, " cardId:", id);
 
-            return accept();
+            try {
+                const _fieldIndex = _workspace.fields.findIndex(el => el._id == source.droppableId);
+                const _field = _workspace.fields[_fieldIndex];
+                const _cardIndex = _field.cards.findIndex(el => el._id == id);
+                const _card = _field.cards[_cardIndex];
+
+                // first remove card from field
+                await workspacesCollection.updateOne({ "_id": ObjectId(workspaceId), "fields._id": ObjectId(source.droppableId) }, {
+                    $pull: {
+                        "fields.$.cards": {
+                            _id: ObjectId(id),
+                        }
+                    },
+                    $set: {
+                        "fields.$.updatedAt": Date.now(),
+                    }
+                });
+
+                // then put it back to target field
+
+                return await workspacesCollection.findOneAndUpdate({ "_id": ObjectId(workspaceId), "fields._id": ObjectId(destination.droppableId) },
+                    {
+                        $push: {
+                            "fields.$.cards": {
+                                $each: [_card],
+                                $position: destination.index,
+                            }
+                        }
+                    }).then(() => accept());
+
+            } catch (error) {
+                return reject(error);
+            }
         }
     }
 

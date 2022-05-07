@@ -376,7 +376,9 @@ const WorkspaceSettingsModal = ({ open, onClose, onSubmit, onUserChange, workspa
                     </div>}
                 </Tab.TabView>
                 <Tab.TabView index={2} className="pt-4 grid grid-cols-1 gap-2">
-                    <p className="border-b-2 border-b-solid border-b-neutral-200 dark:border-b-neutral-800 pb-2">Add up to 20 users to your workspace to work with together.</p>
+                    <p className="border-b-2 border-b-solid border-b-neutral-200 dark:border-b-neutral-800 pb-2">
+                        Add up to 20 users to your workspace to work with together. (Beta)
+                    </p>
                     <label>Workspace Owner</label>
                     <div className="flex items-center p-2 w-full h-16 bg-neutral-100 dark:bg-neutral-800 rounded-xl">
                         <div className="flex flex-row items-center">

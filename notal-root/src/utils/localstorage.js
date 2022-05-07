@@ -4,6 +4,7 @@ const DefaultSettings = {
     cookies: false,
     homeNavCollapsed: false,
     navbarCollapsed: false,
+    installedVersion: process.env.NEXT_PUBLIC_APP_VERSION
 }
 
 const LocalSettings = {

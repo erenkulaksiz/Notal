@@ -65,7 +65,7 @@ const Footer = ({ className }) => {
                         </Link>
                     </Tooltip>
                 </span>
-                <Link href="https://github.com/erenkulaksiz/Helios" passHref>
+                {/*<Link href="https://github.com/erenkulaksiz/Helios" passHref>
                     <a target="_blank" className="mt-2 flex flex-row items-center text-sm dark:text-white text-black">
                         powered by
                         <div className="flex items-center object-contain h-6 w-14 ml-1">
@@ -77,7 +77,7 @@ const Footer = ({ className }) => {
                             />
                         </div>
                     </a>
-                </Link>
+            </Link>*/}
             </motion.div>
             <motion.div
                 variants={{
