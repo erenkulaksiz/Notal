@@ -14,7 +14,7 @@
 
 ### Discover more screenshots on [https://notal.app/workspace/screenshots](https://notal.app/workspace/screenshots)
 
-### TODO: Switch Tooltip to Popper.js, soft delete on card and fields, card editibility, card reorder on backend
+### TODO: Switch Tooltip to Popper.js, soft delete on card and fields, card editibility, card reorder on backend, field reorder,
 
 # Notal
 
@@ -101,3 +101,7 @@ Even while buying the domain, i didnt knew about them. It was a bit unlucky but 
 ## Questions & Contact
 
 You can ask whatever you want from erenkulaksz@gmail.com email or you can just contact me
+
+## License
+
+License is on LICENSE file

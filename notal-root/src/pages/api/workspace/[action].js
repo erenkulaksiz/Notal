@@ -187,7 +187,7 @@ export default async function handler(req, res) {
                     return reject();
                 }
             } else { // if no uid present, find workspaces based on decodedtoken
-                const workspaces = await workspacesCollection.find({ owner: decodedToken.uid }).toArray();
+                const workspaces = await workspacesCollection.find({ owner: decodedToken.uid, _deleted: { $in: [null, false] } }).toArray();
                 return accept(
                     workspaces.map(el => {
                         return {
