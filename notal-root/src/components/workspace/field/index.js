@@ -118,22 +118,19 @@ const WorkspaceField = ({
                         </Button>
                     </div>}
                 >
-                    {(hovered || !field?.collapsed) && <Button light size="sm" className="px-2 rounded-md active:scale-90" title="Show More Field Options" aria-label="Show More Field Options">
-                        <MoreIcon size={24} className="dark:fill-white fill-black" />
-                    </Button>}
+                    {(hovered || !field?.collapsed) && <button
+                        className="py-2"
+                        title="Drag Field"
+                        aria-label="Drag Field"
+                    //{...fieldDraggableProvided.dragHandleProps}
+                    >
+                        <DragIcon
+                            size={24}
+                            className="fill-neutral-800 dark:fill-white"
+                            style={{ transform: "scale(.7)" }}
+                        />
+                    </button>}
                 </Tooltip>}
-                {(hovered || !field?.collapsed) && isOwner && <button
-                    className="py-2"
-                    title="Drag Field"
-                    aria-label="Drag Field"
-                //{...fieldDraggableProvided.dragHandleProps}
-                >
-                    <DragIcon
-                        size={24}
-                        className="fill-neutral-800 dark:fill-white"
-                        style={{ transform: "scale(.7)" }}
-                    />
-                </button>}
             </div>
         </div>
         <div

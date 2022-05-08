@@ -6,6 +6,7 @@ import FsLightbox from 'fslightbox-react';
 import { MoreIcon, WarningIcon, SettingsIcon, DeleteIcon, DragIcon } from "@icons";
 import { Button, Tooltip } from "@components";
 import BuildComponent from "@utils/buildComponent";
+import { formatDate } from "@utils";
 
 const CardColor = ({ color }) => {
     if (!color) return null;
@@ -99,28 +100,19 @@ const WorkspaceFieldCard = ({
                                     </Button>
                                 </div>}
                             >
-                                <Button
-                                    light
-                                    size="sm"
-                                    className="px-1"
-                                    title="Show More Card Options"
-                                    aria-label="Show More Card Options"
+                                <button
+                                    //className="pl-2"
+                                    title="Drag Card"
+                                    aria-label="Drag Card"
+                                    {...provided.dragHandleProps}
                                 >
-                                    <MoreIcon size={24} className="fill-neutral-800 dark:fill-white" style={{ transform: "scale(.7)" }} />
-                                </Button>
+                                    <DragIcon
+                                        size={24}
+                                        className="fill-neutral-800 dark:fill-white"
+                                        style={{ transform: "scale(.7)" }}
+                                    />
+                                </button>
                             </Tooltip>
-                            <button
-                                className="pl-2"
-                                title="Drag Card"
-                                aria-label="Drag Card"
-                                {...provided.dragHandleProps}
-                            >
-                                <DragIcon
-                                    size={24}
-                                    className="fill-neutral-800 dark:fill-white"
-                                    style={{ transform: "scale(.7)" }}
-                                />
-                            </button>
                         </div>}
                     </div>
                 </div>
@@ -142,7 +134,7 @@ const WorkspaceFieldCard = ({
                         types={["image"]}
                     />
                 </>}
-                {card.updatedAt && <span className="text-xs dark:text-neutral-600 text-neutral-400 mt-2 hidden group-hover:flex" title={`Created ${new Date(card.createdAt).getDate()} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][new Date(card.createdAt).getMonth()]}, ${new Date(card.createdAt).getFullYear()} ${new Date(card.createdAt).getHours().toString().padStart(2, '0')}:${new Date(card.createdAt).getMinutes().toString().padStart(2, '0')} • Updated ${new Date(card.updatedAt).getDate()} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][new Date(card.updatedAt).getMonth()]}, ${new Date(card.updatedAt).getFullYear()} ${new Date(card.updatedAt).getHours().toString().padStart(2, '0')}:${new Date(card.updatedAt).getMinutes().toString().padStart(2, '0')}`}>
+                {card.updatedAt && <span className="text-xs dark:text-neutral-600 text-neutral-400 mt-2 hidden group-hover:flex" title={`Created ${formatDate(card.createdAt)} • Updated ${formatDate(card.updatedAt)}`}>
                     <time dateTime={card.updatedAt}>{`Created ${prettyMilliseconds(Date.now() - card.createdAt, { compact: true })} ago • Updated ${prettyMilliseconds(Date.now() - card.updatedAt, { compact: true })} ago`}</time>
                 </span>}
                 {card.owner && <Link href="/profile/[username]" as={`/profile/${cardOwner?.username || "not-found"}`} passHref>

@@ -318,7 +318,9 @@ export default async function handler(req, res) {
 
             try {
 
-                const _workspace = await checkWorkspaceOwner(id);
+                const _findWorkspace = await workspacesCollection.findOne({ "id": id, _deleted: { $in: [null, false] } });
+                if (!_findWorkspace) return reject("not-found");
+                const _workspace = await checkWorkspaceOwner(_findWorkspace._id);
                 if (!_workspace) return reject("not-found");
 
                 const workspaceOwner = await usersCollection.findOne({ "uid": _workspace.owner });
@@ -329,23 +331,22 @@ export default async function handler(req, res) {
                     if (decodedToken.user_id != _workspace.owner) {
                         return reject("not-found");
                     }
-                    const _workspace = await checkWorkspaceOwner()
                 }
 
                 return accept({
-                    title: workspace?.title,
-                    desc: workspace?.desc,
-                    thumbnail: workspace?.thumbnail,
+                    title: _workspace?.title,
+                    desc: _workspace?.desc,
+                    thumbnail: _workspace?.thumbnail,
                     owner: {
                         username: workspaceOwner?.username,
                         fullname: workspaceOwner?.fullname ?? "",
                         avatar: workspaceOwner?.avatar ?? "",
                     },
-                    id: workspace?.id,
-                    starred: workspace?.starred,
-                    updatedAt: workspace?.updatedAt,
-                    createdAt: workspace?.createdAt,
-                    workspaceVisible: workspace?.workspaceVisible,
+                    id: _workspace?.id,
+                    starred: _workspace?.starred,
+                    updatedAt: _workspace?.updatedAt,
+                    createdAt: _workspace?.createdAt,
+                    workspaceVisible: _workspace?.workspaceVisible,
                 });
             } catch (error) {
                 return reject(error);
@@ -773,8 +774,6 @@ export default async function handler(req, res) {
         },
         reordercard: async () => {
             if (!id || !uid || !workspaceId || !destination || !source) return reject("invalid-params");
-
-            // #TODO: replace card index here
 
             const _workspace = await checkWorkspaceOwner(workspaceId);
             if (!_workspace) return reject();

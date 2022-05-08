@@ -212,6 +212,14 @@ const Handler = {
                     await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: newFields } }, false);
                     const data = await auth.workspace.field.editCard({ id, workspaceId: _workspace?.data?._id, fieldId, title, desc, color, tag });
                     Log.debug("edit card data: ", data);
+                    if (!data?.success) {
+                        NotalUI.Alert.show({
+                            title: "Error",
+                            desc: "Couldn't perform the action you want. Please check the console and contact via erenkulaksz@gmail.com"
+                        });
+                        Log.debug("edit card error: ", data?.error);
+                        workspaceData.mutate();
+                    }
                 },
                 delete: async ({ id, fieldId }) => {
                     const newFields = _workspace?.data?.fields;
@@ -220,7 +228,7 @@ const Handler = {
                     await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: newFields } }, false);
                     const data = await auth.workspace.field.removeCard({ id, fieldId, workspaceId: _workspace?.data?._id });
                     Log.debug("removeCard data: ", data);
-                    if (!data.success) {
+                    if (!data?.success) {
                         NotalUI.Alert.show({
                             title: "Error",
                             desc: "Couldn't perform the action you want. Please check the console and contact via erenkulaksz@gmail.com"
@@ -230,9 +238,6 @@ const Handler = {
                     }
                 },
                 reOrder: async ({ cardId, destination, source }) => {
-                    // destination: { index: 0, droppableId: "xxx" }
-                    Log.debug("reorder data res:", data);
-
                     const newFields = _workspace?.data?.fields;
                     const newFieldIndex = newFields?.findIndex(el => el._id == source.droppableId);
                     const newField = _workspace?.data?.fields[newFieldIndex];
@@ -249,7 +254,15 @@ const Handler = {
 
                     const data = await auth.workspace.field.cardReOrder({ destination, source, id: cardId, workspaceId: _workspace?.data?._id });
 
-                    //workspaceData.mutate();
+                    if (!data?.success) {
+                        NotalUI.Alert.show({
+                            title: "Error",
+                            desc: "Couldn't perform the action you want. Please check the console and contact via erenkulaksz@gmail.com"
+                        });
+                        Log.debug("reorder card error: ", data?.error);
+                        workspaceData.mutate();
+                    }
+                    Log.debug("reorder data res:", data);
                 }
             }
         }

@@ -1,6 +1,8 @@
 <img src="./design/notal_logo_banner.png" alt="logo" width="320"/>
 <br/>
 
+# Screenshots
+
 <p align="center">
     <img src="https://storage.googleapis.com/notal-1df19.appspot.com/cardImages/card_6272972538ca31cd0cf5cd1d?GoogleAccessId=firebase-adminsdk-yyjek%40notal-1df19.iam.gserviceaccount.com&Expires=16447006800&Signature=dgXQmWFHUxBj1G%2BsnGFjmOBog5VYkvX3vwH253rYLD4n58dmY%2BMj78ShTmsPPJmkDW5F3QMKRg0zgRjNCCHzYfwtzjVzkCoCxQqfu%2BzmIrK6vU4zdP4fkdo4SftM7tunRpH9yuJ7PD771qsJXDOKip42MjMejeWlgNYp4KuD7XLanGoXeqYTp40566butmLSjR%2FU5L5gMqzA95Qr2hkWdyLaggLBDaIjIYrvW7B9DGnuO7t8%2Bhj0iuOVjN0XlJO9x5SsDqsTa6CJd0jET3hMz3%2BuXcp%2FzzyR%2F9Z8k92cnvwm%2BT7RKq9RFzzN1Kx7QNmEgjItoltWD1%2BnR0oqyZboKw%3D%3D" width="290">
     <img src="https://storage.googleapis.com/notal-1df19.appspot.com/cardImages/card_627299f338ca31cd0cf5cd27?GoogleAccessId=firebase-adminsdk-yyjek%40notal-1df19.iam.gserviceaccount.com&Expires=16447006800&Signature=VPT%2BEpwr6J3F8TmeDkzov0iNofq0F6AA1iKoRbpIUX6PJ8JBIjgnNG%2BMLI9M2GPkPMlypXqh5Tw6BQvGG3l6pLXBNhVLRn2R7uY8FRpi1kqRvBJt7zIFUE%2Fey2FXucCuBVa9WLL3zr4EiCJylOsT9Ep6Dc2k7ZA0E%2FVMpJeP4uXE%2BoXAXzfrLZ8HIsO0cniyc39rgXGxJ2tpKtpMHh6L501EPVTVven64%2FmXOoC0Tl16HxsoW7X1ilebjUXra98id%2FtwvNOmg8Xn7YgPTGcgVRGcJ%2F4K%2FATu3LT0UsmY5qu7P9HeFjkOlgogLMXDP2Wounij3v0hfuSJDK1E1SkJeg%3D%3D" width="256">
@@ -14,7 +16,7 @@
 
 ### Discover more screenshots on [https://notal.app/workspace/screenshots](https://notal.app/workspace/screenshots)
 
-### TODO: Switch Tooltip to Popper.js, soft delete on card and fields, card editibility, card reorder on backend, field reorder,
+### TODO: Switch Tooltip to Popper.js, soft delete on card and fields, card editibility, field reorder
 
 # Notal
 
@@ -25,10 +27,17 @@ Notal is a simple platform to keep your project management simple, as well as ma
 - Use bookmarks to link board cards with bookmarks which you can add images and links (Building - WIP)
 - Use changelog to view and edit your project's version notes (Building - WIP)
 
-## Project features
+## By sharing workspace URL with someone, you let them:
+
+- Vote for Roadmaps
+- See who is working on that workspace
+- If you want privacy on workspaces, you can always press `eye` button on workspace sidebar to set that workspace to private
+- If someone is added as user in that workspace, they should be able to edit and view the workspace even if that workspace is set to private
+
+## Technical features
 
 - NextJS as primary framework, Vercel as primary host
-- React Native on mobile side with Redux & Firebase
+- React Native on mobile side with Redux & Firebase (WIP)
 - Authentication via Google and GitHub
 - SWR, PWA, SSR & Workbox ready (see ./notal-root/worker/index.js for workbox development logs)
 - SEO is correctly managed, used Workbox for superfast caching
@@ -41,9 +50,20 @@ Notal is a simple platform to keep your project management simple, as well as ma
 
 You can see the live demo at **https://notal.app**
 
+## Known issues
+
+- TTFB time as well as FCP time is taking long time
+- First load is taking nearly 7~ seconds on benchmarks, need to switch to dynamic imports to reduce JS bundle
+- Maybe switch from Framer Motion to pure CSS or tailwind?
+
 ## Running locally in development mode
 
-To get started, clone the repository and run `npm install && npm run devp` inside `notal-root` file:
+First of all, you need to create a Firebase project, as well as MongoDB database. If you don't want to create these stuff, you will be able to run the project in Storybook mode in the future to review each component.
+
+- [Create Firebase project from here](https://cloud.google.com/firestore/docs/client/get-firebase)
+- [Create MongoDB database from here](https://www.mongodb.com/blog/post/quick-start-nodejs-mongodb-how-to-get-connected-to-your-database)
+
+Then, clone the repository and run `npm install && npm run devp` inside `notal-root` file:
 Make sure to configure the project for your needs from Configuring section
 
     git clone https://github.com/erenkulaksiz/notal.git
@@ -70,7 +90,7 @@ You should run `npm run build` again any time you make changes to the site
 
 If you configure a .env.local file (just copy [.env.local.template](https://github.com/erenkulaksiz/notal/blob/master/notal-root/.env.local.template) over to '.env.local' and fill in the options) you can configure a range of options
 
-Make sure you have done oAuth options from Firebase console to get auth start to work
+Make sure you have done oAuth options from Firebase console to get auth start to work, as well as MongoDB connection
 
 ## Analyze bundle
 

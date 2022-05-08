@@ -75,7 +75,9 @@ const Notal = ({ Component, pageProps }) => {
                     <DragDropContext
                         onDragEnd={(result) => {
                             if (!result.destination) return;
-                            if (result.destination.index == result.source.index && result.destination.droppableId == result.source.droppableId) return;
+                            if (result.destination.index == result.source.index
+                                && result.destination.droppableId == result.source.droppableId
+                            ) return;
                             if (typeof DragDropHandler.onDragEnd == "function") DragDropHandler.onDragEnd(result);
                         }}
                     >

@@ -57,13 +57,11 @@ const Footer = ({ className }) => {
                     <span>with</span>
                     <HeartIcon size={24} className="fill-red-500" style={{ transform: "scale(0.8)" }} />
                     <span>by</span>
-                    <Tooltip direction="right" content={<span className="text-xs">GitHub</span>}>
-                        <Link href="https://github.com/erenkulaksiz" passHref>
-                            <a target="_blank" rel="noreferrer" className="ml-1">
-                                @Eren Kulaksiz
-                            </a>
-                        </Link>
-                    </Tooltip>
+                    <Link href="https://erenk.dev" passHref>
+                        <a target="_blank" rel="noreferrer" className="ml-1">
+                            @Eren Kulaksiz
+                        </a>
+                    </Link>
                 </span>
                 {/*<Link href="https://github.com/erenkulaksiz/Helios" passHref>
                     <a target="_blank" className="mt-2 flex flex-row items-center text-sm dark:text-white text-black">

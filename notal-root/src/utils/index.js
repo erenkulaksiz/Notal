@@ -11,6 +11,10 @@ export const isClient = (typeof window === 'undefined') ? false : true;
 
 export const formatString = (str) => str.replace(/[^\w\s]/gi, "").replace(/\s/g, '');
 
+export const formatDate = (date) => {
+    return `${new Date(date).getDate()} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][new Date(date).getMonth()]}, ${new Date(date).getFullYear()} ${new Date(date).getHours().toString().padStart(2, '0')}:${new Date(date).getMinutes().toString().padStart(2, '0')}`;
+}
+
 export const CheckToken = async ({ token, props, user }) => {
     //Log.debug("jwtyi kontrol edicem bi canım");
     Log.debug("Checking token, " + (token ? "token exist" : "token doesnt exist") + " val: ", props.validate, " userVal: ", user)

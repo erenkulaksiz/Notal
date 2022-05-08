@@ -160,7 +160,10 @@ const Workspace = (props) => {
             if (workspaceData?.data?.error) {
                 console.error("swr error workspaceData: ", workspaceData?.data);
             }
-            if (workspaceData?.data?.error?.code == "auth/id-token-expired") {
+            if (workspaceData?.data?.error?.code == "auth/id-token-expired"
+                || workspaceData?.data?.error == "no-token"
+                || workspaceData?.data?.error == "invalid-token"
+            ) {
                 const token = await auth.users.getIdToken();
                 setTimeout(() => {
                     router.replace(router.asPath);

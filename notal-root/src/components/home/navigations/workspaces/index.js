@@ -56,10 +56,15 @@ const HomeNavWorkspaces = ({ validate, isValidating }) => {
             if (workspacesData?.data?.error) {
                 Log.error("swr error workspacesData: ", workspacesData?.data);
             }
-            if (workspacesData?.data?.error?.code == "auth/id-token-expired" || workspacesData?.data?.error == "no-token") {
-                //const token = await auth.users.getIdToken();
-                router.replace(router.asPath);
-                workspacesData.mutate();
+            if (workspacesData?.data?.error?.code == "auth/id-token-expired"
+                || workspacesData?.data?.error == "no-token"
+                || workspacesData?.data?.error == "invalid-token"
+            ) {
+                const token = await auth.users.getIdToken();
+                setTimeout(() => {
+                    router.replace(router.asPath);
+                    workspacesData.mutate();
+                }, 5000);
             } else {
                 if (workspacesData?.data?.success) {
                     _setWorkspaces(workspacesData?.data);

@@ -1,6 +1,8 @@
+import { useState } from "react";
 import {
     Modal,
-    Button
+    Button,
+    Input
 } from "@components";
 import {
     AddIcon,
@@ -9,9 +11,14 @@ import {
 } from "@icons";
 
 const AddRoadmapModal = ({ open, onClose, onAdd }) => {
+    const [newRoadmap, setNewRoadmap] = useState({ title: "Untitled", desc: "" });
 
     const submit = () => {
-        onAdd();
+        onAdd({
+            title: newRoadmap.title,
+            desc: newRoadmap.desc,
+        });
+        onClose();
     }
 
     const close = () => {
@@ -23,8 +30,16 @@ const AddRoadmapModal = ({ open, onClose, onAdd }) => {
             <AddIcon size={24} fill="currentColor" />
             <span className="text-lg font-medium ml-1">Add Roadmap</span>
         </Modal.Title>
-        <Modal.Body animate>
-
+        <Modal.Body className="flex flex-col pb-2" animate>
+            <label htmlFor="roadmapTitle">Roadmap Title</label>
+            <Input
+                fullWidth
+                placeholder="Roadmap Title"
+                onChange={(e) => setNewRoadmap({ ...newRoadmap, title: e.target.value })}
+                value={newRoadmap.title}
+                id="roadmapTitle"
+                maxLength={32}
+            />
         </Modal.Body>
         <Modal.Footer className="justify-between" animate>
             <Button

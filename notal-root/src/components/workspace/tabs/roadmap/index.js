@@ -23,6 +23,31 @@ const WorkspaceTabRoadmapSkeleton = () => {
     </div>)
 }
 
+const Roadmaps = [
+    {
+        title: "update 1",
+        desc: "ddscccccrtipiton",
+        createdAt: 1651355162213,
+        upvotes: 0,
+        upvoted: false,
+        _id: 1,
+        owner: {
+            username: "eren"
+        }
+    },
+    {
+        title: "update 222",
+        desc: "desccssc",
+        createdAt: 1651355162213,
+        upvotes: 0,
+        upvoted: false,
+        _id: 2,
+        owner: {
+            username: "eren"
+        }
+    }
+]
+
 const WorkspaceTabRoadmap = ({
     loadingWorkspace,
     isOwner,
@@ -30,24 +55,9 @@ const WorkspaceTabRoadmap = ({
     const NotalUI = useNotalUI();
     const [addRoadmapModal, setAddRoadmapModal] = useState({ visible: false });
 
-    if (loadingWorkspace) return <WorkspaceTabRoadmapSkeleton />
+    const [roadmaps, setRoadmaps] = useState([...Roadmaps]);
 
-    const Roadmaps = [
-        {
-            title: "update 1",
-            desc: "ddscccccrtipiton",
-            added: 1651355162213,
-            upvotes: 0,
-            upvoted: false,
-        },
-        {
-            title: "update 222",
-            desc: "desccssc",
-            added: 1651355162213,
-            upvotes: 0,
-            upvoted: false,
-        }
-    ]
+    if (loadingWorkspace) return <WorkspaceTabRoadmapSkeleton />
 
     return (<div className="w-full h-full flex flex-1 flex-col">
         <div>
@@ -75,16 +85,46 @@ const WorkspaceTabRoadmap = ({
                 />
             </div>}
 
-            {Roadmaps.map((roadmap, index) => <WorkspaceRoadmap
+            {roadmaps.map((roadmap, index) => <WorkspaceRoadmap
                 key={index}
                 roadmap={roadmap}
                 isOwner={isOwner}
+                onUpVote={() => {
+                    const newRoadmaps = [...roadmaps];
+                    newRoadmaps[index].upvoted = !newRoadmaps[index].upvoted;
+                    if (newRoadmaps[index].upvoted) {
+                        newRoadmaps[index].upvotes += 1;
+                    } else {
+                        newRoadmaps[index].upvotes -= 1;
+                    }
+                    setRoadmaps([...newRoadmaps]);
+                }}
+                onDelete={() => {
+                    const newRoadmaps = [...roadmaps];
+                    newRoadmaps.splice(index, 1);
+                    setRoadmaps([...newRoadmaps]);
+                }}
             />)}
 
         </div>
         <AddRoadmapModal
             open={addRoadmapModal.visible}
             onClose={() => setAddRoadmapModal({ ...addRoadmapModal, visible: false })}
+            onAdd={({ title, desc }) => {
+                const newRoadmaps = [...roadmaps];
+                newRoadmaps.push({
+                    title,
+                    desc,
+                    createdAt: Date.now(),
+                    upvotes: 0,
+                    upvoted: false,
+                    _id: Date.now(),
+                    owner: {
+                        username: "eren"
+                    }
+                });
+                setRoadmaps([...newRoadmaps]);
+            }}
         />
     </div>)
 }

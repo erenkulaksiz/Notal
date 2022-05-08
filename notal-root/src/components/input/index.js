@@ -25,7 +25,7 @@ const Input = ({
         extraClasses: containerClassName,
         conditionalClasses: [
             {
-                true: "rounded-xl",
+                true: "w-full",
             },
             {
                 default: "h-11",
@@ -79,10 +79,10 @@ const Input = ({
             placeholder={placeholder}
             maxLength={maxLength}
             onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                    if (typeof onEnterPress === "function") {
-                        onEnterPress();
-                    }
+                if (e.key != "Enter") return;
+
+                if (typeof onEnterPress === "function") {
+                    onEnterPress();
                 }
             }}
         />
