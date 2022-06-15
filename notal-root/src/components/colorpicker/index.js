@@ -22,12 +22,14 @@ const ColorPicker = ({ color, onColorChange, id }) => {
             </div>
         </div>}
     >
+        <button className="w-7 h-7 mr-1 p-[2px] rounded border-2 dark:border-neutral-800 bg-transparent">
+            <div className="w-full h-full rounded-sm" style={{ backgroundColor: color || "gray" }} />
+        </button>
         <input
             type="text"
             id={id}
             value={color}
-            className="p-0 w-20 h-7 rounded mr-2"
-            style={{ backgroundColor: color || "gray" }}
+            className="p-0 w-20 h-7 bg-transparent rounded mr-2 border-2 dark:border-neutral-800"
             onChange={(e) => onColorChange(`#${formatString(e.target.value).toUpperCase()}`)}
             maxLength={7}
         />

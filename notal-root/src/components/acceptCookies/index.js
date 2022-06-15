@@ -19,7 +19,7 @@ const AcceptCookies = () => {
         //Cookies.set('cookies', 'true');
         LocalSettings.set("cookies", true);
 
-        setTimeout(() => router.replace(router.asPath), 500);
+        setTimeout(() => router.replace(router.asPath), 200);
     }
 
     return (<div className="fixed bottom-4 left-4 flex flex-col items-start w-64 bg-white/50 dark:bg-neutral-900/50 text-black dark:text-white backdrop-blur-md p-4 rounded-xl drop-shadow-2xl" style={{ zIndex: 500 }}>

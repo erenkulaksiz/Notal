@@ -134,7 +134,7 @@ const WorkspaceField = ({
             </div>
         </div>
         <div
-            className="overflow-auto h-full w-full"
+            className="overflow-auto h-full w-full flex flex-col"
             {...provided.droppableProps}
             ref={provided.innerRef}
         >
@@ -142,14 +142,13 @@ const WorkspaceField = ({
                 <Draggable
                     index={index}
                     draggableId={card._id}
-                    isDragDisabled={!isOwner}
+                    isDragDisabled={!isOwner && (hovered || !field?.collapsed)}
                     key={card._id}
                 >
                     {(provided, snapshot) => (
                         <>
                             <WorkspaceFieldCard
                                 provided={provided}
-                                id={card._id}
                                 card={card}
                                 fieldCollapsed={!!field?.collapsed && !hovered && !snapshot.isDragging}
                                 onDelete={() => onDeleteCard({ id: card._id })}

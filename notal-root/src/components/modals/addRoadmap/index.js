@@ -39,6 +39,7 @@ const AddRoadmapModal = ({ open, onClose, onAdd }) => {
                 value={newRoadmap.title}
                 id="roadmapTitle"
                 maxLength={32}
+                onEnterPress={submit}
             />
         </Modal.Body>
         <Modal.Footer className="justify-between" animate>

@@ -199,7 +199,7 @@ const Handler = {
                         Log.error("add card error: ", data?.error);
                     }
                 },
-                edit: async ({ title, desc, id, fieldId, color = "#ff0000", tag = {} }) => {
+                edit: async ({ title, desc, id, fieldId, color, tags }) => {
                     const newFields = _workspace?.data?.fields;
                     const cards = newFields[_workspace?.data?.fields?.findIndex(el => el._id == fieldId)].cards;
                     cards[cards.findIndex(el => el._id == id)] = {
@@ -207,10 +207,11 @@ const Handler = {
                         title,
                         desc,
                         color,
-                        tag,
+                        tags,
+                        updatedAt: Date.now(),
                     }; // update card completely
                     await workspaceData.mutate({ ..._workspace, data: { ..._workspace.data, fields: newFields } }, false);
-                    const data = await auth.workspace.field.editCard({ id, workspaceId: _workspace?.data?._id, fieldId, title, desc, color, tag });
+                    const data = await auth.workspace.field.editCard({ id, workspaceId: _workspace?.data?._id, fieldId, title, desc, color, tags });
                     Log.debug("edit card data: ", data);
                     if (!data?.success) {
                         NotalUI.Alert.show({

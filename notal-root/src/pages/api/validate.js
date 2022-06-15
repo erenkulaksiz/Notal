@@ -40,6 +40,7 @@ export default async function handler(req, res) {
     try {
         await admin.auth().verifyIdToken(token).then(async (decodedToken) => {
             const user = await usersCollection.findOne({ uid: decodedToken.uid });
+            console.log("decodedToken uid: ", decodedToken.uid);
             if (!user) {
                 const randomName = wordlist[Math.floor(Math.random() * wordlistLength)] + Math.floor((Math.random() * 1000) + 1);
                 const newUser = {

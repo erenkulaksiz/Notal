@@ -403,7 +403,7 @@ const AuthService = {
                     return { success: false, error: data?.error }
                 }
             },
-            editCard: async ({ id, workspaceId, fieldId, title, desc, color }) => {
+            editCard: async ({ id, workspaceId, fieldId, title, desc, color, tags }) => {
                 const auth = getAuth();
                 const token = await auth.currentUser.getIdToken();
 
@@ -414,6 +414,7 @@ const AuthService = {
                     title,
                     desc,
                     color,
+                    tags,
                     fieldId
                 }, {
                     token,

@@ -54,8 +54,8 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
         onClose();
         setAddCardErrors({ title: false, desc: false, color: false, tag: false });
         setAddCard({ ...addCard, title: "", desc: "", /*color: "",*/ tags: [], image: {} });
-        setCardNewTag({ title: "", color: "#ff0000" });
-        setUseTagColor(true);
+        //setCardNewTag({ title: "", color: "#ff0000" });
+        //setUseTagColor(true);
         //setUseColor(false);
         setTab(0);
     }
@@ -154,7 +154,7 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
         }
         setAddCardErrors({ ...addCardErrors, tag: false });
         const newAddCard = addCard?.tags ?? [];
-        newAddCard.push({ title: cardNewTag.title, color: useTagColor ? cardNewTag.color : "" });
+        newAddCard.push({ title: cardNewTag.title, color: useTagColor ? cardNewTag.color : "", _id: Date.now() });
         setAddCard({ ...addCard, tags: newAddCard });
         setCardNewTag({ ...cardNewTag, title: "" });
     }
@@ -183,18 +183,20 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
                     <AddIcon size={24} fill="currentColor" />
                     <span className="text-lg font-medium ml-1">{`Add card to ${fieldTitle}`}</span>
                 </div>
-                <WorkspaceFieldCard
-                    preview
-                    card={{
-                        title: addCard?.image?.file ? addCard?.title : (addCard?.title ? addCard?.title : "Enter Card Title"),
-                        desc: addCard.desc,
-                        color: useColor ? addCard.color : "",
-                        tags: addCard.tags,
-                        image: {
-                            file: addCard?.image?.file,
-                        }
-                    }}
-                />
+                <div className="w-full border-2 border-solid rounded-lg dark:border-neutral-800 mt-2">
+                    <WorkspaceFieldCard
+                        preview
+                        card={{
+                            title: addCard?.image?.file ? addCard?.title : (addCard?.title ? addCard?.title : "Enter Card Title"),
+                            desc: addCard.desc,
+                            color: useColor ? addCard.color : "",
+                            tags: addCard.tags,
+                            image: {
+                                file: addCard?.image?.file,
+                            }
+                        }}
+                    />
+                </div>
             </div>
         </Modal.Title>
         <Modal.Body className="flex flex-col pb-2 pt-2 flex-1" animate>
@@ -264,7 +266,7 @@ const AddCardModal = ({ open, onClose, onAdd, fieldTitle }) => {
                         {addCard?.tags?.map((card, index) => <CardTag
                             title={card.title}
                             color={card.color}
-                            key={index}
+                            key={card._id}
                             onRemove={() => {
                                 const newTags = addCard.tags.filter((tag, i) => i != index);
                                 setAddCard({ ...addCard, tags: newTags });

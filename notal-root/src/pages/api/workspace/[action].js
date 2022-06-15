@@ -675,7 +675,7 @@ export default async function handler(req, res) {
             }
         },
         editcard: async () => {
-            if (!id || !uid || !workspaceId || !title || !fieldId || !color) return reject("invalid-params");
+            if (!id || !uid || !workspaceId || !fieldId) return reject("invalid-params");
 
             Log.debug("editcard", id, uid, workspaceId, title, desc, color, fieldId);
 
@@ -692,6 +692,7 @@ export default async function handler(req, res) {
                             "fields.$[i].cards.$[j].title": title,
                             "fields.$[i].cards.$[j].desc": desc,
                             "fields.$[i].cards.$[j].color": color,
+                            "fields.$[i].cards.$[j].tags": tags,
                             "fields.$[i].cards.$[j].updatedAt": Date.now(),
                         }
                     },

@@ -19,8 +19,8 @@ const EditCardModal = ({ open, onClose, card, onEdit }) => {
         setEditCard({
             title: card.title,
             desc: card.desc,
+            image: card.image,
         });
-
     }, [card]);
 
     const close = () => {
@@ -28,12 +28,13 @@ const EditCardModal = ({ open, onClose, card, onEdit }) => {
         setEditCard({
             title: card.title,
             desc: card.desc,
+            image: card.image,
         });
         setEditCardErr({ title: false, desc: false });
     }
 
     const submit = () => {
-        if (editCard.title.length < 3) {
+        if (editCard.title.length < 3 && !editCard.image && !editCard.image.file) {
             setEditCardErr({ ...editCardErr, title: "Card title must be minimum 3 characters long." });
             return;
         }
@@ -55,9 +56,22 @@ const EditCardModal = ({ open, onClose, card, onEdit }) => {
                 value={editCard.title}
                 id="editCardTitle"
                 maxLength={32}
+                onEnterPress={submit}
             />
-            {/*<label htmlFor="sortBy">Sort By</label>*/}
             {editCardErr.title != false && <span className="text-red-500">{editCardErr.title}</span>}
+            <label htmlFor="editCardDescription">Card Description</label>
+            <Input
+                fullWidth
+                textarea
+                height="h-24"
+                className="p-2"
+                placeholder="Card Description"
+                onChange={(e) => setEditCard({ ...editCard, desc: e.target.value })}
+                value={editCard.desc}
+                id="editCardDescription"
+                maxLength={356}
+                onEnterPress={submit}
+            />
         </Modal.Body>
         <Modal.Footer animate className="justify-between">
             <Button

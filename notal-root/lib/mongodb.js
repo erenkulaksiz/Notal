@@ -1,7 +1,7 @@
 import { MongoClient } from 'mongodb';
 
 const MONGODB_URI = process.env.MONGODB_URI;
-const MONGODB_DB = "Notal";
+const MONGODB_DB = "locati";
 
 // check the MongoDB URI
 if (!MONGODB_URI) {

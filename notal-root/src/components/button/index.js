@@ -64,7 +64,7 @@ const Button = ({
             {
                 default: light,
                 false: "bg-blue-600 hover:bg-blue-500 active:bg-blue-700 outline-none focus:outline-blue-500/50",//also remove ring
-                true: "bg-transparent hover:bg-transparent active:dark:bg-neutral-800/50 active:bg-neutral-200/50"
+                true: "bg-transparent hover:bg-transparent active:dark:bg-neutral-700/30 active:bg-neutral-200/50"
             },
             {
                 default: "focus:outline-2 " + ring,

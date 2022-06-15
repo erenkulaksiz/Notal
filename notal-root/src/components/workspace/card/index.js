@@ -37,6 +37,7 @@ const WorkspaceFieldCard = ({
     cardOwner,
     isDragging,
     provided,
+    className,
 },) => {
     const [isImageFS, setIsImageFS] = useState(false);
 
@@ -50,6 +51,7 @@ const WorkspaceFieldCard = ({
     const BuildCard = BuildComponent({
         name: "Workspace Field Card",
         defaultClasses: "relative w-full rounded-lg group min-h-min flex flex-row dark:bg-neutral-900 bg-white",
+        extraClasses: className,
         conditionalClasses: [{
             true: "border-dashed border-2 border-neutral-300 dark:border-neutral-700 shadow-xl",
             false: "border-solid border-b-2 border-b-neutral-200 dark:border-b-neutral-800"
@@ -80,13 +82,13 @@ const WorkspaceFieldCard = ({
                     </div>}
                 <div className="flex flex-row w-full justify-between items-center">
                     <div className={BuildTitle.classes}>
-                        {card.title}
+                        {card?.title}
                     </div>
                     <div className="flex flex-row">
                         {card?.color == "#D28519" && <div className="py-1">
                             <WarningIcon size={24} fill="#D28519" style={{ transform: "scale(.7)" }} />
                         </div>}
-                        {(!preview && isOwner) && !fieldCollapsed && <div className="flex flex-row fill-neutral-200 dark:fill-neutral-600 relative">
+                        {(!preview && isOwner) && !fieldCollapsed ? <div className="flex flex-row fill-neutral-200 dark:fill-neutral-600 relative">
                             <Tooltip
                                 containerClassName="px-1 p-1"
                                 blockContent={false}
@@ -113,18 +115,18 @@ const WorkspaceFieldCard = ({
                                     />
                                 </button>
                             </Tooltip>
-                        </div>}
+                        </div> : (!preview && <div className="hidden" {...provided.dragHandleProps} />)}
                     </div>
                 </div>
-                {card?.desc && !fieldCollapsed && <span className="dark:text-neutral-300 text-neutral-800 w-full text-sm mt-1 break-words">
+                {card?.desc && !fieldCollapsed && <span className="dark:text-neutral-300 text-neutral-800 w-full text-sm mt-1 mb-1 break-words">
                     {card.desc}
                 </span>}
                 {card?.image && card?.image?.file && <>
-                    <div className="flex items-center justify-center w-full mt-2">
+                    <div className="flex items-center justify-center w-full">
                         <img
                             src={card?.image?.file}
-                            className="object-cover rounded-lg w-full cursor-pointer hover:opacity-80 shadow-lg max-w-[250px] max-h-[360px]"
-                            alt="saul goodman"
+                            className="object-cover border-[2px] border-neutral-200 p-[1px] dark:border-neutral-800 rounded-lg w-full cursor-pointer hover:opacity-80 shadow-lg max-w-[250px] max-h-[360px]"
+                            alt="card image"
                             onClick={() => setIsImageFS(!isImageFS)}
                         />
                     </div>
@@ -134,7 +136,7 @@ const WorkspaceFieldCard = ({
                         types={["image"]}
                     />
                 </>}
-                {card.updatedAt && <span className="text-xs dark:text-neutral-600 text-neutral-400 mt-2 hidden group-hover:flex" title={`Created ${formatDate(card.createdAt)} • Updated ${formatDate(card.updatedAt)}`}>
+                {card.updatedAt && <span className="mt-1 text-xs dark:text-neutral-600 text-neutral-400 hidden group-hover:flex" title={`Created ${formatDate(card.createdAt)} • Updated ${formatDate(card.updatedAt)}`}>
                     <time dateTime={card.updatedAt}>{`Created ${prettyMilliseconds(Date.now() - card.createdAt, { compact: true })} ago • Updated ${prettyMilliseconds(Date.now() - card.updatedAt, { compact: true })} ago`}</time>
                 </span>}
                 {card.owner && <Link href="/profile/[username]" as={`/profile/${cardOwner?.username || "not-found"}`} passHref>
