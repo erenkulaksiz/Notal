@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body {
+    @apply font-sans;
+    @apply selection:bg-pink-700/50 selection:dark:bg-pink-900/50;
+    @apply subpixel-antialiased;
+    @apply bg-white;
+    @apply dark:bg-black;
+    @apply overflow-hidden;
+  }
+}
+
+html,
+body,
+body > div:first-child,
+div#__next,
+div#__next > div:first-child {
+  height: 100%;
+}
+
+div#__next {
+  position: relative;
+}
+
+.bg-yellow-600 {
+  background-color: rgb(202 138 4);
+}
+
+.bg-yellow-500 {
+  background-color: rgb(234 179 8);
+}
