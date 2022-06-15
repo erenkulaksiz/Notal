@@ -1,11 +1,11 @@
-import { useState, useEffect, ChangeEvent } from "react";
+import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { motion } from "framer-motion";
 
-import { Button, Tooltip, Loading, Switch } from "@components";
+import { Button, Tooltip, Loading, Switch, LoginModal } from "@components";
 import { BuildComponent } from "@utils/style";
 import { isClient } from "@utils/isClient";
 
@@ -37,6 +37,8 @@ function Navbar({
 }: NavbarProps) {
   //const { isOwner, _workspace, loadingWorkspace, } = workspace ?? {};
 
+  const [mounted, setMounted] = useState<boolean>(false);
+
   const { resolvedTheme, setTheme } = useTheme();
   const router = useRouter();
 
@@ -49,6 +51,7 @@ function Navbar({
   };
 
   useEffect(() => {
+    setMounted(true);
     if (!showCollapse) return setNavbarCollapse(false);
 
     const navbarCollapsed = LocalSettings.get("navbarCollapsed");
@@ -73,30 +76,34 @@ function Navbar({
     >
       <div className="absolute left-0 right-0 top-0 bottom-0 dark:bg-black/30 bg-white/30 backdrop-blur-md -z-10 shadow-none dark:shadow-md" />
       <div className="w-1/2 flex items-center">
-        <Link href="/" passHref>
-          <a className="">
-            <div className="h-10 sm:flex w-40 hidden">
-              <Image
-                src={resolvedTheme == "dark" ? IconWhite : IconGalactic}
-                alt="Logo of Notal"
-                priority
-                placeholder="blur"
-                className="object-contain"
-              />
-            </div>
-            <div className="h-10 w-12 sm:hidden flex">
-              <Image
-                src={
-                  resolvedTheme == "dark" ? IconWhiteMobile : IconGalacticMobile
-                }
-                alt="Logo of Notal"
-                priority
-                placeholder="blur"
-                className="object-contain"
-              />
-            </div>
-          </a>
-        </Link>
+        {mounted && (
+          <Link href="/" passHref>
+            <a className="">
+              <div className="h-10 sm:flex w-40 hidden">
+                <Image
+                  src={resolvedTheme == "dark" ? IconWhite : IconGalactic}
+                  alt="Logo of Notal"
+                  priority
+                  placeholder="blur"
+                  className="object-contain"
+                />
+              </div>
+              <div className="h-10 w-12 sm:hidden flex">
+                <Image
+                  src={
+                    resolvedTheme == "dark"
+                      ? IconWhiteMobile
+                      : IconGalacticMobile
+                  }
+                  alt="Logo of Notal"
+                  priority
+                  placeholder="blur"
+                  className="object-contain"
+                />
+              </div>
+            </a>
+          </Link>
+        )}
         {showCollapse && (
           <motion.div
             variants={{
@@ -187,35 +194,37 @@ function Navbar({
             </Button>
           </Link>
         )}
-        <Tooltip
-          content="Change Theme"
-          direction="bottom"
-          allContainerClassName="mr-2"
-        >
-          <Switch
-            onChange={() =>
-              setTheme(resolvedTheme === "dark" ? "light" : "dark")
-            }
-            value={resolvedTheme == "dark"}
-            icon={
-              resolvedTheme == "dark" ? (
-                <LightIcon
-                  size={24}
-                  fill="black"
-                  style={{ transform: "scale(0.7)" }}
-                />
-              ) : (
-                <DarkIcon
-                  size={24}
-                  fill="black"
-                  style={{ transform: "scale(0.7)" }}
-                />
-              )
-            }
-            role="switch"
-            id="changeTheme"
-          />
-        </Tooltip>
+        {mounted && (
+          <Tooltip
+            content="Change Theme"
+            direction="bottom"
+            allContainerClassName="mr-2"
+          >
+            <Switch
+              onChange={() =>
+                setTheme(resolvedTheme === "dark" ? "light" : "dark")
+              }
+              value={resolvedTheme == "dark"}
+              icon={
+                resolvedTheme == "dark" ? (
+                  <LightIcon
+                    size={24}
+                    fill="black"
+                    style={{ transform: "scale(0.7)" }}
+                  />
+                ) : (
+                  <DarkIcon
+                    size={24}
+                    fill="black"
+                    style={{ transform: "scale(0.7)" }}
+                  />
+                )
+              }
+              role="switch"
+              id="changeTheme"
+            />
+          </Tooltip>
+        )}
         <div className="flex flex-row">
           <Button
             light
@@ -244,6 +253,16 @@ function Navbar({
           </Button>
         </div>
       </div>
+      <LoginModal
+        open={loginModalVisible}
+        onClose={() => setLoginModalVisible(false)}
+        onLoginSuccess={() => {
+          setTimeout(() => {
+            setLoginModalVisible(false);
+            router.replace(router.asPath);
+          }, 1000);
+        }}
+      />
     </motion.nav>
   );
 }

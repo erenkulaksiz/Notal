@@ -21,8 +21,10 @@ export const CreatePortal = ({
 
     const classList = [portalName];
 
-    if (className) className.split(" ").forEach((item) => classList.push(item));
-    classList.forEach((item) => el.classList.add(item));
+    if (typeof className != "undefined") {
+      className.split(" ").forEach((item) => classList.push(item));
+      classList.forEach((item) => el.classList.add(item ?? ""));
+    }
 
     target.appendChild(el);
     return () => {

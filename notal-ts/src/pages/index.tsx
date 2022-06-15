@@ -16,9 +16,7 @@ const Landing: NextPage = () => {
       <Navbar />
       <div className="bg-red-600">tailwind nextjs ts</div>
       <Loading />
-      <Button size="xl" className="w-32">
-        selam!
-      </Button>
+      <Button className="w-32">selam!</Button>
       <Switch id="selam" value={asd} onChange={() => setAsd(!asd)} />
     </Layout>
   );

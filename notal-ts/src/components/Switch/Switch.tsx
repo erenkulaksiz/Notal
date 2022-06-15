@@ -22,7 +22,7 @@ export function Switch({
   const BuildSwitch = BuildComponent({
     name: "Switch",
     defaultClasses:
-      "w-full h-6 transition-all ease-in-out rounded-full flex items-center",
+      "w-full h-6 transition-all ease-in-out rounded-full flex items-center shadow",
     conditionalClasses: [
       {
         true: "bg-green-700 justify-end",

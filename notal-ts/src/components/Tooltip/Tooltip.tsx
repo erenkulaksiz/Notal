@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 
-import { CreatePortal } from "@components";
+import { CreatePortal as Portal } from "@components";
 import { BuildComponent } from "@utils/style";
 
 import {
@@ -83,7 +83,7 @@ export function Tooltip({
     >
       {children}
       {show && content && (
-        <CreatePortal
+        <Portal
           parent={containerRef.current}
           className={BuildPortal({ direction, blockContent }).classes}
           portalName="notal-tooltip"
@@ -112,7 +112,7 @@ export function Tooltip({
               <div className={BuildArrow({ direction }).classes} />
             )}
           </motion.div>
-        </CreatePortal>
+        </Portal>
       )}
     </div>
   );
