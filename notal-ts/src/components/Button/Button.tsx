@@ -17,6 +17,7 @@ export function Button({
   loading = false,
   form,
   as = "button",
+  title,
   ...props
 }: ButtonProps) {
   /*
@@ -81,8 +82,9 @@ export function Button({
     <ButtonEl
       onClick={onClick}
       className={BuildButton.classes}
-      {...props}
       form={form}
+      title={title}
+      {...props}
     >
       {/*icon && <span className={iconClasses}>{icon}</span>*/}
       <span className="mx-auto flex flex-row items-center">{children}</span>

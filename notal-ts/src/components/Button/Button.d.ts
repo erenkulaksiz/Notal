@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ComponentProps, ReactNode } from "react";
 
 export interface ButtonProps {
   children?: ReactNode;
@@ -14,4 +14,5 @@ export interface ButtonProps {
   form?: string;
   as?: string;
   onClick?: Function;
+  title?: string;
 }

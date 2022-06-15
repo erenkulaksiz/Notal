@@ -8,9 +8,9 @@
     @apply font-sans;
     @apply selection:bg-pink-700/50 selection:dark:bg-pink-900/50;
     @apply subpixel-antialiased;
+    @apply overflow-hidden;
     @apply bg-white;
     @apply dark:bg-black;
-    @apply overflow-hidden;
   }
 }
 
