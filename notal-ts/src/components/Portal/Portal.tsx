@@ -5,12 +5,12 @@ import type { PortalProps } from "./Portal.d";
 
 import { isClient } from "@utils";
 
-export const CreatePortal = ({
+export function CreatePortal({
   children,
   parent,
   className,
   portalName,
-}: PortalProps) => {
+}: PortalProps) {
   const el = useMemo(() => document.createElement("div"), []);
 
   useEffect(() => {
@@ -23,8 +23,9 @@ export const CreatePortal = ({
 
     if (typeof className != "undefined") {
       className.split(" ").forEach((item) => classList.push(item));
-      classList.forEach((item) => el.classList.add(item ?? ""));
     }
+
+    classList.forEach((item) => el.classList.add(item ?? ""));
 
     target.appendChild(el);
     return () => {
@@ -33,4 +34,4 @@ export const CreatePortal = ({
   }, [el, parent, className]);
 
   return ReactDOM.createPortal(children, el);
-};
+}

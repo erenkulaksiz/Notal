@@ -20,7 +20,9 @@
       "@icons": ["./icons"],
       "@utils/*": ["./utils/*"],
       "@utils": ["./utils"],
-      "@public/*": ["../public/*"]
+      "@public/*": ["../public/*"],
+      "@services/*": ["./services/*"],
+      "@hooks/*": ["./hooks/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

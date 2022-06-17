@@ -12,11 +12,11 @@ export function AcceptCookies() {
     setRenderCookies(LocalSettings.get("cookies") != true);
   }, []);
 
-  const onAccept = () => {
+  function onAccept() {
     //Cookies.set('cookies', 'true');
     setRenderCookies(false);
     LocalSettings.set("cookies", true);
-  };
+  }
 
   return renderCookies ? (
     <div
@@ -40,7 +40,7 @@ export function AcceptCookies() {
         gradient
         icon={<CheckIcon size={24} fill="currentColor" className="ml-2" />}
         className="mt-2"
-        onClick={onAccept}
+        onClick={() => onAccept()}
       >
         Accept Cookies
       </Button>

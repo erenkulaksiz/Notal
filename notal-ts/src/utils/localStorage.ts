@@ -6,7 +6,7 @@ const DefaultSettings = {
 };
 
 export const LocalSettings = {
-  get: (item: string) => {
+  get: function (item: string) {
     if (!isClient()) return undefined;
     const Local = localStorage.getItem("settings");
     if (typeof Local == "undefined" || !Local) {
@@ -27,7 +27,7 @@ export const LocalSettings = {
       }
     }
   },
-  set: (key: string, value: any) => {
+  set: function (key: string, value: any) {
     if (!isClient()) return undefined;
     const Local = localStorage.getItem("settings");
     if (typeof Local == "undefined" || !Local) {

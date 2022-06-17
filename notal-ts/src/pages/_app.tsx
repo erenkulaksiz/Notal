@@ -1,13 +1,17 @@
 import "../../styles/globals.css";
-import { ThemeProvider } from "next-themes";
+import "../firebase";
+
 import { useEffect } from "react";
+import { ThemeProvider } from "next-themes";
 import { useRouter } from "next/router";
-import Head from "next/head";
 import ProgressBar from "@badrap/bar-of-progress";
 
 import type { AppProps, NextWebVitalsMetric } from "next/app";
 
 import { Log } from "@utils/logger";
+import { AuthProvider } from "@hooks/useAuth";
+
+import { AcceptCookies } from "@components";
 
 const progress = new ProgressBar({
   size: 3,
@@ -40,12 +44,12 @@ export function reportWebVitals({
 function Notal({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
-  const handleChangeComplete = (url: string) => {
+  function handleChangeComplete(url: string) {
     progress.finish();
     window.gtag("config", process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS, {
       page_path: url,
     });
-  };
+  }
 
   useEffect(() => {
     router.events.on("routeChangeStart", progress.start);
@@ -60,7 +64,10 @@ function Notal({ Component, pageProps }: AppProps) {
 
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <Component {...pageProps} />
+      <AuthProvider>
+        <Component {...pageProps} />
+        <AcceptCookies />
+      </AuthProvider>
     </ThemeProvider>
   );
 }

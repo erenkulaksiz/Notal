@@ -5,19 +5,24 @@ import Link from "next/link";
 
 import type { LoginModalProps } from "./LoginModal.d";
 
-import { Modal } from "@components";
+import { Modal, Button } from "@components";
+
+import { GoogleIcon, GithubIcon } from "@icons";
 
 import IconWhite from "@public/icon_white.webp";
 import IconGalactic from "@public/icon_galactic.webp";
 
 import { Log } from "@utils/logger";
+import useAuth from "@hooks/useAuth";
 
 export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
   const { resolvedTheme } = useTheme();
   const [oauthError, setOauthError] = useState("");
+  const auth = useAuth();
 
   const onLoginWithGoogle = async () => {
     Log.debug("trying to login with google");
+    await auth?.login?.google();
     /*
     const login = await auth.login.google();
     if (
@@ -84,7 +89,38 @@ export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
           </span>
         </div>
       </Modal.Title>
-      <Modal.Body className="p-4" animate>
+      <Modal.Body className="p-4 items-center" animate>
+        <div className="flex flex-col gap-2 pb-2 w-full sm:w-2/3">
+          <Button
+            onClick={() => onLoginWithGoogle()}
+            size="lg"
+            className="text-[1.2em]"
+            gradient
+            fullWidth
+            icon={
+              <GoogleIcon
+                width={24}
+                height={24}
+                fill="currentColor"
+                className="ml-6"
+              />
+            }
+            aria-label="Sign in with Google"
+          >
+            Google
+          </Button>
+          <Button
+            onClick={() => {}}
+            size="lg"
+            className="text-[1.2em]"
+            gradient
+            fullWidth
+            icon={<GithubIcon size={24} fill="currentColor" className="ml-6" />}
+            aria-label="Sign in with GitHub"
+          >
+            GitHub
+          </Button>
+        </div>
         <span className="text-neutral-500 text-sm text-center mt-2">
           {
             "We'll never post to any of your accounts without your permission. More info on"

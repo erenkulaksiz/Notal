@@ -1,12 +1,16 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { Loading, Button, Layout, Tooltip } from "@components";
-import { Switch } from "components/Switch/Switch";
 import { useState } from "react";
+
+import { Loading, Button, Layout, Tooltip, Switch } from "@components";
+import { SendTelegramMessage } from "@utils";
+
 import Navbar from "components/Navbar/Navbar";
+import useAuth from "@hooks/useAuth";
 
 const Landing: NextPage = () => {
   const [asd, setAsd] = useState(false);
+  const auth = useAuth();
 
   return (
     <Layout>
@@ -14,9 +18,11 @@ const Landing: NextPage = () => {
         <title>Notal</title>
       </Head>
       <Navbar />
-      <div className="bg-red-600">tailwind nextjs ts</div>
-      <Loading />
-      <Button className="w-32">selam!</Button>
+      <div className="w-full">{JSON.stringify(auth?.authUser)}</div>
+      <Loading size="xl" />
+      <Button className="w-32" onClick={() => auth?.login?.logout()}>
+        logout!
+      </Button>
       <Switch id="selam" value={asd} onChange={() => setAsd(!asd)} />
     </Layout>
   );

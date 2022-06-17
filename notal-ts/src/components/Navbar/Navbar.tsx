@@ -27,15 +27,15 @@ import {
 import { LocalSettings } from "@utils/localStorage";
 
 import type { NavbarProps } from "./Navbar.d";
+import useAuth from "@hooks/useAuth";
 
 function Navbar({
   user,
   showHomeButton = false,
   validating = false,
-  workspace,
   showCollapse = false,
 }: NavbarProps) {
-  //const { isOwner, _workspace, loadingWorkspace, } = workspace ?? {};
+  const auth = useAuth();
 
   const [mounted, setMounted] = useState<boolean>(false);
 
@@ -45,10 +45,10 @@ function Navbar({
   const [loginModalVisible, setLoginModalVisible] = useState(false);
   const [navbarCollapse, setNavbarCollapse] = useState<boolean>(false);
 
-  const onNavbarCollapse = () => {
+  function onNavbarCollapse() {
     LocalSettings.set("navbarCollapsed", !navbarCollapse);
     setNavbarCollapse(!navbarCollapse);
-  };
+  }
 
   useEffect(() => {
     setMounted(true);
@@ -194,64 +194,145 @@ function Navbar({
             </Button>
           </Link>
         )}
-        {mounted && (
-          <Tooltip
-            content="Change Theme"
-            direction="bottom"
-            allContainerClassName="mr-2"
-          >
-            <Switch
-              onChange={() =>
-                setTheme(resolvedTheme === "dark" ? "light" : "dark")
-              }
-              value={resolvedTheme == "dark"}
-              icon={
-                resolvedTheme == "dark" ? (
-                  <LightIcon
-                    size={24}
-                    fill="black"
-                    style={{ transform: "scale(0.7)" }}
-                  />
-                ) : (
-                  <DarkIcon
-                    size={24}
-                    fill="black"
-                    style={{ transform: "scale(0.7)" }}
-                  />
-                )
-              }
-              role="switch"
-              id="changeTheme"
-            />
-          </Tooltip>
+        {auth?.authLoading ? (
+          <Loading size="lg" />
+        ) : auth?.authUser ? (
+          <details className="relative inline-block bg-transparent">
+            <summary
+              style={{
+                userSelect: "none",
+                listStyle: "none",
+              }}
+            >
+              <div className="p-[2px] w-10 h-10 rounded-full cursor-pointer bg-gradient-to-tr from-blue-700 to-pink-700">
+                <img
+                  src="avatar"
+                  className="w-10 h-9 rounded-full border-[2px] dark:border-black border-white"
+                  alt="Avatar"
+                />
+              </div>
+            </summary>
+            <div
+              className="p-4 absolute top-full rounded-lg right-0 dark:bg-neutral-900/70 filter backdrop-blur-sm bg-white/70 shadow-2xl w-60"
+              style={{ zIndex: 999 }}
+            >
+              <div className="flex flex-row items-center">
+                <Switch
+                  onChange={() =>
+                    setTheme(resolvedTheme === "dark" ? "light" : "dark")
+                  }
+                  value={resolvedTheme == "dark"}
+                  icon={
+                    resolvedTheme == "dark" ? (
+                      <LightIcon
+                        size={24}
+                        fill="black"
+                        style={{ transform: "scale(0.7)" }}
+                      />
+                    ) : (
+                      <DarkIcon
+                        size={24}
+                        fill="black"
+                        style={{ transform: "scale(0.7)" }}
+                      />
+                    )
+                  }
+                  role="switch"
+                  id="changeTheme"
+                />
+                <span className="ml-2 text-xs dark:text-neutral-600 text-neutral-300">{`v${process.env.NEXT_PUBLIC_APP_VERSION}`}</span>
+              </div>
+              <h2 className="text-current font-bold text-xl mt-1" title="uid">
+                eren kulaksiz
+              </h2>
+              <h3
+                className="dark:text-neutral-400 text-neutral-500"
+                title="uid"
+              >
+                @eren
+              </h3>
+              <h4 className="text-current text-md">email@asd.com</h4>
+              <Button
+                fullWidth
+                className="mt-2"
+                icon={<UserIcon size={24} fill="white" className="ml-2" />}
+                gradient
+                aria-label="Profile Button"
+              >
+                <span>Profile</span>
+              </Button>
+              <Button
+                fullWidth
+                className="mt-2"
+                icon={<LogoutIcon size={24} fill="white" className="ml-2" />}
+                gradient
+                aria-label="Sign Out Button"
+                onClick={() => auth?.login?.logout()}
+              >
+                <span>Sign Out</span>
+              </Button>
+            </div>
+          </details>
+        ) : (
+          <>
+            <Tooltip
+              content="Change Theme"
+              direction="bottom"
+              allContainerClassName="mr-2"
+            >
+              <Switch
+                onChange={() =>
+                  setTheme(resolvedTheme === "dark" ? "light" : "dark")
+                }
+                value={resolvedTheme == "dark"}
+                icon={
+                  resolvedTheme == "dark" ? (
+                    <LightIcon
+                      size={24}
+                      fill="black"
+                      style={{ transform: "scale(0.7)" }}
+                    />
+                  ) : (
+                    <DarkIcon
+                      size={24}
+                      fill="black"
+                      style={{ transform: "scale(0.7)" }}
+                    />
+                  )
+                }
+                role="switch"
+                id="changeTheme"
+              />
+            </Tooltip>
+            <div className="flex flex-row">
+              <Button
+                light
+                className="w-16 px-0 mr-2"
+                size="sm"
+                onClick={() => setLoginModalVisible(true)}
+                aria-label="Sign up button"
+              >
+                <span className="dark:text-neutral-400 text-neutral-600 font-medium">
+                  Sign Up
+                </span>
+              </Button>
+              <Button
+                gradient
+                className="w-14 sm:w-32"
+                size="sm"
+                onClick={() => setLoginModalVisible(true)}
+                aria-label="Sign in button"
+              >
+                <LoginIcon
+                  size={24}
+                  fill="currentColor"
+                  style={{ display: "flex", transform: "scale(0.8)" }}
+                />
+                <span className="hidden sm:flex">Sign In</span>
+              </Button>
+            </div>
+          </>
         )}
-        <div className="flex flex-row">
-          <Button
-            light
-            className="w-16 px-0 mr-2"
-            size="sm"
-            onClick={() => setLoginModalVisible(true)}
-            aria-label="Sign up button"
-          >
-            <span className="dark:text-neutral-400 text-neutral-600 font-medium">
-              Sign Up
-            </span>
-          </Button>
-          <Button
-            gradient
-            className="w-14 sm:w-32"
-            size="sm"
-            onClick={() => setLoginModalVisible(true)}
-            aria-label="Sign in button"
-          >
-            <LoginIcon
-              size={24}
-              fill="currentColor"
-              style={{ display: "flex", transform: "scale(0.8)" }}
-            />
-            <span className="hidden sm:flex">Sign In</span>
-          </Button>
-        </div>
       </div>
       <LoginModal
         open={loginModalVisible}
@@ -263,6 +344,31 @@ function Navbar({
           }, 1000);
         }}
       />
+      <style jsx>{`
+        details[open] > summary:before {
+          position: fixed;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          z-index: 40;
+          display: block;
+          cursor: default;
+          content: " ";
+        }
+        details > summary {
+          list-style: none;
+        }
+        details > summary::-webkit-details-marker {
+          display: none;
+        }
+        details > summary:first-of-type {
+          list-style-type: none;
+        }
+        details > summary::marker {
+          display: none;
+        }
+      `}</style>
     </motion.nav>
   );
 }

@@ -20,7 +20,6 @@ export function Button({
   title,
   ...props
 }: ButtonProps) {
-  /*
   const iconSpace = conditionalClass({
     keys: {
       default: "left-4",
@@ -33,7 +32,6 @@ export function Button({
     defaultClasses: "absolute left-0",
     conditions: [iconSpace],
   });
-  */
 
   const BuildButton = BuildComponent({
     name: "Button",
@@ -86,8 +84,8 @@ export function Button({
       title={title}
       {...props}
     >
-      {/*icon && <span className={iconClasses}>{icon}</span>*/}
-      <span className="mx-auto flex flex-row items-center">{children}</span>
+      {icon && <div className={iconClasses}>{icon}</div>}
+      <div className="mx-auto flex flex-row items-center">{children}</div>
       {loading && (
         <div className="absolute left-0 right-0 bottom-0 top-0 dark:bg-neutral-900/90 bg-neutral-200/50 flex items-center justify-center">
           <Loading size="lg" />

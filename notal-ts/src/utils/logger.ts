@@ -2,13 +2,13 @@ import { isClient } from "@utils";
 
 export const Log = {
   activated: process.env.NEXT_PUBLIC_DEBUG_LOG == "true",
-  formatDate: (thisdate: Date) => {
+  formatDate: function (thisdate: Date) {
     const date = new Date(thisdate);
     return `${date.getFullYear()}/${
       date.getMonth() + 1
     }/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}.${date.getMilliseconds()}`;
   },
-  debug: (...args: [] | any) => {
+  debug: function (...args: [] | any) {
     if (!Log.activated && isClient) return;
     console.log(
       `%c[DEBUG] [${Log.formatDate(new Date(Date.now()))}]`,
@@ -17,7 +17,7 @@ export const Log = {
       ...args
     );
   },
-  error: (...args: [] | any) => {
+  error: function (...args: [] | any) {
     //if (!Log.activated && isClient) return;
     console.log(
       `%c❌ [ERROR] [${Log.formatDate(new Date(Date.now()))}]`,
