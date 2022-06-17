@@ -102,7 +102,7 @@ export function AuthProvider(props: PropsWithChildren) {
               body: JSON.stringify({ token }),
             });
 
-            router.replace(router.asPath);
+            setTimeout(() => router.replace(router.asPath), 500);
 
             return { user /*token*/ };
           })

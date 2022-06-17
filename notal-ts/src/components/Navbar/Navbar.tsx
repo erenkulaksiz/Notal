@@ -194,7 +194,7 @@ export function Navbar({
             </Button>
           </Link>
         )}
-        {auth?.authLoading ? (
+        {auth?.authLoading || (auth?.authUser && !auth.validatedUser) ? (
           <Loading size="lg" />
         ) : auth?.authUser ? (
           <details className="relative inline-block bg-transparent">
@@ -244,18 +244,21 @@ export function Navbar({
                   role="switch"
                   id="changeTheme"
                 />
-                <span className="ml-2 text-xs dark:text-neutral-600 text-neutral-300">{`v${process.env.NEXT_PUBLIC_APP_VERSION}`}</span>
+                <span className="ml-2 text-xs dark:text-neutral-600 text-neutral-300 break-words">{`v${process.env.NEXT_PUBLIC_APP_VERSION}`}</span>
               </div>
-              <h2 className="text-current font-bold text-xl mt-1" title="uid">
+              <h2
+                className="text-current font-bold text-xl mt-1 break-words"
+                title="uid"
+              >
                 {auth.validatedUser && auth.validatedUser.fullname}
               </h2>
               <h3
-                className="dark:text-neutral-400 text-neutral-500"
+                className="dark:text-neutral-400 text-neutral-500 w-full break-words"
                 title="uid"
               >
                 @{auth.validatedUser && auth.validatedUser.username}
               </h3>
-              <h4 className="text-current text-md">
+              <h4 className="text-current text-md break-words">
                 {auth.validatedUser && auth.validatedUser.email}
               </h4>
               <Button
