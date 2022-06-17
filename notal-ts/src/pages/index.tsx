@@ -41,7 +41,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   if (req) {
     const authCookie = req.cookies.auth;
 
-    [validate] = await Promise.all([ValidateToken({ token: authCookie })]);
+    validate = await ValidateToken({ token: authCookie });
 
     Log.debug("validate:", validate.success, validate.data, validate.error);
   }

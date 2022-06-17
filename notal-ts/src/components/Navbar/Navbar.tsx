@@ -194,9 +194,9 @@ export function Navbar({
             </Button>
           </Link>
         )}
-        {auth?.authLoading && !auth?.validatedUser ? (
+        {auth?.authLoading ? (
           <Loading size="lg" />
-        ) : auth?.authUser || auth?.validatedUser ? (
+        ) : auth?.authUser ? (
           <details className="relative inline-block bg-transparent">
             <summary
               style={{
