@@ -22,7 +22,10 @@
       "@utils": ["./utils"],
       "@public/*": ["../public/*"],
       "@services/*": ["./services/*"],
-      "@hooks/*": ["./hooks/*"]
+      "@hooks/*": ["./hooks/*"],
+      "@api/*": ["./api/*"],
+      "@lib/*": ["./lib/*"],
+      "@types": ["./types/index.d.ts"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

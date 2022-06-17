@@ -1,16 +1,25 @@
-import type { NextPage } from "next";
+import type { GetServerSidePropsContext, NextPage } from "next";
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect } from "react";
 
-import { Loading, Button, Layout, Tooltip, Switch } from "@components";
-import { SendTelegramMessage } from "@utils";
+import { Layout, Landing, Navbar, Home } from "@components";
 
-import Navbar from "components/Navbar/Navbar";
+import { Log } from "@utils";
+import { ValidateToken } from "@utils/api/validateToken";
 import useAuth from "@hooks/useAuth";
 
-const Landing: NextPage = () => {
-  const [asd, setAsd] = useState(false);
+import type { ValidateTokenReturnType } from "@utils/api/validateToken";
+import type RootProps from "@types";
+
+function Root(props: RootProps) {
   const auth = useAuth();
+
+  useEffect(() => {
+    if (props.validate) {
+      if (props.validate.success)
+        auth && auth.setValidatedUser(props.validate.data);
+    }
+  }, [props.validate]);
 
   return (
     <Layout>
@@ -18,14 +27,23 @@ const Landing: NextPage = () => {
         <title>Notal</title>
       </Head>
       <Navbar />
-      <div className="w-full">{JSON.stringify(auth?.authUser)}</div>
-      <Loading size="xl" />
-      <Button className="w-32" onClick={() => auth?.login?.logout()}>
-        logout!
-      </Button>
-      <Switch id="selam" value={asd} onChange={() => setAsd(!asd)} />
+      {auth?.validatedUser ? <Home /> : <Landing />}
     </Layout>
   );
-};
+}
 
-export default Landing;
+export default Root;
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const { req, res, query } = ctx;
+  let validate = {} as ValidateTokenReturnType;
+
+  if (req) {
+    const authCookie = req.cookies.auth;
+
+    [validate] = await Promise.all([ValidateToken({ token: authCookie })]);
+
+    Log.debug("validate:", validate.success, validate.data, validate.error);
+  }
+  return { props: { validate } };
+}

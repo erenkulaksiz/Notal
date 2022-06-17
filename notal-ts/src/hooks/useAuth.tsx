@@ -38,16 +38,17 @@ interface AuthContextProps {
       }
     | null;
   authLoading: boolean | null;
+  validatedUser: {
+    fullname: string;
+    uid: string;
+    username: string;
+    avatar: string;
+    email: string;
+  } | null;
+  setValidatedUser: Dispatch<SetStateAction<Object | any>>;
 }
 
-const AuthContext = createContext<AuthContextProps | null>({
-  authUser: null,
-  authError: null,
-  setUser: null,
-  login: null,
-  user: null,
-  authLoading: null,
-});
+const AuthContext = createContext<AuthContextProps | null>(null);
 
 export default function useAuth() {
   return useContext(AuthContext);
@@ -56,6 +57,8 @@ export default function useAuth() {
 export function AuthProvider(props: PropsWithChildren) {
   const auth = getAuth();
   const router = useRouter();
+
+  const [validatedUser, setValidatedUser] = useState(null);
 
   const [user, setUser] = useState<null | User>(null);
   const [error, setError] = useState(null);
@@ -91,15 +94,13 @@ export function AuthProvider(props: PropsWithChildren) {
             ) as OAuthCredential;
             Log.debug("redirect result: ", result);
             const { user } = result;
-            const token = credential.accessToken;
+            const token = await user.getIdToken();
 
-            /*
             await fetch(`${server}/api/user/login`, {
               method: "POST",
               headers: new Headers({ "content-type": "application/json" }),
               body: JSON.stringify({ token }),
             });
-            */
 
             router.replace(router.asPath);
 
@@ -135,7 +136,7 @@ export function AuthProvider(props: PropsWithChildren) {
   }, []);
 
   const login = {
-    google: async () => {
+    google: async function () {
       await AuthService.login.google();
 
       /*
@@ -152,6 +153,7 @@ export function AuthProvider(props: PropsWithChildren) {
       await AuthService.user.logout();
       Cookies.remove("auth");
       setUser(null);
+      setValidatedUser(null);
       router.replace(router.asPath);
     },
   };
@@ -175,6 +177,8 @@ export function AuthProvider(props: PropsWithChildren) {
     login,
     user: users,
     authLoading: loading,
+    setValidatedUser,
+    validatedUser,
   };
 
   return <AuthContext.Provider value={value} {...props} />;

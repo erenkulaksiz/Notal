@@ -7,20 +7,20 @@ import {
 
 const AuthService = {
   login: {
-    google: async () => {
+    google: async function () {
       const auth = getAuth();
       const provider = new GoogleAuthProvider();
       await signInWithRedirect(auth, provider);
     },
   },
   user: {
-    logout: async () => {
+    logout: async function () {
       const auth = getAuth();
       await auth.signOut();
     },
-    getIdToken: async () => {
+    getIdToken: async function () {
       const auth = getAuth();
-      if (!auth.currentUser) return;
+      if (!auth.currentUser) return null;
       const res = await getIdToken(auth.currentUser);
       return { res };
     },

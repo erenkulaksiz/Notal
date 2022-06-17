@@ -29,7 +29,7 @@ import { LocalSettings } from "@utils/localStorage";
 import type { NavbarProps } from "./Navbar.d";
 import useAuth from "@hooks/useAuth";
 
-function Navbar({
+export function Navbar({
   user,
   showHomeButton = false,
   validating = false,
@@ -194,9 +194,9 @@ function Navbar({
             </Button>
           </Link>
         )}
-        {auth?.authLoading ? (
+        {auth?.authLoading && !auth?.validatedUser ? (
           <Loading size="lg" />
-        ) : auth?.authUser ? (
+        ) : auth?.authUser || auth?.validatedUser ? (
           <details className="relative inline-block bg-transparent">
             <summary
               style={{
@@ -206,7 +206,11 @@ function Navbar({
             >
               <div className="p-[2px] w-10 h-10 rounded-full cursor-pointer bg-gradient-to-tr from-blue-700 to-pink-700">
                 <img
-                  src="avatar"
+                  src={
+                    auth.validatedUser
+                      ? auth.validatedUser.avatar
+                      : "http://cdn.onlinewebfonts.com/svg/img_258083.png"
+                  }
                   className="w-10 h-9 rounded-full border-[2px] dark:border-black border-white"
                   alt="Avatar"
                 />
@@ -243,15 +247,17 @@ function Navbar({
                 <span className="ml-2 text-xs dark:text-neutral-600 text-neutral-300">{`v${process.env.NEXT_PUBLIC_APP_VERSION}`}</span>
               </div>
               <h2 className="text-current font-bold text-xl mt-1" title="uid">
-                eren kulaksiz
+                {auth.validatedUser && auth.validatedUser.fullname}
               </h2>
               <h3
                 className="dark:text-neutral-400 text-neutral-500"
                 title="uid"
               >
-                @eren
+                @{auth.validatedUser && auth.validatedUser.username}
               </h3>
-              <h4 className="text-current text-md">email@asd.com</h4>
+              <h4 className="text-current text-md">
+                {auth.validatedUser && auth.validatedUser.email}
+              </h4>
               <Button
                 fullWidth
                 className="mt-2"
@@ -372,5 +378,3 @@ function Navbar({
     </motion.nav>
   );
 }
-
-export default Navbar;
