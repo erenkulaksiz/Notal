@@ -9,9 +9,9 @@ import { ValidateToken } from "@utils/api/validateToken";
 import useAuth from "@hooks/useAuth";
 
 import type { ValidateTokenReturnType } from "@utils/api/validateToken";
-import type RootProps from "@types";
+import type { NotalRootProps } from "@types";
 
-function Root(props: RootProps) {
+function Root(props: NotalRootProps) {
   const auth = useAuth();
 
   useEffect(() => {

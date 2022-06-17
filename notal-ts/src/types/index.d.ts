@@ -1,4 +1,4 @@
-import { AppProps } from "next/app";
+import { PropsWithChildren } from "react";
 
 export {};
 
@@ -8,7 +8,7 @@ declare global {
   }
 }
 
-export interface RootProps extends AppProps {
+export interface NotalRootProps extends PropsWithChildren {
   validate: {
     success: boolean;
     data: object;
