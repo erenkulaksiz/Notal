@@ -12,6 +12,7 @@
     "@badrap/bar-of-progress": "^0.2.1",
     "@next/bundle-analyzer": "^12.1.6",
     "@svgr/webpack": "^6.2.1",
+    "critters": "^0.0.16",
     "firebase": "^9.8.3",
     "firebase-admin": "^11.0.0",
     "framer-motion": "^6.3.11",

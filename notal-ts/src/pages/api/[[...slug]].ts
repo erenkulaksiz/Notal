@@ -1,6 +1,5 @@
 import { Log } from "@utils/logger";
-import { NextApiRequest } from "next";
-import { NextRequest, NextResponse } from "next/server";
+import { NextApiRequest, NextApiResponse } from "next";
 
 const admin = require("firebase-admin");
 
@@ -23,7 +22,7 @@ type NextApiRequestWithQuery = NextApiRequest & {
 
 export default async function handler(
   req: NextApiRequestWithQuery,
-  res: NextResponse
+  res: NextApiResponse
 ) {
   if (req.method !== "POST") return reject({ res });
 

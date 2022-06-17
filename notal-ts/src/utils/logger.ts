@@ -9,7 +9,7 @@ export const Log = {
     }/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}.${date.getMilliseconds()}`;
   },
   debug: function (...args: [] | any) {
-    if (!Log.activated && isClient) return;
+    if (!Log.activated && isClient()) return;
     console.log(
       `%c[DEBUG] [${Log.formatDate(new Date(Date.now()))}]`,
       "background:white;color:black;",
