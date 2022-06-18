@@ -1,3 +1,4 @@
+import { formatString } from "@utils/formatString";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const { ValidateUser } = require("@utils/api/validateUser");
@@ -8,12 +9,8 @@ const { connectToDatabase } = require("@lib/mongodb");
 const { formatDate, Log, SendTelegramMessage } = require("@utils");
 
 function generateRandomUsername({ email }: { email: string }) {
-  return (
-    email.split("@")[0] +
-    Date.now()
-      .toString()
-      .substring(Date.now().toString().length - 3)
-  );
+  const now = Date.now().toString();
+  return email.split("@")[0] + now.substring(now.length - 3);
 }
 
 export async function validate(req: NextApiRequest, res: NextApiResponse) {
@@ -42,9 +39,11 @@ export async function validate(req: NextApiRequest, res: NextApiResponse) {
       let generated = false;
 
       while (generated == false) {
-        generateUsername = generateRandomUsername({
-          email: validateUser.decodedToken.email,
-        });
+        generateUsername = formatString(
+          generateRandomUsername({
+            email: validateUser.decodedToken.email,
+          })
+        ).toLowerCase();
         const checkusername = await users.findOne({
           username: generateUsername,
         });

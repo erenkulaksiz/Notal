@@ -65,9 +65,11 @@ export function AuthProvider(props: PropsWithChildren) {
     const tokenChange = onIdTokenChanged(auth, async (user) => {
       setLoading(true);
       if (!user) {
-        setUser(null);
-        Cookies.remove("auth");
         setLoading(false);
+        setUser(null);
+        setError(null);
+        Cookies.remove("auth");
+        return;
       } else {
         const token = await user.getIdToken();
         setUser(user);
@@ -81,12 +83,13 @@ export function AuthProvider(props: PropsWithChildren) {
       if (!user) {
         setLoading(false);
         setUser(null);
+        setError(null);
         Cookies.remove("auth");
       } else {
-        setLoading(true);
         const token = await user.getIdToken();
         Cookies.set("auth", token, { expires: 365 });
         setLoading(false);
+        setUser(user ?? null);
         return { authError: error ?? null, authUser: user ?? null };
       }
       //router.replace(router.asPath);
@@ -116,6 +119,8 @@ export function AuthProvider(props: PropsWithChildren) {
         body: JSON.stringify({ token }),
       });
 
+      setLoading(false);
+
       return { authError: error ?? null, authUser: user ?? null };
     },
     logout: async function () {
@@ -123,15 +128,15 @@ export function AuthProvider(props: PropsWithChildren) {
       Cookies.remove("auth");
       setUser(null);
       setValidatedUser(null);
-      //router.replace(router.asPath);
+      router.replace(router.asPath);
     },
   };
 
   const users = {
     getIdToken: async function () {
       try {
-        const res = await AuthService.user.getIdToken();
-        return res;
+        const res = await user?.getIdToken();
+        return { success: true, res };
       } catch (error) {
         //Log.debug("error with authService.getIdToken", error);
         return { success: false, error };

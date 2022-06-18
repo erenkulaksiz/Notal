@@ -49,12 +49,6 @@ const AuthService = {
       const auth = getAuth();
       await auth.signOut();
     },
-    getIdToken: async function () {
-      const auth = getAuth();
-      if (!auth.currentUser) return null;
-      const res = await getIdToken(auth.currentUser);
-      return { res };
-    },
   },
 };
 

@@ -12,5 +12,6 @@ export interface NotalRootProps extends PropsWithChildren {
   validate: {
     success: boolean;
     data: object;
+    error?: string;
   };
 }

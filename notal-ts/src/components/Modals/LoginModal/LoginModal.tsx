@@ -37,7 +37,7 @@ export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
       );
       return;
     }
-    onLoginSuccess();
+    await onLoginSuccess();
   };
 
   const onLoginWithGithub = async () => {

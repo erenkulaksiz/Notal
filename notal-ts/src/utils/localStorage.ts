@@ -3,6 +3,7 @@ import { isClient } from "@utils/isClient";
 const DefaultSettings = {
   cookies: false,
   installedVersion: process.env.NEXT_PUBLIC_APP_VERSION,
+  installedEnv: process.env.NODE_ENV,
 };
 
 export const LocalSettings = {

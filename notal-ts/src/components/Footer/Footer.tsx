@@ -4,7 +4,7 @@ import { useTheme } from "next-themes";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
-import { CodeIcon, HeartIcon, TwitterIcon } from "@icons";
+import { CodeIcon, Github2Icon, HeartIcon, TwitterIcon } from "@icons";
 
 import IconWhite from "@public/icon_white.webp";
 import IconGalactic from "@public/icon_galactic.webp";
@@ -143,6 +143,23 @@ export function Footer({ className }: { className?: string }) {
               rel="noreferrer"
             >
               <TwitterIcon
+                width={18}
+                height={18}
+                style={{ color: "currentColor" }}
+              />
+            </a>
+          </Tooltip>
+          <Tooltip
+            content="i <3 Open Source"
+            direction="right"
+            allContainerClassName="ml-2"
+          >
+            <a
+              href="https://github.com/erenkulaksiz/notal"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Github2Icon
                 width={18}
                 height={18}
                 style={{ color: "currentColor" }}

@@ -12,7 +12,6 @@ export function Home() {
     <Container>
       {JSON.stringify(auth?.validatedUser)}
       <Switch id="selam" value={asd} onChange={() => setAsd(!asd)} />
-      <Footer />
     </Container>
   );
 }

@@ -36,15 +36,15 @@ Notal is a simple platform to keep your project management simple, as well as ma
 
 ## Technical features
 
-- NextJS as primary framework, Vercel as primary host
-- React Native on mobile side with Redux & Firebase (WIP)
+- TypeScript as primary programming language
+- NextJS + React 18 as primary framework, Vercel as primary host
 - Authentication via Google and GitHub
-- SWR, PWA, SSR & Workbox ready (see ./notal-root/worker/index.js for workbox development logs)
+- SWR, PWA, SSR & Workbox ready (see ./notal-ts/worker/index.js for workbox development logs)
 - SEO is correctly managed, used Workbox for superfast caching
-- Uses Tailwind on frontend, `framer-motion` for cool animations, `next-themes` for Dark mode theme and `react-beautiful-dnd` for beatiful drag drop experience
-- MongoDB on backend as a database
+- Uses Tailwind on frontend for styling, `framer-motion` for cool animations, `next-themes` for Dark theme and `react-beautiful-dnd` for beatiful drag drop experience
+- MongoDB & serverless functions on backend
 - Secure session management using Firebase Auth
-- Custom components made just for Notal, each of them has different purpose and different styles with fully customizable option
+- Custom components made just for Notal, each of them has different purpose and different styles with fully customizable option (NotalUI)
 - Comes with Google Material Icons
 - Google Analytics for analytics, page views and page view times: LCP, TTFB and FCP
 
@@ -54,7 +54,7 @@ You can see the live demo at **https://notal.app**
 
 - TTFB time as well as FCP time is taking long time
 - First load is taking nearly 7~ seconds on benchmarks, need to switch to dynamic imports to reduce JS bundle
-- Maybe switch from Framer Motion to pure CSS or tailwind?
+- Maybe switch from Framer Motion to pure CSS or Tailwind transitions?
 
 ## Running locally in development mode
 
@@ -63,23 +63,23 @@ First of all, you need to create a Firebase project, as well as MongoDB database
 - [Create Firebase project from here](https://cloud.google.com/firestore/docs/client/get-firebase)
 - [Create MongoDB database from here](https://www.mongodb.com/blog/post/quick-start-nodejs-mongodb-how-to-get-connected-to-your-database)
 
-Then, clone the repository and run `npm install && npm run devp` inside `notal-root` file:
+Then, clone the repository and run `npm install && npm run dev` inside `notal-ts` file:
 Make sure to configure the project for your needs from Configuring section
 
     git clone https://github.com/erenkulaksiz/notal.git
-    cd notal/notal-root
+    cd notal/notal-ts
     npm install
-    npm run devp
+    npm run dev
 
-Opens development server on [https://localhost:3000](https://localhost:1111) with hot reload activated
+Opens development server on [https://localhost:3000](https://localhost:3000) with hot reload activated
 
-Note: You can use `npm run dev` to start on port 3000. Make sure you have right port on .env.local aswell for API
+Note: Make sure you have right port on .env.local aswell for API
 
 ## Building and deploying in production
 
 If you wanted to run this site in production, you should install modules then build the site with `npm run build` and run it with `npm run start`:
 
-    cd notal-root
+    cd notal-ts
     npm install
     npm run build
     npm run start
@@ -88,7 +88,7 @@ You should run `npm run build` again any time you make changes to the site
 
 ## Configuring
 
-If you configure a .env.local file (just copy [.env.local.template](https://github.com/erenkulaksiz/notal/blob/master/notal-root/.env.local.template) over to '.env.local' and fill in the options) you can configure a range of options
+If you configure a .env.local file (just copy [.env.local.template](https://github.com/erenkulaksiz/notal/blob/master/notal-ts/.env.local.template) over to '.env.local' and fill in the options) you can configure a range of options
 
 Make sure you have done oAuth options from Firebase console to get auth start to work, as well as MongoDB connection
 
@@ -96,10 +96,10 @@ Make sure you have done oAuth options from Firebase console to get auth start to
 
 Run `npm run analyze` to view bundle sizes for client and server
 
-## notal-old
+## deprecated/notal-old and deprecated/notal-root
 
-This file contains old version of notal which uses [NextUI](https://nextui.org/) as frontend library. Since NextUI is new, it didnt fit my needs so i switched to Tailwind later on.
-You can use same .env.local file from notal-root to notal-old, they actually use same API's
+./deprecated file contains old versions of Notal. notal-old was built with [NextUI](https://nextui.org/) and lacked many things. I refactored the code then made `notal-root`. Which later on, i refactored code again and switched to `notal-ts` with typescript.
+You can use same .env.local file from `notal-ts` to `notal-root & notal-old`, they use same API's
 
 ## Mobile Application
 
@@ -115,8 +115,8 @@ I've seen lately, many projects like:
 - [reflect.app](https://reflect.app)
 - [height.app](https://height.app)
 
-While first creating this project, i didn't yet know these projects. When i was this far, i found out about them. I suggest you to use them instead of Notal since this project is still being built.
-Even while buying the domain, i didnt knew about them. It was a bit unlucky but now i have some competition going :)
+While first creating this project, i didn't yet knew these projects. When i was this far, i just found out about them. I suggest you to use them instead of Notal since this project is still being built and has bugs.
+Even while buying the domain, i didnt knew about them. It was a bit unlucky but, now i have some competition going :)
 
 ## Questions & Contact
 
@@ -125,3 +125,5 @@ You can ask whatever you want from erenkulaksz@gmail.com email or you can just c
 ## License
 
 License is on LICENSE file
+
+You may steal code or just take a "peek", but please credit me or this repo if you are doing so. I'm all aware of what can happen, (which happened before) while publishing this project open source.
