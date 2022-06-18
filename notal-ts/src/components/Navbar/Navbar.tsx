@@ -347,10 +347,7 @@ export function Navbar({
         open={loginModalVisible}
         onClose={() => setLoginModalVisible(false)}
         onLoginSuccess={() => {
-          setTimeout(() => {
-            setLoginModalVisible(false);
-            router.replace(router.asPath);
-          }, 1000);
+          setLoginModalVisible(false);
         }}
       />
       <style jsx>{`

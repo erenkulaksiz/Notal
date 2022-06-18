@@ -6,4 +6,5 @@ export async function SendTelegramMessage({ message }: { message: string }) {
     `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_ID}/sendMessage?chat_id=${process.env.TELEGRAM_BOT_TARGET_ID}&text=${text}`
   );
   Log.debug("Sent telegram bot message: ", message);
+  Log.debug("Telegram bot res:", res);
 }

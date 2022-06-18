@@ -11,10 +11,7 @@ import {
   getAuth,
   onIdTokenChanged,
   onAuthStateChanged,
-  getRedirectResult,
-  GoogleAuthProvider,
   User,
-  OAuthCredential,
 } from "firebase/auth";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
@@ -25,7 +22,7 @@ import AuthService from "@services/AuthService";
 
 interface AuthContextProps {
   authUser: null | User;
-  authError: null;
+  authError: string | null | undefined;
   setUser: Dispatch<SetStateAction<User | null>> | null;
   login:
     | {
@@ -61,7 +58,7 @@ export function AuthProvider(props: PropsWithChildren) {
   const [validatedUser, setValidatedUser] = useState(null);
 
   const [user, setUser] = useState<null | User>(null);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<null | undefined | string>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -86,45 +83,11 @@ export function AuthProvider(props: PropsWithChildren) {
         setUser(null);
         Cookies.remove("auth");
       } else {
-        getRedirectResult(auth)
-          .then(async (result) => {
-            if (!result) return;
-            const credential = GoogleAuthProvider.credentialFromResult(
-              result
-            ) as OAuthCredential;
-            Log.debug("redirect result: ", result);
-            const { user } = result;
-            const token = await user.getIdToken();
-
-            await fetch(`${server}/api/user/login`, {
-              method: "POST",
-              headers: new Headers({ "content-type": "application/json" }),
-              body: JSON.stringify({ token }),
-            });
-
-            setTimeout(() => router.replace(router.asPath), 500);
-
-            return { user /*token*/ };
-          })
-          .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            const email = error.email;
-            const credential = GoogleAuthProvider.credentialFromError(error);
-
-            if (!errorCode) return;
-            Log.error("login google error: ", error, " code:", errorCode);
-
-            router.replace(router.asPath);
-
-            return { error: { code: errorCode, message: errorMessage } };
-          });
-
         setLoading(true);
-        setUser(user);
         const token = await user.getIdToken();
         Cookies.set("auth", token, { expires: 365 });
         setLoading(false);
+        return { authError: error ?? null, authUser: user ?? null };
       }
       //router.replace(router.asPath);
     });
@@ -137,24 +100,30 @@ export function AuthProvider(props: PropsWithChildren) {
 
   const login = {
     google: async function () {
-      await AuthService.login.google();
+      const res = await AuthService.login.google();
 
-      /*
       const { user, error } = res;
       setUser(user ?? null);
-      setError(error?.code ?? null);
+      setError(error?.errorMessage ?? null);
 
-      if (!error) router.replace(router.asPath);
+      //if (!error) router.replace(router.asPath);
+
+      const token = await user?.getIdToken();
+
+      await fetch(`${server}/api/user/login`, {
+        method: "POST",
+        headers: new Headers({ "content-type": "application/json" }),
+        body: JSON.stringify({ token }),
+      });
 
       return { authError: error ?? null, authUser: user ?? null };
-      */
     },
     logout: async function () {
       await AuthService.user.logout();
       Cookies.remove("auth");
       setUser(null);
       setValidatedUser(null);
-      router.replace(router.asPath);
+      //router.replace(router.asPath);
     },
   };
 

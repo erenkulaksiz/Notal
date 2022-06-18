@@ -22,9 +22,7 @@ export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
 
   const onLoginWithGoogle = async () => {
     Log.debug("trying to login with google");
-    await auth?.login?.google();
-    /*
-    const login = await auth.login.google();
+    const login = await auth?.login?.google();
     if (
       login?.authError?.errorCode ==
       "auth/account-exists-with-different-credential"
@@ -39,7 +37,6 @@ export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
       );
       return;
     }
-    */
     onLoginSuccess();
   };
 

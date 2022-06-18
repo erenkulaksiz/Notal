@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 import { Layout, Landing, Navbar, Home } from "@components";
 
-import { Log } from "@utils";
+import { Log, server } from "@utils";
 import { ValidateToken } from "@utils/api/validateToken";
 import useAuth from "@hooks/useAuth";
 
@@ -27,6 +27,7 @@ function Root(props: NotalRootProps) {
         <title>Notal</title>
       </Head>
       <Navbar />
+      {"server: " + server}
       {auth?.validatedUser ? <Home /> : <Landing />}
     </Layout>
   );
