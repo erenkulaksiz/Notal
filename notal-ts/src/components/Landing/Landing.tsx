@@ -29,7 +29,7 @@ export function Landing() {
               />
             </div>
           </div>
-          <h1 className="dark:text-white text-black mr-2 z-10 relative flex flex-col drop-shadow-xl sm:text-4xl text-xl font-bold font-sans">
+          <h1 className="dark:text-white text-black mr-2 z-20 relative flex flex-col drop-shadow-xl sm:text-4xl text-xl font-bold font-sans">
             <Typewriter
               options={{
                 strings: [
@@ -49,16 +49,16 @@ export function Landing() {
               }}
             />
           </h1>
-          <h5 className="dark:text-neutral-400 text-gray-600 z-10 drop-shadow-lg text-md sm:text-lg font-semibold">
+          <h5 className="dark:text-neutral-400 text-gray-600 z-20 drop-shadow-lg text-md sm:text-lg font-semibold">
             {
               "Data between users and developers is important. Notal is the solution."
             }
           </h5>
           <Button
             rounded
-            className="w-32 mt-4"
+            className="w-40 z-20 mt-4"
             aria-label="Discover more button"
-            onClick={() => alert("hey")}
+            //onClick={() => alert("hey")}
           >
             Discover More
           </Button>
@@ -72,13 +72,13 @@ export function Landing() {
             }}
             initial="hidden"
             animate="show"
-            className="mb-16 mt-16 flex-row grid gap-4 h-auto grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 z-20"
+            className="mb-16 mt-16 z-10 flex-row grid gap-4 h-auto grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
           >
             {Features.map((feature: LandingFeatureCardProps, index: number) => (
               <LandingFeatureCard feature={feature} key={index} />
             ))}
-            <div className="bg-landing_bg_2 opacity-25 absolute w-[800px] h-[800px] -left-[300px] -bottom-[100px] bg-no-repeat bg-contain -z-10"></div>
-            <div className="bg-landing_bg_3 opacity-20 absolute w-[800px] h-[800px] -right-[350px] -bottom-[200px] bg-no-repeat bg-contain -z-10"></div>
+            <div className="bg-landing_bg_2 opacity-25 absolute w-[800px] h-[800px] -left-[300px] -bottom-[100px] bg-no-repeat bg-contain -z-20"></div>
+            <div className="bg-landing_bg_3 opacity-20 absolute w-[800px] h-[800px] -right-[350px] -bottom-[200px] bg-no-repeat bg-contain -z-20"></div>
           </motion.div>
         </div>
       </Container>

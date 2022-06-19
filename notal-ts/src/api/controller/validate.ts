@@ -13,6 +13,9 @@ function generateRandomUsername({ email }: { email: string }) {
   return email.split("@")[0] + now.substring(now.length - 3);
 }
 
+/**
+ * Validate incoming requests by returning user data
+ */
 export async function validate(req: NextApiRequest, res: NextApiResponse) {
   const { db } = await connectToDatabase();
 

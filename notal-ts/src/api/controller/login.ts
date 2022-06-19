@@ -8,6 +8,9 @@ const { ValidateUser } = require("@utils/api/validateUser");
 const { accept, reject } = require("@api/utils");
 const { formatDate, SendTelegramMessage } = require("@utils");
 
+/**
+ * Send Telegram notification about new login and data
+ */
 export async function login(req: NextApiRequest, res: NextApiResponse) {
   let token = "";
   const { db } = await connectToDatabase();

@@ -7,8 +7,10 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 module.exports = withBundleAnalyzer(withPWA({
   pwa: {
     dest: 'public',
+    disable: process.env.NODE_ENV === 'development',
     register: true,
-    skipWaiting: true,
+    scope: '/app',
+    sw: 'service-worker.js',
   },
   webpack(config) {
     config.module.rules.push({

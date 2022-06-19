@@ -16,9 +16,8 @@ import {
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 
-import { Log, server } from "@utils";
-
 import AuthService from "@services/AuthService";
+import { NotifyLogin } from "@utils/api/notifyLogin";
 
 interface AuthContextProps {
   authUser: null | User;
@@ -113,11 +112,7 @@ export function AuthProvider(props: PropsWithChildren) {
 
       if (!error) {
         const token = await user?.getIdToken();
-        await fetch(`${server}/api/user/login`, {
-          method: "POST",
-          headers: new Headers({ "content-type": "application/json" }),
-          body: JSON.stringify({ token }),
-        });
+        await NotifyLogin(token);
         setTimeout(() => router.replace(router.asPath), 1000);
       }
 

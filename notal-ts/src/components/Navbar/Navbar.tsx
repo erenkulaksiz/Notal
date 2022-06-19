@@ -52,16 +52,21 @@ export function Navbar({
 
   useEffect(() => {
     setMounted(true);
-    if (!showCollapse) return setNavbarCollapse(false);
-
-    const navbarCollapsed = LocalSettings.get("navbarCollapsed");
-    if (typeof navbarCollapsed == "undefined") {
-      LocalSettings.set("navbarCollapsed", false);
-      setNavbarCollapse(false);
-    } else {
-      setNavbarCollapse(navbarCollapsed);
-    }
   }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      if (!showCollapse) return setNavbarCollapse(false);
+
+      const navbarCollapsed = LocalSettings.get("navbarCollapsed");
+      if (typeof navbarCollapsed == "undefined") {
+        LocalSettings.set("navbarCollapsed", false);
+        setNavbarCollapse(false);
+      } else {
+        setNavbarCollapse(navbarCollapsed);
+      }
+    }
+  }, [mounted]);
 
   return (
     <motion.nav

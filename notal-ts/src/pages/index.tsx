@@ -44,7 +44,7 @@ function Root(props: NotalRootProps) {
       <Head>
         <title>Notal</title>
       </Head>
-      <Navbar />
+      <Navbar showCollapse={auth?.validatedUser != null} />
       {auth?.validatedUser && auth?.authLoading ? (
         <Loading size="lg" />
       ) : auth?.validatedUser || auth?.authUser ? (

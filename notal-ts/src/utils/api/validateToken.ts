@@ -7,7 +7,7 @@ export interface ValidateTokenReturnType {
 }
 
 /**
- * Convert JWT token to user data via API
+ * Send validate request to convert JWT token into user data
  */
 export async function ValidateToken({
   token,

@@ -55,6 +55,7 @@ const SEO = (
   </>
 );
 
+/*
 interface StyleType {
   assetPrefix: string | undefined;
   file: string;
@@ -87,11 +88,12 @@ class CriticalCssHead extends Head {
       : null;
   }
 }
+*/
 
 export default function Notal() {
   return (
     <Html lang="en">
-      <CriticalCssHead>
+      <Head>
         <meta charSet="UTF-8" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -113,7 +115,7 @@ export default function Notal() {
             __html: `window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}', {page_path: window.location.pathname});`,
           }}
         />
-      </CriticalCssHead>
+      </Head>
       <body>
         <noscript className="p-2 absolute bg-white" style={{ zIndex: 999 }}>
           If you are seeing this message, that means{" "}
