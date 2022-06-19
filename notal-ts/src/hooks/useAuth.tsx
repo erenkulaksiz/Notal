@@ -90,7 +90,6 @@ export function AuthProvider(props: PropsWithChildren) {
         Cookies.set("auth", token, { expires: 365 });
         setLoading(false);
         setUser(user ?? null);
-        return { authError: error ?? null, authUser: user ?? null };
       }
       //router.replace(router.asPath);
     });
@@ -103,23 +102,24 @@ export function AuthProvider(props: PropsWithChildren) {
 
   const login = {
     google: async function () {
+      setLoading(true);
       const res = await AuthService.login.google();
 
       const { user, error } = res;
       setUser(user ?? null);
       setError(error?.errorMessage ?? null);
 
-      //if (!error) router.replace(router.asPath);
-
-      const token = await user?.getIdToken();
-
-      await fetch(`${server}/api/user/login`, {
-        method: "POST",
-        headers: new Headers({ "content-type": "application/json" }),
-        body: JSON.stringify({ token }),
-      });
-
       setLoading(false);
+
+      if (!error) {
+        const token = await user?.getIdToken();
+        await fetch(`${server}/api/user/login`, {
+          method: "POST",
+          headers: new Headers({ "content-type": "application/json" }),
+          body: JSON.stringify({ token }),
+        });
+        setTimeout(() => router.replace(router.asPath), 1000);
+      }
 
       return { authError: error ?? null, authUser: user ?? null };
     },
@@ -128,7 +128,7 @@ export function AuthProvider(props: PropsWithChildren) {
       Cookies.remove("auth");
       setUser(null);
       setValidatedUser(null);
-      router.replace(router.asPath);
+      //router.replace(router.asPath);
     },
   };
 

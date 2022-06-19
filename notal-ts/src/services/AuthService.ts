@@ -29,7 +29,7 @@ const AuthService = {
 
           window.gtag("event", "login", { login: "type:google/" + user.email });
 
-          Router.replace(Router.asPath);
+          //Router.replace(Router.asPath);
 
           return { user, token };
         })

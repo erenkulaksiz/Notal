@@ -150,7 +150,17 @@ export function Footer({ className }: { className?: string }) {
             </a>
           </Tooltip>
           <Tooltip
-            content="i <3 Open Source"
+            content={
+              <div className="flex flex-row items-center">
+                <span>i</span>
+                <HeartIcon
+                  size={24}
+                  className="fill-red-500"
+                  style={{ transform: "scale(0.6)" }}
+                />
+                <span>Open Source</span>
+              </div>
+            }
             direction="right"
             allContainerClassName="ml-2"
           >

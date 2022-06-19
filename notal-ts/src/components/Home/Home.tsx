@@ -2,8 +2,6 @@ import { useState } from "react";
 import { Container, Loading, Button, Switch, Footer } from "@components";
 import useAuth from "@hooks/useAuth";
 
-import type { HomeProps } from "./Home.d";
-
 export function Home() {
   const auth = useAuth();
   const [asd, setAsd] = useState(false);
