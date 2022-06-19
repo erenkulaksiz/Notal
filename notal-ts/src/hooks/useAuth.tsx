@@ -127,8 +127,10 @@ export function AuthProvider(props: PropsWithChildren) {
       await AuthService.user.logout();
       Cookies.remove("auth");
       setUser(null);
+      setError(null);
       setValidatedUser(null);
-      //router.replace(router.asPath);
+
+      setTimeout(() => router.replace(router.asPath), 1000);
     },
   };
 
