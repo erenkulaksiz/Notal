@@ -115,7 +115,6 @@ export function AuthProvider(props: PropsWithChildren) {
       if (!error) {
         const token = await user?.getIdToken();
         await NotifyLogin(token);
-        router.replace(router.asPath);
       }
 
       return { authError: error ?? null, authUser: user ?? null };

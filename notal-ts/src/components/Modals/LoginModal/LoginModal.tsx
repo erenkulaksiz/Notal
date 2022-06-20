@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,6 +20,12 @@ export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
   const [oauthError, setOauthError] = useState("");
   const auth = useAuth();
 
+  useEffect(() => {
+    if (auth?.authUser && open) {
+      onClose();
+    }
+  }, [auth?.authUser]);
+
   const onLoginWithGoogle = async () => {
     Log.debug("trying to login with google");
     const login = await auth?.login?.google();
@@ -40,7 +46,7 @@ export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
 
       return;
     }*/
-    await onLoginSuccess();
+    onLoginSuccess();
   };
 
   const onLoginWithGithub = async () => {
