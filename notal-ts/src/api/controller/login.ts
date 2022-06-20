@@ -39,5 +39,5 @@ URL: ${server}
 ENV: ${process.env.NODE_ENV}`,
   });
 
-  return accept({ res });
+  return accept({ res, action: "user_logined" });
 }

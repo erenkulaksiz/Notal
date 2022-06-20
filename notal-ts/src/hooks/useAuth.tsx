@@ -67,6 +67,7 @@ export function AuthProvider(props: PropsWithChildren) {
         setLoading(false);
         setUser(null);
         setError(null);
+        setValidatedUser(null); // remove user
         Cookies.remove("auth");
         return;
       } else {
@@ -83,6 +84,7 @@ export function AuthProvider(props: PropsWithChildren) {
         setLoading(false);
         setUser(null);
         setError(null);
+        setValidatedUser(null); // remove user
         Cookies.remove("auth");
       } else {
         const token = await user.getIdToken();
@@ -113,7 +115,7 @@ export function AuthProvider(props: PropsWithChildren) {
       if (!error) {
         const token = await user?.getIdToken();
         await NotifyLogin(token);
-        setTimeout(() => router.replace(router.asPath), 1000);
+        //setTimeout(() => router.replace(router.asPath), 1000);
       }
 
       return { authError: error ?? null, authUser: user ?? null };

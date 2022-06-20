@@ -9,7 +9,7 @@ declare global {
 }
 
 export interface NotalRootProps extends PropsWithChildren {
-  validate: {
+  validate?: {
     success: boolean;
     data: object;
     error?: string;

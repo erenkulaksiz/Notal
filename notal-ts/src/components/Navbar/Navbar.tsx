@@ -153,7 +153,7 @@ export function Navbar({
             animate={navbarCollapse ? "hidden" : "show"}
             transition={{ type: "tween" }}
           >
-            <Link href="/home" passHref>
+            <Link href="/" passHref>
               <Button
                 className="ml-1 px-0 h-6 w-6 dark:bg-neutral-800 bg-neutral-100 fill-black dark:fill-white shadow-xl"
                 light="hover:bg-neutral-300 hover:dark:bg-neutral-700 focus:dark:bg-neutral-600 focus:bg-neutral-400"
