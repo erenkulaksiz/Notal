@@ -351,9 +351,7 @@ export function Navbar({
       <LoginModal
         open={loginModalVisible}
         onClose={() => setLoginModalVisible(false)}
-        onLoginSuccess={() => {
-          setLoginModalVisible(false);
-        }}
+        onLoginSuccess={() => setLoginModalVisible(false)}
       />
       <style jsx>{`
         details[open] > summary:before {

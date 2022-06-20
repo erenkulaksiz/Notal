@@ -115,7 +115,7 @@ export function AuthProvider(props: PropsWithChildren) {
       if (!error) {
         const token = await user?.getIdToken();
         await NotifyLogin(token);
-        //setTimeout(() => router.replace(router.asPath), 1000);
+        router.replace(router.asPath);
       }
 
       return { authError: error ?? null, authUser: user ?? null };
@@ -127,7 +127,7 @@ export function AuthProvider(props: PropsWithChildren) {
       setError(null);
       setValidatedUser(null);
 
-      setTimeout(() => router.replace(router.asPath), 1000);
+      //setTimeout(() => router.replace(router.asPath), 1000);
     },
   };
 

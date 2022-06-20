@@ -5,6 +5,7 @@ import { NotalRootProps } from "@types";
 import useAuth from "@hooks/useAuth";
 import { CheckToken } from "@utils/api/checkToken";
 import { useRouter } from "next/router";
+import Cookies from "js-cookie";
 
 export function Layout(props: NotalRootProps) {
   const auth = useAuth();
@@ -27,7 +28,7 @@ export function Layout(props: NotalRootProps) {
   }, [auth?.authLoading]);
 
   useEffect(() => {
-    if (props.validate) {
+    if (props.validate && Cookies.get("auth")) {
       if (props.validate.success)
         auth && auth.setValidatedUser(props.validate.data);
     }

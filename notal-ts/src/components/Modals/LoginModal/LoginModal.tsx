@@ -36,9 +36,10 @@ export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
         `Your account has been disabled. Sorry for the inconvenience.`
       );
       return;
-    } else if (login?.authError?.errorCode == "auth/popup-closed-by-user") {
+    } /*else if (login?.authError?.errorCode == "auth/popup-closed-by-user") {
+
       return;
-    }
+    }*/
     await onLoginSuccess();
   };
 

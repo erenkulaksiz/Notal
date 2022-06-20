@@ -1,15 +1,21 @@
 import type { GetServerSidePropsContext } from "next";
 import Head from "next/head";
-import { useEffect } from "react";
-import { useRouter } from "next/router";
 
-import { Layout, Landing, Navbar, Home, Loading, Container } from "@components";
+import { Layout, Landing, Navbar, Home, Loading } from "@components";
 
 import { ValidateToken } from "@utils/api/validateToken";
 import useAuth from "@hooks/useAuth";
 
 import type { ValidateTokenReturnType } from "@utils/api/validateToken";
 import type { NotalRootProps } from "@types";
+
+function LoadingOverlay() {
+  return (
+    <div className="flex flex-1 w-full h-full items-center justify-center">
+      <Loading size="xl" />
+    </div>
+  );
+}
 
 function Root(props: NotalRootProps) {
   const auth = useAuth();
@@ -21,7 +27,7 @@ function Root(props: NotalRootProps) {
       </Head>
       <Navbar showCollapse={auth?.validatedUser != null} />
       {auth?.validatedUser && auth?.authLoading ? (
-        <Loading size="lg" />
+        <LoadingOverlay />
       ) : auth?.validatedUser || auth?.authUser ? (
         <Home />
       ) : (
