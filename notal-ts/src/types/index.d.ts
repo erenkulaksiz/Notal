@@ -14,4 +14,5 @@ export interface NotalRootProps extends PropsWithChildren {
     data: object;
     error?: string;
   };
+  withoutLayout?: boolean;
 }

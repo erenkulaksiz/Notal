@@ -176,8 +176,11 @@ export function Footer({ className }: { className?: string }) {
               />
             </a>
           </Tooltip>
+          <span className="uppercase text-xs ml-3 text-neutral-400 text-left">
+            Development build
+          </span>
         </div>
-        <div className="flex items-center text-neutral-400 sm:text-md text-xs">
+        <div className="flex items-center text-neutral-400 sm:text-md text-xs text-right">
           © 2022 notal.app, All Rights Reserved.
         </div>
       </div>

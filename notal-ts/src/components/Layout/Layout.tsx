@@ -34,6 +34,8 @@ export function Layout(props: NotalRootProps) {
     }
   }, [props.validate]);
 
+  if (props.withoutLayout) return <>{props.children}</>;
+
   return (
     <main className="mx-auto transition-all overflow-x-hidden ease-in-out duration-300 overflow-auto dark:bg-black/50 bg-white h-full items-center w-full flex flex-col dark:text-white relative text-black">
       {props.children}

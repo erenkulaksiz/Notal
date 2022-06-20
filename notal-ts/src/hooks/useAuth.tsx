@@ -62,9 +62,9 @@ export function AuthProvider(props: PropsWithChildren) {
 
   useEffect(() => {
     const tokenChange = onIdTokenChanged(auth, async (user) => {
-      setLoading(true);
+      //setLoading(true);
       if (!user) {
-        setLoading(false);
+        //setLoading(false);
         setUser(null);
         setError(null);
         setValidatedUser(null); // remove user
@@ -74,7 +74,7 @@ export function AuthProvider(props: PropsWithChildren) {
         const token = await user.getIdToken();
         setUser(user);
         Cookies.set("auth", token, { expires: 365 });
-        setLoading(false);
+        //setLoading(false);
       }
     });
 
@@ -91,6 +91,7 @@ export function AuthProvider(props: PropsWithChildren) {
         Cookies.set("auth", token, { expires: 365 });
         setLoading(false);
         setUser(user ?? null);
+        setError(null);
       }
       //router.replace(router.asPath);
     });
