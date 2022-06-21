@@ -1,4 +1,4 @@
-export function formatDate(date: Date) {
+export function formatDate(date: Date | number | string) {
   return `${new Date(date).getDate()} ${
     [
       "Jan",

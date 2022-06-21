@@ -8,7 +8,7 @@ const { connectToDatabase } = require("@lib/mongodb");
 
 const { formatDate, Log, SendTelegramMessage } = require("@utils");
 
-function generateRandomUsername({ email }: { email: string }) {
+export function generateRandomUsername({ email }: { email: string }) {
   const now = Date.now().toString();
   return email.split("@")[0] + now.substring(now.length - 3);
 }
@@ -19,7 +19,7 @@ function generateRandomUsername({ email }: { email: string }) {
 export async function validate(req: NextApiRequest, res: NextApiResponse) {
   const { db } = await connectToDatabase();
 
-  const users = await db.collection("users");
+  const usersCollection = await db.collection("users");
 
   let token = "";
 
@@ -34,7 +34,9 @@ export async function validate(req: NextApiRequest, res: NextApiResponse) {
   if (validateUser.success && validateUser.decodedToken.success) {
     // validated, now check db
 
-    let user = await users.findOne({ uid: validateUser.decodedToken.user_id });
+    let user = await usersCollection.findOne({
+      uid: validateUser.decodedToken.user_id,
+    });
 
     if (!user) {
       // register user - check and register username
@@ -47,7 +49,7 @@ export async function validate(req: NextApiRequest, res: NextApiResponse) {
             email: validateUser.decodedToken.email,
           })
         ).toLowerCase();
-        const checkusername = await users.findOne({
+        const checkusername = await usersCollection.findOne({
           username: generateUsername,
         });
         if (!checkusername) generated = true;
@@ -66,10 +68,12 @@ export async function validate(req: NextApiRequest, res: NextApiResponse) {
 
       Log.debug("USER NOT FOUND | GENERATED USER:", newUser);
 
-      await users.insertOne({
+      await usersCollection.insertOne({
         ...newUser,
       });
-      user = await users.findOne({ uid: validateUser.decodedToken.user_id });
+      user = await usersCollection.findOne({
+        uid: validateUser.decodedToken.user_id,
+      });
 
       await SendTelegramMessage({
         message: `NEW USER

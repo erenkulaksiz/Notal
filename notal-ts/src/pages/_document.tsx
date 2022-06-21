@@ -5,11 +5,6 @@ import { join } from "path";
 const SEO = (
   <>
     <meta
-      property="x-author"
-      name="x-author"
-      content="Developed with <3 By Eren Kulaksiz"
-    />
-    <meta
       property="apple-mobile-web-app-capable"
       name="apple-mobile-web-app-capable"
       content="yes"
@@ -92,6 +87,13 @@ export default function Notal() {
   return (
     <Html lang="en">
       <CriticalCssHead>
+        <head
+          dangerouslySetInnerHTML={{
+            __html: `
+<!-- Developed with <3 By Eren Kulaksiz -->
+`,
+          }}
+        ></head>
         <meta charSet="UTF-8" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link

@@ -13,3 +13,4 @@ export { Landing } from "./Landing/Landing";
 export { Navbar } from "./Navbar/Navbar";
 export { Home } from "./Home/Home";
 export { Footer } from "./Footer/Footer";
+export { LoadingOverlay } from "./LoadingOverlay/LoadingOverlay";
