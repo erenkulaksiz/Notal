@@ -30,7 +30,7 @@ export async function login(req: NextApiRequest, res: NextApiResponse) {
 
   await SendTelegramMessage({
     message: `LOGIN
-USERNAME: ${user?.username}
+USERNAME: @${user?.username}
 EMAIL: ${validateUser.decodedToken.email}
 UID: ${validateUser.decodedToken.user_id}
 TIME: ${formatDate(Date.now())}

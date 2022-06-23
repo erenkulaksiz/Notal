@@ -1,27 +1,25 @@
 import { connectToDatabase } from "@lib/mongodb";
+import { getTokenFromHeader } from "@utils/api/getTokenFromHeader";
+import { Log } from "@utils/logger";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const { ValidateUser } = require("@utils/api/validateUser");
 const { accept, reject } = require("@api/utils");
 
 export async function getworkspaces(req: NextApiRequest, res: NextApiResponse) {
-  let token = "";
   const { db } = await connectToDatabase();
-  const usersCollection = await db.collection("users");
   const workspacesCollection = await db.collection("workspaces");
 
   const { body } = req;
   if (!body.uid) return reject({ reason: "no-uid", res });
+  // we have uid of user request in body.uid now
 
-  const bearer = req.headers["authorization"];
-  const bearerToken = bearer?.split(" ")[1];
-  if (typeof bearerToken == "undefined")
-    return reject({ reason: "invalid-params", res });
+  const bearer = getTokenFromHeader(req);
 
-  const validateUser = await ValidateUser({ token: bearerToken });
+  const validateUser = await ValidateUser({ token: bearer });
 
-  if (!validateUser && !validateUser.decodedToken.success)
-    return reject("invalid-token");
+  if (validateUser && !validateUser.decodedToken.success)
+    return reject({ reason: validateUser.decodedToken.errorCode, res });
 
   const workspaces = await workspacesCollection
     .find({
@@ -46,5 +44,6 @@ export async function getworkspaces(req: NextApiRequest, res: NextApiResponse) {
       };
     }),
     res,
+    action: "getworkspaces",
   });
 }

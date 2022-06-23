@@ -33,7 +33,7 @@ export function LandingFeatureCard({ feature }: LandingFeatureCardTypes) {
           },
         },
       }}
-      className="dark:bg-white/5 bg-white/40 dark:text-white text-black p-4 flex-col rounded-xl"
+      className="dark:bg-white/5 bg-white/40 dark:text-white text-black p-4 flex-col rounded-xl drop-shadow-xl"
     >
       <div className="flex flex-row">
         <div className="p-1 self-start rounded-full mr-2 dark:bg-neutral-700/20 bg-neutral-300/20">

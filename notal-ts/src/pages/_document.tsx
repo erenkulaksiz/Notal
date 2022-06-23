@@ -86,7 +86,7 @@ class CriticalCssHead extends Head {
 export default function Notal() {
   return (
     <Html lang="en">
-      <CriticalCssHead>
+      <Head>
         <head
           dangerouslySetInnerHTML={{
             __html: `
@@ -115,7 +115,7 @@ export default function Notal() {
             __html: `window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}', {page_path: window.location.pathname});`,
           }}
         />
-      </CriticalCssHead>
+      </Head>
       <body>
         <noscript className="p-2 absolute bg-white" style={{ zIndex: 999 }}>
           If you are seeing this message, that means{" "}

@@ -10,7 +10,11 @@ import { SendTelegramMessage } from "@utils";
 
 export interface ValidateTokenReturnType {
   success: boolean;
-  error?: string;
+  error?:
+    | string
+    | {
+        errorCode: string;
+      };
   data?: object;
 }
 
@@ -92,7 +96,7 @@ PROVIDER: ${validateUser.decodedToken.firebase.sign_in_provider}`,
 
   return {
     success: false,
-    error: validateUser.error,
+    error: validateUser.decodedToken.errorCode,
   };
 
   /*

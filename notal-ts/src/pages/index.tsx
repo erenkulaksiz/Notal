@@ -9,6 +9,8 @@ import useAuth from "@hooks/useAuth";
 import type { ValidateTokenReturnType } from "@utils/api/validateToken";
 import type { NotalRootProps } from "@types";
 
+import { Log } from "@utils/logger";
+
 function Root(props: NotalRootProps) {
   const auth = useAuth();
 
@@ -18,7 +20,7 @@ function Root(props: NotalRootProps) {
         <title>Notal</title>
       </Head>
       <Navbar showCollapse={auth?.validatedUser != null} />
-      {auth?.validatedUser && auth?.authLoading ? (
+      {auth?.authLoading ? (
         <LoadingOverlay />
       ) : auth?.validatedUser || auth?.authUser ? (
         <Home />
@@ -34,5 +36,6 @@ export default Root;
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   let validate = {} as ValidateTokenReturnType;
   if (ctx.req) validate = await ValidateToken({ token: ctx.req.cookies.auth });
+  Log.debug(validate);
   return { props: { validate } };
 }

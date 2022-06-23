@@ -79,9 +79,10 @@ export async function validate(req: NextApiRequest, res: NextApiResponse) {
         message: `NEW USER
 EMAIL: ${validateUser.decodedToken.email}
 USERNAME: ${newUser.username}
-UID: ${validateUser.decodedToken.user_id}
+UID: ${newUser.uid}
 TIME: ${formatDate(Date.now())}
-TIMESTAMP: ${Date.now()}`,
+TIMESTAMP: ${Date.now()}
+PROVIDER: ${newUser.provider}`,
       });
     }
 

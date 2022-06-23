@@ -24,7 +24,8 @@ export const CheckToken = async ({
     user
   );
   if (
-    props.validate?.error == "auth/id-token-expired" ||
+    (props.validate?.error &&
+      props.validate?.error == "auth/id-token-expired") ||
     props.validate?.error == "auth/argument-error" ||
     props.validate?.error == "validation-error" ||
     (props.validate?.error == "no-token" && user)

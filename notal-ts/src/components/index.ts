@@ -14,3 +14,5 @@ export { Navbar } from "./Navbar/Navbar";
 export { Home } from "./Home/Home";
 export { Footer } from "./Footer/Footer";
 export { LoadingOverlay } from "./LoadingOverlay/LoadingOverlay";
+export { HomeWorkspaceCard } from "./WorkspaceCard/WorkspaceCard";
+export { Toast } from "./Toast/Toast";

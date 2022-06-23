@@ -10,6 +10,7 @@ import type { AppProps, NextWebVitalsMetric } from "next/app";
 
 import { Log } from "@utils/logger";
 import { AuthProvider } from "@hooks/useAuth";
+import { NotalUIProvider } from "@hooks/useNotalUI";
 
 import { AcceptCookies } from "@components";
 
@@ -65,8 +66,10 @@ function Notal({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <AuthProvider>
-        <Component {...pageProps} />
-        <AcceptCookies />
+        <NotalUIProvider>
+          <Component {...pageProps} />
+          <AcceptCookies />
+        </NotalUIProvider>
       </AuthProvider>
     </ThemeProvider>
   );

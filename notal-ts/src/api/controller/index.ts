@@ -7,7 +7,7 @@ const { getworkspaces } = require("./workspace/getworkspaces");
 export function Controller(req: NextRequest, res: NextResponse) {
   return {
     user: {
-      validate: async () => await validate(req, res),
+      //validate: async () => await validate(req, res),
       login: async () => await login(req, res),
     },
     workspace: {

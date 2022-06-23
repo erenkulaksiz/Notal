@@ -1,4 +1,4 @@
-import { ErrorFn } from "firebase/auth";
+import { AuthError } from "firebase/auth";
 import { Log } from "..";
 
 const admin = require("firebase-admin");
@@ -19,11 +19,14 @@ export async function ValidateUser({ token }: { token: string }) {
   const decodedToken = await admin
     .auth()
     .verifyIdToken(token)
-    .catch((error: ErrorFn) => {
-      return { success: false, error };
+    .catch((error: AuthError) => {
+      return { success: false, error, errorCode: error.code };
     });
 
   if (!decodedToken && decodedToken?.error)
-    return { success: false, error: "invalid-token", code: decodedToken.error };
+    return {
+      success: false,
+      error: decodedToken.errorCode,
+    };
   return { success: true, decodedToken: { success: true, ...decodedToken } };
 }
