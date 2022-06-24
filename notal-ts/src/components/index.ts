@@ -16,3 +16,4 @@ export { Footer } from "./Footer/Footer";
 export { LoadingOverlay } from "./LoadingOverlay/LoadingOverlay";
 export { HomeWorkspaceCard } from "./WorkspaceCard/WorkspaceCard";
 export { Toast } from "./Toast/Toast";
+export { AlertModal } from "./Alert/Alert";

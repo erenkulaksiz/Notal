@@ -98,6 +98,16 @@ export function Home() {
         >
           toast
         </Button>
+
+        <Button
+          onClick={() =>
+            NotalUI.Alert.show({
+              title: "selam",
+            })
+          }
+        >
+          alert
+        </Button>
       </div>
     </>
   );

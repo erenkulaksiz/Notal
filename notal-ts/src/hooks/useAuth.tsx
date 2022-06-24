@@ -18,6 +18,9 @@ import { useRouter } from "next/router";
 
 import AuthService from "@services/AuthService";
 import { NotifyLogin } from "@utils/api/notifyLogin";
+import useNotalUI from "./useNotalUI";
+
+import { InfoIcon } from "@icons";
 
 interface AuthContextProps {
   authUser: null | User;
@@ -53,6 +56,7 @@ export default function useAuth() {
 export function AuthProvider(props: PropsWithChildren) {
   const auth = getAuth();
   const router = useRouter();
+  const NotalUI = useNotalUI();
 
   const [validatedUser, setValidatedUser] = useState(null);
 
@@ -114,8 +118,19 @@ export function AuthProvider(props: PropsWithChildren) {
       setLoading(false);
 
       if (!error) {
+        /**
+         * Successful login
+         */
         const token = await user?.getIdToken();
         await NotifyLogin(token);
+        NotalUI.Toast.show({
+          desc: `Logged in as ${user?.email}`,
+          icon: <InfoIcon size={24} fill="currentColor" />,
+          className: "dark:bg-green-600 bg-green-500 text-white",
+          duration: 4500,
+          timeEnabled: true,
+          closeable: true,
+        });
       }
 
       return { authError: error ?? null, authUser: user ?? null };

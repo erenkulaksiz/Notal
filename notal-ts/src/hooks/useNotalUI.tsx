@@ -1,28 +1,43 @@
 import {
   createContext,
   PropsWithChildren,
+  ReactNode,
   useContext,
   useEffect,
   useState,
 } from "react";
 import { AnimateSharedLayout, motion } from "framer-motion";
 
-import { Toast as ToastComponent } from "@components";
-import { ToastProps } from "components/Toast/Toast.d";
+import { Toast as ToastComponent, AlertModal } from "@components";
+import type { ToastProps } from "components/Toast/Toast.d";
+
+import type { AlertProps } from "components/Alert/Alert.d";
 
 import { CreatePortal as Portal } from "@components";
 
 import { isClient } from "@utils/isClient";
 import { Log } from "@utils";
 
-interface NotalUIContextProps {
+import { WorkboxInit } from "@utils/workboxInit";
+
+function HOC({ children }: { children: ReactNode }) {
+  const NotalUI = useNotalUI();
+  useEffect(() => WorkboxInit(NotalUI), []);
+  return <>{children}</>;
+}
+
+export interface NotalUIContextProps {
   Toast: {
     show: (arg: ToastProps) => void;
     showMultiple?: ([]: ToastProps[]) => void;
-    close?: (index: number) => void;
+    close: (index: number) => void;
     closeAll?: () => void;
     render?: (index: number) => void;
     onClick?: (index?: number) => void;
+  };
+  Alert: {
+    show: (arg: AlertProps) => void;
+    close: () => void;
   };
 }
 
@@ -35,6 +50,11 @@ export default function useNotalUI() {
 }
 
 export function NotalUIProvider(props: PropsWithChildren) {
+  const [alert, setAlert] = useState<AlertProps>({
+    visible: false,
+    title: "",
+    desc: "",
+  });
   const [showToastPortal, setShowToastPortal] = useState<boolean>(false);
   const [toastBuffer, setToastBuffer] = useState<ToastProps[]>([]);
 
@@ -52,15 +72,14 @@ export function NotalUIProvider(props: PropsWithChildren) {
       if (filterToasts.length == 0) return;
       const lastToast = filterToasts[filterToasts.length - 1];
       const toastTimeEnabled = toastBuffer.findIndex(
-        (el) => lastToast.id == el.id
+        (el) => el.id == lastToast.id
       );
-      if (!interval) {
-        if (toastTimeEnabled == -1) return;
-        interval = setInterval(
-          () => Toast?.close && Toast?.close(toastTimeEnabled),
-          toastBuffer[toastTimeEnabled].duration || 1000
-        );
-      }
+      if (interval) return;
+      if (toastTimeEnabled == -1) return;
+      interval = setInterval(
+        () => Toast?.close && Toast?.close(toastTimeEnabled),
+        toastBuffer[toastTimeEnabled].duration || 1000
+      );
     } else {
       if (interval) clearInterval(interval);
     }
@@ -79,7 +98,7 @@ export function NotalUIProvider(props: PropsWithChildren) {
       duration = 3500,
       className = "dark:bg-neutral-800 bg-neutral-100 border-2 border-solid border-neutral-300 dark:border-neutral-800",
       buttons,
-      showClose,
+      showClose = true,
       type = "default",
     }: ToastProps) => {
       let btns;
@@ -138,8 +157,6 @@ export function NotalUIProvider(props: PropsWithChildren) {
       });
 
       setToastBuffer([...allToasts]);
-
-      Log.debug(allToasts);
     },
     close: (index: number) => {
       const newToastArr = [...toastBuffer];
@@ -156,53 +173,90 @@ export function NotalUIProvider(props: PropsWithChildren) {
     },
   };
 
-  const value = { Toast };
+  const Alert = {
+    show: ({
+      title,
+      desc,
+      showCloseButton = true,
+      closeable = true,
+      titleIcon = false,
+      blur = false,
+      buttons = false,
+      animate = true,
+      customContent = false,
+      onClose,
+    }: AlertProps) => {
+      setAlert({
+        visible: true,
+        title,
+        desc,
+        closeable,
+        titleIcon,
+        blur,
+        buttons,
+        animate,
+        showCloseButton,
+        customContent,
+        onClose: () => {
+          if (!alert.closeable) return;
+
+          if (onClose) {
+            Log.debug(onClose);
+            return onClose;
+          }
+          Alert.close();
+          return null;
+        },
+      });
+    },
+    close: () => {
+      setAlert({ ...alert, visible: false });
+    },
+  };
+
+  Log.debug("alert:", alert);
+
+  const value = { Toast, Alert };
 
   return (
     <notalUIContext.Provider value={value} {...props}>
       {props.children}
-      {isClient() && showToastPortal && (
-        <Portal portalName="notal-toast">
-          {/* @ts-ignore */}
-          <AnimateSharedLayout>
-            <motion.div
-              layout
-              variants={{
-                show: { opacity: 1, y: 0 },
-                hidden: { opacity: 0, y: 70 },
-              }}
-              initial="hidden"
-              animate="show"
-              exit="hidden"
-              className="absolute pointer-events-none left-0 right-0 top-0 bottom-0 z-50 flex flex-col justify-end items-end"
-            >
-              {toastBuffer.map((toast, index) => (
-                <ToastComponent
-                  title={toast?.title}
-                  desc={toast?.desc}
-                  icon={toast?.icon}
-                  closeable={toast?.closeable}
-                  className={toast?.className}
-                  onClick={() => {
-                    if (!toast?.closeable) return;
+      <HOC>
+        {isClient() && showToastPortal && (
+          <Portal portalName="notal-toast">
+            {/* @ts-ignore */}
+            <AnimateSharedLayout>
+              <motion.div
+                layout
+                variants={{
+                  show: { opacity: 1, y: 0 },
+                  hidden: { opacity: 0, y: 70 },
+                }}
+                initial="hidden"
+                animate="show"
+                exit="hidden"
+                className="absolute pointer-events-none left-0 right-0 top-0 bottom-0 z-50 flex flex-col justify-end items-end"
+              >
+                {toastBuffer.map((toast, index) => (
+                  <ToastComponent
+                    toast={toast}
+                    key={toast.id}
+                    onClick={() => {
+                      if (!toast?.closeable) return;
 
-                    if (typeof Toast?.onClick == "function")
-                      Toast?.onClick(index);
-                    else Toast.close && Toast?.close(index);
-                  }}
-                  buttons={toast?.buttons}
-                  showClose={toast?.showClose}
-                  key={index}
-                  id={toast.id}
-                  onRender={() => Toast.render && Toast?.render(index)}
-                  rendered={toast?.rendered}
-                  type={toast?.type}
-                />
-              ))}
-            </motion.div>
-          </AnimateSharedLayout>
-        </Portal>
-      )}
+                      if (typeof Toast?.onClick == "function")
+                        Toast?.onClick(index);
+                      else Toast.close && Toast?.close(index);
+                    }}
+                    onRender={() => Toast.render && Toast?.render(index)}
+                  />
+                ))}
+              </motion.div>
+            </AnimateSharedLayout>
+          </Portal>
+        )}
+        <AlertModal alert={alert} />
+      </HOC>
     </notalUIContext.Provider>
   );
 }

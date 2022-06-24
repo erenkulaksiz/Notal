@@ -43,27 +43,24 @@ const ToastTypes: {
  * NotalUI Toast Component
  */
 export function Toast({
-  title,
-  desc,
-  icon,
-  closeable = true,
-  className,
-  buttons = [],
+  toast,
   onClick,
-  showClose = true,
-  id,
   onRender,
-  rendered,
-  type,
-}: ToastProps) {
+}: {
+  toast: ToastProps;
+  onClick: () => void;
+  onRender: () => void;
+}) {
   useEffect(() => {
-    if (!rendered) {
+    if (!toast.rendered) {
       typeof onRender == "function" && onRender();
     }
-  }, [rendered]);
+  }, [toast.rendered]);
 
   const NotalUIToast: FC<ComponentProps | MotionProps | any> = ({
-    as: Tag = buttons && Array.isArray(buttons) ? motion.div : motion.a,
+    as: Tag = toast.buttons && Array.isArray(toast.buttons)
+      ? motion.div
+      : motion.a,
     ...otherProps
   }) => <Tag {...otherProps} />;
 
@@ -74,13 +71,13 @@ export function Toast({
     conditionalClasses: [
       { true: "cursor-pointer" },
       {
-        default: className || ToastTypes.default.className,
+        default: toast.className || ToastTypes.default.className,
         error: ToastTypes.error.className,
         info: ToastTypes.info.className,
         success: ToastTypes.success.className,
       },
     ],
-    selectedClasses: [closeable, type],
+    selectedClasses: [toast.closeable, toast.type],
   });
 
   return (
@@ -91,29 +88,33 @@ export function Toast({
         show: { opacity: 1, y: 0 },
         hidden: { opacity: 0, y: 120 },
       }}
-      initial={rendered ? "show" : "hidden"}
+      initial={toast.rendered ? "show" : "hidden"}
       animate="show"
       exit="hidden"
-      layoutId={id?.toString()}
+      layoutId={toast.id?.toString()}
     >
-      {icon && <div className="mr-2 h-full flex">{icon}</div>}
-      {!icon && type && ToastTypes[type as keyof typeof ToastTypes].icon && (
-        <div className="mr-2 h-full flex">
-          {type && (
-            <div className="flex items-center justify-center">
-              {ToastTypes[type as keyof typeof ToastTypes].icon}
-            </div>
-          )}
-        </div>
-      )}
+      {toast.icon && <div className="mr-2 h-full flex">{toast.icon}</div>}
+      {!toast.icon &&
+        toast.type &&
+        ToastTypes[toast.type as keyof typeof ToastTypes].icon && (
+          <div className="mr-2 h-full flex">
+            {toast.type && (
+              <div className="flex items-center justify-center">
+                {ToastTypes[toast.type as keyof typeof ToastTypes].icon}
+              </div>
+            )}
+          </div>
+        )}
       <div className="flex flex-col">
-        {title && <span className="text-lg">{title}</span>}
-        {desc && <span className="text-sm break-words">{desc}</span>}
+        {toast.title && <span className="text-lg">{toast.title}</span>}
+        {toast.desc && (
+          <span className="text-sm break-words">{toast.desc}</span>
+        )}
       </div>
-      {buttons && (
+      {toast.buttons && (
         <div className="ml-2 flex flex-row h-full">
-          {Array.isArray(buttons) &&
-            buttons.map((button: ReactNode, index: number) => {
+          {Array.isArray(toast.buttons) &&
+            toast.buttons.map((button: ReactNode, index: number) => {
               return (
                 <div key={index} className="w-[98%]">
                   {button}
@@ -122,7 +123,7 @@ export function Toast({
             })}
         </div>
       )}
-      {closeable && showClose && (
+      {toast.closeable && toast.showClose && (
         <button
           onClick={() => typeof onClick == "function" && onClick()}
           className="ml-2 bg-neutral-300/10 dark:bg-neutral-900/10 hover:opacity-80 rounded p-[2px] flex items-center justify-center"

@@ -65,12 +65,12 @@ function Notal({ Component, pageProps }: AppProps) {
 
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <AuthProvider>
-        <NotalUIProvider>
+      <NotalUIProvider>
+        <AuthProvider>
           <Component {...pageProps} />
           <AcceptCookies />
-        </NotalUIProvider>
-      </AuthProvider>
+        </AuthProvider>
+      </NotalUIProvider>
     </ThemeProvider>
   );
 }
