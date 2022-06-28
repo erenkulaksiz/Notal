@@ -8,10 +8,7 @@ const { connectToDatabase } = require("@lib/mongodb");
 
 const { formatDate, Log, SendTelegramMessage } = require("@utils");
 
-export function generateRandomUsername({ email }: { email: string }) {
-  const now = Date.now().toString();
-  return email.split("@")[0] + now.substring(now.length - 3);
-}
+const { generateRandomUsername } = require("@api/utils");
 
 /**
  * Validate incoming requests by returning user data

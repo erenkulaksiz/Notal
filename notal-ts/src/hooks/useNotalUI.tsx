@@ -33,12 +33,14 @@ export interface NotalUIContextProps {
     close: (index: number) => void;
     closeAll?: () => void;
     render?: (index: number) => void;
-    onClick?: (index?: number) => void;
+    onClick?: ({ toast, index }: { toast: ToastProps; index: number }) => void;
   };
   Alert: {
     show: (arg: AlertProps) => void;
     close: () => void;
+    onClose?: () => void;
   };
+  AlertState: AlertProps;
 }
 
 const notalUIContext = createContext<NotalUIContextProps>(
@@ -52,8 +54,6 @@ export default function useNotalUI() {
 export function NotalUIProvider(props: PropsWithChildren) {
   const [alert, setAlert] = useState<AlertProps>({
     visible: false,
-    title: "",
-    desc: "",
   });
   const [showToastPortal, setShowToastPortal] = useState<boolean>(false);
   const [toastBuffer, setToastBuffer] = useState<ToastProps[]>([]);
@@ -128,6 +128,8 @@ export function NotalUIProvider(props: PropsWithChildren) {
           type,
         },
       ]);
+
+      return { id: Date.now() };
     },
     showMultiple: (multipleToasts: ToastProps[]) => {
       const allToasts = [...toastBuffer];
@@ -173,7 +175,7 @@ export function NotalUIProvider(props: PropsWithChildren) {
     },
   };
 
-  const Alert = {
+  const Alert: NotalUIContextProps["Alert"] = {
     show: ({
       title,
       desc,
@@ -184,7 +186,6 @@ export function NotalUIProvider(props: PropsWithChildren) {
       buttons = false,
       animate = true,
       customContent = false,
-      onClose,
     }: AlertProps) => {
       setAlert({
         visible: true,
@@ -195,18 +196,8 @@ export function NotalUIProvider(props: PropsWithChildren) {
         blur,
         buttons,
         animate,
-        showCloseButton,
+        showCloseButton: buttons == false ? showCloseButton : false,
         customContent,
-        onClose: () => {
-          if (!alert.closeable) return;
-
-          if (onClose) {
-            Log.debug(onClose);
-            return onClose;
-          }
-          Alert.close();
-          return null;
-        },
       });
     },
     close: () => {
@@ -214,9 +205,7 @@ export function NotalUIProvider(props: PropsWithChildren) {
     },
   };
 
-  Log.debug("alert:", alert);
-
-  const value = { Toast, Alert };
+  const value = { Toast, Alert, AlertState: alert };
 
   return (
     <notalUIContext.Provider value={value} {...props}>
@@ -245,8 +234,8 @@ export function NotalUIProvider(props: PropsWithChildren) {
                       if (!toast?.closeable) return;
 
                       if (typeof Toast?.onClick == "function")
-                        Toast?.onClick(index);
-                      else Toast.close && Toast?.close(index);
+                        Toast?.onClick({ toast, index });
+                      else Toast?.close(index);
                     }}
                     onRender={() => Toast.render && Toast?.render(index)}
                   />
@@ -255,7 +244,15 @@ export function NotalUIProvider(props: PropsWithChildren) {
             </AnimateSharedLayout>
           </Portal>
         )}
-        <AlertModal alert={alert} />
+        <AlertModal
+          alert={alert}
+          onClose={() => {
+            if (!alert.closeable) return;
+
+            if (typeof Alert?.onClose == "function") Alert?.onClose();
+            else Alert?.close();
+          }}
+        />
       </HOC>
     </notalUIContext.Provider>
   );

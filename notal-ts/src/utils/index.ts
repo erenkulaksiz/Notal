@@ -5,3 +5,4 @@ export { SendTelegramMessage } from "./bot";
 export { server } from "./server";
 export { formatDate } from "./formatDate";
 export { formatString } from "./formatString";
+export { workspaceFetch } from "./workspaceFetch";

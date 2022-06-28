@@ -9,8 +9,6 @@ import useAuth from "@hooks/useAuth";
 import type { ValidateTokenReturnType } from "@utils/api/validateToken";
 import type { NotalRootProps } from "@types";
 
-import { Log } from "@utils/logger";
-
 function Root(props: NotalRootProps) {
   const auth = useAuth();
 
@@ -36,6 +34,5 @@ export default Root;
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   let validate = {} as ValidateTokenReturnType;
   if (ctx.req) validate = await ValidateToken({ token: ctx.req.cookies.auth });
-  Log.debug(validate);
   return { props: { validate } };
 }

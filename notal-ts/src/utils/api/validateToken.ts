@@ -4,7 +4,7 @@ import { connectToDatabase } from "@lib/mongodb";
 import { ValidateUser } from "./validateUser";
 
 import { formatString, formatDate } from "@utils";
-import { generateRandomUsername } from "@api/controller/validate";
+import { generateRandomUsername } from "@api/utils";
 
 import { SendTelegramMessage } from "@utils";
 

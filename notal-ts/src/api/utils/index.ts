@@ -34,3 +34,8 @@ export function reject({
   Log.debug("reject: ", reason);
   return res.status(status).send({ success: false, error: reason });
 }
+
+export function generateRandomUsername({ email }: { email: string }) {
+  const now = Date.now().toString();
+  return email.split("@")[0] + now.substring(now.length - 3);
+}

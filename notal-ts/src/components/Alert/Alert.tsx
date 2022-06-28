@@ -3,7 +3,13 @@ import { Modal, Button } from "@components";
 import { BuildComponent } from "@utils/style/buildComponent";
 import { AlertProps } from "./Alert.d";
 
-export function AlertModal({ alert }: { alert: AlertProps }) {
+export function AlertModal({
+  alert,
+  onClose,
+}: {
+  alert: AlertProps;
+  onClose: () => void;
+}) {
   const BuildModalTitle = BuildComponent({
     name: "Modal Title",
     defaultClasses: "flex flex-row items-center text-lg font-medium",
@@ -15,7 +21,7 @@ export function AlertModal({ alert }: { alert: AlertProps }) {
     name: "Modal Footer",
     conditionalClasses: [
       {
-        true: `justify-between flex-row flex w-full`,
+        true: `justify-between flex-row flex w-full gap-2`,
         false: "flex items-end justify-end",
       },
     ],
@@ -26,7 +32,7 @@ export function AlertModal({ alert }: { alert: AlertProps }) {
     <Modal
       open={alert.visible == true}
       closeBtn={alert.closeable}
-      onClose={() => alert.onClose && alert.onClose()}
+      onClose={() => onClose()}
       className="w-[90%] sm:w-[400px] p-4 px-5"
       blur={alert.blur}
       animate={alert.animate}
@@ -65,7 +71,7 @@ export function AlertModal({ alert }: { alert: AlertProps }) {
             <Button
               className="h-10 w-1/2"
               light="bg-red-500 dark:bg-red-700"
-              onClick={() => alert.onClose && alert.onClose()}
+              onClick={() => onClose()}
             >
               Close
             </Button>

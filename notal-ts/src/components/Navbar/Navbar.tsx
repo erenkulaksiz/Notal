@@ -6,8 +6,6 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 
 import { Button, Tooltip, Loading, Switch, LoginModal } from "@components";
-import { BuildComponent } from "@utils/style";
-import { isClient } from "@utils/isClient";
 
 import IconWhite from "@public/icon_white.webp";
 import IconGalactic from "@public/icon_galactic.webp";
@@ -30,7 +28,6 @@ import type { NavbarProps } from "./Navbar.d";
 import useAuth from "@hooks/useAuth";
 
 export function Navbar({
-  user,
   showHomeButton = false,
   validating = false,
   showCollapse = false,
@@ -81,7 +78,7 @@ export function Navbar({
     >
       <div className="absolute left-0 right-0 top-0 bottom-0 dark:bg-black/30 bg-white/30 backdrop-blur-md -z-10 shadow-none dark:shadow-md" />
       <div className="w-1/2 flex items-center">
-        {mounted && (
+        {mounted ? (
           <Link href="/" passHref>
             <a className="">
               <div className="h-10 sm:flex w-40 hidden">
@@ -108,6 +105,8 @@ export function Navbar({
               </div>
             </a>
           </Link>
+        ) : (
+          <div className="w-40 h-10 dark:bg-neutral-800 bg-neutral-200 animate-pulse" />
         )}
         {showCollapse && (
           <motion.div

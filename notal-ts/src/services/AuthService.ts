@@ -1,11 +1,9 @@
 import {
   getAuth,
-  getIdToken,
   GoogleAuthProvider,
   signInWithPopup,
   User,
 } from "firebase/auth";
-import Router from "next/router";
 
 interface AuthServiceGoogleReturnType {
   user?: User;
@@ -16,7 +14,7 @@ interface AuthServiceGoogleReturnType {
   };
 }
 
-const AuthService = {
+export const AuthService = {
   login: {
     google: async function (): Promise<AuthServiceGoogleReturnType> {
       const auth = getAuth();
@@ -51,5 +49,3 @@ const AuthService = {
     },
   },
 };
-
-export default AuthService;
