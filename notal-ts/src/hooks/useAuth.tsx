@@ -16,7 +16,7 @@ import {
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 
-import AuthService from "@services/AuthService";
+import { AuthService } from "@services/AuthService";
 import { NotifyLogin } from "@utils/api/notifyLogin";
 import useNotalUI from "./useNotalUI";
 
