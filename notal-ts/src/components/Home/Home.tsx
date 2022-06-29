@@ -60,7 +60,6 @@ export function Home() {
   }, [workspacesData]);
 
   async function starWorkspace(id: string) {
-    const data = await WorkspaceService.workspace.star(id);
     const newWorkspaces = [...workspacesData.data.data];
     const workspace = newWorkspaces.findIndex((el) => el._id === id);
     if (workspace != -1)
@@ -72,6 +71,7 @@ export function Home() {
       },
       false
     );
+    const data = await WorkspaceService.workspace.star(id);
     Log.debug("starData:", data);
     if (data.success) {
       window.gtag("event", "starWorkspace", {
