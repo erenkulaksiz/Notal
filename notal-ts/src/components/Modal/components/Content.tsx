@@ -1,9 +1,9 @@
 import { BuildComponent } from "@utils/style/buildComponent";
 import { motion } from "framer-motion";
 
-import type { ModalContentProps } from "./Modal.d";
+import type { ModalContentProps } from "../Modal.d";
 
-import { ChildrenAnim } from "./Modal";
+import { ChildrenAnim } from "../Modal";
 
 // Wrapper for modal content.
 export default function Content({

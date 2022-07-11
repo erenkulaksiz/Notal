@@ -25,7 +25,7 @@ import {
 import { LocalSettings } from "@utils/localStorage";
 
 import type { NavbarProps } from "./Navbar.d";
-import useAuth from "@hooks/useAuth";
+import { useAuth } from "@hooks";
 
 export function Navbar({
   showHomeButton = false,

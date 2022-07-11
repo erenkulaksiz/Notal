@@ -8,7 +8,7 @@ export interface ButtonProps {
   light?: boolean | string;
   size?: "sm" | "lg" | "xl" | string;
   rounded?: boolean;
-  fullWidth?: boolean;
+  fullWidth?: boolean | string;
   ring?: boolean | string;
   loading?: boolean | string;
   form?: string;

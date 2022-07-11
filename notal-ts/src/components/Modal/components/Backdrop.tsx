@@ -1,7 +1,7 @@
 import { BuildComponent } from "@utils/style/buildComponent";
 import { motion } from "framer-motion";
 
-import type { ModalBackdropProps } from "./Modal.d";
+import type { ModalBackdropProps } from "../Modal.d";
 
 export default function Backdrop({
   children,

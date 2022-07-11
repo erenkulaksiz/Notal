@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 import { NotalRootProps } from "@types";
 
-import useAuth from "@hooks/useAuth";
+import { useAuth } from "@hooks";
 import { CheckToken } from "@utils/api/checkToken";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";

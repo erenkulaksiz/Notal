@@ -6,7 +6,7 @@ import { ObjectId } from "mongodb";
 const { ValidateUser } = require("@utils/api/validateUser");
 const { accept, reject } = require("@api/utils");
 
-export async function starworkspace(req: NextApiRequest, res: NextApiResponse) {
+export async function star(req: NextApiRequest, res: NextApiResponse) {
   const { db } = await connectToDatabase();
   const workspacesCollection = await db.collection("workspaces");
 

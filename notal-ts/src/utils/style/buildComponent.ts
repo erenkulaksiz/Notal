@@ -3,7 +3,7 @@ interface BuildComponentTypes {
   defaultClasses?: string;
   extraClasses?: string;
   conditionalClasses?: Array<{
-    [key: string]: string | boolean | undefined;
+    [key: string]: string | boolean | number | undefined;
   }>;
   selectedClasses?: Array<string | boolean | undefined>;
 }

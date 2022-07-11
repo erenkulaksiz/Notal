@@ -88,7 +88,17 @@ export function NotalUIProvider(props: PropsWithChildren) {
     };
   }, [toastBuffer]);
 
+  /**
+   * @description - toast control
+   * @param {ToastProps} toast - toast props
+   * @returns {id}
+   */
   const Toast: NotalUIContextProps["Toast"] = {
+    /**
+     * @description - show toast
+     * @param {ToastProps} - toast props
+     * @returns {id}
+     */
     show: ({
       title,
       desc,
@@ -100,7 +110,14 @@ export function NotalUIProvider(props: PropsWithChildren) {
       buttons,
       showClose = true,
       type = "default",
+      id,
+      once = false,
     }: ToastProps) => {
+      if (once) {
+        const findToast = toastBuffer.findIndex((el) => el.id == id);
+        if (findToast != -1) return;
+      }
+
       let btns;
 
       /**
@@ -111,6 +128,8 @@ export function NotalUIProvider(props: PropsWithChildren) {
       } else if (Array.isArray(buttons)) {
         btns = buttons;
       }
+
+      const toastId = id || Date.now();
 
       setToastBuffer([
         ...toastBuffer,
@@ -123,13 +142,13 @@ export function NotalUIProvider(props: PropsWithChildren) {
           className,
           buttons: btns,
           duration,
-          id: Date.now(),
+          id: toastId,
           showClose,
           type,
         },
       ]);
 
-      return { id: Date.now() };
+      return { id: toastId };
     },
     showMultiple: (multipleToasts: ToastProps[]) => {
       const allToasts = [...toastBuffer];
@@ -182,6 +201,7 @@ export function NotalUIProvider(props: PropsWithChildren) {
       showCloseButton = true,
       closeable = true,
       titleIcon = false,
+      className,
       blur = false,
       buttons = false,
       animate = true,
@@ -195,6 +215,7 @@ export function NotalUIProvider(props: PropsWithChildren) {
         titleIcon,
         blur,
         buttons,
+        className,
         animate,
         showCloseButton: buttons == false ? showCloseButton : false,
         customContent,

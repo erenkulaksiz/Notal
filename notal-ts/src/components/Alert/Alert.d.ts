@@ -1,11 +1,11 @@
 import { ReactNode } from "react";
 
 export interface AlertProps {
-  title?: string;
-  desc?: string;
+  title?: string | ReactNode;
+  desc?: string | ReactNode;
   showCloseButton?: boolean;
   closeable?: boolean;
-  titleIcon?: boolean;
+  titleIcon?: ReactNode | boolean;
   blur?: boolean;
   buttons?: ReactNode[] | boolean;
   animate?: boolean;
@@ -13,4 +13,5 @@ export interface AlertProps {
   visible?: boolean;
   onClose?: any;
   open?: boolean;
+  className?: string;
 }

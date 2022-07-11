@@ -10,15 +10,26 @@ export function AlertModal({
   alert: AlertProps;
   onClose: () => void;
 }) {
+  const BuildModal = BuildComponent({
+    name: "Notal UI Modal",
+    conditionalClasses: [
+      {
+        true: alert.className,
+        false: "w-[90%] sm:w-[400px] p-4 px-5",
+      },
+    ],
+    selectedClasses: [alert.className ? true : false],
+  });
+
   const BuildModalTitle = BuildComponent({
-    name: "Modal Title",
+    name: "Notal UI Modal Title",
     defaultClasses: "flex flex-row items-center text-lg font-medium",
     conditionalClasses: [{ true: "ml-1" }],
     selectedClasses: [alert.titleIcon ? true : false],
   });
 
   const BuildModalFooter = BuildComponent({
-    name: "Modal Footer",
+    name: "Notal UI Modal Footer",
     conditionalClasses: [
       {
         true: `justify-between flex-row flex w-full gap-2`,
@@ -33,7 +44,7 @@ export function AlertModal({
       open={alert.visible == true}
       closeBtn={alert.closeable}
       onClose={() => onClose()}
-      className="w-[90%] sm:w-[400px] p-4 px-5"
+      className={BuildModal.classes}
       blur={alert.blur}
       animate={alert.animate}
     >

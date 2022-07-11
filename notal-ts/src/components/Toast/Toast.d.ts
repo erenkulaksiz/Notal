@@ -4,6 +4,8 @@ export interface ToastProps {
   title?: string;
   desc?: string;
   icon?: ReactNode;
+  id?: string | number;
+  once?: boolean;
   closeable?: boolean;
   className?: string;
   buttons?: ReactNode | ReactNode[] | ((index: number) => void) | void;

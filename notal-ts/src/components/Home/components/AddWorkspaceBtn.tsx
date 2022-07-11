@@ -1,16 +1,24 @@
 import { motion } from "framer-motion";
 import { AddIcon } from "@icons";
 
-const AddWorkspaceButton = ({ onClick }: { onClick: Function }) => {
+const AddWorkspaceButton = ({
+  onClick,
+  workspaceLength = 0,
+}: {
+  onClick: () => void;
+  workspaceLength: number;
+}) => {
   return (
-    <div
-      /*
-        variants={{
-            hidden: { y: -30, opacity: 0 },
-            show: { y: 0, opacity: 1, transition: { delay: .03 * (workspaceLength - 1) } },
-        }}
-        transition={{ type: "spring", stiffness: 400, damping: 25 }}
-        */
+    <motion.div
+      variants={{
+        hidden: { y: -30, opacity: 0 },
+        show: {
+          y: 0,
+          opacity: 1,
+          transition: { delay: 0.03 * (workspaceLength - 1) },
+        },
+      }}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
       className="sticky bottom-4 z-20"
     >
       <a
@@ -21,7 +29,7 @@ const AddWorkspaceButton = ({ onClick }: { onClick: Function }) => {
         <AddIcon size={24} fill="currentColor" />
         Add Workspace
       </a>
-    </div>
+    </motion.div>
   );
 };
 

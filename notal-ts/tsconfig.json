@@ -23,6 +23,7 @@
       "@public/*": ["../public/*"],
       "@services/*": ["./services/*"],
       "@hooks/*": ["./hooks/*"],
+      "@hooks": ["./hooks"],
       "@api/*": ["./api/*"],
       "@lib/*": ["./lib/*"],
       "@constants/*": ["./constants/*"],

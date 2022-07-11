@@ -29,7 +29,7 @@ export interface WorkspaceTypes {
   updatedAt: number;
   workspaceVisible: boolean;
   thumbnail: {
-    type: "image" | "singleColor" | "gradient";
+    type: "image" | "singleColor" | "gradient" | string;
     file?: string;
     color?: string;
     colors?: {

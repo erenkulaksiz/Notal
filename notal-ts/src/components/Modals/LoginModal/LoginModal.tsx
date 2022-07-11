@@ -13,7 +13,7 @@ import IconWhite from "@public/icon_white.webp";
 import IconGalactic from "@public/icon_galactic.webp";
 
 import { Log } from "@utils/logger";
-import useAuth from "@hooks/useAuth";
+import { useAuth } from "@hooks";
 
 export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
   const { resolvedTheme } = useTheme();
@@ -107,7 +107,7 @@ export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
             </div>
           </Modal.Title>
           <Modal.Body className="p-4 items-center" animate>
-            <div className="flex flex-col gap-2 pb-2 w-full sm:w-2/3">
+            <div className="flex flex-col gap-2 pb-2 w-full sm:px-8">
               <Button
                 onClick={() => onLoginWithGoogle()}
                 size="lg"
@@ -119,7 +119,7 @@ export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
                     width={24}
                     height={24}
                     fill="currentColor"
-                    className="ml-6"
+                    className="ml-2"
                   />
                 }
                 aria-label="Sign in with Google"
@@ -133,7 +133,7 @@ export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
                 gradient
                 fullWidth
                 icon={
-                  <GithubIcon size={24} fill="currentColor" className="ml-6" />
+                  <GithubIcon size={24} fill="currentColor" className="ml-2" />
                 }
                 aria-label="Sign in with GitHub"
               >

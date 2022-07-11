@@ -1,9 +1,9 @@
 import { BuildComponent } from "@utils/style/buildComponent";
 import { motion } from "framer-motion";
 
-import type { ModalBodyProps } from "./Modal.d";
+import type { ModalBodyProps } from "../Modal.d";
 
-import { ChildrenAnim } from "./Modal";
+import { ChildrenAnim } from "../Modal";
 
 export default function Body({
   children,

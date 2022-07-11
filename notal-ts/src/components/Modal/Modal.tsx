@@ -4,11 +4,11 @@ import { CrossIcon } from "@icons";
 
 import type { ModalProps } from "./Modal.d";
 
-import Backdrop from "./Backdrop";
-import Content from "./Content";
-import Body from "./Body";
-import Title from "./Title";
-import Footer from "./Footer";
+import Backdrop from "./components/Backdrop";
+import Content from "./components/Content";
+import Body from "./components/Body";
+import Title from "./components/Title";
+import Footer from "./components/Footer";
 
 export const ChildrenAnim = {
   hidden: {

@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 
-import type { ModalTitleProps } from "./Modal.d";
+import type { ModalTitleProps } from "../Modal.d";
 
-import { ChildrenAnim } from "./Modal";
+import { ChildrenAnim } from "../Modal";
 
 export default function Title({
   children,

@@ -19,36 +19,40 @@ export function HomeWorkspaceCard({
   onDelete,
   skeleton = false,
   preview = false,
+  index = 0,
 }: {
-  workspace: WorkspaceTypes;
-  onStar: Function;
-  onDelete: Function;
+  workspace?: WorkspaceTypes;
+  onStar?: Function;
+  onDelete?: Function;
   skeleton?: boolean;
   preview?: boolean;
+  index?: number;
 }) {
   if (skeleton)
     return (
-      <div
-        /*
-    variants={{
-        hidden: { y: -30, opacity: 0 },
-        show: { y: 0, opacity: 1 },
-    }}
-    transition={{ type: "spring", stiffness: 400, duration: 0.02, damping: 25 }}
-    */
+      <motion.div
+        variants={{
+          hidden: { y: -30, opacity: 0 },
+          show: { y: 0, opacity: 1 },
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 400,
+          duration: 0.02,
+          damping: 25,
+        }}
         className="w-full h-32 flex flex-col justify-end shadow-2xl rounded-xl bg-white dark:bg-neutral-800 overflow-hidden"
       >
         <div className="animate-pulse w-full h-18 px-4 pb-4">
           <div className="w-[65%] h-6 bg-neutral-300 dark:bg-neutral-700" />
           <div className="w-[80%] mt-2 h-4 bg-neutral-300 dark:bg-neutral-700" />
         </div>
-      </div>
+      </motion.div>
     );
 
   return (
     <div className="relative hover:z-40 active:scale-[98%] hover:scale-[101%] hover:-translate-y-0.5 group transition-all ease-in-out">
-      <div
-        /*
+      <motion.div
         variants={{
           hidden: { y: -30, opacity: 0 },
           show: {
@@ -59,7 +63,6 @@ export function HomeWorkspaceCard({
         }}
         //exit={{ y: -30, opacity: 0 }}
         transition={{ type: "spring", stiffness: 400, damping: 25 }}
-        */
         className="relative xl:max-w-[500px] w-full h-32 shadow-xl rounded-xl p-3 flex flex-col justify-end"
       >
         <div className="flex flex-row justify-between group-hover:scale-[97%] transition-all ease-in-out z-20 pointer-events-none">
@@ -83,7 +86,7 @@ export function HomeWorkspaceCard({
             {!preview ? (
               <Link
                 href="/workspace/[id]"
-                as={`/workspace/${workspace.id || "not-found"}`}
+                as={`/workspace/${workspace?.id ?? "not-found"}`}
                 passHref
               >
                 <a className="flex-col flex w-full">
@@ -99,12 +102,16 @@ export function HomeWorkspaceCard({
               </Link>
             ) : (
               <div className="flex-col flex w-full">
-                <span className="font-medium text-ellipsis overflow-hidden whitespace-nowrap drop-shadow-xl break-words">
-                  {workspace.title}
-                </span>
-                <span className="text-sm drop-shadow-lg break-words">
-                  {workspace.desc}
-                </span>
+                {workspace?.title && (
+                  <span className="font-medium text-ellipsis overflow-hidden whitespace-nowrap drop-shadow-xl break-words">
+                    {workspace.title}
+                  </span>
+                )}
+                {workspace?.desc && (
+                  <span className="text-sm drop-shadow-lg break-words">
+                    {workspace.desc}
+                  </span>
+                )}
               </div>
             )}
           </div>
@@ -183,7 +190,7 @@ export function HomeWorkspaceCard({
             {!preview && (
               <Link
                 href="/workspace/[id]"
-                as={`/workspace/${workspace.id || "not-found"}`}
+                as={`/workspace/${workspace?.id ?? "not-found"}`}
                 passHref
               >
                 <a className="cursor-pointer transition-all ease-in-out absolute left-0 right-0 top-0 bottom-0 rounded-xl z-10" />
@@ -196,7 +203,7 @@ export function HomeWorkspaceCard({
             {!preview && (
               <Link
                 href="/workspace/[id]"
-                as={`/workspace/${workspace.id || "not-found"}`}
+                as={`/workspace/${workspace?.id ?? "not-found"}`}
                 passHref
               >
                 <a className="cursor-pointer transition-all ease-in-out absolute left-0 right-0 top-0 bottom-0 rounded-xl z-10" />
@@ -204,7 +211,7 @@ export function HomeWorkspaceCard({
             )}
           </div>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 }

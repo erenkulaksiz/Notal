@@ -33,7 +33,7 @@ export function HomeNavTitle({
           allContainerClassName="ml-2"
           blockContent
         >
-          <div className="dark:bg-neutral-800 bg-neutral-100 p-1 px-2 rounded-lg">
+          <div className="dark:bg-neutral-800 bg-neutral-100 text-md p-1 px-2 rounded-lg">
             {count?.workspaces}
           </div>
         </Tooltip>
@@ -45,7 +45,7 @@ export function HomeNavTitle({
           allContainerClassName="ml-2"
           blockContent
         >
-          <div className="flex flex-row items-center dark:bg-neutral-800 bg-neutral-100 p-1 px-1 pr-2 rounded-lg">
+          <div className="flex gap-1 flex-row items-center dark:bg-neutral-800 bg-neutral-100 p-1 px-1 pr-2 rounded-lg">
             <StarFilledIcon
               width={20}
               height={24}
@@ -62,7 +62,7 @@ export function HomeNavTitle({
           direction="bottom"
           allContainerClassName="ml-2"
         >
-          <div className="flex flex-row items-center dark:bg-neutral-800 bg-neutral-100 p-1 px-1 pr-2 rounded-lg">
+          <div className="flex gap-1 flex-row items-center dark:bg-neutral-800 bg-neutral-100 p-1 px-1 pr-2 rounded-lg">
             <VisibleOffIcon
               width={20}
               height={24}
