@@ -16,7 +16,7 @@ interface rejectProps {
 }
 
 export function accept({
-  data,
+  data = {},
   status = 200,
   action = "defaultAction",
   res,

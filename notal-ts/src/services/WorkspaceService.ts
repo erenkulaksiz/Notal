@@ -4,7 +4,7 @@ import { WorkspaceTypes } from "@types";
 
 export const WorkspaceService = {
   workspace: {
-    create: async function ({
+    add: async function ({
       title,
       desc,
       starred,
@@ -22,6 +22,7 @@ export const WorkspaceService = {
           workspaceVisible,
           thumbnail,
           owner: auth?.currentUser?.uid,
+          uid: auth?.currentUser?.uid,
         },
         {
           token,

@@ -1,3 +1,5 @@
+import { Log } from "..";
+
 interface BuildComponentTypes {
   name?: string;
   defaultClasses?: string;

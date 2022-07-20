@@ -1,11 +1,14 @@
-import { NextRequest, NextResponse } from "next/server";
+import { Log } from "@utils";
+import { NextApiRequest, NextApiResponse } from "next";
 
-const { login } = require("./login");
+import { login } from "./login";
 //const { validate } = require("./validate");
-const { getworkspaces } = require("./workspace/getworkspaces");
-const { star } = require("./workspace/star");
+import { getworkspaces } from "./workspace/getworkspaces";
+import { star } from "./workspace/star";
+import { create } from "./workspace/create";
+import { deleteWorkspace } from "./workspace/delete";
 
-export function Controller(req: NextRequest, res: NextResponse) {
+export function Controller(req: NextApiRequest, res: NextApiResponse) {
   return {
     user: {
       //validate: async () => await validate(req, res),
@@ -14,6 +17,8 @@ export function Controller(req: NextRequest, res: NextResponse) {
     workspace: {
       getworkspaces: async () => await getworkspaces(req, res),
       star: async () => await star(req, res),
+      create: async () => await create(req, res),
+      delete: async () => await deleteWorkspace(req, res),
     },
   };
 }

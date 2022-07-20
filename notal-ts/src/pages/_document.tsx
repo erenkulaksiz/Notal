@@ -87,13 +87,6 @@ export default function Notal() {
   return (
     <Html lang="en">
       <Head>
-        <head
-          dangerouslySetInnerHTML={{
-            __html: `
-<!-- Developed with <3 By Eren Kulaksiz -->
-`,
-          }}
-        ></head>
         <meta charSet="UTF-8" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link

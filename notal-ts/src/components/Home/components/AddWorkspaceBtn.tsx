@@ -1,13 +1,7 @@
 import { motion } from "framer-motion";
 import { AddIcon } from "@icons";
 
-const AddWorkspaceButton = ({
-  onClick,
-  workspaceLength = 0,
-}: {
-  onClick: () => void;
-  workspaceLength: number;
-}) => {
+const AddWorkspaceButton = ({ onClick }: { onClick: () => void }) => {
   return (
     <motion.div
       variants={{
@@ -15,7 +9,7 @@ const AddWorkspaceButton = ({
         show: {
           y: 0,
           opacity: 1,
-          transition: { delay: 0.03 * (workspaceLength - 1) },
+          transition: { delay: 0.03 },
         },
       }}
       transition={{ type: "spring", stiffness: 400, damping: 25 }}

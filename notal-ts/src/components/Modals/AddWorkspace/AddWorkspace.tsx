@@ -61,8 +61,8 @@ export function AddWorkspaceModal({
   function submit() {
     onAdd({
       ...newWorkspace,
-      _id: new Date(Date.now()).toString(),
-      id: new Date(Date.now()).toString(),
+      _id: Date.now().toString(),
+      id: Date.now().toString(),
       createdAt: Date.now(),
       updatedAt: Date.now(),
       owner: "",
@@ -76,7 +76,7 @@ export function AddWorkspaceModal({
     <Modal
       open={open}
       onClose={() => !thumbnailLoading && close()}
-      className="w-[90%] sm:w-[400px] p-4 px-5 relative"
+      className="w-[90%] sm:w-[400px] h-[560px] p-4 px-5 relative"
       animate
     >
       <Modal.Title animate>
@@ -314,7 +314,7 @@ export function AddWorkspaceModal({
           </Tab.TabView>
         </Tab>
       </Modal.Body>
-      <Modal.Footer className="justify-between" animate>
+      <Modal.Footer className="justify-between items-end flex-1" animate>
         <Button
           light="bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500"
           onClick={() => !thumbnailLoading && close()}

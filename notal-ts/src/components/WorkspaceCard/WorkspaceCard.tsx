@@ -58,7 +58,7 @@ export function HomeWorkspaceCard({
           show: {
             y: 0,
             opacity: 1,
-            transition: { delay: 0.015 * (index + 1) },
+            transition: { delay: 0.035 * (index + 1) },
           },
         }}
         //exit={{ y: -30, opacity: 0 }}

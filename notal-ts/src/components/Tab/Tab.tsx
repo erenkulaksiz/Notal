@@ -1,4 +1,4 @@
-import React, { ReactNode, useState, useMemo, cloneElement } from "react";
+import React, { ReactNode, useState, cloneElement } from "react";
 import { LayoutGroup, motion } from "framer-motion";
 
 import { BuildComponent } from "@utils/style/buildComponent";
@@ -127,7 +127,7 @@ function TabView({
   children,
   className,
 }: {
-  children: ReactNode;
+  children?: ReactNode;
   className?: string;
   title?: string;
   icon?: ReactNode;
@@ -193,7 +193,7 @@ function Tab({
                     {children.props.icon && (
                       <div>{children.props.icon && children.props.icon}</div>
                     )}
-                    <div>{children.props.title}</div>
+                    <div>{children.props.title ?? "Default"}</div>
                   </div>
                 </TabButton>
               ))}
@@ -204,11 +204,15 @@ function Tab({
         children?.map((child, index) => {
           if (index != selected) return;
 
-          const clone = cloneElement(child, {
-            className: globalTabViewClassName,
-          });
-
-          return clone;
+          if (globalTabViewClassName) {
+            // check if theres global classname
+            const clone = cloneElement(child, {
+              className: globalTabViewClassName,
+              key: index,
+            });
+            return clone;
+          }
+          return child;
         })}
     </div>
   );

@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 const admin = require("firebase-admin");
 
-const { Controller } = require("@api/controller");
+import { Controller } from "@api/controller";
 const { accept, reject } = require("@api/utils");
 
 const googleService = JSON.parse(process.env.GOOGLE_SERVICE ?? "");
@@ -30,7 +30,7 @@ export default async function handler(
 
   if (slug.length == 0) return reject({ res });
 
-  let ExecuteController = Controller(req, res);
+  let ExecuteController: any = Controller(req, res); // #TODO: REMOVE ANY!!!!!
 
   if (slug.length == 1) {
     ExecuteController = ExecuteController[slug[0]];
