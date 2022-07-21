@@ -16,7 +16,7 @@ export function HomeNavTitle({
   };
 }) {
   return (
-    <div className="flex flex-row min-h-[60px] px-4 w-full items-center sticky top-0 z-30 dark:bg-neutral-800/60 bg-neutral-200/40 backdrop-blur-sm">
+    <div className="flex flex-row min-h-[60px] px-4 w-full items-center sticky top-0 z-40 dark:bg-neutral-800/60 bg-neutral-200/40 backdrop-blur-sm">
       <div className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 p-2 dark:bg-neutral-800 bg-white mr-3 rounded-lg">
         <div className="hidden md:flex">{children}</div>
         <div className="flex md:hidden">

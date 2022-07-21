@@ -45,17 +45,12 @@ export default function useWorkspaces() {
       const isInvalidToken = workspacesData?.data?.error === "invalid-token";
       const tokenError = workspacesData?.data?.error === "auth/argument-error";
       if (isTokenExpired || isNoToken || isInvalidToken || tokenError) {
-        recon();
-        return;
-      }
-      if (workspacesData?.data?.error) {
         Log.error("swr error workspacesData: ", workspacesData?.data);
         recon();
         return;
-      } else {
-        if (workspacesData?.data?.success) {
-          setIsLoading(false);
-        }
+      }
+      if (workspacesData?.data?.success) {
+        setIsLoading(false);
       }
 
       if (workspacesData.error) {
@@ -141,7 +136,7 @@ export default function useWorkspaces() {
     } else if (data.success == false) {
       if (data.error == "max-workspaces") {
         NotalUI.Toast.show({
-          id: "workspace-maxworkspaces-toast",
+          id: "workspace-max-workspaces-toast",
           once: true,
           title: "Error",
           type: "error",
@@ -150,9 +145,12 @@ export default function useWorkspaces() {
         return;
       }
       Log.debug("RES ERR create workspace -> ", data);
-      NotalUI.Alert.show({
+      NotalUI.Toast.show({
         title: "Error",
         desc: "Couldn't create the workspace, check the console for more info.",
+        type: "error",
+        id: "workspace-create-error-toast",
+        once: true,
       });
       workspacesData.mutate();
     }

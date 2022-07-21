@@ -1,19 +1,24 @@
 import { WorkspaceTypes } from "@types";
-import { michael } from "./michael";
+
+import { CONSTANTS } from ".";
+
 export const WorkspaceDefaults: WorkspaceTypes = {
   _id: "workspace-default",
   id: "workspace-default",
   owner: "",
   createdAt: Date.now(),
   updatedAt: Date.now(),
-  title: "Untitled",
+  title: CONSTANTS.DEFAULT_WORKSPACE_TITLE,
   desc: "",
   starred: false,
   workspaceVisible: false,
   thumbnail: {
-    type: "gradient",
-    file: michael,
-    color: "#666666",
-    colors: { start: "#0eeaed", end: "#00575e" },
+    type: CONSTANTS.DEFAULT_WORKSPACE_THUMBNAIL_TYPE,
+    file: CONSTANTS.MICHAEL,
+    color: CONSTANTS.DEFAULT_WORKSPACE_THUMBNAIL_COLOR,
+    colors: {
+      start: CONSTANTS.DEFAULT_WORKSPACE_THUMBNAIL_GRADIENT.start,
+      end: CONSTANTS.DEFAULT_WORKSPACE_THUMBNAIL_GRADIENT.end,
+    },
   },
 };

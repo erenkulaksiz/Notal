@@ -3,16 +3,16 @@ import { NextApiResponse } from "next";
 const { Log } = require("@utils");
 
 interface acceptProps {
-  data: any;
-  status: number;
-  action: string;
-  res: NextApiResponse;
+  data?: any;
+  status?: number;
+  action?: string;
+  res?: NextApiResponse;
 }
 
 interface rejectProps {
-  reason: string;
-  status: number;
-  res: NextApiResponse;
+  reason?: string;
+  status?: number;
+  res?: NextApiResponse;
 }
 
 export function accept({

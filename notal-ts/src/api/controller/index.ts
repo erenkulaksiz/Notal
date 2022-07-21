@@ -7,18 +7,35 @@ import { getworkspaces } from "./workspace/getworkspaces";
 import { star } from "./workspace/star";
 import { create } from "./workspace/create";
 import { deleteWorkspace } from "./workspace/delete";
+import { accept } from "@api/utils";
 
-export function Controller(req: NextApiRequest, res: NextApiResponse) {
+export interface ControllerReturnType {
+  ping: (req: NextApiRequest, res: NextApiResponse) => void;
+  user: {
+    login: (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
+  };
+  workspace: {
+    getworkspaces: (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
+    star: (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
+    create: (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
+    delete: (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
+  };
+}
+
+export function Controller() {
   return {
+    ping: (req, res) => {
+      return accept({ res, data: { pong: true } });
+    },
     user: {
-      //validate: async () => await validate(req, res),
-      login: async () => await login(req, res),
+      //validate,
+      login,
     },
     workspace: {
-      getworkspaces: async () => await getworkspaces(req, res),
-      star: async () => await star(req, res),
-      create: async () => await create(req, res),
-      delete: async () => await deleteWorkspace(req, res),
+      getworkspaces,
+      star,
+      create,
+      delete: deleteWorkspace,
     },
-  };
+  } as ControllerReturnType;
 }

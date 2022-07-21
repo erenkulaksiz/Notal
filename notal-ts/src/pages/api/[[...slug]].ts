@@ -24,26 +24,28 @@ export default async function handler(
   req: NextApiRequestWithQuery,
   res: NextApiResponse
 ) {
-  // #TODO: Dynamic api router with query
-
   if (req.method !== "POST") return reject({ res });
-
   const { slug } = req.query;
-
   if (slug.length == 0) return reject({ res });
+  if (!Array.isArray(slug)) return reject({ res });
 
-  let ExecuteController: any = Controller(req, res); // #TODO: REMOVE ANY!!!!!
+  let ExecuteController: any = Controller(); // #TODO: REMOVE ANY HERE!!!!!
 
-  if (slug.length == 1) {
-    ExecuteController = ExecuteController[slug[0]]; // go in to the controller
-  } else if (slug.length == 2) {
-    ExecuteController = ExecuteController[slug[0]][slug[1]];
-  } else if (slug.length == 3) {
-    ExecuteController = ExecuteController[slug[0]][slug[1]][slug[2]];
-  }
+  slug.forEach(async (slugItem, index) => {
+    if (index != slug.length - 1) {
+      if (ExecuteController[slug[index]]) {
+        ExecuteController = ExecuteController[slug[index]]; // go inside the object
+        return;
+      }
+      return;
+    }
+    // last index, execute
+    ExecuteController = ExecuteController[slugItem];
 
-  if (typeof ExecuteController == "function") {
-    return await ExecuteController(slug[slug.length - 1]); // Always send last slug to api route
-  }
-  reject({ res });
+    if (typeof ExecuteController == "function") {
+      return await ExecuteController(req, res);
+    } else {
+      return reject({ res });
+    }
+  });
 }

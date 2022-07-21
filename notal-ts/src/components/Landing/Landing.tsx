@@ -2,12 +2,12 @@ import Typewriter from "typewriter-effect";
 import Image from "next/image";
 import { motion } from "framer-motion";
 
+import LandingBackground from "@public/landing_bg_banner_1.webp";
 import { Container, Footer, Button } from "@components";
 import { Features } from "@constants/features";
-import { LandingFeatureCard } from "./FeatureCard";
-import type { LandingFeatureCardProps } from "./FeatureCard";
-
-import LandingBackground from "@public/landing_bg_banner_1.webp";
+import { LandingFeatureCard } from "./components/FeatureCard";
+import type { LandingFeatureCardProps } from "./components/FeatureCard";
+import { CONSTANTS } from "@constants";
 
 export function Landing() {
   return (
@@ -30,13 +30,7 @@ export function Landing() {
           <h1 className="dark:text-white text-black mr-2 z-20 relative flex flex-col drop-shadow-xl sm:text-4xl text-xl font-bold font-sans">
             <Typewriter
               options={{
-                strings: [
-                  "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>Empowering</span> user and developer relations",
-                  "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>New way of</span> planning to your projects",
-                  "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>Empowering</span> user feedbacks",
-                  "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>Featuring</span> roadmaps to your users",
-                  "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>Empowering</span> collaborating with your team to develop together",
-                ],
+                strings: CONSTANTS.LANDING_PAGE_STRINGS,
                 //pauseFor: 2500,
                 autoStart: true,
                 loop: true,
@@ -48,9 +42,7 @@ export function Landing() {
             />
           </h1>
           <h5 className="dark:text-neutral-400 text-gray-600 z-20 drop-shadow-lg text-md sm:text-lg font-semibold">
-            {
-              "Data between users and developers is important. Notal is the solution."
-            }
+            {CONSTANTS.LANDING_PAGE_SUBDESC}
           </h5>
           <Button
             rounded

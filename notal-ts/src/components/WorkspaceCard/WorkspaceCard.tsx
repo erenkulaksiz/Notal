@@ -49,7 +49,7 @@ export function HomeWorkspaceCard({
     );
 
   return (
-    <div className="relative hover:z-40 active:scale-[98%] hover:scale-[101%] hover:-translate-y-0.5 group transition-all ease-in-out">
+    <div className="relative hover:z-20 active:scale-[98%] hover:scale-[101%] hover:-translate-y-0.5 group transition-all ease-in-out">
       <motion.div
         variants={{
           hidden: { y: -30, opacity: 0 },

@@ -27,14 +27,14 @@ Notal is a simple platform to keep your project management simple, as well as ma
 
 ## Technical features
 
-- TypeScript as primary programming language
+- TypeScript
 - NextJS 12.1.6 + React 18 as primary tech stack, Vercel as primary host
 - Authentication via Google and GitHub
-- SWR, PWA, SSR & Workbox ready (see ./notal-ts/worker/index.js for workbox development logs)
-- Uses Tailwind on frontend for styling, `framer-motion` for cool animations, `next-themes` for Dark theme and `react-beautiful-dnd` for beatiful drag drop experience
-- MongoDB & serverless functions on backend with custom controller
+- SWR, PWA, Workbox ready (see ./notal-ts/worker/index.js for workbox development logs)
+- Uses `tailwindcss` on frontend for styling, `framer-motion` for cool animations, `next-themes` for Dark theme and `react-beautiful-dnd` for beatiful drag drop experience
+- MongoDB & serverless functions on backend with custom API controller (see ./notal-ts/src/api/controller)
 - Secure session management using Firebase Auth
-- Custom components made just for Notal, each of them has different purpose and different styles with fully customizable option (NotalUI)
+- Introducing NotalUI, each components made custom for just for Notal, which even has Modal and Toast components built-in
 - Comes with Google Material Icons
 - Google Analytics for analytics, page views and page view times: LCP, TTFB and FCP
 
@@ -87,11 +87,11 @@ Run `npm run analyze` to view bundle sizes for client and server
 ## About ./deprecated/notal-old and ./deprecated/notal-root
 
 ./deprecated file contains old versions of Notal. notal-old was built with [NextUI](https://nextui.org/) and lacked many things. I refactored the code then made `notal-root`. Which later on, i refactored code again and switched to `notal-ts` with TypeScript and currently building it back from scratch.
-You can use same .env.local file from `notal-ts` to `notal-root & notal-old`, they use same API's
+You can use same .env.local file from `notal-ts` to `notal-root & notal-old`, because they use same API's
 
 ## Mobile Application
 
-Mobile App of Notal is being built under notal/app folder, with React Native
+Mobile App of Notal is being built under notal/app folder, with React Native (WIP)
 
 ## Devnote
 

@@ -112,6 +112,7 @@ export function AddWorkspaceModal({
         )}MB.`,
         type: "error",
         once: true,
+        id: "add-workspace-thumbnail-error",
       });
       return;
     }
@@ -165,6 +166,7 @@ export function AddWorkspaceModal({
           desc: "An error occurred while uploading the file. Please check the console.",
           type: "error",
           once: true,
+          id: "add-workspace-thumbnail-error",
         });
         return;
       }
