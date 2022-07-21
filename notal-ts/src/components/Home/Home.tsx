@@ -62,6 +62,7 @@ export function Home() {
             />
           )}
           {!_workspaces.isValidating &&
+            _workspaces?.data?.data &&
             _workspaces?.data?.data.map(
               (workspace: WorkspaceTypes, index: number) => (
                 <HomeWorkspaceCard
