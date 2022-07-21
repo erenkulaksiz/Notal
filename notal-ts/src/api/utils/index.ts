@@ -6,13 +6,13 @@ interface acceptProps {
   data?: any;
   status?: number;
   action?: string;
-  res?: NextApiResponse;
+  res: NextApiResponse;
 }
 
 interface rejectProps {
   reason?: string;
   status?: number;
-  res?: NextApiResponse;
+  res: NextApiResponse;
 }
 
 export function accept({
