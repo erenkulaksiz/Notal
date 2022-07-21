@@ -1,5 +1,4 @@
 import { BuildComponent } from "@utils/style/buildComponent";
-
 import type { SelectProps } from "./Select.d";
 
 export function Select({

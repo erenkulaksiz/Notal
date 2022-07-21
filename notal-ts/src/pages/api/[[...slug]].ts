@@ -24,6 +24,8 @@ export default async function handler(
   req: NextApiRequestWithQuery,
   res: NextApiResponse
 ) {
+  // #TODO: Dynamic api router with query
+
   if (req.method !== "POST") return reject({ res });
 
   const { slug } = req.query;
@@ -33,7 +35,7 @@ export default async function handler(
   let ExecuteController: any = Controller(req, res); // #TODO: REMOVE ANY!!!!!
 
   if (slug.length == 1) {
-    ExecuteController = ExecuteController[slug[0]];
+    ExecuteController = ExecuteController[slug[0]]; // go in to the controller
   } else if (slug.length == 2) {
     ExecuteController = ExecuteController[slug[0]][slug[1]];
   } else if (slug.length == 3) {

@@ -1,5 +1,5 @@
 export interface ColorpickerProps {
-  color: string;
+  color?: string;
   onChange: (color: string) => void;
   id: string;
 }

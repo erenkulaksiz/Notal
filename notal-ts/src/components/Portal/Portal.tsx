@@ -1,9 +1,8 @@
 import { useEffect, useMemo } from "react";
 import ReactDOM from "react-dom";
 
-import type { PortalProps } from "./Portal.d";
-
 import { isClient } from "@utils";
+import type { PortalProps } from "./Portal.d";
 
 export function CreatePortal({
   children,
@@ -18,7 +17,6 @@ export function CreatePortal({
     if (!isClient()) return;
 
     const target = parent && parent["appendChild"] ? parent : document.body;
-
     const classList = [portalName];
 
     if (typeof className != "undefined") {

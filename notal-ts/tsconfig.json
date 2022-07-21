@@ -27,6 +27,7 @@
       "@api/*": ["./api/*"],
       "@lib/*": ["./lib/*"],
       "@constants/*": ["./constants/*"],
+      "@constants": ["./constants"],
       "@types/*": ["./types/*"],
       "@types": ["./types"]
     }

@@ -1,6 +1,6 @@
 export interface InputProps {
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  value: string;
+  value?: string;
   onEnterPress?: () => void;
   placeholder?: string;
   fullWidth?: boolean;

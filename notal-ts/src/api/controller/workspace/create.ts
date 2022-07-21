@@ -6,6 +6,9 @@ import { customAlphabet } from "nanoid";
 
 const admin = require("firebase-admin");
 
+import { LIMITS } from "@constants/limits";
+import { CONSTANTS } from "@constants";
+import { WorkspaceTypes } from "@types";
 const { ValidateUser } = require("@utils/api/validateUser");
 const { accept, reject } = require("@api/utils");
 const { Log } = require("@utils");
@@ -27,11 +30,17 @@ export async function create(req: NextApiRequest, res: NextApiResponse) {
   if (title?.length > 32) return reject("title-maxlength");
   if (desc?.length > 96) return reject("desc-maxlength");
   if (title?.length < 3) return reject("title-minlength");
-  if (thumbnail?.type == "singleColor" && thumbnail?.color.length > 7)
+  if (
+    thumbnail?.type == "singleColor" &&
+    thumbnail?.color.length > LIMITS.MAX.WORKSPACE_SINGLECOLOR_COLOR_LENGTH
+  )
     return reject("invalid-color");
   else if (
     thumbnail?.type == "gradient" &&
-    (thumbnail?.colors?.start?.length > 7 || thumbnail?.colors?.end?.length > 7)
+    (thumbnail?.colors?.start?.length >
+      LIMITS.MAX.WORKSPACE_GRADIENT_COLOR_LENGTH ||
+      thumbnail?.colors?.end?.length >
+        LIMITS.MAX.WORKSPACE_GRADIENT_COLOR_LENGTH)
   )
     return reject("invalid-color");
 
@@ -48,7 +57,7 @@ export async function create(req: NextApiRequest, res: NextApiResponse) {
   if (workspacesCount >= 20) return reject({ reason: "max-workspaces", res });
 
   let givenId: string | boolean = false;
-  let length: number = 4; // default id length
+  let length: number = CONSTANTS.DEFAULT_WORKSPACE_ID_LENGTH; // default id length
 
   /**
    * Dynamic ID generator
@@ -71,6 +80,26 @@ export async function create(req: NextApiRequest, res: NextApiResponse) {
 
   Log.debug("generated ID for workspace: ", givenId, " owner: ", uid);
 
+  const thumbnailTypes: {
+    [key: string]: WorkspaceTypes["thumbnail"];
+  } = {
+    image: {
+      type: "image",
+      file: thumbnail.file,
+    },
+    gradient: {
+      type: "gradient",
+      colors: {
+        start: thumbnail.colors.start,
+        end: thumbnail.colors.end,
+      },
+    },
+    singleColor: {
+      type: "singleColor",
+      color: thumbnail.color,
+    },
+  };
+
   return await workspacesCollection
     .insertOne({
       title,
@@ -80,7 +109,7 @@ export async function create(req: NextApiRequest, res: NextApiResponse) {
       updatedAt: Date.now(),
       owner: uid,
       workspaceVisible,
-      thumbnail,
+      thumbnail: thumbnailTypes[thumbnail.type],
       users: [uid], // Add owner as default user
       id: givenId,
     })
@@ -89,35 +118,33 @@ export async function create(req: NextApiRequest, res: NextApiResponse) {
       Log.debug("updating id: ", resId);
       Log.debug("thumbnail: ", thumbnail);
 
-      if (thumbnail?.type == "image") {
-        // move from temp to real location
-        const storageRef = admin
-          .storage()
-          .bucket(process.env.FIREBASE_STORAGE_BUCKET);
-        const file = storageRef.file(`thumbnails/temp/workspace_${uid}`);
-        const fileExist = await file.exists();
-        if (fileExist[0]) {
-          await file.move(`thumbnails/workspace_${resId}`);
-          const newFile = storageRef.file(`thumbnails/workspace_${resId}`);
-          //const meta = await newFile.getMetadata();
-          const url = await newFile.getSignedUrl({
-            action: "read",
-            expires: "03-09-2491",
-          });
-          return await workspacesCollection
-            .updateOne(
-              { _id: new ObjectId(resId) },
-              { $set: { thumbnail: { type: "image", file: url[0] } } }
-            )
-            .then(() => accept({ res }))
-            .catch((error) => {
-              return reject({ res, reason: error });
-            });
-        } else {
-          return accept({ res });
-        }
+      if (thumbnail?.type != "image")
+        return accept({ res, action: "createWorkspace" });
+
+      // move from temp to real location
+      const storageRef = admin
+        .storage()
+        .bucket(process.env.FIREBASE_STORAGE_BUCKET);
+      const file = storageRef.file(`thumbnails/temp/workspace_${uid}`);
+      const fileExist = await file.exists();
+      if (fileExist[0]) {
+        await file.move(`thumbnails/workspace_${resId}`);
+        const newFile = storageRef.file(`thumbnails/workspace_${resId}`);
+        //const meta = await newFile.getMetadata();
+        const url = await newFile.getSignedUrl({
+          action: "read",
+          expires: "03-09-2491",
+        });
+        return await workspacesCollection
+          .updateOne(
+            { _id: new ObjectId(resId) },
+            { $set: { thumbnail: { type: "image", file: url[0] } } }
+          )
+          .then(() => accept({ res, action: "createWorkspace" }))
+          .catch((error) => reject({ res, reason: error }));
       } else {
-        return accept({ res });
+        // file doesnt exist
+        return accept({ res, action: "createWorkspace" });
       }
     });
 }

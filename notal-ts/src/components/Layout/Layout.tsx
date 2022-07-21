@@ -1,11 +1,10 @@
 import { useEffect } from "react";
-
-import { NotalRootProps } from "@types";
+import Cookies from "js-cookie";
+import { useRouter } from "next/router";
 
 import { useAuth } from "@hooks";
 import { CheckToken } from "@utils/api/checkToken";
-import { useRouter } from "next/router";
-import Cookies from "js-cookie";
+import type { NotalRootProps } from "@types";
 
 export function Layout(props: NotalRootProps) {
   const auth = useAuth();

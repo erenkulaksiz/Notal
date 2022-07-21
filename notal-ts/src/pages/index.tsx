@@ -2,10 +2,8 @@ import type { GetServerSidePropsContext } from "next";
 import Head from "next/head";
 
 import { Layout, Landing, Navbar, Home, LoadingOverlay } from "@components";
-
 import { ValidateToken } from "@utils/api/validateToken";
 import { useAuth } from "@hooks";
-
 import type { ValidateTokenReturnType } from "@utils/api/validateToken";
 import type { NotalRootProps } from "@types";
 

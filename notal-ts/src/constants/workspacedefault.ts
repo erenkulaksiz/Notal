@@ -1,5 +1,11 @@
+import { WorkspaceTypes } from "@types";
 import { michael } from "./michael";
-export const WorkspaceDefaults = {
+export const WorkspaceDefaults: WorkspaceTypes = {
+  _id: "workspace-default",
+  id: "workspace-default",
+  owner: "",
+  createdAt: Date.now(),
+  updatedAt: Date.now(),
   title: "Untitled",
   desc: "",
   starred: false,

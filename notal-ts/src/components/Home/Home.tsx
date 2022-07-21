@@ -1,14 +1,10 @@
-import { useEffect, useState } from "react";
-import useSWR from "swr";
-import Cookies from "js-cookie";
-import { useRouter } from "next/router";
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { DashboardFilledIcon } from "@icons";
 import { HomeWorkspaceCard, AddWorkspaceModal } from "@components";
 import { HomeNavTitle } from "./components/NavTitle";
 import { useAuth, useNotalUI, useWorkspaces } from "@hooks";
-import { Log } from "@utils";
 import AddWorkspaceButton from "./components/AddWorkspaceBtn";
 import type { WorkspaceTypes } from "@types";
 
@@ -66,12 +62,12 @@ export function Home() {
             />
           )}
           {!_workspaces.isValidating &&
-            _workspaces?.data?.data?.map(
+            _workspaces?.data?.data.map(
               (workspace: WorkspaceTypes, index: number) => (
                 <HomeWorkspaceCard
                   workspace={workspace}
                   onStar={() => _workspaces.workspace.star(workspace._id)}
-                  onDelete={() => _workspaces.workspace.delete(workspace)}
+                  onDelete={() => _workspaces.workspace.delete(workspace._id)}
                   key={workspace._id}
                   index={index}
                 />
@@ -84,10 +80,9 @@ export function Home() {
       <AddWorkspaceModal
         open={addWorkspaceModal}
         onClose={() => setAddWorkspaceModal(false)}
-        onAdd={(workspace: WorkspaceTypes) => {
-          Log.debug("add this workspace:", workspace);
-          _workspaces.workspace.add(workspace);
-        }}
+        onAdd={(workspace: WorkspaceTypes) =>
+          _workspaces.workspace.add(workspace)
+        }
       />
     </>
   );

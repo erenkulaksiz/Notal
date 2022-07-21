@@ -2,10 +2,8 @@ import Typewriter from "typewriter-effect";
 import Image from "next/image";
 import { motion } from "framer-motion";
 
-import { Container, Footer, Button, LoadingOverlay } from "@components";
-
+import { Container, Footer, Button } from "@components";
 import { Features } from "@constants/features";
-
 import { LandingFeatureCard } from "./FeatureCard";
 import type { LandingFeatureCardProps } from "./FeatureCard";
 

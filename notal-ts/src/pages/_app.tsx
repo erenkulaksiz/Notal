@@ -6,13 +6,12 @@ import { ThemeProvider } from "next-themes";
 import { useRouter } from "next/router";
 import ProgressBar from "@badrap/bar-of-progress";
 
-import type { AppProps, NextWebVitalsMetric } from "next/app";
-
 import { Log } from "@utils/logger";
 import { AuthProvider } from "@hooks/useAuth";
 import { NotalUIProvider } from "@hooks/useNotalUI";
-
 import { AcceptCookies } from "@components";
+
+import type { AppProps, NextWebVitalsMetric } from "next/app";
 
 const progress = new ProgressBar({
   size: 3,

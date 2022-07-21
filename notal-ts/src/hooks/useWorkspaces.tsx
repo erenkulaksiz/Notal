@@ -16,7 +16,7 @@ export default function useWorkspaces() {
   const router = useRouter();
   const NotalUI = useNotalUI();
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const workspacesData = useSWR(
     auth?.validatedUser ? "api/fetchWorkspaces" : null,
@@ -33,10 +33,10 @@ export default function useWorkspaces() {
        * Refresh token and reload the page.
        */
       async function recon() {
-        const token = await auth?.user?.getIdToken();
-        Cookies.set("auth", token, { expires: 365 });
+        setIsLoading(true);
+        await auth?.login?.reload();
         setTimeout(() => {
-          router.reload();
+          router.replace(router.asPath);
         }, 1000);
       }
       const isTokenExpired =
@@ -70,7 +70,36 @@ export default function useWorkspaces() {
     })();
   }, [workspacesData]);
 
-  async function deleteWorkspace(_workspace: WorkspaceTypes) {
+  function deleteWorkspace(id: string) {
+    async function onDelete() {
+      const data = await WorkspaceService.workspace.delete(id);
+      Log.debug("remove data:", data);
+
+      const newWorkspaces = [...workspacesData.data.data];
+      const workspaceIndex = newWorkspaces.findIndex((el) => el._id === id);
+      newWorkspaces.splice(workspaceIndex, 1);
+
+      await workspacesData.mutate(
+        {
+          ...workspacesData,
+          data: newWorkspaces,
+        },
+        false
+      );
+
+      if (data.error) {
+        NotalUI.Toast.show({
+          id: "workspace-delete-error-toast",
+          once: true,
+          title: "Error",
+          desc: "Something went wrong. Please check the console.",
+        });
+        return;
+      }
+
+      NotalUI.Alert.close();
+    }
+
     NotalUI.Alert.show({
       title: "Delete Workspace",
       titleIcon: <DeleteIcon size={24} fill="currentColor" />,
@@ -90,32 +119,7 @@ export default function useWorkspaces() {
           <CrossIcon size={24} fill="currentColor" />
           Cancel
         </Button>,
-        <Button
-          onClick={async () => {
-            const data = await WorkspaceService.workspace.delete(
-              _workspace._id
-            );
-            Log.debug("remove data:", data);
-
-            const newWorkspaces = [...workspacesData.data.data];
-            const workspaceIndex = newWorkspaces.findIndex(
-              (el) => el._id === _workspace._id
-            );
-            newWorkspaces.splice(workspaceIndex, 1);
-
-            await workspacesData.mutate(
-              {
-                ...workspacesData,
-                data: newWorkspaces,
-              },
-              false
-            );
-
-            NotalUI.Alert.close();
-          }}
-          key={2}
-          fullWidth="w-[49%]"
-        >
+        <Button onClick={() => onDelete()} key={2} fullWidth="w-[49%]">
           <CheckIcon size={24} fill="currentColor" />
           Delete
         </Button>,

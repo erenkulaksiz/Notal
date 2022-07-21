@@ -3,17 +3,13 @@ import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
 
-import type { LoginModalProps } from "./LoginModal.d";
-
-import { Modal, Button, Loading } from "@components";
-
-import { GoogleIcon, GithubIcon } from "@icons";
-
 import IconWhite from "@public/icon_white.webp";
 import IconGalactic from "@public/icon_galactic.webp";
-
+import { Modal, Button, Loading } from "@components";
+import { GoogleIcon, GithubIcon } from "@icons";
 import { Log } from "@utils/logger";
 import { useAuth } from "@hooks";
+import type { LoginModalProps } from "./LoginModal.d";
 
 export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
   const { resolvedTheme } = useTheme();

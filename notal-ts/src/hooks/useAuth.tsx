@@ -19,7 +19,6 @@ import { useRouter } from "next/router";
 import { AuthService } from "@services/AuthService";
 import { NotifyLogin } from "@utils/api/notifyLogin";
 import useNotalUI from "./useNotalUI";
-
 import { InfoIcon } from "@icons";
 
 interface AuthContextProps {
@@ -143,6 +142,23 @@ export function AuthProvider(props: PropsWithChildren) {
       setValidatedUser(null);
 
       //setTimeout(() => router.replace(router.asPath), 1000);
+    },
+    reload: async function () {
+      const auth = getAuth();
+      setLoading(true);
+      if (!auth.currentUser) {
+        setLoading(false);
+        setUser(null);
+        setError(null);
+        setValidatedUser(null); // remove user
+        Cookies.remove("auth");
+      } else {
+        const token = await auth.currentUser.getIdToken();
+        Cookies.set("auth", token, { expires: 365 });
+        setLoading(false);
+        setUser(user ?? null);
+        setError(null);
+      }
     },
   };
 

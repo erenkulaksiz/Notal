@@ -5,13 +5,11 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import { motion } from "framer-motion";
 
-import { Button, Tooltip, Loading, Switch, LoginModal } from "@components";
-
 import IconWhite from "@public/icon_white.webp";
 import IconGalactic from "@public/icon_galactic.webp";
 import IconWhiteMobile from "@public/logo_white_mobile.webp";
 import IconGalacticMobile from "@public/logo_galactic_mobile.webp";
-
+import { Button, Tooltip, Loading, Switch, LoginModal } from "@components";
 import {
   UserIcon,
   LogoutIcon,
@@ -21,11 +19,9 @@ import {
   HomeFilledIcon,
   ArrowDownIcon,
 } from "@icons";
-
 import { LocalSettings } from "@utils/localStorage";
-
-import type { NavbarProps } from "./Navbar.d";
 import { useAuth } from "@hooks";
+import type { NavbarProps } from "./Navbar.d";
 
 export function Navbar({
   showHomeButton = false,

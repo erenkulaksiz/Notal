@@ -1,14 +1,9 @@
 import { useState, useEffect } from "react";
+
 import { CreatePortal as Portal } from "@components";
 import { CrossIcon } from "@icons";
-
+import { Backdrop, Content, Body, Title, Footer } from "./components";
 import type { ModalProps } from "./Modal.d";
-
-import Backdrop from "./components/Backdrop";
-import Content from "./components/Content";
-import Body from "./components/Body";
-import Title from "./components/Title";
-import Footer from "./components/Footer";
 
 export const ChildrenAnim = {
   hidden: {

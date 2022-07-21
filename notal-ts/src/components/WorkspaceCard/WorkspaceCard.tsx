@@ -1,10 +1,8 @@
-import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
-import type { WorkspaceTypes } from "@types";
-
 import { Button, Tooltip } from "@components";
+import type { WorkspaceTypes } from "@types";
 
 import {
   StarOutlineIcon,
@@ -158,9 +156,14 @@ export function HomeWorkspaceCard({
               <div className="cursor-pointer bg-gradient-to-t from-black/30 dark:from-black/90 dark:to-trasparent to-black/30 group-hover:opacity-0 opacity-100 transition-all ease-in-out absolute left-0 right-0 top-0 bottom-0 z-10" />
             )}
             <img
-              src={workspace?.thumbnail.file}
-              className="w-full h-full object-cover"
+              // @ts-ignore
+              // src will be always a string here, no need to check its type
+              src={workspace?.thumbnail?.file}
+              className="w-full min-w-[200px] h-full object-cover"
               alt="Workspace Image"
+              onError={(e) => {
+                e.currentTarget.src = "/no-image.png";
+              }}
             />
           </div>
         )}

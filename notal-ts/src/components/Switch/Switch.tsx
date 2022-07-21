@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 
 import { BuildComponent } from "@utils/style";
-
 import type { SwitchProps } from "./Switch.d";
 
 export function Switch({

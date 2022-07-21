@@ -1,7 +1,7 @@
+import { ReactNode } from "react";
 import { motion } from "framer-motion";
 
 import { isClient } from "@utils";
-import { ReactNode } from "react";
 
 export interface LandingFeatureCardProps {
   title: string;

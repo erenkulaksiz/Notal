@@ -30,7 +30,8 @@ export interface WorkspaceTypes {
   workspaceVisible: boolean;
   thumbnail: {
     type: "image" | "singleColor" | "gradient" | string;
-    file?: string;
+    file?: string | ArrayBuffer | null;
+    fileData?: File | null;
     color?: string;
     colors?: {
       start?: string;

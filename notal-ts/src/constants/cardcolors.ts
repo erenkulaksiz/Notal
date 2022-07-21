@@ -30,4 +30,4 @@ export const CardColors = [
     code: "#D28519",
     showName: "Yellow",
   },
-];
+] as CardColorTypes[];

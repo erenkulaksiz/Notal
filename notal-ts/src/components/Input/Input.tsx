@@ -1,5 +1,4 @@
 import { BuildComponent } from "@utils/style/buildComponent";
-
 import type { InputProps } from "./Input.d";
 
 export function Input({

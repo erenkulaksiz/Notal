@@ -1,7 +1,4 @@
 import { useState, useRef } from "react";
-import { HexColorPicker } from "react-colorful";
-
-import { WorkspaceDefaults } from "@constants/workspacedefault";
 
 import {
   Modal,
@@ -10,12 +7,10 @@ import {
   Checkbox,
   HomeWorkspaceCard,
   Select,
-  Tooltip,
   Loading,
   Tab,
   Colorpicker,
 } from "@components";
-
 import {
   AddIcon,
   CrossIcon,
@@ -26,11 +21,11 @@ import {
   VisibleOffIcon,
   CloudUploadIcon,
 } from "@icons";
-
-import { useAuth } from "@hooks";
-
+import { useAuth, useNotalUI } from "@hooks";
 import { Log } from "@utils";
-
+import { WorkspaceService } from "@services/WorkspaceService";
+import { LIMITS } from "@constants/limits";
+import { WorkspaceDefaults } from "@constants/workspacedefault";
 import type { AddWorkspaceModalProps } from "./AddWorkspace.d";
 
 export function AddWorkspaceModal({
@@ -39,10 +34,14 @@ export function AddWorkspaceModal({
   onAdd,
 }: AddWorkspaceModalProps) {
   const auth = useAuth();
+  const NotalUI = useNotalUI();
 
   const [newWorkspace, setNewWorkspace] = useState(WorkspaceDefaults);
 
-  const [newWorkspaceErr, setNewWorkspaceErr] = useState({
+  const [newWorkspaceErr, setNewWorkspaceErr] = useState<{
+    title: string | boolean;
+    desc: string | boolean;
+  }>({
     title: false,
     desc: false,
   });
@@ -58,25 +57,143 @@ export function AddWorkspaceModal({
     setTab(0);
   }
 
-  function submit() {
-    onAdd({
-      ...newWorkspace,
-      _id: Date.now().toString(),
-      id: Date.now().toString(),
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-      owner: "",
-    });
-    close();
+  async function submit() {
+    if (newWorkspace.title.length < LIMITS.MIN.WORKSPACE_TITLE_CHARACTER) {
+      setNewWorkspaceErr({
+        ...newWorkspaceErr,
+        title: `Title must be minimum ${LIMITS.MIN.WORKSPACE_TITLE_CHARACTER} characters long.`,
+      });
+      return;
+    }
+    if (newWorkspace.title.length > LIMITS.MAX.WORKSPACE_TITLE_CHARACTER) {
+      setNewWorkspaceErr({
+        ...newWorkspaceErr,
+        title: `Title must be maximum ${LIMITS.MAX.WORKSPACE_TITLE_CHARACTER} characters long.`,
+      });
+      return;
+    }
+    if (
+      newWorkspace.desc &&
+      newWorkspace.desc.length > LIMITS.MAX.WORKSPACE_DESC_CHARACTER
+    ) {
+      setNewWorkspaceErr({
+        ...newWorkspaceErr,
+        desc: `Description must be maximum ${LIMITS.MAX.WORKSPACE_DESC_CHARACTER} characters long.`,
+      });
+      return;
+    }
+    // reset errors
+    setNewWorkspaceErr({ ...newWorkspaceErr, title: false, desc: false });
+
+    // on non-image type thumbnails
+    if (newWorkspace.thumbnail.type != "image") {
+      onAdd({
+        ...newWorkspace,
+        _id: Date.now().toString(),
+        id: Date.now().toString(),
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        owner: "",
+      });
+      close();
+      return;
+    }
+
+    if (!newWorkspace.thumbnail.fileData) return;
+    Log.debug(newWorkspace.thumbnail.fileData);
+
+    // check file size
+    const file = Math.round(newWorkspace.thumbnail.fileData.size / 1024);
+    if (file >= LIMITS.MAX.WORKSPACE_THUMBNAIL_IMAGE_SIZE) {
+      NotalUI.Toast.show({
+        title: "Error",
+        desc: `File size must be less than ${LIMITS.MAX.WORKSPACE_THUMBNAIL_IMAGE_SIZE.toString().charAt(
+          0
+        )}MB.`,
+        type: "error",
+        once: true,
+      });
+      return;
+    }
+
+    // check file type
+    const fileType = newWorkspace.thumbnail.fileData.type;
+    if (
+      fileType == "image/jpeg" ||
+      fileType == "image/png" ||
+      fileType == "image/jpg"
+    ) {
+      setThumbnailLoading(true);
+      const res = await WorkspaceService.workspace.uploadThumbnail({
+        image: newWorkspace.thumbnail.fileData,
+      });
+
+      if (res && res.success) {
+        setThumbnailLoading(false);
+        setNewWorkspace({
+          ...newWorkspace,
+          thumbnail: {
+            ...newWorkspace.thumbnail,
+            file: res.url,
+            fileData: null,
+          },
+        });
+        // send res data to server now
+        Log.debug("thumbnail upload success! res: ", res);
+
+        onAdd({
+          ...newWorkspace,
+          thumbnail: {
+            file: res.url,
+            type: "image",
+          },
+          _id: Date.now().toString(),
+          id: Date.now().toString(),
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          owner: "",
+        });
+        close();
+        return;
+      } else {
+        // error
+        Log.debug("thumbnail upload error: ", res);
+        setThumbnailLoading(false);
+
+        NotalUI.Toast.show({
+          title: "Error",
+          desc: "An error occurred while uploading the file. Please check the console.",
+          type: "error",
+          once: true,
+        });
+        return;
+      }
+    }
   }
 
-  function onThumbnailChange() {}
+  function onThumbnailChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.files && e.target.files[0]) {
+      let reader = new FileReader();
+      let file = e.target.files[0];
+      reader.onloadend = () => {
+        setNewWorkspace({
+          ...newWorkspace,
+          thumbnail: {
+            ...newWorkspace.thumbnail,
+            file: reader.result,
+            fileData: file,
+          },
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  }
 
   return (
     <Modal
       open={open}
       onClose={() => !thumbnailLoading && close()}
-      className="w-[90%] sm:w-[400px] h-[560px] p-4 px-5 relative"
+      className="w-[90%] sm:w-[400px] h-[580px] p-4 px-5 relative"
       animate
     >
       <Modal.Title animate>

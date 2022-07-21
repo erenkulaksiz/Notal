@@ -24,5 +24,5 @@ export async function deleteWorkspace(
         },
       }
     )
-    .then(() => accept({ res }));
+    .then(() => accept({ res, action: "deleteWorkspace" }));
 }

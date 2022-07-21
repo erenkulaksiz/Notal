@@ -1,0 +1,3 @@
+export const CONSTANTS = {
+  DEFAULT_WORKSPACE_ID_LENGTH: 4,
+};

@@ -1,6 +1,14 @@
 import { getAuth } from "firebase/auth";
+import {
+  getStorage,
+  ref as stRef,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
+
 import { workspaceFetch } from "@utils";
 import { WorkspaceTypes } from "@types";
+import { Log } from "@utils";
 
 export const WorkspaceService = {
   workspace: {
@@ -20,7 +28,11 @@ export const WorkspaceService = {
           desc,
           starred,
           workspaceVisible,
-          thumbnail,
+          thumbnail: {
+            ...thumbnail,
+            type: thumbnail.type,
+            fileData: null,
+          },
           owner: auth?.currentUser?.uid,
           uid: auth?.currentUser?.uid,
         },
@@ -76,6 +88,34 @@ export const WorkspaceService = {
         return { success: true };
       }
       return { success: false, error: data?.error };
+    },
+    uploadThumbnail: async function ({ image }: { image: File }) {
+      // temporarily uploads image for later use.
+      const auth = getAuth();
+      if (!auth?.currentUser)
+        return { success: false, error: "User not logged in", url: "" };
+
+      Log.debug("AUTH USER GET AUTH:", auth.currentUser);
+
+      const token = await auth?.currentUser.getIdToken();
+      if (!token) return;
+      const storage = getStorage();
+      const storageRef = stRef(
+        storage,
+        `cardImages/temp/user_${auth.currentUser.uid}`
+      );
+
+      return await uploadBytes(storageRef, image)
+        .then((snapshot) => {
+          Log.debug(snapshot);
+
+          return getDownloadURL(snapshot.ref).then(async (downloadURL) => {
+            return { success: true, url: downloadURL };
+          });
+        })
+        .catch((error) => {
+          return { success: false, error, url: "" };
+        });
     },
   },
 };
