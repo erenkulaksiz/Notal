@@ -1,6 +1,5 @@
 import { CheckIcon } from "@icons";
 import { BuildComponent } from "@utils/style";
-
 import type { CheckboxProps } from "./Checkbox.d";
 
 export function Checkbox({

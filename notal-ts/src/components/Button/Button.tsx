@@ -1,4 +1,5 @@
-import { createElement, ReactNode } from "react";
+import { createElement } from "react";
+
 import { BuildComponent, allClass, conditionalClass } from "@utils/style";
 import { Loading } from "@components";
 import type { ButtonProps } from "./Button.d";

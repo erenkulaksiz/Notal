@@ -1,3 +1,4 @@
+import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
 import { AuthError } from "firebase/auth";
 import { Log } from "..";
 
@@ -10,10 +11,20 @@ if (!admin.apps.length) {
   });
 }
 
+interface ValidateUserReturnType {
+  success: boolean;
+  error?: AuthError | string;
+  decodedToken?: DecodedIdToken;
+}
+
 /**
  * Convert user token to user data via Firebase
  */
-export async function ValidateUser({ token }: { token: string }) {
+export async function ValidateUser({
+  token,
+}: {
+  token: string | boolean;
+}): Promise<ValidateUserReturnType> {
   if (!token) return { success: false, error: "no-token" };
 
   const decodedToken = await admin
@@ -23,7 +34,7 @@ export async function ValidateUser({ token }: { token: string }) {
       return { success: false, error, errorCode: error.code };
     });
 
-  if (!decodedToken && decodedToken?.error)
+  if (!decodedToken || decodedToken?.error || decodedToken.success === false)
     return {
       success: false,
       error: decodedToken.errorCode,

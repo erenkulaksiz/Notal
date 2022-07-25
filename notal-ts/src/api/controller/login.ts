@@ -28,7 +28,7 @@ export async function login(req: NextApiRequest, res: NextApiResponse) {
   if (!validateUser && !validateUser.decodedToken.success)
     return reject("invalid-token");
 
-  await SendTelegramMessage({
+  SendTelegramMessage({
     message: `LOGIN
 USERNAME: @${user?.username}
 EMAIL: ${validateUser.decodedToken.email}

@@ -2,7 +2,6 @@ import { Log } from "@utils";
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { login } from "./login";
-//const { validate } = require("./validate");
 import { getworkspaces } from "./workspace/getworkspaces";
 import { star } from "./workspace/star";
 import { create } from "./workspace/create";
@@ -28,7 +27,6 @@ export function Controller() {
       return accept({ res, data: { pong: true } });
     },
     user: {
-      //validate,
       login,
     },
     workspace: {

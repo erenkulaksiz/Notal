@@ -2,15 +2,12 @@ import React, { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 
 import { CreatePortal as Portal } from "@components";
-import { BuildComponent } from "@utils/style";
-
 import {
   BuildAllContainer,
   BuildTooltipContainer,
   BuildArrow,
   BuildPortal,
 } from "./BuildComponent";
-
 import type { TooltipProps } from "./Tooltip.d";
 
 export function Tooltip({

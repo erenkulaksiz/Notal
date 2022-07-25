@@ -25,7 +25,7 @@ import { useAuth, useNotalUI } from "@hooks";
 import { Log } from "@utils";
 import { WorkspaceService } from "@services/WorkspaceService";
 import { LIMITS } from "@constants/limits";
-import { WorkspaceDefaults } from "@constants/workspacedefault";
+import { WorkspaceDefaults } from "@constants/workspacedefaults";
 import type { AddWorkspaceModalProps } from "./AddWorkspace.d";
 
 export function AddWorkspaceModal({
@@ -93,7 +93,6 @@ export function AddWorkspaceModal({
         id: Date.now().toString(),
         createdAt: Date.now(),
         updatedAt: Date.now(),
-        owner: "",
       });
       close();
       return;
@@ -152,7 +151,6 @@ export function AddWorkspaceModal({
           id: Date.now().toString(),
           createdAt: Date.now(),
           updatedAt: Date.now(),
-          owner: "",
         });
         close();
         return;
@@ -220,7 +218,6 @@ export function AddWorkspaceModal({
               thumbnail: newWorkspace.thumbnail,
               _id: "preview",
               id: "preview",
-              owner: "",
               createdAt: Date.now(),
               updatedAt: Date.now(),
             }}

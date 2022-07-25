@@ -6,8 +6,8 @@ import LandingBackground from "@public/landing_bg_banner_1.webp";
 import { Container, Footer, Button } from "@components";
 import { Features } from "@constants/features";
 import { LandingFeatureCard } from "./components/FeatureCard";
-import type { LandingFeatureCardProps } from "./components/FeatureCard";
 import { CONSTANTS } from "@constants";
+import type { LandingFeatureCardProps } from "./components/FeatureCard";
 
 export function Landing() {
   return (

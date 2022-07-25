@@ -9,39 +9,31 @@ import IconWhite from "@public/icon_white.webp";
 import IconGalactic from "@public/icon_galactic.webp";
 import IconWhiteMobile from "@public/logo_white_mobile.webp";
 import IconGalacticMobile from "@public/logo_galactic_mobile.webp";
-import { Button, Tooltip, Loading, Switch, LoginModal } from "@components";
+import { Button, Tooltip, Loading, LoginModal } from "@components";
 import {
   UserIcon,
   LogoutIcon,
-  DarkIcon,
-  LightIcon,
   LoginIcon,
   HomeFilledIcon,
   ArrowDownIcon,
 } from "@icons";
 import { LocalSettings } from "@utils/localStorage";
-import { useAuth } from "@hooks";
+import { useAuth, useWorkspace } from "@hooks";
+import { ThemeSwitcher } from "./components/ThemeSwitcher";
+import { WorkspaceOwnerProfile } from "./components/WorkspaceOwnerProfile";
 import type { NavbarProps } from "./Navbar.d";
 
 export function Navbar({
-  showHomeButton = false,
   validating = false,
   showCollapse = false,
 }: NavbarProps) {
   const auth = useAuth();
-
-  const [mounted, setMounted] = useState<boolean>(false);
-
-  const { resolvedTheme, setTheme } = useTheme();
+  const { resolvedTheme } = useTheme();
   const router = useRouter();
 
+  const [mounted, setMounted] = useState<boolean>(false);
   const [loginModalVisible, setLoginModalVisible] = useState(false);
   const [navbarCollapse, setNavbarCollapse] = useState<boolean>(false);
-
-  function onNavbarCollapse() {
-    LocalSettings.set("navbarCollapsed", !navbarCollapse);
-    setNavbarCollapse(!navbarCollapse);
-  }
 
   useEffect(() => {
     setMounted(true);
@@ -50,16 +42,15 @@ export function Navbar({
   useEffect(() => {
     if (mounted) {
       if (!showCollapse) return setNavbarCollapse(false);
-
       const navbarCollapsed = LocalSettings.get("navbarCollapsed");
-      if (typeof navbarCollapsed == "undefined") {
-        LocalSettings.set("navbarCollapsed", false);
-        setNavbarCollapse(false);
-      } else {
-        setNavbarCollapse(navbarCollapsed);
-      }
+      setNavbarCollapse(navbarCollapsed);
     }
   }, [mounted]);
+
+  function onNavbarCollapse() {
+    LocalSettings.set("navbarCollapsed", !navbarCollapse);
+    setNavbarCollapse(!navbarCollapse);
+  }
 
   return (
     <motion.nav
@@ -104,6 +95,7 @@ export function Navbar({
         ) : (
           <div className="w-40 h-10 dark:bg-neutral-800 bg-neutral-200 animate-pulse" />
         )}
+        <WorkspaceOwnerProfile />
         {showCollapse && (
           <motion.div
             variants={{
@@ -138,33 +130,6 @@ export function Navbar({
             </Tooltip>
           </motion.div>
         )}
-        {showHomeButton && (
-          <motion.div
-            variants={{
-              hidden: { y: 70, opacity: 1, display: "flex" },
-              show: { y: 0, opacity: 0, transitionEnd: { display: "none" } },
-            }}
-            initial={navbarCollapse ? "hidden" : "show"}
-            animate={navbarCollapse ? "hidden" : "show"}
-            transition={{ type: "tween" }}
-          >
-            <Link href="/" passHref>
-              <Button
-                className="ml-1 px-0 h-6 w-6 dark:bg-neutral-800 bg-neutral-100 fill-black dark:fill-white shadow-xl"
-                light="hover:bg-neutral-300 hover:dark:bg-neutral-700 focus:dark:bg-neutral-600 focus:bg-neutral-400"
-                as="a"
-                title="Home"
-                aria-label="Home"
-              >
-                <HomeFilledIcon
-                  size={24}
-                  fill="currentFill"
-                  style={{ transform: "scale(.7)" }}
-                />
-              </Button>
-            </Link>
-          </motion.div>
-        )}
       </div>
       <div className="w-1/2 flex items-center justify-end">
         {validating && (
@@ -172,27 +137,6 @@ export function Navbar({
             <Loading size="md" />
             <span className="ml-2 text-sm sm:flex hidden">Loading...</span>
           </div>
-        )}
-        {showHomeButton && !validating && (
-          <Link href="/home" passHref>
-            <Button
-              light
-              size="sm"
-              className="mr-2"
-              as="a"
-              title="Home"
-              aria-label="Home"
-            >
-              <span className="w-full justify-end flex items-center dark:text-white text-black">
-                <HomeFilledIcon
-                  size={24}
-                  fill="currentColor"
-                  style={{ transform: "scale(0.8)" }}
-                />
-                Home
-              </span>
-            </Button>
-          </Link>
         )}
         {auth?.authLoading || (auth?.authUser && !auth.validatedUser) ? (
           <Loading size="lg" />
@@ -221,29 +165,7 @@ export function Navbar({
               style={{ zIndex: 999 }}
             >
               <div className="flex flex-row items-center">
-                <Switch
-                  onChange={() =>
-                    setTheme(resolvedTheme === "dark" ? "light" : "dark")
-                  }
-                  value={resolvedTheme == "dark"}
-                  icon={
-                    resolvedTheme == "dark" ? (
-                      <LightIcon
-                        size={24}
-                        fill="black"
-                        style={{ transform: "scale(0.7)" }}
-                      />
-                    ) : (
-                      <DarkIcon
-                        size={24}
-                        fill="black"
-                        style={{ transform: "scale(0.7)" }}
-                      />
-                    )
-                  }
-                  role="switch"
-                  id="changeTheme"
-                />
+                <ThemeSwitcher />
                 <span className="ml-2 text-xs dark:text-neutral-600 text-neutral-300 break-words">{`v${process.env.NEXT_PUBLIC_APP_VERSION}`}</span>
               </div>
               <h2
@@ -284,35 +206,7 @@ export function Navbar({
           </details>
         ) : (
           <>
-            <Tooltip
-              content="Change Theme"
-              direction="bottom"
-              allContainerClassName="mr-2"
-            >
-              <Switch
-                onChange={() =>
-                  setTheme(resolvedTheme === "dark" ? "light" : "dark")
-                }
-                value={resolvedTheme == "dark"}
-                icon={
-                  resolvedTheme == "dark" ? (
-                    <LightIcon
-                      size={24}
-                      fill="black"
-                      style={{ transform: "scale(0.7)" }}
-                    />
-                  ) : (
-                    <DarkIcon
-                      size={24}
-                      fill="black"
-                      style={{ transform: "scale(0.7)" }}
-                    />
-                  )
-                }
-                role="switch"
-                id="changeTheme"
-              />
-            </Tooltip>
+            <ThemeSwitcher />
             <div className="flex flex-row">
               <Button
                 light

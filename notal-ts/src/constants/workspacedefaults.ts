@@ -5,7 +5,12 @@ import { CONSTANTS } from ".";
 export const WorkspaceDefaults: WorkspaceTypes = {
   _id: "workspace-default",
   id: "workspace-default",
-  owner: "",
+  owner: {
+    uid: "preview",
+    username: "",
+    fullname: "",
+    avatar: "",
+  },
   createdAt: Date.now(),
   updatedAt: Date.now(),
   title: CONSTANTS.DEFAULT_WORKSPACE_TITLE,

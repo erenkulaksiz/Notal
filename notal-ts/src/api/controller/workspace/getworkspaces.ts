@@ -15,11 +15,12 @@ export async function getworkspaces(req: NextApiRequest, res: NextApiResponse) {
   // we have uid of user request in body.uid now
 
   const bearer = getTokenFromHeader(req);
-
   const validateUser = await ValidateUser({ token: bearer });
-
-  if (validateUser && !validateUser.decodedToken.success)
-    return reject({ reason: validateUser.decodedToken.errorCode, res });
+  if (!validateUser || !validateUser?.decodedToken?.success)
+    return reject({
+      reason: validateUser?.decodedToken?.errorCode ?? "no-token",
+      res,
+    });
 
   const workspaces = await workspacesCollection
     .find({

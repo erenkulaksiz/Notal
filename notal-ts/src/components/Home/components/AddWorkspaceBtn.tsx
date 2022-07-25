@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+
 import { AddIcon } from "@icons";
 
 const AddWorkspaceButton = ({ onClick }: { onClick: () => void }) => {

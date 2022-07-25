@@ -54,7 +54,6 @@ export default function useAuth() {
 
 export function AuthProvider(props: PropsWithChildren) {
   const auth = getAuth();
-  const router = useRouter();
   const NotalUI = useNotalUI();
 
   const [validatedUser, setValidatedUser] = useState(null);

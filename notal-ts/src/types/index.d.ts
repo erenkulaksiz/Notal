@@ -13,7 +13,12 @@ export interface NotalRootProps extends PropsWithChildren {
   validate?: {
     success: boolean;
     data: object;
-    error?: string;
+    error?: string | object;
+  };
+  workspace?: {
+    success: boolean;
+    data: WorkspaceTypes;
+    error?: string | object;
   };
   withoutLayout?: boolean;
 }
@@ -24,7 +29,12 @@ export interface WorkspaceTypes {
   createdAt: number;
   desc?: string;
   title: string;
-  owner: string;
+  owner?: {
+    avatar: string;
+    fullname: string;
+    username: string;
+    uid: string;
+  };
   starred: boolean;
   updatedAt: number;
   workspaceVisible: boolean;

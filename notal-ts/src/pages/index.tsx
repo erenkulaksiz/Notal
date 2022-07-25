@@ -1,4 +1,3 @@
-import type { GetServerSidePropsContext } from "next";
 import Head from "next/head";
 
 import { Layout, Landing, Navbar, Home, LoadingOverlay } from "@components";
@@ -6,6 +5,7 @@ import { ValidateToken } from "@utils/api/validateToken";
 import { useAuth } from "@hooks";
 import type { ValidateTokenReturnType } from "@utils/api/validateToken";
 import type { NotalRootProps } from "@types";
+import type { GetServerSidePropsContext } from "next";
 
 function Root(props: NotalRootProps) {
   const auth = useAuth();
@@ -13,7 +13,11 @@ function Root(props: NotalRootProps) {
   return (
     <Layout {...props}>
       <Head>
-        <title>Notal</title>
+        <title>
+          {auth?.validatedUser || auth?.authUser
+            ? "Workspaces • notal.app"
+            : "Notal"}
+        </title>
       </Head>
       <Navbar showCollapse={auth?.validatedUser != null} />
       {auth?.authLoading ? (

@@ -1,30 +1,41 @@
 import { isClient } from "@utils/isClient";
 
-const DefaultSettings = {
+interface DefaultSettingsTypes {
+  cookies: boolean;
+  installedVersion: string;
+  installedEnv: string;
+  navbarCollapsed: boolean;
+}
+
+const DefaultSettings: DefaultSettingsTypes = {
   cookies: false,
-  installedVersion: process.env.NEXT_PUBLIC_APP_VERSION,
+  installedVersion: process.env.NEXT_PUBLIC_APP_VERSION || "",
   installedEnv: process.env.NODE_ENV,
+  navbarCollapsed: false,
 };
 
-export const LocalSettings = {
-  get: function (item: string) {
+export const LocalSettings: {
+  get: (key: string) => any | undefined;
+  set: (key: string, value: any) => void;
+} = {
+  get: function (key: string) {
     if (!isClient()) return undefined;
     const Local = localStorage.getItem("settings");
     if (typeof Local == "undefined" || !Local) {
       // set defaults if not exist
       localStorage.setItem("settings", JSON.stringify(DefaultSettings));
-      return DefaultSettings; // return default data
+      return DefaultSettings[key as keyof DefaultSettingsTypes]; // return default data
     } else {
       try {
         const LocalItem = JSON.parse(Local);
-        if (typeof LocalItem[item] == "undefined") {
+        if (typeof LocalItem[key] == "undefined") {
           localStorage.setItem("settings", JSON.stringify(DefaultSettings));
-          return DefaultSettings;
+          return DefaultSettings[key as keyof DefaultSettingsTypes];
         }
-        return LocalItem[item];
+        return LocalItem[key];
       } catch (error) {
         localStorage.setItem("settings", JSON.stringify(DefaultSettings));
-        return DefaultSettings;
+        return DefaultSettings[key as keyof DefaultSettingsTypes];
       }
     }
   },

@@ -23,3 +23,7 @@ export { default as Tab } from "./Tab/Tab";
 export { Input } from "./Input/Input";
 export { Select } from "./Select/Select";
 export { AddWorkspaceModal } from "./Modals/AddWorkspace/AddWorkspace";
+export { WorkspaceSEO } from "./Workspace/components/WorkspaceSEO";
+export { WorkspaceNotFound } from "./Workspace/components/WorkspaceNotFound";
+export { Workspace } from "./Workspace/Workspace";
+export { WorkspaceSidebar } from "./Workspace/components/WorkspaceSidebar";

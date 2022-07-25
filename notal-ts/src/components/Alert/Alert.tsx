@@ -11,7 +11,7 @@ export function AlertModal({
   onClose: () => void;
 }) {
   const BuildModal = BuildComponent({
-    name: "Notal UI Modal",
+    name: "Notal UI Alert Modal",
     conditionalClasses: [
       {
         true: alert.className,
@@ -22,14 +22,14 @@ export function AlertModal({
   });
 
   const BuildModalTitle = BuildComponent({
-    name: "Notal UI Modal Title",
+    name: "Notal UI Alert Modal Title",
     defaultClasses: "flex flex-row items-center text-lg font-medium",
     conditionalClasses: [{ true: "ml-1" }],
     selectedClasses: [alert.titleIcon ? true : false],
   });
 
   const BuildModalFooter = BuildComponent({
-    name: "Notal UI Modal Footer",
+    name: "Notal UI Alert Modal Footer",
     conditionalClasses: [
       {
         true: `justify-between flex-row flex w-full gap-2`,

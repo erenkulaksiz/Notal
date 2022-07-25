@@ -2,9 +2,7 @@ import { useEffect, ReactNode, FC, HTMLAttributes, ElementType } from "react";
 import { motion, MotionProps } from "framer-motion";
 
 import type { ToastProps } from "./Toast.d";
-
 import { BuildComponent } from "@utils/style/buildComponent";
-
 import { CrossIcon, InfoIcon, Cross2Icon, CheckIcon } from "@icons";
 
 interface ToastIconType {

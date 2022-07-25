@@ -2,9 +2,8 @@ import { HexColorPicker } from "react-colorful";
 
 import { Tooltip } from "@components";
 import { CardColors } from "@constants/cardcolors";
-import type { CardColorTypes } from "@constants/cardcolors";
 import { formatString } from "@utils";
-
+import type { CardColorTypes } from "@constants/cardcolors";
 import type { ColorpickerProps } from "./Colorpicker.d";
 
 export function Colorpicker({ color, onChange, id }: ColorpickerProps) {
