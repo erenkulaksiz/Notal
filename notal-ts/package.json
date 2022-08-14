@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:release": "next build && git add . && git commit -m \"[$t] $c\" && git push",
+    "build:release": "cd .. && git add . && cd notal-ts && next build && git commit -m \"[$npm_config_t] $npm_config_c\" && git push",
     "start": "next start",
     "lint": "next lint",
     "analyze": "cross-env ANALYZE=true next build",

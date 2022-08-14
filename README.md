@@ -84,11 +84,6 @@ Make sure you have done oAuth options from Firebase console to get auth start to
 
 Run `npm run analyze` to view bundle sizes for client and server
 
-## About ./deprecated/notal-old and ./deprecated/notal-root
-
-./deprecated file contains old versions of Notal. notal-old was built with [NextUI](https://nextui.org/) and lacked many things. I refactored the code then made `notal-root`. Which later on, i refactored code again and switched to `notal-ts` with TypeScript and currently building it back from scratch.
-You can use same .env.local file from `notal-ts` to `notal-root & notal-old`, because they use same API's
-
 ## Mobile Application
 
 Mobile App of Notal is being built under notal/app folder, with React Native (WIP)
