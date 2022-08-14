@@ -1,6 +1,5 @@
 import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
 import { AuthError } from "firebase/auth";
-import { Log } from "..";
 
 const admin = require("firebase-admin");
 const googleService = JSON.parse(process.env.GOOGLE_SERVICE || "");

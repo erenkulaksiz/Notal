@@ -130,7 +130,7 @@ export function HomeWorkspaceCard({
                   )}
                 </Button>
               </Tooltip>
-              <Tooltip content="Delete this workspace">
+              <Tooltip content="Delete workspace">
                 <Button className="p-3 pt-1 pb-1" light onClick={onDelete}>
                   <DeleteIcon size={24} fill="currentColor" />
                 </Button>

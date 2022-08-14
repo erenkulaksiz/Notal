@@ -7,7 +7,7 @@ export interface ButtonProps {
   gradient?: boolean | string;
   light?: boolean | string;
   size?: "sm" | "lg" | "xl" | string;
-  rounded?: boolean;
+  rounded?: boolean | string;
   fullWidth?: boolean | string;
   ring?: boolean | string;
   loading?: boolean | string;

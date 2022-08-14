@@ -1,31 +1,48 @@
+import { useEffect } from "react";
 import Head from "next/head";
+import useSWR from "swr";
+import Cookies from "js-cookie";
+import { useRouter } from "next/router";
 
-import { PropsWithChildren } from "react";
-
-import { ValidateToken } from "@utils/api/validateToken";
 import {
   Layout,
   Navbar,
   WorkspaceSEO,
   Workspace as NotalWorkspace,
 } from "@components";
-import { useAuth, useWorkspace } from "@hooks";
 import {
   GetWorkspaceData,
   WorkspaceDataReturnType,
 } from "@utils/api/workspaceData";
+import { useWorkspace } from "@hooks";
 import { NotalRootProps } from "@types";
+import { fetchWorkspace, ValidateToken } from "@utils";
 import type { GetServerSidePropsContext } from "next";
 import type { ValidateTokenReturnType } from "@utils/api/validateToken";
 
 function Workspace(props: NotalRootProps) {
-  const { workspaceLoading } = useWorkspace();
+  const router = useRouter();
+  const workspaceHook = useWorkspace();
+
+  const workspace = useSWR(
+    [`api/fetchWorkspace/${router?.query?.id ?? ""}`],
+    () =>
+      fetchWorkspace({
+        token: Cookies.get("auth"),
+        id: props.workspace?.data.id,
+        uid: props.validate?.data?.uid,
+      })
+  );
+
+  useEffect(() => {
+    workspaceHook.setWorkspace(workspace);
+  }, [workspace.data]);
 
   return (
     <Layout {...props}>
       <Head>
         <title>
-          {workspaceLoading
+          {!props.workspace
             ? "Loading..."
             : props.workspace?.success
             ? `${props.workspace?.data?.title} • notal.app`
@@ -35,8 +52,14 @@ function Workspace(props: NotalRootProps) {
         </title>
         <WorkspaceSEO workspace={props.workspace} />
       </Head>
-      <Navbar showCollapse />
-      <NotalWorkspace />
+      <Navbar
+        showCollapse
+        workspaceLoading={!props.workspace || workspace.isValidating}
+      />
+      <NotalWorkspace
+        workspaceData={props.workspace}
+        workspaceLoading={!props.workspace || workspace.isValidating}
+      />
     </Layout>
   );
 }

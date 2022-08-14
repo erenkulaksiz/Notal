@@ -12,7 +12,13 @@ declare global {
 export interface NotalRootProps extends PropsWithChildren {
   validate?: {
     success: boolean;
-    data: object;
+    data: {
+      avatar: string;
+      email: string;
+      fullname?: string;
+      uid: string;
+      username: string;
+    };
     error?: string | object;
   };
   workspace?: {
@@ -48,6 +54,17 @@ export interface WorkspaceTypes {
       end?: string;
     };
   };
+  fields?: [
+    {
+      collapsed: boolean;
+      createdAt: number;
+      updatedAt: number;
+      _id: string;
+      owner: string;
+      title: string;
+      cards?: [];
+    }
+  ];
 }
 
 export declare module WorkboxWindow {

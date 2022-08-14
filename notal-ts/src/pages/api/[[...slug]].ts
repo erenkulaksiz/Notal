@@ -1,10 +1,9 @@
-import { Log } from "@utils/logger";
 import { NextApiRequest, NextApiResponse } from "next";
-
 const admin = require("firebase-admin");
 
+import { Log } from "@utils/logger";
 import { Controller } from "@api/controller";
-const { accept, reject } = require("@api/utils");
+import { accept, reject } from "@api/utils";
 
 const googleService = JSON.parse(process.env.GOOGLE_SERVICE ?? "");
 

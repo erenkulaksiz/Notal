@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import useSWR from "swr";
+import useSWR, { SWRResponse } from "swr";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 
-import { fetchWorkspaces } from "@utils/fetcher/workspaces";
 import { useAuth, useNotalUI } from "@hooks";
-import { Log } from "@utils";
-import { WorkspaceService } from "@services/WorkspaceService";
+import { Log, fetchWorkspaces } from "@utils";
+import { WorkspaceService } from "@services";
 import { Button } from "@components";
 import { DeleteIcon, CrossIcon, CheckIcon } from "@icons";
 import type { WorkspaceTypes } from "@types";
@@ -26,6 +25,47 @@ export default function useWorkspaces() {
         uid: auth?.validatedUser?.uid,
       })
   );
+
+  /*
+  useEffect(() => {
+    if (workspace) {
+      const notFound =
+        (workspace?.data?.data?.workspaceVisible == false &&
+          !auth?.validatedUser) ||
+        workspace?.data?.error == "not-found" ||
+        workspace?.data?.error == "invalid-params" ||
+        workspace?.data?.error == "user-workspace-private" ||
+        workspace?.data?.success != true;
+
+      setWorkspaceNotFound(notFound);
+
+      if (!notFound) {
+        const isOwner =
+          workspace?.data?.data?.owner == auth?.validatedUser?.uid;
+
+        setIsWorkspaceOwner(isOwner);
+      }
+    }
+
+    Log.debug("aaa", workspace);
+
+    const notFound =
+      (workspace?.data?.data?.workspaceVisible == false &&
+        !auth?.validatedUser) ||
+      workspace?.data?.error == "not-found" ||
+      workspace?.data?.error == "invalid-params" ||
+      workspace?.data?.error == "user-workspace-private" ||
+      workspace?.data?.success != true;
+    Log.debug("NOTFOUND: ", notFound);
+    setWorkspaceNotFound(notFound);
+
+    if (!notFound) {
+      const isOwner = workspace?.data?.data?.owner == auth?.validatedUser?.uid;
+
+      setIsWorkspaceOwner(isOwner);
+    }
+  }, [workspace?.data]);
+  */
 
   useEffect(() => {
     (async () => {

@@ -18,7 +18,7 @@ import {
   ArrowDownIcon,
 } from "@icons";
 import { LocalSettings } from "@utils/localStorage";
-import { useAuth, useWorkspace } from "@hooks";
+import { useAuth } from "@hooks";
 import { ThemeSwitcher } from "./components/ThemeSwitcher";
 import { WorkspaceOwnerProfile } from "./components/WorkspaceOwnerProfile";
 import type { NavbarProps } from "./Navbar.d";
@@ -26,6 +26,7 @@ import type { NavbarProps } from "./Navbar.d";
 export function Navbar({
   validating = false,
   showCollapse = false,
+  workspaceLoading,
 }: NavbarProps) {
   const auth = useAuth();
   const { resolvedTheme } = useTheme();
@@ -95,7 +96,7 @@ export function Navbar({
         ) : (
           <div className="w-40 h-10 dark:bg-neutral-800 bg-neutral-200 animate-pulse" />
         )}
-        <WorkspaceOwnerProfile />
+        <WorkspaceOwnerProfile workspaceLoading={workspaceLoading} />
         {showCollapse && (
           <motion.div
             variants={{

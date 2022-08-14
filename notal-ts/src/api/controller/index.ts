@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 import { login } from "./login";
 import { getworkspaces } from "./workspace/getworkspaces";
+import { getworkspace } from "./workspace/getworkspace";
 import { star } from "./workspace/star";
 import { create } from "./workspace/create";
 import { deleteWorkspace } from "./workspace/delete";
@@ -15,6 +16,7 @@ export interface ControllerReturnType {
   };
   workspace: {
     getworkspaces: (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
+    getworkspace: (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
     star: (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
     create: (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
     delete: (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
@@ -31,6 +33,7 @@ export function Controller() {
     },
     workspace: {
       getworkspaces,
+      getworkspace,
       star,
       create,
       delete: deleteWorkspace,

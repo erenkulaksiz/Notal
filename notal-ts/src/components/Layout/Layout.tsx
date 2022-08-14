@@ -2,14 +2,13 @@ import { useEffect } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 
-import { useAuth, useWorkspace } from "@hooks";
+import { useAuth } from "@hooks";
 import { CheckToken } from "@utils/api/checkToken";
 import type { NotalRootProps } from "@types";
 
 export function Layout(props: NotalRootProps) {
   const auth = useAuth();
   const router = useRouter();
-  const workspace = useWorkspace();
 
   useEffect(() => {
     if (!auth?.authLoading) {
@@ -33,14 +32,6 @@ export function Layout(props: NotalRootProps) {
         auth && auth.setValidatedUser(props.validate.data);
     }
   }, [props.validate]);
-
-  useEffect(() => {
-    if (props?.workspace?.error == "no-token") {
-      router.reload();
-      return;
-    }
-    workspace.setWorkspaceData(props.workspace);
-  }, [props.workspace]);
 
   if (props.withoutLayout) return <>{props.children}</>;
 

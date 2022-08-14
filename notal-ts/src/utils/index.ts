@@ -6,3 +6,5 @@ export { server } from "./server";
 export { formatDate } from "./formatDate";
 export { formatString } from "./formatString";
 export { workspaceFetch } from "./workspaceFetch";
+export { fetchWorkspace } from "./fetcher/workspace";
+export { fetchWorkspaces } from "./fetcher/workspaces";

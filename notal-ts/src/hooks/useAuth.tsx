@@ -14,7 +14,6 @@ import {
   User,
 } from "firebase/auth";
 import Cookies from "js-cookie";
-import { useRouter } from "next/router";
 
 import { AuthService } from "@services/AuthService";
 import { NotifyLogin } from "@utils/api/notifyLogin";

@@ -9,7 +9,8 @@
     "lint": "next lint",
     "analyze": "cross-env ANALYZE=true next build",
     "analyze:server": "cross-env BUNDLE_ANALYZE=server next build",
-    "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build"
+    "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build",
+    "release": "git add . && git commit -m \"[feat] new release\" && git push"
   },
   "dependencies": {
     "@badrap/bar-of-progress": "^0.2.1",
@@ -19,7 +20,6 @@
     "firebase": "^9.8.3",
     "firebase-admin": "^11.0.0",
     "framer-motion": "^6.3.11",
-    "fs": "^0.0.1-security",
     "js-cookie": "^3.0.1",
     "mongodb": "^4.7.0",
     "nanoid": "^4.0.0",

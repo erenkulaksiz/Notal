@@ -6,10 +6,8 @@ import { ThemeProvider } from "next-themes";
 import { useRouter } from "next/router";
 import ProgressBar from "@badrap/bar-of-progress";
 
-import { Log } from "@utils/logger";
-import { AuthProvider } from "@hooks/useAuth";
-import { NotalUIProvider } from "@hooks/useNotalUI";
-import { NotalWorkspaceProvider } from "@hooks/useWorkspace";
+import { Log } from "@utils";
+import { AuthProvider, NotalUIProvider, WorkspaceProvider } from "@hooks";
 import { AcceptCookies } from "@components";
 
 import type { AppProps, NextWebVitalsMetric } from "next/app";
@@ -67,10 +65,10 @@ function Notal({ Component, pageProps }: AppProps) {
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <NotalUIProvider>
         <AuthProvider>
-          <NotalWorkspaceProvider>
+          <WorkspaceProvider>
             <Component {...pageProps} />
             <AcceptCookies />
-          </NotalWorkspaceProvider>
+          </WorkspaceProvider>
         </AuthProvider>
       </NotalUIProvider>
     </ThemeProvider>

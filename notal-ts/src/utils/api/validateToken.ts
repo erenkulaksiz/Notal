@@ -1,11 +1,10 @@
-import { Log } from "@utils";
+import { ObjectId } from "mongodb";
 
+import { Log } from "@utils";
 import { connectToDatabase } from "@lib/mongodb";
 import { ValidateUser } from "./validateUser";
-
 import { formatString, formatDate } from "@utils";
 import { generateRandomUsername } from "@api/utils";
-
 import { SendTelegramMessage } from "@utils";
 
 export interface ValidateTokenReturnType {
@@ -16,6 +15,29 @@ export interface ValidateTokenReturnType {
         errorCode: string;
       };
   data?: object;
+}
+
+/**
+ * email: validateUser.decodedToken.email,
+      username: generateUsername,
+      uid: validateUser.decodedToken.user_id,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      fullname: validateUser.decodedToken.name,
+      avatar: validateUser.decodedToken.picture,
+      provider: validateUser.decodedToken.firebase.sign_in_provider || "",
+ */
+
+interface UserTypes {
+  email?: string;
+  username: string;
+  uid: string;
+  createdAt: number;
+  updatedAt: number;
+  fullname?: string;
+  avatar?: string;
+  provider?: string;
+  _id?: ObjectId;
 }
 
 /**
@@ -53,7 +75,7 @@ export async function ValidateToken({
       Log.debug("validateUser:", validateUser);
       generateUsername = formatString(
         generateRandomUsername({
-          email: validateUser.decodedToken.email ?? "error-email",
+          email: validateUser.decodedToken.email ?? "error",
         })
       ).toLowerCase();
       const checkusername = await usersCollection.findOne({
@@ -62,7 +84,7 @@ export async function ValidateToken({
       if (!checkusername) generated = true;
     }
 
-    const newUser = {
+    const newUser: UserTypes = {
       email: validateUser.decodedToken.email,
       username: generateUsername,
       uid: validateUser.decodedToken.user_id,
@@ -75,14 +97,18 @@ export async function ValidateToken({
 
     Log.debug("USER NOT FOUND | GENERATED USER:", newUser);
 
-    await usersCollection.insertOne({
-      ...newUser,
-    });
-    user = await usersCollection.findOne({
-      uid: validateUser.decodedToken.user_id,
-    });
+    await usersCollection
+      .insertOne({
+        ...newUser,
+      })
+      .then((result) => {
+        user = {
+          ...newUser,
+          _id: result.insertedId,
+        };
+      });
 
-    await SendTelegramMessage({
+    SendTelegramMessage({
       message: `NEW USER
 EMAIL: ${validateUser.decodedToken.email}
 USERNAME: ${newUser.username}

@@ -22,6 +22,7 @@
       "@utils": ["./utils"],
       "@public/*": ["../public/*"],
       "@services/*": ["./services/*"],
+      "@services": ["./services"],
       "@hooks/*": ["./hooks/*"],
       "@hooks": ["./hooks"],
       "@api/*": ["./api/*"],

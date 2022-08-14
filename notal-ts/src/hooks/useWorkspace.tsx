@@ -1,64 +1,67 @@
 import {
   createContext,
+  Dispatch,
   PropsWithChildren,
-  ReactNode,
+  SetStateAction,
   useContext,
   useEffect,
   useState,
 } from "react";
+import { SWRResponse } from "swr";
 
-import { NotalRootProps, WorkspaceTypes } from "@types";
-import { Log } from "@utils/logger";
+import type { WorkspaceDataReturnType } from "@utils/api/workspaceData";
 import useAuth from "./useAuth";
+import { Log } from "@utils";
 
-export interface NotalWorkspaceContextProps {
-  setWorkspaceData: (
-    workspace: NotalRootProps["workspace"] | undefined
-  ) => void;
-  setWorkspaceLoading: (loading: boolean) => void;
-  workspaceData: NotalRootProps["workspace"] | undefined;
-  workspaceLoading: boolean;
-  notFound: boolean;
-  isOwner: boolean;
+export interface WorkspaceContextProps {
+  workspace?: SWRResponse<WorkspaceDataReturnType>;
+  setWorkspace: Dispatch<
+    SetStateAction<SWRResponse<WorkspaceDataReturnType> | null>
+  >;
+  workspaceNotFound: boolean;
+  isWorkspaceOwner: boolean;
 }
 
-const notalWorkspaceContext = createContext<NotalWorkspaceContextProps>(
-  {} as NotalWorkspaceContextProps
+const WorkspaceContext = createContext<WorkspaceContextProps>(
+  {} as WorkspaceContextProps
 );
 
 export default function useWorkspace() {
-  return useContext(notalWorkspaceContext);
+  return useContext(WorkspaceContext);
 }
 
-export function NotalWorkspaceProvider(props: PropsWithChildren) {
+export function WorkspaceProvider(props: PropsWithChildren) {
   const auth = useAuth();
-  const [workspaceData, setWorkspaceData] =
-    useState<NotalRootProps["workspace"]>();
-  const [workspaceLoading, setWorkspaceLoading] = useState<boolean>(true);
 
-  const notFound =
-    (workspaceData?.data?.workspaceVisible == false && !auth?.validatedUser) ||
-    workspaceData?.error == "not-found" ||
-    workspaceData?.error == "invalid-params" ||
-    workspaceData?.error == "user-workspace-private" ||
-    workspaceData?.success != true;
-
-  const isOwner = workspaceData?.data
-    ? workspaceData?.data?.owner?.uid == auth?.validatedUser?.uid
-    : false;
+  const [workspaceNotFound, setWorkspaceNotFound] = useState(false);
+  const [isWorkspaceOwner, setIsWorkspaceOwner] = useState(false);
+  const [workspace, setWorkspace] =
+    useState<WorkspaceContextProps["workspace"]>();
 
   useEffect(() => {
-    if (workspaceData) setWorkspaceLoading(false);
-  }, [workspaceData]);
+    const notFound =
+      (workspace?.data?.data?.workspaceVisible == false &&
+        !auth?.validatedUser) ||
+      workspace?.data?.error == "not-found" ||
+      workspace?.data?.error == "invalid-params" ||
+      workspace?.data?.error == "user-workspace-private" ||
+      workspace?.data?.success != true;
+
+    setWorkspaceNotFound(notFound);
+
+    if (!notFound) {
+      const isOwner = workspace?.data?.data?.owner == auth?.validatedUser?.uid;
+
+      setIsWorkspaceOwner(isOwner);
+    }
+  }, [workspace]);
 
   const value = {
-    setWorkspaceData,
-    setWorkspaceLoading,
-    workspaceData,
-    workspaceLoading,
-    notFound,
-    isOwner,
-  } as NotalWorkspaceContextProps;
+    workspace,
+    setWorkspace,
+    workspaceNotFound,
+    isWorkspaceOwner,
+  } as WorkspaceContextProps;
 
-  return <notalWorkspaceContext.Provider value={value} {...props} />;
+  return <WorkspaceContext.Provider value={value} {...props} />;
 }
