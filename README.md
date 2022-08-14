@@ -72,7 +72,18 @@ If you wanted to run this site in production, you should install modules then bu
     npm run build
     npm run start
 
-You should run `npm run build` again any time you make changes to the site
+You should run `npm run build` again any time you make changes tßo the site
+
+## Releasing a new version
+
+parameters
+
+- -t: type of commit e.g. feat, fix etc.
+- -c: commit message
+
+then:
+
+    npm run build:release -- -t=feat -c="example commit"
 
 ## Configuring
 
