@@ -1,10 +1,10 @@
-import { connectToDatabase } from "@lib/mongodb";
-import { getTokenFromHeader } from "@utils/api/getTokenFromHeader";
 import { NextApiRequest, NextApiResponse } from "next";
 import { ObjectId } from "mongodb";
 
-const { ValidateUser } = require("@utils/api/validateUser");
-const { accept, reject } = require("@api/utils");
+import { connectToDatabase } from "@lib/mongodb";
+import { getTokenFromHeader } from "@utils/api/getTokenFromHeader";
+import { ValidateUser } from "@utils/api/validateUser";
+import { accept, reject } from "@api/utils";
 
 export async function star(req: NextApiRequest, res: NextApiResponse) {
   const { db } = await connectToDatabase();
@@ -23,7 +23,7 @@ export async function star(req: NextApiRequest, res: NextApiResponse) {
 
   const validateUser = await ValidateUser({ token: bearer });
 
-  if (validateUser && !validateUser.decodedToken.success)
+  if (validateUser && !validateUser.decodedToken)
     return reject({ reason: validateUser.decodedToken.errorCode, res });
 
   const workspace = await workspacesCollection.findOne({

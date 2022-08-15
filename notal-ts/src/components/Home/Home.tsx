@@ -1,17 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { DashboardFilledIcon } from "@icons";
 import { HomeWorkspaceCard, AddWorkspaceModal } from "@components";
 import { HomeNavTitle } from "./components/NavTitle";
-import { useAuth, useNotalUI, useWorkspaces } from "@hooks";
+import { useNotalUI, useWorkspace, useWorkspaces } from "@hooks";
 import AddWorkspaceButton from "./components/AddWorkspaceBtn";
 import type { WorkspaceTypes } from "@types";
 
 export function Home() {
-  const auth = useAuth();
   const NotalUI = useNotalUI();
   const _workspaces = useWorkspaces();
+  const workspace = useWorkspace();
 
   const [addWorkspaceModal, setAddWorkspaceModal] = useState(false);
 
@@ -23,6 +23,10 @@ export function Home() {
     : _workspaces?.data?.data?.filter(
         (el: WorkspaceTypes) => !el.workspaceVisible
       );
+
+  useEffect(() => {
+    workspace.setWorkspace(null);
+  }, []);
 
   return (
     <>

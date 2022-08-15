@@ -17,15 +17,15 @@ export interface ValidateTokenReturnType {
   data?: object;
 }
 
-/**
- * email: validateUser.decodedToken.email,
-      username: generateUsername,
-      uid: validateUser.decodedToken.user_id,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-      fullname: validateUser.decodedToken.name,
-      avatar: validateUser.decodedToken.picture,
-      provider: validateUser.decodedToken.firebase.sign_in_provider || "",
+/*
+  email: validateUser.decodedToken.email,
+  username: generateUsername,
+  uid: validateUser.decodedToken.user_id,
+  createdAt: Date.now(),
+  updatedAt: Date.now(),
+  fullname: validateUser.decodedToken.name,
+  avatar: validateUser.decodedToken.picture,
+  provider: validateUser.decodedToken.firebase.sign_in_provider || "",
  */
 
 interface UserTypes {
@@ -55,10 +55,10 @@ export async function ValidateToken({
 
   const validateUser = await ValidateUser({ token });
 
-  if (!validateUser?.success || !validateUser?.decodedToken?.success) {
+  if (validateUser && !validateUser?.decodedToken) {
     return {
       success: false,
-      error: validateUser?.decodedToken?.errorCode || validateUser.error,
+      error: validateUser?.decodedToken?.errorCode,
     };
   }
 

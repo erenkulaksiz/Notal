@@ -24,7 +24,7 @@ export async function getworkspace(req: NextApiRequest, res: NextApiResponse) {
     if (!body.uid) return reject({ reason: "no-uid", res });
     const bearer = getTokenFromHeader(req);
     const validateUser = await ValidateUser({ token: bearer });
-    if (!validateUser || !validateUser?.decodedToken?.success)
+    if (!validateUser || !validateUser?.decodedToken)
       return reject({
         reason: validateUser?.decodedToken?.errorCode ?? "no-token",
         res,

@@ -1,10 +1,10 @@
-import { connectToDatabase } from "@lib/mongodb";
-import { server } from "@utils/server";
 import { NextApiRequest, NextApiResponse } from "next";
 
-const { ValidateUser } = require("@utils/api/validateUser");
-const { accept, reject } = require("@api/utils");
-const { formatDate, SendTelegramMessage } = require("@utils");
+import { connectToDatabase } from "@lib/mongodb";
+import { server } from "@utils/server";
+import { ValidateUser } from "@utils/api/validateUser";
+import { accept, reject } from "@api/utils";
+import { formatDate, SendTelegramMessage } from "@utils";
 
 /**
  * Send Telegram notification about new login and data
@@ -25,8 +25,8 @@ export async function login(req: NextApiRequest, res: NextApiResponse) {
     uid: validateUser.decodedToken.user_id,
   });
 
-  if (!validateUser && !validateUser.decodedToken.success)
-    return reject("invalid-token");
+  if (validateUser && !validateUser.decodedToken)
+    return reject({ reason: validateUser.decodedToken.errorCode, res });
 
   SendTelegramMessage({
     message: `LOGIN

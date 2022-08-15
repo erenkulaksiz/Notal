@@ -1,17 +1,16 @@
-import { connectToDatabase } from "@lib/mongodb";
-import { getTokenFromHeader } from "@utils/api/getTokenFromHeader";
 import { NextApiRequest, NextApiResponse } from "next";
 import { ObjectId } from "mongodb";
 import { customAlphabet } from "nanoid";
+import * as admin from "firebase-admin";
 
-const admin = require("firebase-admin");
-
+import { connectToDatabase } from "@lib/mongodb";
+import { getTokenFromHeader } from "@utils/api/getTokenFromHeader";
 import { LIMITS } from "@constants/limits";
 import { CONSTANTS } from "@constants";
 import { WorkspaceTypes } from "@types";
-const { ValidateUser } = require("@utils/api/validateUser");
-const { accept, reject } = require("@api/utils");
-const { Log } = require("@utils");
+import { ValidateUser } from "@utils/api/validateUser";
+import { accept, reject } from "@api/utils";
+import { Log } from "@utils";
 
 export async function create(req: NextApiRequest, res: NextApiResponse) {
   const { db } = await connectToDatabase();
@@ -27,14 +26,14 @@ export async function create(req: NextApiRequest, res: NextApiResponse) {
   const { title, desc, starred, workspaceVisible, thumbnail, owner, uid } =
     body;
 
-  if (title?.length > 32) return reject("title-maxlength");
-  if (desc?.length > 96) return reject("desc-maxlength");
-  if (title?.length < 3) return reject("title-minlength");
+  if (title?.length > 32) return reject({ res, reason: "title-maxlength" });
+  if (desc?.length > 96) return reject({ res, reason: "desc-maxlength" });
+  if (title?.length < 3) return reject({ res, reason: "title-minlength" });
   if (
     thumbnail?.type == "singleColor" &&
     thumbnail?.color.length > LIMITS.MAX.WORKSPACE_SINGLECOLOR_COLOR_LENGTH
   )
-    return reject("invalid-color");
+    return reject({ res, reason: "invalid-color" });
   else if (
     thumbnail?.type == "gradient" &&
     (thumbnail?.colors?.start?.length >
@@ -42,12 +41,12 @@ export async function create(req: NextApiRequest, res: NextApiResponse) {
       thumbnail?.colors?.end?.length >
         LIMITS.MAX.WORKSPACE_GRADIENT_COLOR_LENGTH)
   )
-    return reject("invalid-color");
+    return reject({ res, reason: "invalid-color" });
 
   const bearer = getTokenFromHeader(req);
   const validateUser = await ValidateUser({ token: bearer });
 
-  if (validateUser && !validateUser.decodedToken.success)
+  if (validateUser && !validateUser.decodedToken)
     return reject({ reason: validateUser.decodedToken.errorCode, res });
 
   const workspacesCount = await workspacesCollection

@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { ObjectId } from "mongodb";
 
 import { connectToDatabase } from "@lib/mongodb";
-const { accept, reject } = require("@api/utils");
+import { accept, reject } from "@api/utils";
 
 export async function deleteWorkspace(
   req: NextApiRequest,
@@ -12,7 +12,7 @@ export async function deleteWorkspace(
   const workspacesCollection = await db.collection("workspaces");
 
   const { body } = req;
-  if (!body.uid || !body.id) return reject("invalid-params");
+  if (!body.uid || !body.id) return reject({ res });
   const { id } = body;
 
   return await workspacesCollection

@@ -40,7 +40,7 @@ export async function GetWorkspaceData({
 
     const validateUser = await ValidateUser({ token });
 
-    if (!validateUser.success || !validateUser.decodedToken?.success) {
+    if (validateUser && !validateUser.decodedToken) {
       return {
         success: false,
         error: validateUser.decodedToken?.errorCode || validateUser?.error,

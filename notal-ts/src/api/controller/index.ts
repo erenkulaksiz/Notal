@@ -1,4 +1,3 @@
-import { Log } from "@utils";
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { login } from "./login";

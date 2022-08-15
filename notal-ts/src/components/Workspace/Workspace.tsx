@@ -50,27 +50,30 @@ export function Workspace({
             className="relative flex flex-1 gap-2 pl-2 pr-2 pt-1 pb-2 flex-row overflow-y-auto overflow-x-visible"
           >
             {workspace.isWorkspaceOwner && <WorkspaceSidebar />}
-            {Array.from({ length: 20 }, (_, i) => (
-              <motion.div
-                key={i}
-                animate="normal"
-                variants={{
-                  collapse: {
-                    width: "140px",
-                    minWidth: "140px",
-                    maxWidth: "140px",
-                  },
-                  normal: {
-                    minWidth: "280px",
-                    width: "280px",
-                    maxWidth: "280px",
-                  },
-                }}
-                className="p-2 rounded-md w-32 flex flex-row dark:bg-neutral-900 bg-white overflow-visible border-2 dark:border-neutral-800"
-              >
-                asdsal
-              </motion.div>
-            ))}
+            {workspace.workspace?.data?.data?.fields &&
+              workspace.workspace.data.data.fields.map((field, index) => {
+                return (
+                  <motion.div
+                    key={field._id}
+                    animate="normal"
+                    variants={{
+                      collapse: {
+                        width: "140px",
+                        minWidth: "140px",
+                        maxWidth: "140px",
+                      },
+                      normal: {
+                        minWidth: "280px",
+                        width: "280px",
+                        maxWidth: "280px",
+                      },
+                    }}
+                    className="p-2 rounded-md w-32 flex flex-row dark:bg-neutral-900 bg-white overflow-visible border-2 dark:border-neutral-800"
+                  >
+                    {field.title}
+                  </motion.div>
+                );
+              })}
           </Tab.TabView>
           <Tab.TabView
             title="Roadmap"
