@@ -10,7 +10,9 @@ export function WorkspaceOwnerProfile({
 }) {
   const workspace = useWorkspace();
 
+  if (workspaceLoading) return null;
   if (workspace.workspaceNotFound) return null;
+  if (!workspace?.workspace?.data?.data?.title) return null;
 
   const BuildWorkspaceOwnerProfileContainer = BuildComponent({
     name: "Workspace Owner Profile Container",

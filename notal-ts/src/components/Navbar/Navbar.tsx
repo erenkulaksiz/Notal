@@ -167,7 +167,7 @@ export function Navbar({
             >
               <div className="flex flex-row items-center">
                 <ThemeSwitcher />
-                <span className="ml-2 text-xs dark:text-neutral-600 text-neutral-300 break-words">{`v${process.env.NEXT_PUBLIC_APP_VERSION}`}</span>
+                <span className="ml-1 text-xs dark:text-neutral-600 text-neutral-300 break-words">{`v${process.env.NEXT_PUBLIC_APP_VERSION}`}</span>
               </div>
               <h2
                 className="text-current font-bold text-xl mt-1 break-words"

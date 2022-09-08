@@ -1,11 +1,12 @@
 import {
   getAuth,
+  GithubAuthProvider,
   GoogleAuthProvider,
   signInWithPopup,
   User,
 } from "firebase/auth";
 
-interface AuthServiceGoogleReturnType {
+interface AuthServiceReturnType {
   user?: User;
   token?: string | undefined;
   error?: {
@@ -16,7 +17,7 @@ interface AuthServiceGoogleReturnType {
 
 export const AuthService = {
   login: {
-    google: async function (): Promise<AuthServiceGoogleReturnType> {
+    google: async function (): Promise<AuthServiceReturnType> {
       const auth = getAuth();
       const provider = new GoogleAuthProvider();
       const signin = await signInWithPopup(auth, provider)
@@ -39,6 +40,30 @@ export const AuthService = {
 
           return { error: { errorCode, errorMessage } };
         });
+      return signin;
+    },
+    github: async function(): Promise<AuthServiceReturnType>{
+      const auth = getAuth();
+      const provider = new GithubAuthProvider();
+      const signin = await signInWithPopup(auth, provider)
+      .then(async (result) => {
+        const credential = GithubAuthProvider.credentialFromResult(result);
+        const token = credential?.accessToken;
+        const {user}=result;
+  
+        window.gtag("event", "login", { login: "type:github/" + user.email });
+  
+        return {user,token};
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        const email = error.email;
+        const credential = GoogleAuthProvider.credentialFromError(error);
+
+        return { error: { errorCode, errorMessage } };
+      });
+  
       return signin;
     },
   },

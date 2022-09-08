@@ -13,7 +13,7 @@ import type { LoginModalProps } from "./LoginModal.d";
 
 export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
   const { resolvedTheme } = useTheme();
-  const [oauthError, setOauthError] = useState("");
+  const [oauthError, setOauthError] = useState<string | boolean>("");
   const auth = useAuth();
 
   useEffect(() => {
@@ -46,8 +46,7 @@ export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
   };
 
   const onLoginWithGithub = async () => {
-    /*
-    const login = await auth.login.github();
+    const login = await auth?.login?.github();
     Log.debug("github login errors:", login.authError);
     if (
       login?.authError?.errorCode ==
@@ -64,13 +63,17 @@ export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
       return;
     }
     onLoginSuccess();
-    */
+  };
+
+  const close = () => {
+    setOauthError(false);
+    onClose();
   };
 
   return (
     <Modal
       open={open}
-      onClose={() => !auth?.authLoading && onClose()}
+      onClose={() => !auth?.authLoading && close()}
       animate
       className="w-[90%] sm:w-[440px]"
       closeBtn={!auth?.authLoading}
@@ -123,7 +126,7 @@ export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
                 Google
               </Button>
               <Button
-                onClick={() => {}}
+                onClick={() => onLoginWithGithub()}
                 size="lg"
                 className="text-[1.2em]"
                 gradient
@@ -136,7 +139,10 @@ export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
                 GitHub
               </Button>
             </div>
-            <span className="text-neutral-500 text-sm text-center mt-2">
+            {oauthError && (
+              <span className="text-red-600 text-center">{oauthError}</span>
+            )}
+            <span className="text-neutral-500 text-sm text-center mt-1">
               {
                 "We'll never post to any of your accounts without your permission. More info on"
               }{" "}

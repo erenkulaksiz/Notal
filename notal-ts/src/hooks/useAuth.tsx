@@ -20,6 +20,8 @@ import { NotifyLogin } from "@utils/api/notifyLogin";
 import useNotalUI from "./useNotalUI";
 import { InfoIcon } from "@icons";
 
+import { Log } from "@utils";
+
 interface AuthContextProps {
   authUser: null | User;
   authError: string | null | undefined;
@@ -107,6 +109,37 @@ export function AuthProvider(props: PropsWithChildren) {
     google: async function () {
       setLoading(true);
       const res = await AuthService.login.google();
+
+      const { user, error } = res;
+      setUser(user ?? null);
+      setError(error?.errorMessage ?? null);
+
+      setLoading(false);
+
+      if (!error) {
+        /**
+         * Successful login
+         */
+        const token = await user?.getIdToken();
+        await NotifyLogin(token);
+        NotalUI.Toast.show({
+          desc: `Logged in as ${user?.email}`,
+          icon: <InfoIcon size={24} fill="currentColor" />,
+          className: "dark:bg-green-600 bg-green-500 text-white",
+          duration: 4500,
+          timeEnabled: true,
+          closeable: true,
+        });
+      }
+
+      return { authError: error ?? null, authUser: user ?? null };
+    },
+    github: async function () {
+      setLoading(true);
+
+      const res = await AuthService.login.github();
+
+      Log.debug("res ->>>>", res);
 
       const { user, error } = res;
       setUser(user ?? null);
