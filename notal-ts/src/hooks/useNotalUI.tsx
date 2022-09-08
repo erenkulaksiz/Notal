@@ -11,14 +11,11 @@ import { AnimateSharedLayout, motion } from "framer-motion";
 import { Toast as ToastComponent, AlertModal } from "@components";
 import { CreatePortal as Portal } from "@components";
 import { isClient } from "@utils/isClient";
-import { Log } from "@utils";
-import { WorkboxInit } from "@utils/workboxInit";
+
 import type { ToastProps } from "components/Toast/Toast.d";
 import type { AlertProps } from "components/Alert/Alert.d";
 
 function HOC({ children }: { children: ReactNode }) {
-  const NotalUI = useNotalUI();
-  useEffect(() => WorkboxInit(NotalUI), []);
   return <>{children}</>;
 }
 

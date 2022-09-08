@@ -1,4 +1,4 @@
-<img src="./design/notal_logo_banner.png" alt="logo" width="320"/>
+<img src="./brand/notal_logo_banner.png" alt="logo" width="320"/>
 <br/>
 
 ## PR's and code reviews are welcome!
@@ -30,7 +30,6 @@ Notal is a simple platform to keep your project management simple, as well as ma
 - TypeScript
 - NextJS 12.1.6 + React 18 as primary tech stack, Vercel as primary host
 - Authentication via Google and GitHub
-- SWR, PWA, Workbox ready (see ./notal-ts/worker/index.js for workbox development logs)
 - Uses `tailwindcss` on frontend for styling, `framer-motion` for cool animations, `next-themes` for Dark theme and `react-beautiful-dnd` for beatiful drag drop experience
 - MongoDB & serverless functions on backend with custom API controller (see ./notal-ts/src/api/controller)
 - Secure session management using Firebase Auth
@@ -56,7 +55,7 @@ Make sure to configure the project for your needs from Configuring section
 
     git clone https://github.com/erenkulaksiz/notal.git
     cd notal/notal-ts
-    npm install
+    npm install --force
     npm run dev
 
 Opens development server on [https://localhost:3000](https://localhost:3000) with hot reload activated
@@ -68,7 +67,7 @@ Note: Make sure you have right port on .env.local aswell for API
 If you wanted to run this site in production, you should install modules then build the site with `npm run build` and run it with `npm run start`:
 
     cd notal-ts
-    npm install
+    npm install --force
     npm run build
     npm run start
 
@@ -90,6 +89,8 @@ then:
 If you configure a .env.local file (just copy [.env.local.template](https://github.com/erenkulaksiz/notal/blob/master/notal-ts/.env.local.template) over to '.env.local' and fill in the options) you can configure a range of options
 
 Make sure you have done oAuth options from Firebase console to get auth start to work, as well as MongoDB connection
+
+Note: Make sure you enter Google service.json as a single line, and put it inside single quote, like this: GOOGLE_SERVICE='{ type: "...", data: "..." }'
 
 ## Analyze bundle
 

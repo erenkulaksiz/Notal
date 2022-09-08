@@ -47,7 +47,6 @@ export function AddWorkspaceModal({
   });
   const thumbnailRef = useRef<HTMLInputElement>(null);
   const [thumbnailLoading, setThumbnailLoading] = useState(false);
-
   const [tab, setTab] = useState(0);
 
   function close() {

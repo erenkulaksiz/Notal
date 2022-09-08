@@ -67,6 +67,7 @@ export interface WorkspaceTypes {
   ];
 }
 
+/*
 export declare module WorkboxWindow {
   class Workbox {
     constructor(scriptURL: string, registerOptions?: object);
@@ -151,3 +152,4 @@ export declare module WorkboxWindow {
     sw: ServiceWorker;
   }
 }
+*/

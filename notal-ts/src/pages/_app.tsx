@@ -9,7 +9,6 @@ import ProgressBar from "@badrap/bar-of-progress";
 import { Log } from "@utils";
 import { AuthProvider, NotalUIProvider, WorkspaceProvider } from "@hooks";
 import { AcceptCookies } from "@components";
-
 import type { AppProps, NextWebVitalsMetric } from "next/app";
 
 const progress = new ProgressBar({
