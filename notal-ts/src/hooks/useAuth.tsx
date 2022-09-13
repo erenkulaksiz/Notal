@@ -106,40 +106,9 @@ export function AuthProvider(props: PropsWithChildren) {
   }, []);
 
   const login = {
-    google: async function () {
+    platform: async function (platform: string) {
       setLoading(true);
-      const res = await AuthService.login.google();
-
-      const { user, error } = res;
-      setUser(user ?? null);
-      setError(error?.errorMessage ?? null);
-
-      setLoading(false);
-
-      if (!error) {
-        /**
-         * Successful login
-         */
-        const token = await user?.getIdToken();
-        await NotifyLogin(token);
-        NotalUI.Toast.show({
-          desc: `Logged in as ${user?.email}`,
-          icon: <InfoIcon size={24} fill="currentColor" />,
-          className: "dark:bg-green-600 bg-green-500 text-white",
-          duration: 4500,
-          timeEnabled: true,
-          closeable: true,
-        });
-      }
-
-      return { authError: error ?? null, authUser: user ?? null };
-    },
-    github: async function () {
-      setLoading(true);
-
-      const res = await AuthService.login.github();
-
-      Log.debug("res ->>>>", res);
+      const res = await AuthService.login.platform(platform);
 
       const { user, error } = res;
       setUser(user ?? null);

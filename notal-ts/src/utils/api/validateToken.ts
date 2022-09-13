@@ -58,7 +58,7 @@ export async function ValidateToken({
   if (validateUser && !validateUser?.decodedToken) {
     return {
       success: false,
-      error: validateUser?.decodedToken?.errorCode,
+      error: validateUser?.errorCode,
     };
   }
 

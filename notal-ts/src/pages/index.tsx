@@ -7,6 +7,8 @@ import type { ValidateTokenReturnType } from "@utils/api/validateToken";
 import type { NotalRootProps } from "@types";
 import type { GetServerSidePropsContext } from "next";
 
+import { Log } from "@utils";
+
 function Root(props: NotalRootProps) {
   const auth = useAuth();
 

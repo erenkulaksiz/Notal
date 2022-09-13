@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,6 +11,35 @@ import { Log } from "@utils/logger";
 import { useAuth } from "@hooks";
 import type { LoginModalProps } from "./LoginModal.d";
 
+// #TODO: move these to constants
+interface PlatformLoginTypes {
+  google: {
+    icon: ReactNode;
+    text: string;
+    id: string;
+  };
+  github: {
+    icon: ReactNode;
+    text: string;
+    id: string;
+  };
+}
+
+const PlatformLogins = {
+  google: {
+    icon: (
+      <GoogleIcon width={24} height={24} fill="currentColor" className="ml-2" />
+    ),
+    text: "Google",
+    id: "google",
+  },
+  github: {
+    icon: <GithubIcon size={24} fill="currentColor" className="ml-2" />,
+    text: "Github",
+    id: "github",
+  },
+} as PlatformLoginTypes;
+
 export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
   const { resolvedTheme } = useTheme();
   const [oauthError, setOauthError] = useState<string | boolean>("");
@@ -22,15 +51,15 @@ export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
     }
   }, [auth?.authUser]);
 
-  const onLoginWithGoogle = async () => {
-    Log.debug("trying to login with google");
-    const login = await auth?.login?.google();
+  const onLoginWithPlatform = async (platform: string) => {
+    Log.debug(`trying to login with platform ${platform}`);
+    const login = await auth?.login?.platform(platform);
     if (
       login?.authError?.errorCode ==
       "auth/account-exists-with-different-credential"
     ) {
       setOauthError(
-        `This account exist with different credential. Please try another method.`
+        `This account exist with different credentials. Please try another method.`
       );
       return;
     } else if (login?.authError?.errorCode == "auth/user-disabled") {
@@ -42,26 +71,6 @@ export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
 
       return;
     }*/
-    onLoginSuccess();
-  };
-
-  const onLoginWithGithub = async () => {
-    const login = await auth?.login?.github();
-    Log.debug("github login errors:", login.authError);
-    if (
-      login?.authError?.errorCode ==
-      "auth/account-exists-with-different-credential"
-    ) {
-      setOauthError(
-        `This account exist with different credential. Please try another method.`
-      );
-      return;
-    } else if (login?.authError?.errorCode == "auth/user-disabled") {
-      setOauthError(
-        `Your account has been disabled. Sorry for the inconvenience.`
-      );
-      return;
-    }
     onLoginSuccess();
   };
 
@@ -107,37 +116,23 @@ export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
           </Modal.Title>
           <Modal.Body className="p-4 items-center" animate>
             <div className="flex flex-col gap-2 pb-2 w-full sm:px-8">
-              <Button
-                onClick={() => onLoginWithGoogle()}
-                size="lg"
-                className="text-[1.2em]"
-                gradient
-                fullWidth
-                icon={
-                  <GoogleIcon
-                    width={24}
-                    height={24}
-                    fill="currentColor"
-                    className="ml-2"
-                  />
-                }
-                aria-label="Sign in with Google"
-              >
-                Google
-              </Button>
-              <Button
-                onClick={() => onLoginWithGithub()}
-                size="lg"
-                className="text-[1.2em]"
-                gradient
-                fullWidth
-                icon={
-                  <GithubIcon size={24} fill="currentColor" className="ml-2" />
-                }
-                aria-label="Sign in with GitHub"
-              >
-                GitHub
-              </Button>
+              {Object.keys(PlatformLogins).map((platform) => {
+                const currPlatform =
+                  PlatformLogins[platform as keyof PlatformLoginTypes];
+                return (
+                  <Button
+                    onClick={() => onLoginWithPlatform(currPlatform.id)}
+                    size="lg"
+                    className="text-[1.2em]"
+                    gradient
+                    fullWidth
+                    icon={currPlatform.icon}
+                    aria-label={`Sign in with ${currPlatform.text}`}
+                  >
+                    {currPlatform.text}
+                  </Button>
+                );
+              })}
             </div>
             {oauthError && (
               <span className="text-red-600 text-center">{oauthError}</span>
