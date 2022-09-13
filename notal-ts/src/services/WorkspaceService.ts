@@ -10,6 +10,14 @@ import { workspaceFetch } from "@utils";
 import { WorkspaceTypes } from "@types";
 import { Log } from "@utils";
 
+interface WorkspaceServiceTypes {
+  workspace: {
+    add: () => Promise<void>;
+    star: () => Promise<void>;
+    delete: () => Promise<void>;
+  }
+}
+
 export const WorkspaceService = {
   workspace: {
     add: async function ({

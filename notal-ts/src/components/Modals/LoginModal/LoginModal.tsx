@@ -127,6 +127,7 @@ export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
                     gradient
                     fullWidth
                     icon={currPlatform.icon}
+                    key={currPlatform.id}
                     aria-label={`Sign in with ${currPlatform.text}`}
                   >
                     {currPlatform.text}
