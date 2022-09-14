@@ -96,6 +96,12 @@ Note: Make sure you enter Google service.json as a single line, and put it insid
 
 Run `npm run analyze` to view bundle sizes for client and server
 
+## Storybook
+
+Notal introduces Storybook to view each component individually without running the project.
+
+If you installed all dependencies, you can run `npm run sb` in notal-ts folder.
+
 ## Mobile Application
 
 Mobile App of Notal is being built under notal/app folder, with React Native (WIP)

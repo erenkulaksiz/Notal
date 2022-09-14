@@ -61,13 +61,12 @@ export function Button({
       },
       {
         default: light,
-        false:
-          "bg-blue-600 hover:bg-blue-500 active:bg-blue-700 outline-none focus:outline-blue-500/50", //also remove ring
+        false: "bg-blue-600 hover:bg-blue-500 active:bg-blue-700 outline-none", //also remove ring
         true: "bg-transparent hover:bg-transparent active:dark:bg-neutral-700/30 active:bg-neutral-200/50",
       },
       {
-        default: "focus:outline-2 " + ring,
-        true: "focus:outline-2",
+        default: ring,
+        true: "focus:outline-2 focus:outline-blue-500/50",
       },
     ],
     selectedClasses: [fullWidth, rounded, gradient, size, light, ring],
