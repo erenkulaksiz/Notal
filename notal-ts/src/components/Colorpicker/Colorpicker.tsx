@@ -6,7 +6,12 @@ import { formatString } from "@utils";
 import type { CardColorTypes } from "@constants/cardcolors";
 import type { ColorpickerProps } from "./Colorpicker.d";
 
-export function Colorpicker({ color, onChange, id }: ColorpickerProps) {
+export function Colorpicker({
+  color,
+  onChange,
+  id,
+  withoutInput = false,
+}: ColorpickerProps) {
   return (
     <Tooltip
       useFocus
@@ -39,16 +44,18 @@ export function Colorpicker({ color, onChange, id }: ColorpickerProps) {
           style={{ backgroundColor: color || "gray" }}
         />
       </button>
-      <input
-        type="text"
-        id={id}
-        value={color}
-        className="p-0 w-20 h-7 bg-transparent rounded border-2 dark:border-neutral-800 border-neutral-500/40"
-        onChange={(e) =>
-          onChange(`#${formatString(e.target.value).toUpperCase()}`)
-        }
-        maxLength={7}
-      />
+      {!withoutInput && (
+        <input
+          type="text"
+          id={id}
+          value={color}
+          className="p-0 w-20 h-7 bg-transparent rounded border-2 dark:border-neutral-800 border-neutral-500/40"
+          onChange={(e) =>
+            onChange(`#${formatString(e.target.value).toUpperCase()}`)
+          }
+          maxLength={7}
+        />
+      )}
     </Tooltip>
   );
 }

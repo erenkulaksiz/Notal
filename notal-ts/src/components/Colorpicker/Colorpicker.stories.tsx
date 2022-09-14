@@ -21,3 +21,8 @@ const Template: ComponentStory<typeof Colorpicker> = (args) => {
 };
 
 export const Default = Template.bind({});
+
+export const WithoutInput = Template.bind({});
+WithoutInput.args = {
+  withoutInput: true,
+};

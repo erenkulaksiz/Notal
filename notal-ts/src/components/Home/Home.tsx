@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { DashboardFilledIcon } from "@icons";
+import { LIMITS } from "@constants/limits";
 import { HomeWorkspaceCard, AddWorkspaceModal } from "@components";
 import { HomeNavTitle } from "./components/NavTitle";
 import { useNotalUI, useWorkspace, useWorkspaces } from "@hooks";
@@ -51,10 +52,10 @@ export function Home() {
           {!_workspaces.isValidating && (
             <AddWorkspaceButton
               onClick={() => {
-                if (_workspaces.data?.data?.length >= 20) {
+                if (_workspaces.data?.data?.length >= LIMITS.MAX.WORKSPACES) {
                   NotalUI.Toast.show({
                     title: "Error",
-                    desc: "You can only have 20 workspaces maximum at the moment.",
+                    desc: `You can only have ${LIMITS.MAX.WORKSPACES} workspaces maximum at the moment.`,
                     type: "error",
                     once: true,
                     id: "workspace-limit-toast",
