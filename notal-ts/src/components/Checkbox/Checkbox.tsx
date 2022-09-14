@@ -11,18 +11,18 @@ export function Checkbox({
 }: CheckboxProps) {
   const BuildCheckbox = BuildComponent({
     name: "Checkbox",
-    defaultClasses: "flex flex-row",
+    defaultClasses: "flex flex-row group",
     extraClasses: className,
   });
 
   const BuildCheckboxInner = BuildComponent({
     name: "Checkbox Inner",
     defaultClasses:
-      "relative h-4 w-4 outline-none group-focus:outline-2 group-focus:outline-blue-500/50 transition-colors ease-in-out flex items-center text-xs justify-center rounded-md border-2 dark:border-neutral-600",
+      "relative h-4 w-4 outline-none group-focus:outline-2 group-focus:outline-blue-500/50 transition-colors ease-in-out flex items-center text-xs justify-center rounded-md border-2 border-neutral-500/40 dark:border-neutral-600",
     extraClasses: className,
     conditionalClasses: [
       {
-        true: "bg-green-500 dark:bg-green-800",
+        true: "bg-green-500 dark:bg-green-800 border-[2px]",
       },
       { true: "mr-2" },
     ],
@@ -48,7 +48,7 @@ export function Checkbox({
               <CheckIcon
                 size={24}
                 fill="white"
-                style={{ transform: "scale(0.5)" }}
+                style={{ transform: "scale(0.4)" }}
                 className="absolute"
               />
             )}

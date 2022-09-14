@@ -25,7 +25,7 @@ export function Switch({
     conditionalClasses: [
       {
         true: "bg-green-700 justify-end",
-        false: "dark:bg-neutral-600 bg-neutral-200 justify-start",
+        false: "dark:bg-neutral-600 bg-neutral-500/40 justify-start",
       },
     ],
     selectedClasses: [value],
@@ -34,11 +34,11 @@ export function Switch({
   const BuildSwitchInside = BuildComponent({
     name: "Switch Inside",
     defaultClasses:
-      "w-4 h-4 rounded-full text-black dark:text-white bg-white dark:bg-black",
+      "w-4 h-4 relative rounded-full text-black dark:text-white bg-white dark:bg-black",
     conditionalClasses: [
       {
         true: "mr-1",
-        false: "ml-1",
+        false: "ml-1 outline-2 outline-neutral-500/40",
       },
     ],
     selectedClasses: [value],

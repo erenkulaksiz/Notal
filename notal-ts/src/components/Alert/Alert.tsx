@@ -42,7 +42,7 @@ export function AlertModal({
   return (
     <Modal
       open={alert.visible == true}
-      closeBtn={alert.closeable}
+      closeBtn={alert.closeable ? true : alert.showCloseButton}
       onClose={() => onClose()}
       className={BuildModal.classes}
       blur={alert.blur}

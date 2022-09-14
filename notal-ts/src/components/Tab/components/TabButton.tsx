@@ -57,7 +57,7 @@ export default function TabButton({
       )}
       {selected && (
         <motion.div
-          className="absolute left-3 right-3 h-1 -bottom-1 rounded-xl z-10 bg-blue-600"
+          className="absolute left-3 right-3 h-1 bottom-0 rounded-xl z-10 bg-blue-600"
           layoutId="tabunderline"
           transition={{
             layout: {

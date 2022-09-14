@@ -13,4 +13,5 @@ export interface TooltipProps {
   useFocus?: boolean;
   style?: Object;
   noPadding?: boolean;
+  outline?: boolean;
 }

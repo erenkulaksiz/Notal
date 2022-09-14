@@ -76,6 +76,8 @@ export function Navbar({
                   priority
                   placeholder="blur"
                   className="object-contain"
+                  width={150}
+                  height={50}
                 />
               </div>
               <div className="h-10 w-12 sm:hidden flex">
@@ -89,6 +91,8 @@ export function Navbar({
                   priority
                   placeholder="blur"
                   className="object-contain"
+                  width={100}
+                  height={50}
                 />
               </div>
             </a>

@@ -23,6 +23,7 @@ export function Tooltip({
   useFocus = false, // uses focus instead of using hover
   style,
   noPadding = false,
+  outline = false,
 }: TooltipProps) {
   const [show, setShow] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -94,19 +95,20 @@ export function Tooltip({
               stiffness: 400,
               duration: 0.02,
               damping: 25,
-            }} // bottom-[calc(100%+45px)]
+            }}
             className={
               BuildTooltipContainer({
                 containerClassName,
                 direction,
                 noPadding,
+                outline,
               }).classes
             }
             onAnimationComplete={() => !visible && setShow(false)}
           >
             {content}
             {!hideArrow && (
-              <div className={BuildArrow({ direction }).classes} />
+              <div className={BuildArrow({ direction, outline }).classes} />
             )}
           </motion.div>
         </Portal>

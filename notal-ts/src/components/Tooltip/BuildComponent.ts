@@ -32,20 +32,32 @@ export function BuildPortal({
   });
 }
 
-export function BuildArrow({ direction = "top" }: TooltipProps) {
+export function BuildArrow({ direction = "top", outline }: TooltipProps) {
+
+  const ArrowDirectionStyles = {
+    top: "border-r-2 border-r-neutral-600/20 border-b-2 border-b-neutral-600/20",
+    right: "border-l-2 border-l-neutral-600/20 border-b-2 border-b-neutral-600/20",
+    left: "border-t-2 border-t-neutral-600/20 border-r-2 border-r-neutral-600/20",
+    bottom: "border-t-2 border-t-neutral-600/20 border-l-2 border-l-neutral-600/20",
+  }
+
   return BuildComponent({
     name: "Tooltip Arrow",
     defaultClasses:
-      "w-2 -z-10 h-2 bg-white dark:bg-neutral-800 absolute rotate-45",
+      "w-2 -z-40 h-2 bg-white dark:bg-neutral-800 absolute rotate-45",
     conditionalClasses: [
       {
-        top: "-bottom-1",
-        right: "-left-0.5",
-        left: "-right-0.5",
-        bottom: "-top-1",
+        top: "-bottom-1.5",
+        right: "-left-1.5",
+        left: "-right-1.5",
+        bottom: "-top-1.5",
       },
+      {
+        true: ArrowDirectionStyles[direction] ?? "border-none",
+        default: outline,
+      }
     ],
-    selectedClasses: [direction],
+    selectedClasses: [direction, outline],
   });
 }
 
@@ -53,11 +65,12 @@ export function BuildTooltipContainer({
   containerClassName,
   direction = "top",
   noPadding = false,
+  outline = false,
 }: TooltipProps) {
   return BuildComponent({
     name: "Tooltip Container",
     defaultClasses:
-      "shadow-xl z-50 relative bg-white dark:bg-neutral-800 dark:shadow-black/60 shadow-neutral-800/30 whitespace-nowrap flex items-center justify-center rounded-xl text-sm shadow-xl text-black dark:text-white",
+      "shadow-xl shadow-neutral-600/30 z-50 relative bg-white dark:bg-neutral-800 dark:shadow-black/60 shadow-neutral-800/30 whitespace-nowrap flex items-center justify-center rounded-xl text-sm shadow-xl text-black dark:text-white",
     extraClasses: containerClassName,
     conditionalClasses: [
       {
@@ -69,7 +82,11 @@ export function BuildTooltipContainer({
       {
         false: "px-3 py-1",
       },
+      {
+        true: "border-2 border-neutral-600/20",
+        default: outline,
+      }
     ],
-    selectedClasses: [direction, noPadding],
+    selectedClasses: [direction, noPadding, outline],
   });
 }
