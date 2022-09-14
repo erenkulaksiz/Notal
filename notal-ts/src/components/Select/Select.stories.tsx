@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
 import { Select } from "./Select";
@@ -8,7 +8,18 @@ export default {
   component: Select,
 } as ComponentMeta<typeof Select>;
 
-const Template: ComponentStory<typeof Select> = (args) => <Select {...args} />;
+const Template: ComponentStory<typeof Select> = (args) => {
+  const [selected, setSelected] = useState();
+
+  return (
+    <Select
+      {...args}
+      id="select"
+      value={selected}
+      onChange={(event) => setSelected(event.target.value)}
+    />
+  );
+};
 
 export const Default = Template.bind({});
 Default.args = {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
 import Tab from "./Tab";
@@ -8,7 +8,18 @@ export default {
   component: Tab,
 } as ComponentMeta<typeof Tab>;
 
-const Template: ComponentStory<typeof Tab> = (args) => <Tab {...args} />;
+const Template: ComponentStory<typeof Tab> = (args) => {
+  const [selected, setSelected] = useState(0);
+
+  return (
+    <Tab
+      {...args}
+      selected={selected}
+      onSelect={(selected) => setSelected(selected)}
+      id="tab"
+    />
+  );
+};
 
 export const Default = Template.bind({});
 Default.args = {

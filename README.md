@@ -36,6 +36,7 @@ Notal is a simple platform to keep your project management simple, as well as ma
 - Introducing NotalUI, each components made custom for just for Notal, which even has Modal and Toast components built-in
 - Comes with Google Material Icons
 - Google Analytics for analytics, page views and page view times: LCP, TTFB and FCP
+- Storybook ready to go for each component, view Storybook section
 
 ## Known issues
 

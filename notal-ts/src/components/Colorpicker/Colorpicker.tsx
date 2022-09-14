@@ -33,7 +33,7 @@ export function Colorpicker({ color, onChange, id }: ColorpickerProps) {
         </div>
       }
     >
-      <button className="w-7 h-7 mr-1 p-[2px] rounded border-2 dark:border-neutral-800 bg-transparent">
+      <button className="w-7 h-7 mr-1 p-[2px] rounded border-2 dark:border-neutral-800 border-neutral-500/40 bg-transparent">
         <div
           className="w-full h-full rounded-sm"
           style={{ backgroundColor: color || "gray" }}
@@ -43,7 +43,7 @@ export function Colorpicker({ color, onChange, id }: ColorpickerProps) {
         type="text"
         id={id}
         value={color}
-        className="p-0 w-20 h-7 bg-transparent rounded border-2 dark:border-neutral-800"
+        className="p-0 w-20 h-7 bg-transparent rounded border-2 dark:border-neutral-800 border-neutral-500/40"
         onChange={(e) =>
           onChange(`#${formatString(e.target.value).toUpperCase()}`)
         }

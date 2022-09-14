@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
 import { Switch } from "./Switch";
@@ -9,17 +9,20 @@ export default {
   component: Switch,
 } as ComponentMeta<typeof Switch>;
 
-const Template: ComponentStory<typeof Switch> = (args) => <Switch {...args} />;
+const Template: ComponentStory<typeof Switch> = (args) => {
+  const [value, setValue] = useState(false);
+
+  return (
+    <Switch
+      {...args}
+      value={value}
+      onChange={(event) => setValue(event.target.checked)}
+      id="switch"
+    />
+  );
+};
 
 export const Default = Template.bind({});
-Default.args = {
-  value: false,
-};
-
-export const Open = Template.bind({});
-Open.args = {
-  value: true,
-};
 
 export const WithIcon = Template.bind({});
 WithIcon.args = {
@@ -38,5 +41,4 @@ WithIcon.args = {
       }}
     />
   ),
-  value: false,
 };

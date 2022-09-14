@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
 import { Checkbox } from "./Checkbox";
@@ -8,19 +8,20 @@ export default {
   component: Checkbox,
 } as ComponentMeta<typeof Checkbox>;
 
-const Template: ComponentStory<typeof Checkbox> = (args) => (
-  <Checkbox {...args} />
-);
+const Template: ComponentStory<typeof Checkbox> = (args) => {
+  const [checked, setChecked] = useState(false);
 
-export const Default = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Default.args = {
-  children: "Checkbox",
+  return (
+    <Checkbox
+      {...args}
+      onChange={(checked) => setChecked(checked)}
+      checked={checked}
+    />
+  );
 };
 
-export const Checked = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Checked.args = {
+export const Default = Template.bind({});
+Default.args = {
   children: "Checkbox",
-  checked: true,
+  id: "checkbox",
 };

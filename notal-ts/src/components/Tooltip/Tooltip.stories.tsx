@@ -18,7 +18,6 @@ Default.args = {
   children: "Inner content, hover over me",
   content: "Tooltip Content",
   direction: "top",
-  allContainerClassName: "mt-24",
   outline: true,
 };
 
@@ -27,7 +26,6 @@ LeftDirection.args = {
   children: "Inner content, hover over me",
   content: "Tooltip Content",
   direction: "left",
-  allContainerClassName: "ml-32 w-52",
   outline: true,
 };
 
@@ -36,7 +34,6 @@ RightDirection.args = {
   children: "Inner content, hover over me",
   content: "Tooltip Content",
   direction: "right",
-  allContainerClassName: "w-52",
   outline: true,
 };
 
@@ -67,7 +64,6 @@ CustomContent.args = {
     </>
   ),
   direction: "right",
-  allContainerClassName: "w-52",
-  outline: false,
+  outline: true,
   hideArrow: true,
 };
