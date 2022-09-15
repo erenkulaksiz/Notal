@@ -4,7 +4,7 @@ export interface AlertProps {
   title?: string | ReactNode;
   desc?: string | ReactNode;
   showCloseButton?: boolean;
-  closeable?: boolean;
+  notCloseable?: boolean;
   titleIcon?: ReactNode | boolean;
   blur?: boolean;
   buttons?: ReactNode[] | boolean;

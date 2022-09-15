@@ -1,17 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
 import { AlertModal } from "./Alert";
 import { Button } from "@components";
 
 export default {
-  title: "Interactive/AlertModal",
+  title: "Interactive/Modals/AlertModal",
   component: AlertModal,
 } as ComponentMeta<typeof AlertModal>;
 
-const Template: ComponentStory<typeof AlertModal> = (args) => (
-  <AlertModal {...args} />
-);
+const Template: ComponentStory<typeof AlertModal> = (args) => {
+  const [visible, setVisible] = useState(true);
+
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>Open Alert</Button>
+      <AlertModal
+        {...args}
+        alert={{ ...args.alert, visible }}
+        onClose={() => setVisible(false)}
+      />
+    </>
+  );
+};
 
 export const Default = Template.bind({});
 Default.args = {
@@ -70,6 +81,15 @@ WithCloseButton.args = {
     desc: "Lorem ipsum dolor amet.",
     visible: true,
     showCloseButton: true,
-    closeable: true,
+  },
+};
+
+export const NotCloseable = Template.bind({});
+NotCloseable.args = {
+  alert: {
+    title: "Example Alert",
+    desc: "Lorem ipsum dolor amet.",
+    visible: true,
+    notCloseable: true,
   },
 };

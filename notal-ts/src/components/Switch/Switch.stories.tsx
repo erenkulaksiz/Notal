@@ -5,7 +5,7 @@ import { Switch } from "./Switch";
 import { CodeIcon } from "@icons";
 
 export default {
-  title: "Interactive/Switch",
+  title: "Interactive/Form/Switch",
   component: Switch,
 } as ComponentMeta<typeof Switch>;
 

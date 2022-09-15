@@ -5,7 +5,7 @@ import { Button } from "./Button";
 import { CodeIcon } from "@icons";
 
 export default {
-  title: "Interactive/Button",
+  title: "Interactive/Form/Button",
   component: Button,
 } as ComponentMeta<typeof Button>;
 
@@ -79,6 +79,9 @@ export const FullWidth = Template.bind({});
 FullWidth.args = {
   children: "Button",
   fullWidth: true,
+};
+FullWidth.parameters = {
+  layout: "left",
 };
 
 export const Loading = Template.bind({});

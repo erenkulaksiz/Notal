@@ -1,5 +1,8 @@
+import { useState } from "react";
 import { BuildComponent } from "@utils/style/buildComponent";
 import type { InputProps } from "./Input.d";
+
+import { VisibleIcon, VisibleOffIcon } from "@icons";
 
 export function Input({
   onChange,
@@ -16,7 +19,11 @@ export function Input({
   icon,
   id,
   maxLength,
+  password = false,
+  passwordVisibility = false,
 }: InputProps) {
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
   const InputElement = textarea ? "textarea" : "input";
 
   const BuildInputContainer = BuildComponent({
@@ -54,16 +61,20 @@ export function Input({
         false: rounded,
       },
       {
-        true: "absolute pl-8",
+        true: "pl-8",
       },
       {
         true: "resize-none",
+      },
+      {
+        true: "pr-8",
       },
     ],
     selectedClasses: [
       rounded == true ? true : false,
       icon ? true : false,
       textarea,
+      passwordVisibility,
     ],
   });
 
@@ -80,7 +91,15 @@ export function Input({
       <InputElement
         id={id}
         value={value}
-        type={!textarea ? "text" : ""}
+        type={
+          !textarea
+            ? password
+              ? passwordVisible
+                ? "text"
+                : "password"
+              : "text"
+            : ""
+        }
         key={id}
         autoFocus={autoFocus}
         onChange={(e) => typeof onChange == "function" && onChange(e)}
@@ -95,6 +114,19 @@ export function Input({
           }
         }}
       />
+      {passwordVisibility && (
+        <button
+          className="z-20 absolute -right-2 p-4 fill-inherit"
+          style={{ transform: "scale(0.7)" }}
+          onClick={() => setPasswordVisible(!passwordVisible)}
+        >
+          {passwordVisible ? (
+            <VisibleOffIcon width={24} height={24} fill="currentColor" />
+          ) : (
+            <VisibleIcon width={24} height={24} fill="currentColor" />
+          )}
+        </button>
+      )}
     </div>
   );
 }

@@ -21,7 +21,7 @@ const ToastTypes: {
   success: ToastIconType;
 } = {
   default: {
-    className: "dark:bg-neutral-700 bg-neutral-200",
+    className: "dark:bg-neutral-700 bg-neutral-200 text-black dark:text-white",
   },
   error: {
     icon: <CrossIcon size={24} fill="currentColor" />,
@@ -46,7 +46,7 @@ export function Toast({
   onRender,
 }: {
   toast: ToastProps;
-  onClick: () => void;
+  onClick?: () => void;
   onRender: () => void;
 }) {
   useEffect(() => {
@@ -75,7 +75,7 @@ export function Toast({
         success: ToastTypes.success.className,
       },
     ],
-    selectedClasses: [toast.closeable, toast.type],
+    selectedClasses: [toast.closeable, toast.type || "default"],
   });
 
   return (

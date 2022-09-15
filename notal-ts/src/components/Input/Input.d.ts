@@ -13,4 +13,6 @@ export interface InputProps {
   icon?: React.ReactNode;
   id?: string;
   maxLength?: number;
+  password?: boolean;
+  passwordVisibility?: boolean;
 }

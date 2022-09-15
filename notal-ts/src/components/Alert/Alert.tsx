@@ -42,8 +42,8 @@ export function AlertModal({
   return (
     <Modal
       open={alert.visible == true}
-      closeBtn={alert.closeable ? true : alert.showCloseButton}
-      onClose={() => onClose()}
+      closeBtn={!alert.notCloseable ? true : alert.showCloseButton}
+      onClose={() => alert.notCloseable || onClose()}
       className={BuildModal.classes}
       blur={alert.blur}
       animate={alert.animate}
@@ -78,11 +78,11 @@ export function AlertModal({
       )}
       {alert.showCloseButton && (
         <Modal.Footer className="justify-end" animate={alert.animate}>
-          {alert.closeable && alert.showCloseButton && (
+          {!alert.notCloseable && alert.showCloseButton && (
             <Button
               className="h-10 w-1/2"
               light="bg-red-500 dark:bg-red-700"
-              onClick={() => onClose()}
+              onClick={() => alert.notCloseable || onClose()}
             >
               Close
             </Button>

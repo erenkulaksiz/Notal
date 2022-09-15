@@ -192,7 +192,7 @@ export function NotalUIProvider(props: PropsWithChildren) {
       title,
       desc,
       showCloseButton = true,
-      closeable = true,
+      notCloseable = true,
       titleIcon = false,
       className,
       blur = false,
@@ -204,7 +204,7 @@ export function NotalUIProvider(props: PropsWithChildren) {
         visible: true,
         title,
         desc,
-        closeable,
+        notCloseable,
         titleIcon,
         blur,
         buttons,
@@ -261,7 +261,7 @@ export function NotalUIProvider(props: PropsWithChildren) {
         <AlertModal
           alert={alert}
           onClose={() => {
-            if (!alert.closeable) return;
+            if (alert.notCloseable) return;
 
             if (typeof Alert?.onClose == "function") Alert?.onClose();
             else Alert?.close();
