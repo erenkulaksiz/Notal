@@ -27,3 +27,5 @@ export { WorkspaceSEO } from "./Workspace/components/WorkspaceSEO";
 export { WorkspaceNotFound } from "./Workspace/components/WorkspaceNotFound";
 export { Workspace } from "./Workspace/Workspace";
 export { WorkspaceSidebar } from "./Workspace/components/WorkspaceSidebar";
+export { WorkspaceField } from "./Workspace/components/WorkspaceField/WorkspaceField";
+export { WorkspaceFieldHeader } from "./Workspace/components/WorkspaceField/WorkspaceFieldHeader";

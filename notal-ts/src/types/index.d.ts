@@ -29,42 +29,46 @@ export interface NotalRootProps extends PropsWithChildren {
   withoutLayout?: boolean;
 }
 
+export interface FieldTypes {
+  collapsed: boolean;
+  createdAt: number;
+  updatedAt: number;
+  _id: string;
+  owner: string;
+  title: string;
+  cards?: [];
+}
+
+export interface ThumbnailTypes {
+  type: "image" | "singleColor" | "gradient" | string;
+  file?: string | ArrayBuffer | null;
+  fileData?: File | null;
+  color?: string;
+  colors?: {
+    start?: string;
+    end?: string;
+  };
+}
+
+export interface OwnerTypes {
+  avatar: string;
+  fullname: string;
+  username: string;
+  uid: string;
+}
+
 export interface WorkspaceTypes {
   _id: string;
   id: string;
   createdAt: number;
   desc?: string;
   title: string;
-  owner?: {
-    avatar: string;
-    fullname: string;
-    username: string;
-    uid: string;
-  };
+  owner?: OwnerTypes;
   starred: boolean;
   updatedAt: number;
   workspaceVisible: boolean;
-  thumbnail: {
-    type: "image" | "singleColor" | "gradient" | string;
-    file?: string | ArrayBuffer | null;
-    fileData?: File | null;
-    color?: string;
-    colors?: {
-      start?: string;
-      end?: string;
-    };
-  };
-  fields?: [
-    {
-      collapsed: boolean;
-      createdAt: number;
-      updatedAt: number;
-      _id: string;
-      owner: string;
-      title: string;
-      cards?: [];
-    }
-  ];
+  thumbnail: ThumbnailTypes;
+  fields?: Array[FieldTypes];
 }
 
 /*

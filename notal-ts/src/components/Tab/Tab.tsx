@@ -37,7 +37,7 @@ function Tab({
 
   const BuildTabHeaderContainer = BuildComponent({
     name: "Notal UI Tab Header Container",
-    defaultClasses: "flex overflow-x-auto overflow-y-hidden pb-1",
+    defaultClasses: "flex w-full overflow-x-auto overflow-y-hidden pb-1",
     extraClasses: headerContainerClassName,
   });
 

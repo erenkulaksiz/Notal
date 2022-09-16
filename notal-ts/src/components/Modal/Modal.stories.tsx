@@ -20,6 +20,7 @@ const Template: ComponentStory<typeof Modal> = (args) => {
         <img
           src="/helios_logo.png"
           className="absolute w-full h-full top-0 left-0 right-0 bottom-0 object-contain"
+          alt="Helios logo"
         />
       )}
       <Button onClick={() => setVisible(true)} className="shadow-xl">

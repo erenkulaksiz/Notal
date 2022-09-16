@@ -13,7 +13,7 @@ export function WorkspaceSidebar() {
   const workspace = useWorkspace();
 
   return (
-    <nav className="flex flex-col justify-between items-center p-2 mb-2 ml-2 w-14 pt-2 z-40 border-2 dark:border-neutral-800 rounded-lg dark:bg-neutral-900/50 backdrop-blur-md bg-white border-neutral-500/40">
+    <nav className="flex flex-col justify-between items-center sticky left-0 p-2 w-14 pt-2 z-40 border-2 dark:border-neutral-800 rounded-lg dark:bg-neutral-900/50 backdrop-blur-md bg-white border-neutral-500/40">
       <div className="flex flex-col gap-2">
         <WorkspaceSidebarItem
           icon={
@@ -37,18 +37,18 @@ export function WorkspaceSidebar() {
           icon={
             <SettingsIcon size={24} className="dark:fill-white fill-black" />
           }
-          title="Settings"
+          title="Workspace Settings"
         />
         <WorkspaceSidebarItem
           icon={
             workspace.workspace?.data?.data?.workspaceVisible ? (
-              <VisibleIcon
+              <VisibleOffIcon
                 width={24}
                 height={24}
                 className="dark:fill-white fill-black"
               />
             ) : (
-              <VisibleOffIcon
+              <VisibleIcon
                 width={24}
                 height={24}
                 className="dark:fill-white fill-black"
@@ -57,8 +57,8 @@ export function WorkspaceSidebar() {
           }
           title={
             workspace.workspace?.data?.data?.workspaceVisible
-              ? "Make private"
-              : "Make public"
+              ? "Set workspace private"
+              : "Set workspace public"
           }
         />
       </div>

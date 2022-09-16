@@ -168,7 +168,12 @@ export function Footer({ className }: { className?: string }) {
               rel="noreferrer"
               className="flex items-center justify-center"
             >
-              <Image src={StorybookLogo} width={18} height={18} />
+              <Image
+                src={StorybookLogo}
+                width={18}
+                height={18}
+                alt="Storybook Logo"
+              />
             </a>
           </Tooltip>
           <span className="uppercase text-xs ml-3 text-neutral-400 text-left">

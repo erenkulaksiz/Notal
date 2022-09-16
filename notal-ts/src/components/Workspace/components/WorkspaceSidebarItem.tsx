@@ -24,7 +24,7 @@ export function WorkspaceSidebarItem({
         className="justify-center"
         size="h-10"
         rounded="rounded-md"
-        light="outline-none focus:outline-2 bg-neutral-100 dark:bg-neutral-800 backdrop-blur-sm"
+        light="border-2 border-neutral-400/50 dark:border-0 focus:outline-2 bg-neutral-100 dark:bg-neutral-800 backdrop-blur-sm"
         title={title}
         aria-label={title}
         onClick={onClick}
