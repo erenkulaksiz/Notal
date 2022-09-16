@@ -41,7 +41,7 @@ WithIcon.args = {
 
 export const WithPassword = Template.bind({});
 WithPassword.args = {
-  password: true,
+  type: "password",
 };
 
 export const WithPasswordVisiblity = Template.bind({});

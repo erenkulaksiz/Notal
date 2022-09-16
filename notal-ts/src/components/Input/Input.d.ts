@@ -15,4 +15,5 @@ export interface InputProps {
   maxLength?: number;
   password?: boolean;
   passwordVisibility?: boolean;
+  type?: HTMLInputElement["type"];
 }

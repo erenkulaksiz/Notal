@@ -112,6 +112,7 @@ export function Navbar({
             className="ml-2"
           >
             <Tooltip
+              outline
               content={navbarCollapse ? "Show Navbar" : "Hide Navbar"}
               direction="bottom"
             >
@@ -166,12 +167,12 @@ export function Navbar({
               </div>
             </summary>
             <div
-              className="p-4 absolute top-full rounded-lg right-0 dark:bg-neutral-900/70 filter backdrop-blur-sm bg-white/70 shadow-2xl w-60"
+              className="p-4 absolute top-full rounded-lg right-0 dark:bg-neutral-900/70 filter backdrop-blur-sm bg-white/70 border-2 border-neutral-400/30 dark:border-neutral-800/50 shadow-2xl w-60"
               style={{ zIndex: 999 }}
             >
               <div className="flex flex-row items-center">
                 <ThemeSwitcher />
-                <span className="ml-1 text-xs dark:text-neutral-600 text-neutral-300 break-words">{`v${process.env.NEXT_PUBLIC_APP_VERSION}`}</span>
+                <span className="ml-1 text-xs dark:text-neutral-600 text-neutral-400 break-words">{`v${process.env.NEXT_PUBLIC_APP_VERSION}`}</span>
               </div>
               <h2
                 className="text-current font-bold text-xl mt-1 break-words"

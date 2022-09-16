@@ -11,6 +11,4 @@ export default {
 const Template: ComponentStory<typeof Landing> = (args) => <Landing />;
 
 export const Default = Template.bind({});
-Default.args = {
-  //size: "sm",
-};
+Default.args = {};

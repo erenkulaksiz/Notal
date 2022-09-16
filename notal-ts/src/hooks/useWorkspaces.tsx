@@ -144,6 +144,7 @@ export default function useWorkspaces() {
         </div>
       ),
       showCloseButton: false,
+      notCloseable: false,
       buttons: [
         <Button
           light="bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500"

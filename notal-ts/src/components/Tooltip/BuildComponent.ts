@@ -47,10 +47,10 @@ export function BuildArrow({ direction = "top", outline }: TooltipProps) {
       "w-2 -z-40 h-2 bg-white dark:bg-neutral-800 absolute rotate-45",
     conditionalClasses: [
       {
-        top: "-bottom-1.5",
-        right: "-left-1.5",
-        left: "-right-1.5",
-        bottom: "-top-1.5",
+        top: "-bottom-1",
+        right: "-left-1",
+        left: "-right-1",
+        bottom: "-top-1",
       },
       {
         true: ArrowDirectionStyles[direction] ?? "border-none",

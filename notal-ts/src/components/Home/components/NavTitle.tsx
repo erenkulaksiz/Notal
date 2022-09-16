@@ -28,7 +28,12 @@ export function HomeNavTitle({
         {title}
       </h1>
       {count?.workspaces > 0 && (
-        <Tooltip content="Total workspaces" direction="bottom" blockContent>
+        <Tooltip
+          content="Total workspaces"
+          direction="bottom"
+          blockContent
+          outline
+        >
           <div className="dark:bg-neutral-800 bg-white text-md p-1 px-2 rounded-lg">
             {count?.workspaces}
           </div>
@@ -38,7 +43,12 @@ export function HomeNavTitle({
         <div className="w-[1px] h-1/3 bg-neutral-300 dark:bg-neutral-600" />
       ) : null}
       {count?.starredWorkspaces > 0 && (
-        <Tooltip content="Favorite workspaces" direction="bottom" blockContent>
+        <Tooltip
+          content="Favorite workspaces"
+          direction="bottom"
+          blockContent
+          outline
+        >
           <div className="flex gap-1 flex-row items-center dark:bg-neutral-800 bg-white p-1 px-1 pr-2 rounded-lg">
             <StarFilledIcon
               width={20}
@@ -51,10 +61,10 @@ export function HomeNavTitle({
         </Tooltip>
       )}
       {count?.privateWorkspaces > 0 && (
-        <Tooltip content="Private workspaces" direction="bottom">
+        <Tooltip content="Private workspaces" direction="bottom" outline>
           <div className="flex gap-1 flex-row items-center dark:bg-neutral-800 bg-white p-1 px-1 pr-2 rounded-lg">
             <VisibleOffIcon
-              width={20}
+              width={24}
               height={24}
               fill="currentColor"
               style={{ transform: "scale(.8)" }}

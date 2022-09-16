@@ -19,8 +19,8 @@ export function Input({
   icon,
   id,
   maxLength,
-  password = false,
   passwordVisibility = false,
+  type = "text",
 }: InputProps) {
   const [passwordVisible, setPasswordVisible] = useState(false);
 
@@ -45,7 +45,7 @@ export function Input({
     ],
     selectedClasses: [
       fullWidth,
-      height == "h-11" ? true : false,
+      height == "h-11" && true,
       rounded == true ? true : false,
     ],
   });
@@ -91,15 +91,7 @@ export function Input({
       <InputElement
         id={id}
         value={value}
-        type={
-          !textarea
-            ? password
-              ? passwordVisible
-                ? "text"
-                : "password"
-              : "text"
-            : ""
-        }
+        type={passwordVisible ? "text" : type}
         key={id}
         autoFocus={autoFocus}
         onChange={(e) => typeof onChange == "function" && onChange(e)}
@@ -121,9 +113,17 @@ export function Input({
           onClick={() => setPasswordVisible(!passwordVisible)}
         >
           {passwordVisible ? (
-            <VisibleOffIcon width={24} height={24} fill="currentColor" />
+            <VisibleOffIcon
+              width={24}
+              height={24}
+              className="fill-neutral-600/60 dark:fill-neutral-600"
+            />
           ) : (
-            <VisibleIcon width={24} height={24} fill="currentColor" />
+            <VisibleIcon
+              width={24}
+              height={24}
+              className="fill-neutral-600/60 dark:fill-neutral-600"
+            />
           )}
         </button>
       )}

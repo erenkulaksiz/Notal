@@ -19,6 +19,7 @@ export function Button({
   form,
   as = "button",
   title,
+  type,
   ...props
 }: ButtonProps) {
   const iconSpace = conditionalClass({
@@ -82,6 +83,7 @@ export function Button({
       className={BuildButton.classes}
       form={form}
       title={title}
+      type={type}
       {...props}
     >
       {icon && <div className={iconClasses}>{icon}</div>}

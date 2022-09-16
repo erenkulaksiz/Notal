@@ -18,7 +18,7 @@ Default.args = {
   children: "Inner content, hover over me",
   content: "Tooltip Content",
   direction: "top",
-  outline: true,
+  outline: false,
 };
 
 export const LeftDirection = Template.bind({});

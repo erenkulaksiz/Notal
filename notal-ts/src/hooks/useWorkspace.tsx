@@ -56,6 +56,8 @@ export function WorkspaceProvider(props: PropsWithChildren) {
     }
   }, [workspace]);
 
+  async function starWorkspace(id: string) {}
+
   const value = {
     workspace,
     setWorkspace,

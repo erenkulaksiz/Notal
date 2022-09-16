@@ -45,7 +45,7 @@ export default function TabButton({
       <span className="z-20 relative">{children}</span>
       {hover && (
         <motion.div
-          className="absolute left-1 right-1 top-1 bottom-1 z-10 dark:bg-neutral-700 bg-neutral-200 rounded-md"
+          className="absolute left-1 right-1 top-1 bottom-1 z-10 dark:bg-neutral-700 bg-neutral-300/80 rounded-md"
           layoutId="tabheader"
           transition={{
             layout: {

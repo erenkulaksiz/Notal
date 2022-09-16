@@ -28,14 +28,15 @@ export function Workspace({
   if (workspace.workspaceNotFound) return <WorkspaceNotFound />;
 
   return (
-    <div className="relative flex flex-row flex-1 bg-white dark:bg-neutral-900 overflow-y-auto w-full pt-2">
-      <div className="relative flex flex-1 flex-row overflow-y-auto overflow-x-visible">
+    <div className="relative flex flex-row flex-1 bg-white dark:bg-neutral-900 w-full pt-2">
+      <div className="relative flex flex-1 flex-row ">
+        {workspace.isWorkspaceOwner && <WorkspaceSidebar />}
         <Tab
           selected={workspaceTab}
           onSelect={(index) => setWorkspaceTab(index)}
           id="workspaceTab"
           headerClassName="dark:bg-transparent bg-white flex-1 max-w-[700px]"
-          className="flex-1 flex flex-col"
+          className="flex w-full flex-col"
           headerContainerClassName="pl-2 pr-2"
         >
           <Tab.TabView
@@ -47,9 +48,8 @@ export function Workspace({
                 style={{ transform: "scale(.7)" }}
               />
             }
-            className="relative flex flex-1 gap-2 pl-2 pr-2 pt-1 pb-2 flex-row overflow-y-auto overflow-x-visible"
+            className="relative flex flex-1 overflow-auto gap-2 px-2 mb-2 flex-row bg-red-200"
           >
-            {workspace.isWorkspaceOwner && <WorkspaceSidebar />}
             {workspace.workspace?.data?.data?.fields &&
               workspace.workspace.data.data.fields.map((field, index) => {
                 return (

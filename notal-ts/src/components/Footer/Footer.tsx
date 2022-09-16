@@ -5,11 +5,10 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 import { CodeIcon, Github2Icon, HeartIcon, TwitterIcon } from "@icons";
-
 import IconWhite from "@public/icon_white.webp";
 import IconGalactic from "@public/icon_galactic.webp";
 import { BuildComponent } from "@utils/style/buildComponent";
-
+import StorybookLogo from "@public/storybook_logo.png";
 import { isClient } from "@utils";
 import { Tooltip } from "@components";
 
@@ -47,7 +46,7 @@ export function Footer({ className }: { className?: string }) {
       className={BuildFooter.classes}
       animate={isInView ? "show" : "hidden"}
       variants={FooterAnimVariant}
-      onViewportEnter={(e) => setInView(true)}
+      onViewportEnter={() => setInView(true)}
     >
       <div className="h-0.5 dark:bg-neutral-700/70 bg-neutral-300/70 w-full rounded-full" />
       <div className="grid grid-cols-1 sm:grid-cols-3 mt-8 gap-8 sm:gap-4">
@@ -135,8 +134,8 @@ export function Footer({ className }: { className?: string }) {
         </div>
       </div>
       <div className="w-full mt-10 flex flex-row justify-between">
-        <div className="flex items-center">
-          <Tooltip content="@notalapp" direction="right">
+        <div className="flex items-center gap-2 align-center">
+          <Tooltip content="Twitter" direction="right">
             <a
               href="https://twitter.com/notalapp"
               target="_blank"
@@ -149,21 +148,7 @@ export function Footer({ className }: { className?: string }) {
               />
             </a>
           </Tooltip>
-          <Tooltip
-            content={
-              <div className="flex flex-row items-center">
-                <span>i</span>
-                <HeartIcon
-                  size={24}
-                  className="fill-red-500"
-                  style={{ transform: "scale(0.6)" }}
-                />
-                <span>Open Source</span>
-              </div>
-            }
-            direction="right"
-            allContainerClassName="ml-2"
-          >
+          <Tooltip content="Github" direction="right">
             <a
               href="https://github.com/erenkulaksiz/notal"
               target="_blank"
@@ -174,6 +159,16 @@ export function Footer({ className }: { className?: string }) {
                 height={18}
                 style={{ color: "currentColor" }}
               />
+            </a>
+          </Tooltip>
+          <Tooltip content="Storybook" direction="right">
+            <a
+              href="https://notalui.vercel.app"
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center justify-center"
+            >
+              <Image src={StorybookLogo} width={18} height={18} />
             </a>
           </Tooltip>
           <span className="uppercase text-xs ml-3 text-neutral-400 text-left">

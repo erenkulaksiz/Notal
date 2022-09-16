@@ -39,7 +39,7 @@ export function HomeWorkspaceCard({
           duration: 0.02,
           damping: 25,
         }}
-        className="w-full h-32 flex flex-col justify-end shadow-2xl rounded-xl bg-white dark:bg-neutral-800 overflow-hidden"
+        className="w-full h-32 flex flex-col justify-end shadow-2xl rounded-xl dark:bg-neutral-800 bg-neutral-400/30 overflow-hidden"
       >
         <div className="animate-pulse w-full h-18 px-4 pb-4">
           <div className="w-[65%] h-6 bg-neutral-300 dark:bg-neutral-700" />
@@ -87,7 +87,7 @@ export function HomeWorkspaceCard({
                 as={`/workspace/${workspace?.id ?? "not-found"}`}
                 passHref
               >
-                <a className="flex-col flex w-full">
+                <a className="flex-col flex w-full mr-6">
                   <span className="font-medium text-ellipsis overflow-hidden whitespace-nowrap drop-shadow break-words">
                     {workspace?.title}
                   </span>
@@ -116,6 +116,7 @@ export function HomeWorkspaceCard({
           {!preview && (
             <div className="flex flex-col justify-end pointer-events-auto drop-shadow">
               <Tooltip
+                outline
                 content={
                   workspace?.starred
                     ? "Remove from favorites"
@@ -130,7 +131,7 @@ export function HomeWorkspaceCard({
                   )}
                 </Button>
               </Tooltip>
-              <Tooltip content="Delete workspace">
+              <Tooltip content="Delete workspace" outline>
                 <Button className="p-3 pt-1 pb-1" light onClick={onDelete}>
                   <DeleteIcon size={24} fill="currentColor" />
                 </Button>
