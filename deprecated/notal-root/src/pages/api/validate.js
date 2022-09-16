@@ -2,7 +2,7 @@ const admin = require("firebase-admin");
 const { firebaseConfig } = require('../../config/firebaseApp.config');
 const { connectToDatabase } = require('../../../lib/mongodb');
 
-const googleService = JSON.parse(process.env.NEXT_PUBLIC_GOOGLE_SERVICE);
+const googleService = JSON.parse(process.env.GOOGLE_SERVICE);
 
 if (!admin.apps.length) {
     admin.initializeApp({
@@ -23,6 +23,8 @@ export default async function handler(req, res) {
         res.status(400).send({ success: false })
         return
     }
+
+    Log.debug("request! body", req.body)
 
     let token = "";
 

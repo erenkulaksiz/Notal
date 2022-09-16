@@ -4,7 +4,7 @@ const ObjectId = require('mongodb').ObjectId;
 
 const { customAlphabet } = require('nanoid')
 
-const googleService = JSON.parse(process.env.NEXT_PUBLIC_GOOGLE_SERVICE);
+const googleService = JSON.parse(process.env.GOOGLE_SERVICE);
 
 import Log from "@utils/logger"
 

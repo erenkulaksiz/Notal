@@ -52,7 +52,7 @@ export const ValidateToken = async ({ token }) => {
     })
         .then(response => response.json())
         .catch(error => {
-            return { success: false, error: { code: "validation-error", errorMessage: error } }
+            return { success: false, error: { code: "validation-error"/*, errorMessage: error*/ } }
         });
 
     if (data.success) {
@@ -96,7 +96,8 @@ export const GetWorkspaces = async ({ uid, token }) => {
         method: "POST",
         headers: { 'Authorization': 'Bearer ' + token },
         body: JSON.stringify({ uid, action: "GET_WORKSPACES" }),
-    }).then(response => response.json());
+    }).then(response => response.json())
+        .catch(error => Log.debug("err get workspaces:", error))
 
     if (data?.success) {
         if (data?.data) {

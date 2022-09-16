@@ -1,5 +1,5 @@
 const admin = require("firebase-admin");
-const googleService = JSON.parse(process.env.NEXT_PUBLIC_GOOGLE_SERVICE);
+const googleService = JSON.parse(process.env.GOOGLE_SERVICE);
 
 const { connectToDatabase } = require('../../../../lib/mongodb');
 const { db } = await connectToDatabase();
