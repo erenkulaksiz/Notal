@@ -14,7 +14,7 @@ export { Navbar } from "./Navbar/Navbar";
 export { Home } from "./Home/Home";
 export { Footer } from "./Footer/Footer";
 export { LoadingOverlay } from "./LoadingOverlay/LoadingOverlay";
-export { HomeWorkspaceCard } from "./WorkspaceCard/WorkspaceCard";
+export { HomeWorkspaceCard } from "./Workspace/components/WorkspaceCard/WorkspaceCard";
 export { Toast } from "./Toast/Toast";
 export { AlertModal } from "./Alert/Alert";
 export { Colorpicker } from "./Colorpicker/Colorpicker";

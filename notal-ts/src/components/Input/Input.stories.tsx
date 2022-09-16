@@ -46,6 +46,6 @@ WithPassword.args = {
 
 export const WithPasswordVisiblity = Template.bind({});
 WithPasswordVisiblity.args = {
-  password: true,
+  type: "password",
   passwordVisibility: true,
 };
