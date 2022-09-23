@@ -33,3 +33,7 @@ div#__next {
 .bg-yellow-500 {
   background-color: rgb(234 179 8);
 }
+
+.sb-main-fullscreen {
+  overflow: auto !important;
+}

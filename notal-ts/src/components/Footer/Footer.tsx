@@ -109,6 +109,18 @@ export function Footer({ className }: { className?: string }) {
               Home
             </a>
           </Link>
+          <Link
+            href="http://notalui.vercel.app/?path=/docs/changelog--page"
+            passHref
+          >
+            <a
+              className="uppercase mt-2 text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out"
+              about="_blank"
+              rel="noreferrer"
+            >
+              Changelog
+            </a>
+          </Link>
           {/*<a href="#" className="uppercase mt-2 text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
               Tutorial
           </a>*/}

@@ -1,0 +1,25 @@
+import { Meta } from '@storybook/addon-docs';
+
+<Meta title="Changelog" />
+
+# Changelog
+
+## 2.0.5 - 24.09.2022
+- [feat] Add `Changelog` section to Storybook, i should've been added it already
+- [feat] Add `Changelog` link to `Footer` component
+- [feat] Add all components to `Introduction` section of storybook
+- [feat] Add `WithTextarea` section to `Input` storybook
+- [feat] Add `AddCardModal` and `AddFieldModal` component
+- [feat] Add functionality to "add to favorites" and "toggle privacy" right inside workspace
+- [feat] Add storybook logo+link to footer
+- [feat] Add `headerVisible` prop to `Tab` component
+- [feat] Add `WorkspaceField` and `WorkspaceFieldCard` component
+- [feat] Add functionality that `useWorkspace` hook can now control workspace's status (loading, starred, visible, ...etc)
+- [feat] Add ability to delete workspace from inside workspace where it was not possible
+- [fix] Fix where landing screen should use 100vh instead of padding
+- [fix] Fix where all components didn't use index.ts files
+- [fix] Fix where all component stories used local components instead of `@components` usage
+- [fix] Fix where min title and max title lengths were not in `LIMITS` file
+- [fix] Fix where AddWorkspaceModal component used alot of states, switched to `useReducer` hook
+- [fix] Fix where landing page background was overlapping with other contents and had wrong positioning
+- [fix] Fix where workspace wasn't finishing loading

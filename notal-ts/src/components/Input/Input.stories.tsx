@@ -49,3 +49,9 @@ WithPasswordVisiblity.args = {
   type: "password",
   passwordVisibility: true,
 };
+
+export const WithTextarea = Template.bind({});
+WithTextarea.args = {
+  textarea: true,
+  className: "p-2 h-24",
+};
