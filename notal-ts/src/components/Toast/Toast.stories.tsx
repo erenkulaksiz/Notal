@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
-import { Toast } from "./Toast";
-import { Button } from "@components";
+import { Button, Toast } from "@components";
 
 export default {
   title: "Interactive/Toast",

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
-import { Colorpicker } from "./Colorpicker";
+import { Colorpicker } from "@components";
 
 export default {
   title: "Interactive/Colorpicker",

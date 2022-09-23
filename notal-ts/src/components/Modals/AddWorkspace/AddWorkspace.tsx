@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useReducer } from "react";
 
 import {
   Modal,
@@ -21,22 +21,80 @@ import {
   VisibleOffIcon,
   CloudUploadIcon,
 } from "@icons";
-import { useAuth, useNotalUI } from "@hooks";
+import { useNotalUI } from "@hooks";
 import { Log } from "@utils";
 import { WorkspaceService } from "@services/WorkspaceService";
 import { LIMITS } from "@constants/limits";
 import { WorkspaceDefaults } from "@constants/workspacedefaults";
-import type { AddWorkspaceModalProps } from "./AddWorkspace.d";
+import {
+  AddWorkspaceModalProps,
+  WorkspaceAction,
+  AddWorkspaceActionType,
+} from "./AddWorkspace.d";
+import { WorkspaceTypes } from "@types";
+
+function reducer(
+  state: WorkspaceTypes,
+  action: WorkspaceAction
+): WorkspaceTypes {
+  switch (action.type) {
+    case AddWorkspaceActionType.SET_TITLE:
+      return { ...state, title: action.payload };
+
+    case AddWorkspaceActionType.SET_DESC:
+      return { ...state, desc: action.payload };
+
+    case AddWorkspaceActionType.SET_THUMBNAIL:
+      return { ...state, ...action.payload };
+
+    case AddWorkspaceActionType.SET_WORKSPACE:
+      return { ...state, ...action.payload };
+
+    case AddWorkspaceActionType.SET_STARRED:
+      return { ...state, starred: action.payload };
+
+    case AddWorkspaceActionType.SET_VISIBLE:
+      return { ...state, workspaceVisible: action.payload };
+
+    case AddWorkspaceActionType.SET_THUMB_TYPE:
+      return {
+        ...state,
+        thumbnail: { ...state.thumbnail, type: action.payload },
+      };
+
+    case AddWorkspaceActionType.SET_THUMB_COLOR:
+      return {
+        ...state,
+        thumbnail: {
+          ...state.thumbnail,
+          color: action.payload,
+        },
+      };
+
+    case AddWorkspaceActionType.SET_THUMB_GRADIENT_COLORS:
+      return {
+        ...state,
+        thumbnail: {
+          ...state.thumbnail,
+          colors: {
+            ...state.thumbnail.colors,
+            ...action.payload,
+          },
+        },
+      };
+
+    default:
+      return state;
+  }
+}
 
 export function AddWorkspaceModal({
   open,
   onClose,
   onAdd,
 }: AddWorkspaceModalProps) {
-  const auth = useAuth();
   const NotalUI = useNotalUI();
-
-  const [newWorkspace, setNewWorkspace] = useState(WorkspaceDefaults);
+  const [state, dispatch] = useReducer(reducer, WorkspaceDefaults);
 
   const [newWorkspaceErr, setNewWorkspaceErr] = useState<{
     title: string | boolean;
@@ -45,36 +103,36 @@ export function AddWorkspaceModal({
     title: false,
     desc: false,
   });
-  const thumbnailRef = useRef<HTMLInputElement>(null);
   const [thumbnailLoading, setThumbnailLoading] = useState(false);
   const [tab, setTab] = useState(0);
+  const thumbnailRef = useRef<HTMLInputElement>(null);
 
   function close() {
     onClose();
-    setNewWorkspaceErr({ ...newWorkspace, title: false, desc: false });
-    setNewWorkspace(WorkspaceDefaults);
+    setNewWorkspaceErr({ ...newWorkspaceErr, title: false, desc: false });
+    dispatch({
+      type: AddWorkspaceActionType.SET_WORKSPACE,
+      payload: WorkspaceDefaults,
+    });
     setTab(0);
   }
 
   async function submit() {
-    if (newWorkspace.title.length < LIMITS.MIN.WORKSPACE_TITLE_CHARACTER) {
+    if (state.title.length < LIMITS.MIN.WORKSPACE_TITLE_CHARACTER) {
       setNewWorkspaceErr({
         ...newWorkspaceErr,
         title: `Title must be minimum ${LIMITS.MIN.WORKSPACE_TITLE_CHARACTER} characters long.`,
       });
       return;
     }
-    if (newWorkspace.title.length > LIMITS.MAX.WORKSPACE_TITLE_CHARACTER) {
+    if (state.title.length > LIMITS.MAX.WORKSPACE_TITLE_CHARACTER) {
       setNewWorkspaceErr({
         ...newWorkspaceErr,
         title: `Title must be maximum ${LIMITS.MAX.WORKSPACE_TITLE_CHARACTER} characters long.`,
       });
       return;
     }
-    if (
-      newWorkspace.desc &&
-      newWorkspace.desc.length > LIMITS.MAX.WORKSPACE_DESC_CHARACTER
-    ) {
+    if (state.desc && state.desc.length > LIMITS.MAX.WORKSPACE_DESC_CHARACTER) {
       setNewWorkspaceErr({
         ...newWorkspaceErr,
         desc: `Description must be maximum ${LIMITS.MAX.WORKSPACE_DESC_CHARACTER} characters long.`,
@@ -85,23 +143,17 @@ export function AddWorkspaceModal({
     setNewWorkspaceErr({ ...newWorkspaceErr, title: false, desc: false });
 
     // on non-image type thumbnails
-    if (newWorkspace.thumbnail.type != "image") {
-      onAdd({
-        ...newWorkspace,
-        _id: Date.now().toString(),
-        id: Date.now().toString(),
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      });
+    if (state.thumbnail.type != "image") {
+      onAdd(state);
       close();
       return;
     }
 
-    if (!newWorkspace.thumbnail.fileData) return;
-    Log.debug(newWorkspace.thumbnail.fileData);
+    if (!state.thumbnail.fileData) return;
+    Log.debug(state.thumbnail.fileData);
 
     // check file size
-    const file = Math.round(newWorkspace.thumbnail.fileData.size / 1024);
+    const file = Math.round(state.thumbnail.fileData.size / 1024);
     if (file >= LIMITS.MAX.WORKSPACE_THUMBNAIL_IMAGE_SIZE) {
       NotalUI.Toast.show({
         title: "Error",
@@ -116,7 +168,7 @@ export function AddWorkspaceModal({
     }
 
     // check file type
-    const fileType = newWorkspace.thumbnail.fileData.type;
+    const fileType = state.thumbnail.fileData.type;
     if (
       fileType == "image/jpeg" ||
       fileType == "image/png" ||
@@ -124,24 +176,26 @@ export function AddWorkspaceModal({
     ) {
       setThumbnailLoading(true);
       const res = await WorkspaceService.workspace.uploadThumbnail({
-        image: newWorkspace.thumbnail.fileData,
+        image: state.thumbnail.fileData,
       });
 
       if (res && res.success) {
         setThumbnailLoading(false);
-        setNewWorkspace({
-          ...newWorkspace,
-          thumbnail: {
-            ...newWorkspace.thumbnail,
-            file: res.url,
-            fileData: null,
+        dispatch({
+          type: AddWorkspaceActionType.SET_THUMBNAIL,
+          payload: {
+            thumbnail: {
+              ...state.thumbnail,
+              file: res.url,
+              fileData: null,
+            },
           },
         });
         // send res data to server now
         Log.debug("thumbnail upload success! res: ", res);
 
         onAdd({
-          ...newWorkspace,
+          ...state,
           thumbnail: {
             file: res.url,
             type: "image",
@@ -175,12 +229,14 @@ export function AddWorkspaceModal({
       let reader = new FileReader();
       let file = e.target.files[0];
       reader.onloadend = () => {
-        setNewWorkspace({
-          ...newWorkspace,
-          thumbnail: {
-            ...newWorkspace.thumbnail,
-            file: reader.result,
-            fileData: file,
+        dispatch({
+          type: AddWorkspaceActionType.SET_THUMBNAIL,
+          payload: {
+            thumbnail: {
+              ...state.thumbnail,
+              file: reader.result,
+              fileData: file,
+            },
           },
         });
       };
@@ -205,20 +261,19 @@ export function AddWorkspaceModal({
             <Loading size="xl" />
           </div>
         )}
-        {/*<Input fullWidth icon={<UserIcon size={24} />} containerClassName="fill-neutral-600" placeholder="Workspace Title" />*/}
         <div className="w-full mb-4">
           <HomeWorkspaceCard
             preview
             workspace={{
-              workspaceVisible: newWorkspace.workspaceVisible,
-              title: newWorkspace.title || "Enter a title",
-              desc: newWorkspace.desc,
-              starred: newWorkspace.starred,
-              thumbnail: newWorkspace.thumbnail,
-              _id: "preview",
-              id: "preview",
-              createdAt: Date.now(),
-              updatedAt: Date.now(),
+              workspaceVisible: state.workspaceVisible,
+              title: state.title || "Enter a title",
+              desc: state.desc,
+              starred: state.starred,
+              thumbnail: state.thumbnail,
+              _id: WorkspaceDefaults._id,
+              id: WorkspaceDefaults.id,
+              createdAt: WorkspaceDefaults.createdAt,
+              updatedAt: WorkspaceDefaults.updatedAt,
             }}
           />
         </div>
@@ -226,7 +281,7 @@ export function AddWorkspaceModal({
           selected={tab}
           onSelect={(index) => setTab(index)}
           id="workspaceTab"
-          globalTabViewClassName="pt-4 grid grid-cols-1 gap-2"
+          globalTabViewClassName="pt-2 grid grid-cols-1 gap-2"
         >
           <Tab.TabView title="Workspace">
             <label htmlFor="workspaceTitle">Workspace Title</label>
@@ -234,9 +289,12 @@ export function AddWorkspaceModal({
               fullWidth
               placeholder="Workspace Title"
               onChange={(e) =>
-                setNewWorkspace({ ...newWorkspace, title: e.target.value })
+                dispatch({
+                  type: AddWorkspaceActionType.SET_TITLE,
+                  payload: e.target.value,
+                })
               }
-              value={newWorkspace.title}
+              value={state.title}
               id="workspaceTitle"
               maxLength={32}
             />
@@ -248,9 +306,12 @@ export function AddWorkspaceModal({
               fullWidth
               placeholder="Workspace Description"
               onChange={(e) =>
-                setNewWorkspace({ ...newWorkspace, desc: e.target.value })
+                dispatch({
+                  type: AddWorkspaceActionType.SET_DESC,
+                  payload: e.target.value,
+                })
               }
-              value={newWorkspace.desc}
+              value={state.desc}
               id="workspaceDescription"
               maxLength={96}
             />
@@ -259,7 +320,7 @@ export function AddWorkspaceModal({
             )}
             <div className="py-1 grid grid-cols-1 gap-2">
               <div className="flex flex-row items-center">
-                {newWorkspace.starred ? (
+                {state.starred ? (
                   <StarFilledIcon
                     size={24}
                     fill="currentColor"
@@ -276,11 +337,11 @@ export function AddWorkspaceModal({
                 )}
                 <Checkbox
                   id="starredWorkspace"
-                  checked={newWorkspace.starred}
-                  onChange={(e) =>
-                    setNewWorkspace({
-                      ...newWorkspace,
-                      starred: !newWorkspace.starred,
+                  checked={state.starred}
+                  onChange={(starred) =>
+                    dispatch({
+                      type: AddWorkspaceActionType.SET_STARRED,
+                      payload: starred,
                     })
                   }
                 >
@@ -288,7 +349,7 @@ export function AddWorkspaceModal({
                 </Checkbox>
               </div>
               <div className="flex flex-row items-center">
-                {newWorkspace.workspaceVisible ? (
+                {state.workspaceVisible ? (
                   <VisibleIcon
                     width={24}
                     height={24}
@@ -307,15 +368,15 @@ export function AddWorkspaceModal({
                 )}
                 <Checkbox
                   id="privateWorkspace"
-                  checked={!newWorkspace.workspaceVisible}
-                  onChange={(e) =>
-                    setNewWorkspace({
-                      ...newWorkspace,
-                      workspaceVisible: !newWorkspace.workspaceVisible,
+                  checked={state.workspaceVisible}
+                  onChange={(workspaceVisible) =>
+                    dispatch({
+                      type: AddWorkspaceActionType.SET_VISIBLE,
+                      payload: workspaceVisible,
                     })
                   }
                 >
-                  Private Workspace
+                  Public Workspace
                 </Checkbox>
               </div>
             </div>
@@ -324,12 +385,9 @@ export function AddWorkspaceModal({
             <label htmlFor="thumbnailType">Workspace Thumbnail Type</label>
             <Select
               onChange={(e) =>
-                setNewWorkspace({
-                  ...newWorkspace,
-                  thumbnail: {
-                    ...newWorkspace.thumbnail,
-                    type: e.target.value,
-                  },
+                dispatch({
+                  type: AddWorkspaceActionType.SET_THUMB_TYPE,
+                  payload: e.target.value,
                 })
               }
               className="w-full"
@@ -349,7 +407,7 @@ export function AddWorkspaceModal({
                 },
               ]}
             />
-            {newWorkspace?.thumbnail?.type == "image" && (
+            {state?.thumbnail?.type == "image" && (
               <div
                 className="flex flex-col text-blue-400 mt-2 items-center justify-center w-full h-16 border-2 border-solid border-blue-400 group hover:border-blue-300 hover:text-blue-300 rounded-xl cursor-pointer"
                 onClick={() => {
@@ -369,37 +427,33 @@ export function AddWorkspaceModal({
                 />
               </div>
             )}
-            {newWorkspace?.thumbnail?.type == "singleColor" && (
+            {state?.thumbnail?.type == "singleColor" && (
               <div className="flex flex-col items-start">
                 <label htmlFor="cardColor">Workspace Color</label>
                 <Colorpicker
                   id="cardColor"
-                  color={newWorkspace?.thumbnail?.color}
+                  color={state?.thumbnail?.color}
                   onChange={(color) => {
-                    setNewWorkspace({
-                      ...newWorkspace,
-                      thumbnail: { ...newWorkspace.thumbnail, color },
+                    dispatch({
+                      type: AddWorkspaceActionType.SET_THUMB_COLOR,
+                      payload: color,
                     });
                   }}
                 />
               </div>
             )}
-            {newWorkspace?.thumbnail?.type == "gradient" && (
+            {state?.thumbnail?.type == "gradient" && (
               <div className="flex items-center gap-2">
                 <div>
                   <label htmlFor="cardStartColor">Start Color</label>
                   <Colorpicker
                     id="cardStartColor"
-                    color={newWorkspace?.thumbnail?.colors?.start}
+                    color={state?.thumbnail?.colors?.start}
                     onChange={(color) => {
-                      setNewWorkspace({
-                        ...newWorkspace,
-                        thumbnail: {
-                          ...newWorkspace.thumbnail,
-                          colors: {
-                            ...newWorkspace.thumbnail.colors,
-                            start: color,
-                          },
+                      dispatch({
+                        type: AddWorkspaceActionType.SET_THUMB_GRADIENT_COLORS,
+                        payload: {
+                          start: color,
                         },
                       });
                     }}
@@ -409,16 +463,12 @@ export function AddWorkspaceModal({
                   <label htmlFor="cardEndColor">End Color</label>
                   <Colorpicker
                     id="cardEndColor"
-                    color={newWorkspace?.thumbnail?.colors?.end}
+                    color={state?.thumbnail?.colors?.end}
                     onChange={(color) => {
-                      setNewWorkspace({
-                        ...newWorkspace,
-                        thumbnail: {
-                          ...newWorkspace.thumbnail,
-                          colors: {
-                            ...newWorkspace.thumbnail.colors,
-                            end: color,
-                          },
+                      dispatch({
+                        type: AddWorkspaceActionType.SET_THUMB_GRADIENT_COLORS,
+                        payload: {
+                          end: color,
                         },
                       });
                     }}

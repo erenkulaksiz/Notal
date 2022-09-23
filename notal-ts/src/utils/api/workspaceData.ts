@@ -3,7 +3,7 @@ import { connectToDatabase } from "@lib/mongodb";
 import { WorkspaceTypes } from "@types";
 
 export interface WorkspaceDataReturnType {
-  success: boolean;
+  success?: boolean;
   error?:
     | string
     | {

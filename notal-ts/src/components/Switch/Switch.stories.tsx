@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
-import { Switch } from "./Switch";
+import { Switch } from "@components";
 import { CodeIcon } from "@icons";
 
 export default {

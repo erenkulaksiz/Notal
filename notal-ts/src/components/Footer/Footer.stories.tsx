@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
-import { Footer } from "./Footer";
+import { Footer } from "@components";
 
 export default {
   title: "Static/Footer",

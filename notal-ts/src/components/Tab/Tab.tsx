@@ -1,4 +1,9 @@
-import React, { ReactNode, useState, cloneElement } from "react";
+import React, {
+  ReactNode,
+  useState,
+  cloneElement,
+  isValidElement,
+} from "react";
 import { LayoutGroup } from "framer-motion";
 
 import { BuildComponent } from "@utils/style/buildComponent";
@@ -14,6 +19,7 @@ interface TabProps {
   className?: string; // classname for tab
   headerContainerClassName?: string; // classname for header container
   globalTabViewClassName?: string;
+  headerVisible?: boolean;
 }
 
 function Tab({
@@ -26,6 +32,7 @@ function Tab({
   headerContainerClassName,
   globalTabViewClassName, // applies these classnames to all tabviews inside tab
   loadingWorkspace = false,
+  headerVisible = true,
 }: TabProps) {
   const [hover, setHover] = useState(-1);
 
@@ -43,38 +50,40 @@ function Tab({
 
   return (
     <div className={BuildTab.classes}>
-      <div className={BuildTabHeaderContainer.classes}>
-        <TabHeader
-          headerClassName={headerClassName}
-          loadingWorkspace={loadingWorkspace}
-        >
-          <LayoutGroup id={id}>
-            {Array.isArray(children) &&
-              children?.map((children, index) => (
-                <TabButton
-                  className="flex items-center justify-center w-full min-w-[100px] h-full group relative text-sm sm:text-md text-black dark:text-white"
-                  key={index}
-                  selected={selected == index}
-                  setSelected={() => onSelect(index)}
-                  onClick={() => onSelect(index)}
-                  onMouseEnter={() => setHover(index)}
-                  onMouseLeave={() => setHover(-1)}
-                  hover={hover == index}
-                  setHover={(index) => setHover(index)}
-                  title={children.props.title}
-                  aria-label={children.props.title}
-                >
-                  <div className="flex flex-row items-center">
-                    {children.props.icon && (
-                      <div>{children.props.icon && children.props.icon}</div>
-                    )}
-                    <div>{children.props.title ?? "Default"}</div>
-                  </div>
-                </TabButton>
-              ))}
-          </LayoutGroup>
-        </TabHeader>
-      </div>
+      {headerVisible && (
+        <div className={BuildTabHeaderContainer.classes}>
+          <TabHeader
+            headerClassName={headerClassName}
+            loadingWorkspace={loadingWorkspace}
+          >
+            <LayoutGroup id={id}>
+              {Array.isArray(children) &&
+                children?.map((children, index) => (
+                  <TabButton
+                    className="flex items-center justify-center w-full min-w-[100px] h-full group relative text-sm sm:text-md text-black dark:text-white"
+                    key={index}
+                    selected={selected == index}
+                    setSelected={() => onSelect(index)}
+                    onClick={() => onSelect(index)}
+                    onMouseEnter={() => setHover(index)}
+                    onMouseLeave={() => setHover(-1)}
+                    hover={hover == index}
+                    setHover={(index) => setHover(index)}
+                    title={children.props.title}
+                    aria-label={children.props.title}
+                  >
+                    <div className="flex flex-row items-center">
+                      {children.props.icon && (
+                        <div>{children.props.icon && children.props.icon}</div>
+                      )}
+                      <div>{children.props.title ?? "Default"}</div>
+                    </div>
+                  </TabButton>
+                ))}
+            </LayoutGroup>
+          </TabHeader>
+        </div>
+      )}
       {Array.isArray(children) &&
         children?.map((child, index) => {
           if (index != selected) return;

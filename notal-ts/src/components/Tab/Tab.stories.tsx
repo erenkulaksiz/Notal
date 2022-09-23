@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
-import Tab from "./Tab";
+import { Tab } from "@components";
 import { CodeIcon, HeartIcon } from "@icons";
 
 export default {

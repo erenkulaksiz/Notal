@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
-import { Select } from "./Select";
+import { Select } from "@components";
 
 export default {
   title: "Interactive/Form/Select",

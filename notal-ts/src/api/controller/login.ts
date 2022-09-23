@@ -37,7 +37,9 @@ TIME: ${formatDate(Date.now())}
 TS: ${Date.now()}
 URL: ${server}
 ENV: ${process.env.NODE_ENV}
-PROVIDER: ${validateUser.decodedToken.firebase.sign_in_provider}`,
+VER: ${process.env.NEXT_PUBLIC_APP_VERSION}
+PROVIDER: ${validateUser.decodedToken.firebase.sign_in_provider}
+PLATFORM: web`,
   });
 
   return accept({ res, action: "user_logined" });

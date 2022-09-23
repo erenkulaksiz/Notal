@@ -29,14 +29,25 @@ export interface NotalRootProps extends PropsWithChildren {
   withoutLayout?: boolean;
 }
 
-export interface FieldTypes {
-  collapsed: boolean;
+export interface CardTypes {
+  color?: string;
   createdAt: number;
   updatedAt: number;
   _id: string;
   owner: string;
   title: string;
-  cards?: [];
+  desc?: string;
+  tags?: [];
+}
+
+export interface FieldTypes {
+  collapsed?: boolean;
+  createdAt: number;
+  updatedAt: number;
+  _id: string;
+  owner: string;
+  title: string;
+  cards?: Array[CardTypes];
 }
 
 export interface ThumbnailTypes {

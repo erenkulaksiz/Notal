@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 import { AddIcon } from "@icons";
 
-const AddWorkspaceButton = ({ onClick }: { onClick: () => void }) => {
+export function AddWorkspaceButton({ onClick }: { onClick: () => void }) {
   return (
     <motion.div
       variants={{
@@ -25,6 +25,4 @@ const AddWorkspaceButton = ({ onClick }: { onClick: () => void }) => {
       </button>
     </motion.div>
   );
-};
-
-export default AddWorkspaceButton;
+}

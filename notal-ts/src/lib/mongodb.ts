@@ -1,20 +1,17 @@
+import { Log } from "@utils/logger";
 import { Db, MongoClient, MongoClientOptions } from "mongodb";
 
 const MONGODB_URI = process.env.MONGODB_URI;
 const MONGODB_DB = "Notal";
 
-if (!MONGODB_URI) {
-  throw new Error("Define the MONGODB_URI environmental variable");
-}
-
-if (!MONGODB_DB) {
-  throw new Error("Define the MONGODB_DB environmental variable");
-}
-
 let cachedClient = <null | MongoClient>null;
 let cachedDb = <null | Db>null;
 
-export async function connectToDatabase() {
+export async function connectToDatabase() { 
+  if (!MONGODB_URI || !MONGODB_DB) {
+    throw new Error("Define/Check the MONGODB_URI or MONGODB_DB environmental variable");
+  }
+
   if (cachedClient && cachedDb) {
     return {
       client: cachedClient,
@@ -27,7 +24,7 @@ export async function connectToDatabase() {
     useUnifiedTopology: true,
   };
 
-  let client = new MongoClient(MONGODB_URI ?? "", opts);
+  let client = new MongoClient(MONGODB_URI, opts);
   await client.connect();
   let db = client.db(MONGODB_DB);
 

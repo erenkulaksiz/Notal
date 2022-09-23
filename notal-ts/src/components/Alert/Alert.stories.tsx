@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
-import { AlertModal } from "./Alert";
-import { Button } from "@components";
+import { Button, AlertModal } from "@components";
 
 export default {
   title: "Interactive/Modals/AlertModal",

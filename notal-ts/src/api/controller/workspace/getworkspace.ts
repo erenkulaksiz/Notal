@@ -10,12 +10,13 @@ const { accept, reject } = require("@api/utils");
 export async function getworkspace(req: NextApiRequest, res: NextApiResponse) {
   const { db } = await connectToDatabase();
   const workspacesCollection = await db.collection("workspaces");
+  const usersCollection = await db.collection("users");
 
   const { body } = req;
   if (!body.id) return reject({ reason: "no-id", res });
   const { id } = body;
 
-  const workspace = await workspacesCollection.findOne({
+  let workspace = await workspacesCollection.findOne({
     id,
     _deleted: { $in: [null, false] },
   });
@@ -35,6 +36,25 @@ export async function getworkspace(req: NextApiRequest, res: NextApiResponse) {
         res,
       });
     }
+  }
+
+  if(!workspace?.owner){
+    return reject({res, reason: "no-owner"})
+  }
+  const workspaceOwner = await usersCollection.findOne({
+    uid: workspace.owner,
+  });
+  if(!workspaceOwner){
+    return reject({res, reason: "no-owner"})
+  }
+  workspace = {
+    ...workspace,
+    owner: {
+      username: workspaceOwner.username,
+      uid: workspaceOwner?.uid,
+      avatar: workspaceOwner?.avatar,
+      fullname: workspaceOwner?.fullname,
+    },
   }
 
   return accept({

@@ -57,6 +57,8 @@ export const WorkspaceService = {
     },
     star: async function (id: string) {
       // Send a star workspace request to API.
+      if(!id) return;
+      
       const auth = getAuth();
       const token = await auth.currentUser?.getIdToken();
 
@@ -89,6 +91,27 @@ export const WorkspaceService = {
         {
           token,
           action: "delete",
+        }
+      );
+
+      if (data?.success) {
+        return { success: true };
+      }
+      return { success: false, error: data?.error };
+    },
+    toggleVisibility: async function (id: string) {
+      // Send a change workspace visibility request to API.
+      const auth = getAuth();
+      const token = await auth.currentUser?.getIdToken();
+
+      const data = await workspaceFetch(
+        {
+          id,
+          uid: auth?.currentUser?.uid,
+        },
+        {
+          token,
+          action: "toggleVisibility",
         }
       );
 

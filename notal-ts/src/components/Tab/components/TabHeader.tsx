@@ -31,7 +31,7 @@ export default function TabHeader({
   const BuildTabHeader = BuildComponent({
     name: "Notal UI Tab Header",
     defaultClasses:
-      "h-10 flex flex-1 flex-row relative border-2 border-solid dark:border-neutral-800 border-neutral-500/40 rounded-lg",
+      "h-10 flex flex-1 flex-row relative border-2 border-solid dark:border-neutral-800 border-neutral-300 rounded-lg",
     extraClasses: headerClassName,
   });
 

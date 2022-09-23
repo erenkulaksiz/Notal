@@ -1,31 +1,41 @@
-// Components
-export { Loading } from "./Loading/Loading";
-export { Button } from "./Button/Button";
-export { Layout } from "./Layout/Layout";
-export { AcceptCookies } from "./AcceptCookies/AcceptCookies";
-export { CreatePortal } from "./Portal/Portal";
-export { Tooltip } from "./Tooltip/Tooltip";
-export { Switch } from "./Switch/Switch";
-export { default as Modal } from "./Modal/Modal";
-export { LoginModal } from "./Modals/LoginModal/LoginModal";
-export { Container } from "./Container/Container";
-export { Landing } from "./Landing/Landing";
-export { Navbar } from "./Navbar/Navbar";
-export { Home } from "./Home/Home";
-export { Footer } from "./Footer/Footer";
-export { LoadingOverlay } from "./LoadingOverlay/LoadingOverlay";
-export { HomeWorkspaceCard } from "./Workspace/components/WorkspaceCard/WorkspaceCard";
-export { Toast } from "./Toast/Toast";
-export { AlertModal } from "./Alert/Alert";
-export { Colorpicker } from "./Colorpicker/Colorpicker";
-export { Checkbox } from "./Checkbox/Checkbox";
-export { default as Tab } from "./Tab/Tab";
-export { Input } from "./Input/Input";
-export { Select } from "./Select/Select";
-export { AddWorkspaceModal } from "./Modals/AddWorkspace/AddWorkspace";
-export { WorkspaceSEO } from "./Workspace/components/WorkspaceSEO";
-export { WorkspaceNotFound } from "./Workspace/components/WorkspaceNotFound";
-export { Workspace } from "./Workspace/Workspace";
-export { WorkspaceSidebar } from "./Workspace/components/WorkspaceSidebar";
-export { WorkspaceField } from "./Workspace/components/WorkspaceField/WorkspaceField";
-export { WorkspaceFieldHeader } from "./Workspace/components/WorkspaceField/WorkspaceFieldHeader";
+export {     
+    Workspace, 
+    WorkspaceField,
+    WorkspaceFieldCard,
+    WorkspaceFieldHeader,
+    WorkspaceNotFound, 
+    WorkspaceSEO, 
+    WorkspaceSidebar,
+} from "./Workspace";
+export { AcceptCookies } from "./AcceptCookies";
+export { AddWorkspaceButton } from "./Home";
+export { 
+    AddWorkspaceModal, 
+    AddCardModal,
+    AddFieldModal,
+    LoginModal
+} from "./Modals";
+export { AlertModal } from "./Alert";
+export { Button } from "./Button";
+export { Checkbox } from "./Checkbox";
+export { Colorpicker } from "./Colorpicker";
+export { Container } from "./Container";
+export { CreatePortal } from "./Portal";
+export { Footer } from "./Footer";
+export { Home } from "./Home";
+export { HomeWorkspaceCard } from "./Home";
+export { Input } from "./Input";
+export { 
+    Landing, 
+    LandingFeatureCard 
+} from "./Landing";
+export { Layout } from "./Layout";
+export { Loading } from "./Loading";
+export { LoadingOverlay } from "./LoadingOverlay";
+export { Modal } from "./Modal";
+export { Navbar } from "./Navbar";
+export { Select } from "./Select";
+export { Switch } from "./Switch";
+export { Tab } from "./Tab";
+export { Toast } from "./Toast";
+export { Tooltip } from "./Tooltip";

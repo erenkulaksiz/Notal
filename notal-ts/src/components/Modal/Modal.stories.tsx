@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
-import Modal from "./Modal";
-import { Button, Input } from "@components";
+import { Button, Input, Modal } from "@components";
 import { EmailIcon, LoginIcon, PasswordIcon } from "@icons";
-import { type } from "os";
 
 export default {
   title: "Interactive/Modal",

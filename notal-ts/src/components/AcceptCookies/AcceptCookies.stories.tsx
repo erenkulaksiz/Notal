@@ -1,7 +1,7 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
-import { AcceptCookies } from "./AcceptCookies";
+import { AcceptCookies } from "@components";
 
 export default {
   title: "Interactive/AcceptCookies",

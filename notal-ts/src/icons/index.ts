@@ -6,6 +6,7 @@ export { default as AtIcon } from "../../public/icons/at.svg";
 export { default as BackIcon } from "../../public/icons/back.svg";
 export { default as BookmarkOutlineIcon } from "../../public/icons/bookmark_outline.svg";
 export { default as BookmarkFilledIcon } from "../../public/icons/bookmark_filled.svg";
+export { default as BoltIcon } from "../../public/icons/bolt.svg";
 export { default as CakeIcon } from "../../public/icons/cake.svg";
 export { default as CheckIcon } from "../../public/icons/check.svg";
 export { default as CheckOutlineIcon } from "../../public/icons/check_outline.svg";

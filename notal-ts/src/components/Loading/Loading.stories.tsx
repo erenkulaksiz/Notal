@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
-import { Loading } from "./Loading";
+import { Loading } from "@components";
 
 export default {
   title: "Static/Loading",

@@ -114,8 +114,10 @@ EMAIL: ${validateUser.decodedToken.email}
 USERNAME: ${newUser.username}
 UID: ${validateUser.decodedToken.user_id}
 TIME: ${formatDate(Date.now())}
-TIMESTAMP: ${Date.now()}
-PROVIDER: ${validateUser.decodedToken.firebase.sign_in_provider}`,
+TS: ${Date.now()}
+PROVIDER: ${validateUser.decodedToken.firebase.sign_in_provider}
+VER: ${process.env.NEXT_PUBLIC_APP_VERSION}
+PLATFORM: web`,
     });
   }
 

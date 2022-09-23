@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
-import { LoginModal } from "./LoginModal";
-import { Button } from "@components";
+import { Button, LoginModal } from "@components";
 
 export default {
   title: "Interactive/Modals/LoginModal",

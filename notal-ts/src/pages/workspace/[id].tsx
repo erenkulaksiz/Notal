@@ -4,6 +4,7 @@ import useSWR from "swr";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 
+import { Log } from "@utils";
 import {
   Layout,
   Navbar,
@@ -36,6 +37,7 @@ function Workspace(props: NotalRootProps) {
   );
 
   useEffect(() => {
+    Log.debug("workspace:", workspace);
     workspaceHook.setWorkspace(workspace);
   }, [workspace.data]);
 
@@ -53,14 +55,8 @@ function Workspace(props: NotalRootProps) {
         </title>
         <WorkspaceSEO workspace={props.workspace} />
       </Head>
-      <Navbar
-        showCollapse
-        workspaceLoading={!props.workspace || workspace.isValidating}
-      />
-      <NotalWorkspace
-        workspaceData={props.workspace}
-        workspaceLoading={!props.workspace || workspace.isValidating}
-      />
+      <Navbar showCollapse />
+      <NotalWorkspace />
     </Layout>
   );
 }

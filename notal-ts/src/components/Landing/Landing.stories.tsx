@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
-import { Landing } from "./Landing";
+import { Landing } from "@components";
 
 export default {
   title: "Static/Landing",

@@ -1,13 +1,21 @@
+import { useEffect } from "react";
 import Head from "next/head";
 
 import { ValidateToken } from "@utils/api/validateToken";
 import { SecureIcon } from "@icons";
 import { Navbar, Footer, Layout, Container } from "@components";
 import type { NotalRootProps } from "@types";
+import { useWorkspace } from "@hooks";
 import type { GetServerSidePropsContext } from "next";
 import type { ValidateTokenReturnType } from "@utils/api/validateToken";
 
 export function PrivacyPolicy(props: NotalRootProps) {
+  const { setWorkspace } = useWorkspace();
+
+  useEffect(() => {
+    setWorkspace(null);
+  }, []);
+
   return (
     <Layout {...props}>
       <Head>

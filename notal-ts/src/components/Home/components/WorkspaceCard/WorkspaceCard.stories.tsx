@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
-import { HomeWorkspaceCard } from "./WorkspaceCard";
+import { HomeWorkspaceCard } from "@components";
 
 export default {
   title: "Interactive/Home/WorkspaceCard",

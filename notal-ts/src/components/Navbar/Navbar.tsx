@@ -10,24 +10,15 @@ import IconGalactic from "@public/icon_galactic.webp";
 import IconWhiteMobile from "@public/logo_white_mobile.webp";
 import IconGalacticMobile from "@public/logo_galactic_mobile.webp";
 import { Button, Tooltip, Loading, LoginModal } from "@components";
-import {
-  UserIcon,
-  LogoutIcon,
-  LoginIcon,
-  HomeFilledIcon,
-  ArrowDownIcon,
-} from "@icons";
+import { UserIcon, LogoutIcon, LoginIcon, ArrowDownIcon } from "@icons";
 import { LocalSettings } from "@utils/localStorage";
-import { useAuth } from "@hooks";
+import { useAuth, useWorkspace } from "@hooks";
 import { ThemeSwitcher } from "./components/ThemeSwitcher";
 import { WorkspaceOwnerProfile } from "./components/WorkspaceOwnerProfile";
 import type { NavbarProps } from "./Navbar.d";
 
-export function Navbar({
-  validating = false,
-  showCollapse = false,
-  workspaceLoading,
-}: NavbarProps) {
+export function Navbar({ showCollapse = false }: NavbarProps) {
+  const { workspaceLoading } = useWorkspace();
   const auth = useAuth();
   const { resolvedTheme } = useTheme();
   const router = useRouter();
@@ -100,7 +91,7 @@ export function Navbar({
         ) : (
           <div className="w-40 h-10 dark:bg-neutral-800 bg-neutral-200 animate-pulse" />
         )}
-        <WorkspaceOwnerProfile workspaceLoading={workspaceLoading} />
+        <WorkspaceOwnerProfile />
         {showCollapse && (
           <motion.div
             variants={{
@@ -138,7 +129,7 @@ export function Navbar({
         )}
       </div>
       <div className="w-1/2 flex items-center justify-end">
-        {validating && (
+        {workspaceLoading && (
           <div className="flex flex-row items-center justify-center p-1 dark:bg-neutral-800 bg-neutral-100 shadow rounded-lg mr-2 px-3">
             <Loading size="md" />
             <span className="ml-2 text-sm sm:flex hidden">Loading...</span>
@@ -213,10 +204,10 @@ export function Navbar({
         ) : (
           <>
             <ThemeSwitcher />
-            <div className="flex flex-row">
+            <div className="flex flex-row ml-2 gap-2">
               <Button
                 light
-                className="w-16 px-0 mr-2"
+                className="w-16 px-0"
                 size="sm"
                 onClick={() => setLoginModalVisible(true)}
                 aria-label="Sign up button"

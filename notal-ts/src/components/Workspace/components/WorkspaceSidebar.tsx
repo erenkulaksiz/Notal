@@ -1,23 +1,36 @@
-import { WorkspaceSidebarItem } from "./WorkspaceSidebarItem";
+import { useRouter } from "next/router";
 
+import { WorkspaceSidebarItem } from "./WorkspaceSidebarItem";
+import { Button } from "@components";
 import {
   StarFilledIcon,
   SettingsIcon,
   VisibleIcon,
   VisibleOffIcon,
   StarOutlineIcon,
+  DeleteIcon,
+  CrossIcon,
+  CheckIcon,
 } from "@icons";
-import useWorkspace from "@hooks/useWorkspace";
-
+import { useNotalUI, useWorkspace } from "@hooks";
 export function WorkspaceSidebar() {
-  const workspace = useWorkspace();
+  const { workspace, starWorkspace, visibilityChange, deleteWorkspace } =
+    useWorkspace();
+  const NotalUI = useNotalUI();
+  const router = useRouter();
+
+  async function onDelete() {
+    await deleteWorkspace();
+    NotalUI.Alert.close();
+    router.push("/");
+  }
 
   return (
-    <nav className="flex flex-col justify-between items-center sticky left-0 p-2 w-14 pt-2 z-40 border-2 dark:border-neutral-800 rounded-lg dark:bg-neutral-900/50 backdrop-blur-md bg-white border-neutral-500/40">
+    <nav className="flex flex-col h-full justify-between items-center sticky left-0 p-1 z-40 border-2 dark:border-neutral-800 rounded-lg dark:bg-neutral-900/50 backdrop-blur-md bg-white border-neutral-300">
       <div className="flex flex-col gap-2">
         <WorkspaceSidebarItem
           icon={
-            workspace.workspace?.data?.data?.starred ? (
+            workspace?.data?.data?.starred ? (
               <StarFilledIcon size={24} fill="#eab308" />
             ) : (
               <StarOutlineIcon
@@ -27,11 +40,11 @@ export function WorkspaceSidebar() {
             )
           }
           title={
-            workspace.workspace?.data?.data?.starred
+            workspace?.data?.data?.starred
               ? "Remove from favorites"
               : "Add to favorites"
           }
-          //onClick={() => }
+          onClick={async () => await starWorkspace()}
         />
         <WorkspaceSidebarItem
           icon={
@@ -41,14 +54,14 @@ export function WorkspaceSidebar() {
         />
         <WorkspaceSidebarItem
           icon={
-            workspace.workspace?.data?.data?.workspaceVisible ? (
-              <VisibleOffIcon
+            workspace?.data?.data?.workspaceVisible ? (
+              <VisibleIcon
                 width={24}
                 height={24}
                 className="dark:fill-white fill-black"
               />
             ) : (
-              <VisibleIcon
+              <VisibleOffIcon
                 width={24}
                 height={24}
                 className="dark:fill-white fill-black"
@@ -56,9 +69,48 @@ export function WorkspaceSidebar() {
             )
           }
           title={
-            workspace.workspace?.data?.data?.workspaceVisible
+            workspace?.data?.data?.workspaceVisible
               ? "Set workspace private"
               : "Set workspace public"
+          }
+          onClick={async () => await visibilityChange()}
+        />
+        <WorkspaceSidebarItem
+          icon={
+            <DeleteIcon
+              width={24}
+              height={24}
+              className="dark:fill-white fill-black"
+            />
+          }
+          title="Delete Workspace"
+          onClick={() =>
+            NotalUI.Alert.show({
+              title: "Delete Workspace",
+              titleIcon: <DeleteIcon size={24} fill="currentColor" />,
+              desc: (
+                <div className="text-center w-full">
+                  Are you sure want to delete this workspace?
+                </div>
+              ),
+              showCloseButton: false,
+              notCloseable: false,
+              buttons: [
+                <Button
+                  light="bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500"
+                  onClick={() => NotalUI.Alert.close()}
+                  key={1}
+                  fullWidth="w-[49%]"
+                >
+                  <CrossIcon size={24} fill="currentColor" />
+                  Cancel
+                </Button>,
+                <Button onClick={() => onDelete()} key={2} fullWidth="w-[49%]">
+                  <CheckIcon size={24} fill="currentColor" />
+                  Delete
+                </Button>,
+              ],
+            })
           }
         />
       </div>

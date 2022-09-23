@@ -1,11 +1,14 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { login } from "./login";
-import { getworkspaces } from "./workspace/getworkspaces";
-import { getworkspace } from "./workspace/getworkspace";
-import { star } from "./workspace/star";
-import { create } from "./workspace/create";
-import { deleteWorkspace } from "./workspace/delete";
+import { 
+  getworkspaces, 
+  getworkspace, 
+  star, 
+  create, 
+  deleteWorkspace, 
+  toggleVisibility 
+} from "./workspace";
 import { accept } from "@api/utils";
 
 export interface ControllerReturnType {
@@ -36,6 +39,7 @@ export function Controller() {
       star,
       create,
       delete: deleteWorkspace,
+      toggleVisibility
     },
   } as ControllerReturnType;
 }

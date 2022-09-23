@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
-import { Checkbox } from "./Checkbox";
+import { Checkbox } from "@components";
 
 export default {
   title: "Interactive/Form/Checkbox",

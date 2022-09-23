@@ -7,7 +7,6 @@ import { useAuth } from "@hooks";
 
 export default function Page404() {
   const router = useRouter();
-  const auth = useAuth();
 
   return (
     <div className="mx-auto sm:container min-h-screen items-center justify-center flex flex-col">

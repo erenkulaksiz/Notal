@@ -97,7 +97,7 @@ export function Footer({ className }: { className?: string }) {
                   </a>
             </Link>*/}
         </div>
-        <div className="flex flex-col dark:text-white text-neutral-600  hover:-translate-y-1 ease-in-out transition-all">
+        <div className="flex flex-col dark:text-white text-neutral-600 hover:-translate-y-1 ease-in-out transition-all">
           <span className="uppercase dark:text-neutral-400 text-black font-bold">
             Pages
           </span>
@@ -133,19 +133,23 @@ export function Footer({ className }: { className?: string }) {
           </a>
         </div>
       </div>
-      <div className="w-full mt-10 flex flex-row justify-between">
-        <div className="flex items-center gap-2 align-center">
+      <div className="w-full mt-10 flex flex-row justify-between hover:-translate-y-1 ease-in-out transition-all">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 align-center">
           <Tooltip content="Twitter" direction="right">
             <a
               href="https://twitter.com/notalapp"
               target="_blank"
               rel="noreferrer"
+              className="flex flex-row gap-2 items-center"
             >
               <TwitterIcon
                 width={18}
                 height={18}
                 style={{ color: "currentColor" }}
               />
+              <span className="dark:text-white text-neutral-500 flex sm:hidden text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
+                Twitter
+              </span>
             </a>
           </Tooltip>
           <Tooltip content="Github" direction="right">
@@ -153,12 +157,16 @@ export function Footer({ className }: { className?: string }) {
               href="https://github.com/erenkulaksiz/notal"
               target="_blank"
               rel="noreferrer"
+              className="flex flex-row gap-2 items-center"
             >
               <Github2Icon
                 width={18}
                 height={18}
                 style={{ color: "currentColor" }}
               />
+              <span className="dark:text-white text-neutral-500 flex sm:hidden text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
+                Github
+              </span>
             </a>
           </Tooltip>
           <Tooltip content="Storybook" direction="right">
@@ -166,21 +174,25 @@ export function Footer({ className }: { className?: string }) {
               href="https://notalui.vercel.app"
               target="_blank"
               rel="noreferrer"
-              className="flex items-center justify-center"
+              className="flex flex-row gap-2 items-center"
             >
               <Image
                 src={StorybookLogo}
                 width={18}
                 height={18}
                 alt="Storybook Logo"
+                className="dark:bg-white"
               />
+              <span className="dark:text-white text-neutral-500 flex sm:hidden text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out">
+                Storybook
+              </span>
             </a>
           </Tooltip>
-          <span className="uppercase text-xs ml-3 text-neutral-400 text-left">
+          <span className="uppercase mt-8 sm:mt-0 text-xs text-neutral-400 text-left">
             Development build
           </span>
         </div>
-        <div className="flex items-center text-neutral-400 sm:text-md text-xs text-right">
+        <div className="flex items-end text-neutral-400 sm:text-md text-xs text-right">
           © 2022 notal.app, All Rights Reserved.
         </div>
       </div>

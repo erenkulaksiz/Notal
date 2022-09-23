@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
-import { Input } from "./Input";
+import { Input } from "@components";
 import { CodeIcon } from "@icons";
 
 export default {
