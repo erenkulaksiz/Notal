@@ -57,4 +57,8 @@ module.exports = {
   },
   "typescript": { reactDocgen: false },
   "staticDirs": ['../public'],
+  "env": (config) => ({
+    ...config,
+    NEXT_PUBLIC_APP_VERSION: '2.0.5',
+  }),
 }

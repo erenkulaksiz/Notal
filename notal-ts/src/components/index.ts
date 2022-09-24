@@ -33,7 +33,11 @@ export { Layout } from "./Layout";
 export { Loading } from "./Loading";
 export { LoadingOverlay } from "./LoadingOverlay";
 export { Modal } from "./Modal";
-export { Navbar } from "./Navbar";
+export { 
+    Navbar, 
+    ThemeSwitcher, 
+    WorkspaceOwnerProfile 
+} from "./Navbar";
 export { Select } from "./Select";
 export { Switch } from "./Switch";
 export { Tab } from "./Tab";

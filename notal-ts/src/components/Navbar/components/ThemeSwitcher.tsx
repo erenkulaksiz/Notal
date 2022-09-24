@@ -10,6 +10,7 @@ export function ThemeSwitcher() {
     <Tooltip
       content={resolvedTheme === "dark" ? "Light Theme" : "Dark Theme"}
       direction="bottom"
+      outline
     >
       <Switch
         onChange={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}

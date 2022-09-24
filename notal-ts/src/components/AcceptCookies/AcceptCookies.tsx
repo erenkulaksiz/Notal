@@ -13,7 +13,6 @@ export function AcceptCookies() {
   }, []);
 
   function onAccept() {
-    //Cookies.set('cookies', 'true');
     setRenderCookies(false);
     LocalSettings.set("cookies", true);
   }
