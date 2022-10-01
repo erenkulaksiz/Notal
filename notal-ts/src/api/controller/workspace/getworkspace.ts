@@ -21,6 +21,10 @@ export async function getworkspace(req: NextApiRequest, res: NextApiResponse) {
     _deleted: { $in: [null, false] },
   });
 
+  if (!workspace) {
+    return reject({ reason: "not-found", res });
+  }
+
   if (workspace?.workspaceVisible == false) {
     if (!body.uid) return reject({ reason: "no-uid", res });
     const bearer = getTokenFromHeader(req);
@@ -32,20 +36,20 @@ export async function getworkspace(req: NextApiRequest, res: NextApiResponse) {
       });
     if (workspace.owner != validateUser.decodedToken.uid) {
       return reject({
-        reason: "not-found",
+        reason: "user-workspace-private",
         res,
       });
     }
   }
 
-  if(!workspace?.owner){
-    return reject({res, reason: "no-owner"})
+  if (!workspace?.owner) {
+    return reject({ res, reason: "no-owner" });
   }
   const workspaceOwner = await usersCollection.findOne({
     uid: workspace.owner,
   });
-  if(!workspaceOwner){
-    return reject({res, reason: "no-owner"})
+  if (!workspaceOwner) {
+    return reject({ res, reason: "no-owner" });
   }
   workspace = {
     ...workspace,
@@ -55,7 +59,7 @@ export async function getworkspace(req: NextApiRequest, res: NextApiResponse) {
       avatar: workspaceOwner?.avatar,
       fullname: workspaceOwner?.fullname,
     },
-  }
+  };
 
   return accept({
     data: workspace,

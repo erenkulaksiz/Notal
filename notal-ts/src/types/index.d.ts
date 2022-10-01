@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import { PropsWithChildren } from "react";
 
 export {};
@@ -31,22 +32,22 @@ export interface NotalRootProps extends PropsWithChildren {
 
 export interface CardTypes {
   color?: string;
-  createdAt: number;
-  updatedAt: number;
-  _id: string;
-  owner: string;
-  title: string;
+  createdAt?: number;
+  updatedAt?: number;
+  _id?: string;
+  owner?: string;
+  title?: string;
   desc?: string;
   tags?: [];
 }
 
 export interface FieldTypes {
   collapsed?: boolean;
-  createdAt: number;
-  updatedAt: number;
-  _id: string;
-  owner: string;
-  title: string;
+  createdAt?: number;
+  updatedAt?: number;
+  _id?: string | ObjectId;
+  owner?: string;
+  title?: string;
   cards?: Array[CardTypes];
 }
 

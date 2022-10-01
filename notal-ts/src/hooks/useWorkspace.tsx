@@ -13,6 +13,7 @@ import { useAuth, useNotalUI } from "@hooks";
 import { WorkspaceService } from "@services";
 import { Log } from "@utils";
 import type { WorkspaceDataReturnType } from "@utils/api/workspaceData";
+import type { CardTypes, FieldTypes } from "@types";
 
 export interface WorkspaceContextProps {
   workspace: SWRResponse<WorkspaceDataReturnType>;
@@ -23,8 +24,16 @@ export interface WorkspaceContextProps {
   isWorkspaceOwner: boolean;
   workspaceLoading: boolean;
   starWorkspace: () => Promise<void>;
-  visibilityChange: () => Promise<void>;
+  visibilityToggle: () => Promise<void>;
   deleteWorkspace: () => Promise<void>;
+  field: {
+    add: (title: FieldTypes) => Promise<void>;
+    delete: ({ id }: { id: string }) => Promise<void>;
+    edit: ({ id, title }: { id: string; title: string }) => Promise<void>;
+  };
+  card: {
+    add: ({ card, id }: { card: CardTypes; id: string }) => Promise<void>;
+  };
 }
 
 const WorkspaceContext = createContext<WorkspaceContextProps>(
@@ -65,7 +74,7 @@ export function WorkspaceProvider(props: PropsWithChildren) {
       setIsWorkspaceOwner(isOwner);
     }
 
-    if (workspace?.data) Log.debug("workspace", workspace.data);
+    Log.debug("workspace", workspace);
 
     if (workspace?.data?.success) {
       setWorkspaceLoading(false);
@@ -100,12 +109,14 @@ export function WorkspaceProvider(props: PropsWithChildren) {
       NotalUI.Alert.show({
         title: "Error",
         desc: data?.error,
+        showCloseButton: true,
+        notCloseable: false,
       });
       workspace?.mutate();
     }
   }
 
-  async function visibilityChange() {
+  async function visibilityToggle() {
     if (!workspace?.data?.data) return;
     workspace?.mutate(
       {
@@ -131,6 +142,8 @@ export function WorkspaceProvider(props: PropsWithChildren) {
       NotalUI.Alert.show({
         title: "Error",
         desc: data?.error,
+        showCloseButton: true,
+        notCloseable: false,
       });
       workspace?.mutate();
     }
@@ -162,6 +175,192 @@ export function WorkspaceProvider(props: PropsWithChildren) {
       NotalUI.Alert.show({
         title: "Error",
         desc: data?.error,
+        showCloseButton: true,
+        notCloseable: false,
+      });
+      workspace?.mutate();
+    }
+  }
+
+  async function addField({ title }: { title: string }) {
+    if (!workspace?.data?.data) return;
+
+    workspace?.mutate(
+      {
+        ...workspace.data,
+        data: {
+          ...workspace.data.data,
+          fields: [
+            ...workspace.data.data.fields,
+            {
+              _id: Date.now().toString(),
+              title,
+              updatedAt: Date.now(),
+              createdAt: Date.now(),
+              owner: "",
+              cards: [],
+            },
+          ],
+        },
+      },
+      false
+    );
+
+    const data = await WorkspaceService.workspace.field.add({
+      title,
+      id: workspace?.data?.data?._id,
+    });
+
+    Log.debug("addField data:", data);
+    if (data?.success) {
+      window.gtag("event", "addField", {
+        login: auth?.validatedUser?.email,
+        workspaceId: workspace?.data?.data?._id,
+      });
+      workspace?.mutate();
+    } else {
+      NotalUI.Alert.show({
+        title: "Error",
+        desc: data?.error,
+        showCloseButton: true,
+        notCloseable: false,
+      });
+      workspace?.mutate();
+    }
+  }
+
+  async function deleteField({ id }: { id: string }) {
+    if (!workspace?.data?.data) return;
+
+    const newFields = workspace?.data?.data?.fields;
+    newFields.splice(
+      workspace?.data?.data?.fields.findIndex((el: FieldTypes) => el._id == id),
+      1
+    );
+    workspace?.mutate(
+      {
+        ...workspace.data,
+        data: { ...workspace.data.data, fields: newFields },
+      },
+      false
+    );
+
+    const data = await WorkspaceService.workspace.field.delete({
+      id,
+      workspaceId: workspace?.data?.data?._id,
+    });
+
+    Log.debug("deleteField data:", data);
+    if (data?.success) {
+      window.gtag("event", "deleteField", {
+        login: auth?.validatedUser?.email,
+        workspaceId: workspace?.data?.data?._id,
+      });
+      workspace?.mutate();
+    } else {
+      NotalUI.Alert.show({
+        title: "Error",
+        desc: data?.error,
+        showCloseButton: true,
+        notCloseable: false,
+      });
+      workspace?.mutate();
+    }
+  }
+
+  async function editField({ title, id }: { title: string; id: string }) {
+    if (!workspace?.data?.data) return;
+
+    const editFieldIndex = workspace?.data?.data?.fields.findIndex(
+      (field: FieldTypes) => field._id == id
+    );
+    let newFields = workspace?.data?.data?.fields;
+    let newField = newFields[editFieldIndex];
+    newField = {
+      ...newField,
+      title,
+    };
+    newFields[editFieldIndex] = newField;
+
+    workspace?.mutate(
+      {
+        ...workspace.data,
+        data: {
+          ...workspace.data.data,
+          fields: [...newFields],
+        },
+      },
+      false
+    );
+
+    const data = await WorkspaceService.workspace.field.edit({
+      title,
+      id,
+      workspaceId: workspace?.data?.data?._id,
+    });
+
+    Log.debug("editField data:", data);
+    if (data?.success) {
+      window.gtag("event", "editField", {
+        login: auth?.validatedUser?.email,
+        workspaceId: workspace?.data?.data?._id,
+      });
+      workspace?.mutate();
+    } else {
+      NotalUI.Alert.show({
+        title: "Error",
+        desc: data?.error,
+        showCloseButton: true,
+        notCloseable: false,
+      });
+      workspace?.mutate();
+    }
+  }
+
+  async function addCard({ card, id }: { card: CardTypes; id: string }) {
+    if (!workspace?.data?.data) return;
+
+    const addCardFieldIndex = workspace?.data?.data?.fields.findIndex(
+      (field: FieldTypes) => field._id == id
+    );
+    let newFields = workspace?.data?.data?.fields;
+    let newField = newFields[addCardFieldIndex];
+    newField = {
+      ...newField,
+      cards: [...newField.cards, { ...card, _id: Date.now().toString() }],
+    };
+    newFields[addCardFieldIndex] = newField;
+
+    workspace?.mutate(
+      {
+        ...workspace.data,
+        data: {
+          ...workspace.data.data,
+          fields: [...newFields],
+        },
+      },
+      false
+    );
+
+    const data = await WorkspaceService.workspace.card.add({
+      card,
+      workspaceId: workspace?.data?.data?._id,
+      id,
+    });
+
+    Log.debug("addCard data:", data);
+    if (data?.success) {
+      window.gtag("event", "addCard", {
+        login: auth?.validatedUser?.email,
+        workspaceId: workspace?.data?.data?._id,
+      });
+      workspace?.mutate();
+    } else {
+      NotalUI.Alert.show({
+        title: "Error",
+        desc: data?.error,
+        showCloseButton: true,
+        notCloseable: false,
       });
       workspace?.mutate();
     }
@@ -169,13 +368,21 @@ export function WorkspaceProvider(props: PropsWithChildren) {
 
   const value = {
     workspace,
+    field: {
+      add: addField,
+      delete: deleteField,
+      edit: editField,
+    },
+    card: {
+      add: addCard,
+    },
     setWorkspace,
     workspaceNotFound,
     workspaceLoading,
     isWorkspaceOwner,
     starWorkspace,
     deleteWorkspace,
-    visibilityChange,
+    visibilityToggle,
   } as WorkspaceContextProps;
 
   return <WorkspaceContext.Provider value={value} {...props} />;

@@ -31,7 +31,7 @@ function Workspace(props: NotalRootProps) {
     () =>
       fetchWorkspace({
         token: Cookies.get("auth"),
-        id: props.workspace?.data.id,
+        id: router?.query?.id as string,
         uid: props.validate?.data?.uid,
       })
   );

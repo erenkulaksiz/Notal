@@ -11,18 +11,15 @@ import { Log } from "@utils/logger";
 import { useAuth } from "@hooks";
 import type { LoginModalProps } from "./LoginModal.d";
 
-// #TODO: move these to constants
+interface PlatformLogin {
+  icon: ReactNode;
+  text: string;
+  id: string;
+}
+
 interface PlatformLoginTypes {
-  google: {
-    icon: ReactNode;
-    text: string;
-    id: string;
-  };
-  github: {
-    icon: ReactNode;
-    text: string;
-    id: string;
-  };
+  google: PlatformLogin;
+  github: PlatformLogin;
 }
 
 const PlatformLogins = {
@@ -54,15 +51,12 @@ export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
   const onLoginWithPlatform = async (platform: string) => {
     Log.debug(`trying to login with platform ${platform}`);
     const login = await auth?.login?.platform(platform);
-    if (
-      login?.authError?.errorCode ==
-      "auth/account-exists-with-different-credential"
-    ) {
+    if (login?.authError == "auth/account-exists-with-different-credential") {
       setOauthError(
         `This account exist with different credentials. Please try another method.`
       );
       return;
-    } else if (login?.authError?.errorCode == "auth/user-disabled") {
+    } else if (login?.authError == "auth/user-disabled") {
       setOauthError(
         `Your account has been disabled. Sorry for the inconvenience.`
       );

@@ -19,10 +19,10 @@ export function WorkspaceField({ field }: { field: WorkspaceTypes["fields"] }) {
           maxWidth: "280px",
         },
       }}
-      className="rounded-md flex items-start border-neutral-300 flex-col dark:bg-neutral-900 bg-white overflow-visible border-2 dark:border-neutral-800"
+      className="rounded-md group overflow-y-auto overflow-x-hidden max-h-full flex items-start pb-2 border-neutral-300 flex-col dark:bg-black bg-white hover:bg-neutral-200 dark:hover:bg-neutral-900/40 transition-all ease-in-out"
     >
       <WorkspaceFieldHeader field={field} />
-      <div className="flex flex-1 flex-col px-2 gap-2 w-full">
+      <div className="flex flex-1 flex-col px-2 pt-2 gap-2 w-full">
         {Array.isArray(field?.cards) &&
           field?.cards.map((card: CardTypes) => (
             <WorkspaceFieldCard card={card} key={card._id} />

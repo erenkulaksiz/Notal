@@ -15,6 +15,26 @@ import { Meta } from '@storybook/addon-docs';
 
 # Changelog
 
+## 2.0.6 - 25.09.2022 - 28.09.2022
+
+- [feat] Changed workspace background color to black instead of gray in dark mode
+- [feat] Changed home screen navtitle component background to black instead of gray in dark mode
+- [feat] Added ability to add field inside workspace
+- [feat] Added ability to delete field inside workspace
+- [feat] `Workspace`, `WorkspaceField` and `WorkspaceFieldCard` component styles have been renewed
+- [feat] `WorkspaceService` now uses imported functions instead of function mess // TODO: Make the same thing with `useWorkspace` hook
+- [feat] Added ability to edit workspace field title inside workspace by clicking field title
+- [feat] Added ability to add cards inside workspace fields
+- [feat] Added that users cannot add more than max fields and cards
+- [feat] Added a feature that shows a alert on login
+- [fix] Fix a bug where landing page height was using 100vh in mobile devices causing wrong positions of elements
+- [fix] Fix a bug where not found workspaces wont stop loading in workspace screen
+- [fix] Fix a bug that users that doesn't own the workspace could see workspace field controls
+- [fix] Fix a bug that users couldnt close error alerts on workspace events
+- [fix] Fix a bug that caused overflow on y axis in workspace screen
+- [fix] Fix that cards in field cannot be scrollable & fieldheader didn't yet had any background color, now its blurred background
+- [fix] Fix a bug that caused tooltips to show scrollbar inside fields
+
 ## 2.0.5 - 24.09.2022
 - [feat] Add `Changelog` section to Storybook, i should've been added it already
 - [feat] Add `Changelog` link to `Footer` component
@@ -32,7 +52,7 @@ import { Meta } from '@storybook/addon-docs';
 - [fix] Fix where all component stories used local components instead of `@components` global usage
 - [fix] Fix where min title and max title lengths were not in `LIMITS` file
 - [fix] Fix where AddWorkspaceModal component used alot of states, switched to `useReducer` hook
-- [fix] Fix where landing page background was overlapping with other contents and had wrong positioning
+- [fix] Fix where landing page background images was overlapping with other contents and had wrong positioning
 - [fix] Fix where workspace cannot finish loading
 - [fix] Fix where workspace initial loaded was an 404 page for a short time
 - [fix] Fix where `Storybook Introduction` section wasn't showing `Notal` version properly

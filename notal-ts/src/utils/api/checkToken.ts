@@ -10,7 +10,7 @@ export const CheckToken = async ({
   props,
   user,
 }: {
-  token: string | null;
+  token?: string | null;
   props: NotalRootProps;
   user?: User | null;
 }) => {

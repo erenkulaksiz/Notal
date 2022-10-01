@@ -16,7 +16,7 @@ export function Landing() {
   return (
     <>
       <Container>
-        <div className="flex px-4 flex-col h-screen justify-center -z-20 overflow-hidden">
+        <div className="flex px-4 flex-col h-full sm:h-screen pt-14 sm:p-0 justify-center -z-20 overflow-hidden">
           <div className="absolute left-0 right-0 -top-20">
             <div className="absolute bg-gradient-to-t dark:from-black from-white w-full h-[800px] z-20 transition-all ease-in-out duration-500" />
             <div className="relative z-10 dark:opacity-30 opacity-40 w-full h-[800px]">

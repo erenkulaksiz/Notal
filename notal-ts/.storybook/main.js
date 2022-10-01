@@ -59,6 +59,6 @@ module.exports = {
   "staticDirs": ['../public'],
   "env": (config) => ({
     ...config,
-    NEXT_PUBLIC_APP_VERSION: '2.0.5',
+    NEXT_PUBLIC_APP_VERSION: '2.0.6',
   }),
 }

@@ -14,7 +14,7 @@ import {
 } from "@icons";
 import { useNotalUI, useWorkspace } from "@hooks";
 export function WorkspaceSidebar() {
-  const { workspace, starWorkspace, visibilityChange, deleteWorkspace } =
+  const { workspace, starWorkspace, visibilityToggle, deleteWorkspace } =
     useWorkspace();
   const NotalUI = useNotalUI();
   const router = useRouter();
@@ -26,7 +26,7 @@ export function WorkspaceSidebar() {
   }
 
   return (
-    <nav className="flex flex-col h-full justify-between items-center sticky left-0 p-1 z-40 border-2 dark:border-neutral-800 rounded-lg dark:bg-neutral-900/50 backdrop-blur-md bg-white border-neutral-300">
+    <nav className="flex flex-col h-full justify-between items-center sticky left-0 p-1 z-40 rounded-lg backdrop-blur-md">
       <div className="flex flex-col gap-2">
         <WorkspaceSidebarItem
           icon={
@@ -73,7 +73,7 @@ export function WorkspaceSidebar() {
               ? "Set workspace private"
               : "Set workspace public"
           }
-          onClick={async () => await visibilityChange()}
+          onClick={async () => await visibilityToggle()}
         />
         <WorkspaceSidebarItem
           icon={

@@ -3,7 +3,7 @@ import Head from "next/head";
 
 import { BackIcon, HomeFilledIcon } from "@icons";
 import { Button } from "@components";
-import { useAuth } from "@hooks";
+import { WorkspaceService } from "@services/WorkspaceService";
 
 export default function Page404() {
   const router = useRouter();

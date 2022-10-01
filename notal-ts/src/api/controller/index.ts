@@ -1,13 +1,17 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { login } from "./login";
-import { 
-  getworkspaces, 
-  getworkspace, 
-  star, 
-  create, 
-  deleteWorkspace, 
-  toggleVisibility 
+import {
+  getworkspaces,
+  getworkspace,
+  star,
+  create,
+  deleteWorkspace,
+  toggleVisibility,
+  addfield,
+  deletefield,
+  editfield,
+  addcard,
 } from "./workspace";
 import { accept } from "@api/utils";
 
@@ -39,7 +43,15 @@ export function Controller() {
       star,
       create,
       delete: deleteWorkspace,
-      toggleVisibility
+      toggleVisibility,
+      field: {
+        add: addfield,
+        delete: deletefield,
+        edit: editfield,
+      },
+      card: {
+        add: addcard,
+      },
     },
   } as ControllerReturnType;
 }

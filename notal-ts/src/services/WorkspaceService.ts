@@ -1,152 +1,77 @@
-import { getAuth } from "firebase/auth";
+import { CardTypes, WorkspaceTypes } from "@types";
 import {
-  getStorage,
-  ref as stRef,
-  uploadBytes,
-  getDownloadURL,
-} from "firebase/storage";
+  addWorkspace,
+  starWorkspace,
+  deleteWorkspace,
+  toggleVisibility,
+  uploadThumbnail,
+  addField,
+  deleteField,
+  editField,
+  addCard,
+} from "./workspace";
+import type { AddFieldParams } from "./workspace/field/addField";
+import type { EditFieldParams } from "./workspace/field/editField";
 
-import { workspaceFetch } from "@utils";
-import { WorkspaceTypes } from "@types";
-import { Log } from "@utils";
+interface ReturnType {
+  success: boolean;
+  error?: string;
+}
 
 interface WorkspaceServiceTypes {
   workspace: {
-    add: () => Promise<void>;
-    star: () => Promise<void>;
-    delete: () => Promise<void>;
-  }
+    add: (arg: WorkspaceTypes) => Promise<ReturnType>;
+    star: (id: string) => Promise<ReturnType>;
+    delete: (id: string) => Promise<ReturnType>;
+    toggleVisibility: (id: string) => Promise<ReturnType>;
+    uploadThumbnail: ({
+      image,
+    }: {
+      image: File;
+    }) => Promise<{ success: boolean; error?: string; url?: string }>;
+    field: {
+      add: (arg: AddFieldParams) => Promise<ReturnType>;
+      delete: ({
+        id,
+        workspaceId,
+      }: {
+        id: string;
+        workspaceId: string;
+      }) => Promise<ReturnType>;
+      edit: ({
+        id,
+        workspaceId,
+        title,
+      }: EditFieldParams) => Promise<ReturnType>;
+    };
+    card: {
+      add: ({
+        card,
+        id,
+        workspaceId,
+      }: {
+        card: CardTypes;
+        id: string;
+        workspaceId: string;
+      }) => Promise<ReturnType>;
+    };
+  };
 }
 
 export const WorkspaceService = {
   workspace: {
-    add: async function ({
-      title,
-      desc,
-      starred,
-      workspaceVisible,
-      thumbnail,
-    }: WorkspaceTypes) {
-      const auth = getAuth();
-      const token = await auth.currentUser?.getIdToken();
-
-      const data = await workspaceFetch(
-        {
-          title,
-          desc,
-          starred,
-          workspaceVisible,
-          thumbnail: {
-            ...thumbnail,
-            type: thumbnail.type,
-            fileData: null,
-          },
-          owner: auth?.currentUser?.uid,
-          uid: auth?.currentUser?.uid,
-        },
-        {
-          token,
-          action: "create",
-        }
-      );
-
-      if (data?.success) {
-        return { success: true };
-      }
-      return { success: false, error: data?.error };
+    add: addWorkspace,
+    star: starWorkspace,
+    delete: deleteWorkspace,
+    toggleVisibility,
+    uploadThumbnail,
+    field: {
+      add: addField,
+      delete: deleteField,
+      edit: editField,
     },
-    star: async function (id: string) {
-      // Send a star workspace request to API.
-      if(!id) return;
-      
-      const auth = getAuth();
-      const token = await auth.currentUser?.getIdToken();
-
-      const data = await workspaceFetch(
-        {
-          id,
-          uid: auth?.currentUser?.uid,
-        },
-        {
-          token,
-          action: "star",
-        }
-      );
-
-      if (data?.success) {
-        return { success: true };
-      }
-      return { success: false, error: data?.error };
-    },
-    delete: async function (id: string) {
-      // Send a delete workspace request to API.
-      const auth = getAuth();
-      const token = await auth.currentUser?.getIdToken();
-
-      const data = await workspaceFetch(
-        {
-          id,
-          uid: auth?.currentUser?.uid,
-        },
-        {
-          token,
-          action: "delete",
-        }
-      );
-
-      if (data?.success) {
-        return { success: true };
-      }
-      return { success: false, error: data?.error };
-    },
-    toggleVisibility: async function (id: string) {
-      // Send a change workspace visibility request to API.
-      const auth = getAuth();
-      const token = await auth.currentUser?.getIdToken();
-
-      const data = await workspaceFetch(
-        {
-          id,
-          uid: auth?.currentUser?.uid,
-        },
-        {
-          token,
-          action: "toggleVisibility",
-        }
-      );
-
-      if (data?.success) {
-        return { success: true };
-      }
-      return { success: false, error: data?.error };
-    },
-    uploadThumbnail: async function ({ image }: { image: File }) {
-      // temporarily uploads image for later use.
-      const auth = getAuth();
-      if (!auth?.currentUser)
-        return { success: false, error: "User not logged in", url: "" };
-
-      Log.debug("AUTH USER GET AUTH:", auth.currentUser);
-
-      const token = await auth?.currentUser.getIdToken();
-      if (!token) return;
-      const storage = getStorage();
-      const storageRef = stRef(
-        storage,
-        `cardImages/temp/user_${auth.currentUser.uid}`
-      );
-
-      return await uploadBytes(storageRef, image)
-        .then((snapshot) => {
-          Log.debug(snapshot);
-
-          return getDownloadURL(snapshot.ref).then(async (downloadURL) => {
-            return { success: true, url: downloadURL };
-          });
-        })
-        .catch((error) => {
-          return { success: false, error, url: "" };
-        });
+    card: {
+      add: addCard,
     },
   },
-};
+} as WorkspaceServiceTypes;

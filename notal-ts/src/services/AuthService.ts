@@ -15,6 +15,15 @@ interface AuthServiceReturnType {
   };
 }
 
+interface AuthServiceTypes {
+  login: {
+    platform: (platform: string) => Promise<AuthServiceReturnType>;
+  };
+  user: {
+    logout: () => Promise<void>;
+  };
+}
+
 interface loginPlatforms {
   google: () => void;
   github: () => void;
@@ -22,31 +31,34 @@ interface loginPlatforms {
 
 export const AuthService = {
   login: {
-    platform: async function(type: string): Promise<AuthServiceReturnType> {
+    platform: async function (type: string): Promise<AuthServiceReturnType> {
       const auth = getAuth();
       let provider = null;
       const loginType = {
-        google: async () => {
+        google: async function () {
           provider = new GoogleAuthProvider();
         },
-        github: async () => {
-          provider = new GithubAuthProvider()
-        }
+        github: async function () {
+          provider = new GithubAuthProvider();
+        },
       } as loginPlatforms;
       loginType[type as keyof loginPlatforms]();
-      if(!provider) return { 
-        error: {
-          errorMessage: "no-auth", 
-          errorCode: "no-auth"
-        } 
-      };
+      if (!provider)
+        return {
+          error: {
+            errorMessage: "no-auth",
+            errorCode: "no-auth",
+          },
+        };
       const signin = await signInWithPopup(auth, provider)
         .then(async (result) => {
           const credential = GoogleAuthProvider.credentialFromResult(result);
           const token = credential?.accessToken;
           const { user } = result;
 
-          window.gtag("event", "login", { login: `type:${type}/` + user.email });
+          window.gtag("event", "login", {
+            login: `type:${type}/` + user.email,
+          });
 
           //Router.replace(Router.asPath);
 
@@ -61,7 +73,7 @@ export const AuthService = {
           return { error: { errorCode, errorMessage } };
         });
       return signin;
-    }
+    },
   },
   user: {
     logout: async function () {
@@ -69,4 +81,4 @@ export const AuthService = {
       await auth.signOut();
     },
   },
-};
+} as AuthServiceTypes;

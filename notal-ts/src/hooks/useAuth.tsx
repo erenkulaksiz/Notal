@@ -17,25 +17,28 @@ import Cookies from "js-cookie";
 
 import { AuthService } from "@services/AuthService";
 import { NotifyLogin } from "@utils/api/notifyLogin";
-import useNotalUI from "./useNotalUI";
+import { useNotalUI } from "@hooks";
 import { InfoIcon } from "@icons";
 
-import { Log } from "@utils";
+interface LoginTypes {
+  platform: (platform: string) => Promise<{
+    authUser: AuthContextProps["authUser"];
+    authError: AuthContextProps["authError"];
+  }>;
+  logout: () => Promise<void>;
+  reload: () => Promise<void>;
+}
+
+interface UsersTypes {
+  getIdToken: () => Promise<{ success: boolean; res?: string; error?: any }>;
+}
 
 interface AuthContextProps {
   authUser: null | User;
-  authError: string | null | undefined;
+  authError?: string | null | undefined;
   setUser: Dispatch<SetStateAction<User | null>> | null;
-  login:
-    | {
-        [Key in string]: Function;
-      }
-    | null;
-  user:
-    | {
-        [Key in string]: Function;
-      }
-    | null;
+  login: LoginTypes;
+  user: UsersTypes;
   authLoading: boolean | null;
   validatedUser: {
     fullname: string;
@@ -65,9 +68,7 @@ export function AuthProvider(props: PropsWithChildren) {
 
   useEffect(() => {
     const tokenChange = onIdTokenChanged(auth, async (user) => {
-      //setLoading(true);
       if (!user) {
-        //setLoading(false);
         setUser(null);
         setError(null);
         setValidatedUser(null); // remove user
@@ -77,7 +78,6 @@ export function AuthProvider(props: PropsWithChildren) {
         const token = await user.getIdToken();
         setUser(user);
         Cookies.set("auth", token, { expires: 365 });
-        //setLoading(false);
       }
     });
 
@@ -96,7 +96,6 @@ export function AuthProvider(props: PropsWithChildren) {
         setUser(user ?? null);
         setError(null);
       }
-      //router.replace(router.asPath);
     });
 
     return () => {
@@ -117,9 +116,6 @@ export function AuthProvider(props: PropsWithChildren) {
       setLoading(false);
 
       if (!error) {
-        /**
-         * Successful login
-         */
         const token = await user?.getIdToken();
         await NotifyLogin(token);
         NotalUI.Toast.show({
@@ -129,6 +125,13 @@ export function AuthProvider(props: PropsWithChildren) {
           duration: 4500,
           timeEnabled: true,
           closeable: true,
+        });
+        NotalUI.Alert.show({
+          title: "Welcome to Notal!",
+          desc: "This is an experimental application and growing fast day by day. If you find any bugs or have any suggestions, please let me know!",
+          showCloseButton: true,
+          notCloseable: false,
+          animate: true,
         });
       }
 
@@ -140,8 +143,6 @@ export function AuthProvider(props: PropsWithChildren) {
       setUser(null);
       setError(null);
       setValidatedUser(null);
-
-      //setTimeout(() => router.replace(router.asPath), 1000);
     },
     reload: async function () {
       const auth = getAuth();
@@ -150,7 +151,7 @@ export function AuthProvider(props: PropsWithChildren) {
         setLoading(false);
         setUser(null);
         setError(null);
-        setValidatedUser(null); // remove user
+        setValidatedUser(null);
         Cookies.remove("auth");
       } else {
         const token = await auth.currentUser.getIdToken();
@@ -160,7 +161,7 @@ export function AuthProvider(props: PropsWithChildren) {
         setError(null);
       }
     },
-  };
+  } as LoginTypes;
 
   const users = {
     getIdToken: async function () {
@@ -168,11 +169,10 @@ export function AuthProvider(props: PropsWithChildren) {
         const res = await user?.getIdToken();
         return { success: true, res };
       } catch (error) {
-        //Log.debug("error with authService.getIdToken", error);
         return { success: false, error };
       }
     },
-  };
+  } as UsersTypes;
 
   const value = {
     authUser: user,

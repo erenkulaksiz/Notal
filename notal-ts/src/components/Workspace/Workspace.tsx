@@ -7,7 +7,6 @@ import {
   LoadingOverlay,
   Tab,
   AddFieldModal,
-  Button,
 } from "@components";
 import { useAuth, useWorkspace } from "@hooks";
 import {
@@ -29,7 +28,7 @@ export function Workspace() {
   if (workspace.workspaceNotFound) return <WorkspaceNotFound />;
 
   return (
-    <div className="relative flex w-full h-full flex-row bg-white dark:bg-neutral-900 pt-2">
+    <div className="relative flex flex-1 overflow-auto w-full flex-row bg-white dark:bg-black pt-2">
       <Tab
         selected={workspaceTab}
         onSelect={(index) => setWorkspaceTab(index)}
@@ -48,11 +47,11 @@ export function Workspace() {
               style={{ transform: "scale(.7)" }}
             />
           }
-          className="relative flex flex-1 overflow-auto pb-2 gap-2 px-2 flex-row"
+          className="relative w-full flex overflow-auto pb-2 gap-2 px-2 flex-row"
         >
           {workspace.isWorkspaceOwner && (
             <div className="sticky left-0 flex flex-col h-full items-center gap-1 z-40">
-              <div className="p-1 border-2 dark:border-neutral-800 rounded-lg dark:bg-neutral-900/50 backdrop-blur-md bg-white border-neutral-300">
+              <div className="p-1 rounded-lg backdrop-blur-md dark:bg-black/20 bg-white/20">
                 <WorkspaceSidebarItem
                   icon={
                     <AddIcon size={24} className="dark:fill-white fill-black" />
@@ -61,6 +60,7 @@ export function Workspace() {
                   onClick={async () => setAddFieldModalOpen(true)}
                 />
               </div>
+              <div className="dark:bg-neutral-900 bg-neutral-200 h-[2px] rounded-full w-1/2" />
               <WorkspaceSidebar />
             </div>
           )}
@@ -104,7 +104,7 @@ export function Workspace() {
       <AddFieldModal
         open={addFieldModalOpen}
         onClose={() => setAddFieldModalOpen(false)}
-        onAdd={() => {}}
+        onAdd={(field) => workspace.field.add({ title: field.title })}
         workspaceTitle={workspace.workspace?.data?.data?.title}
       />
     </div>

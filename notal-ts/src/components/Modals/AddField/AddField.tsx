@@ -38,13 +38,7 @@ export function AddFieldModal({
       });
       return;
     }
-    onAdd({
-      ...newField,
-      owner: "",
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-      _id: "",
-    });
+    onAdd(newField);
     close();
   }
 
