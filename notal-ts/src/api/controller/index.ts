@@ -26,6 +26,10 @@ export interface ControllerReturnType {
     star: (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
     create: (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
     delete: (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
+    toggleVisibility: (
+      req: NextApiRequest,
+      res: NextApiResponse
+    ) => Promise<void>;
   };
 }
 
