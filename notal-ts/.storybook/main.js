@@ -9,7 +9,6 @@ module.exports = {
     "@storybook/addon-links",
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
-    "storybook-tailwind-dark-mode",
     {
       name: '@storybook/addon-postcss',
       options: {
@@ -59,6 +58,6 @@ module.exports = {
   "staticDirs": ['../public'],
   "env": (config) => ({
     ...config,
-    NEXT_PUBLIC_APP_VERSION: '2.0.6',
+    NEXT_PUBLIC_APP_VERSION: '2.0.61',
   }),
 }
