@@ -39,6 +39,9 @@ export interface CardTypes {
   title?: string;
   desc?: string;
   tags?: [];
+  image?: {
+    url?: string; // file url
+  };
 }
 
 export interface FieldTypes {

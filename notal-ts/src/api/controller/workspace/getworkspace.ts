@@ -1,7 +1,5 @@
 import { connectToDatabase } from "@lib/mongodb";
 import { getTokenFromHeader } from "@utils/api/getTokenFromHeader";
-import { Log } from "@utils/logger";
-import { ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const { ValidateUser } = require("@utils/api/validateUser");

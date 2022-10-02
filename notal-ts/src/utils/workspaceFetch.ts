@@ -2,7 +2,7 @@ import { server } from "./server";
 
 // send data
 export async function workspaceFetch(
-  { ...rest },
+  { ...data },
   { token, action }: { token?: string | null; action: string }
 ) {
   return await fetch(`${server}/api/workspace/${action}`, {
@@ -11,7 +11,7 @@ export async function workspaceFetch(
       Authorization: `Bearer ${token || ""}`,
     }),
     method: "POST",
-    body: JSON.stringify({ ...rest }),
+    body: JSON.stringify({ ...data }),
   })
     .then((response) => response.json())
     .catch((error) => {

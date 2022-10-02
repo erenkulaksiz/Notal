@@ -22,11 +22,9 @@ export function Landing() {
             data-scroll
             data-scroll-speed="4"
           >
-            <div>
-              <div className="cursor-pointer flex flex-col items-center animate-[landingBounce_5s_ease-in-out_infinite]">
-                <span className="text-sm">Scroll to discover</span>
-                <ArrowDownIcon width={20} height={20} fill="currentColor" />
-              </div>
+            <div className="cursor-pointer flex flex-col items-center animate-[landingBounce_5s_ease-in-out_infinite]">
+              <span className="text-sm">Scroll to discover</span>
+              <ArrowDownIcon width={20} height={20} fill="currentColor" />
             </div>
           </div>
           <div className="absolute left-0 right-0 -top-20">
@@ -78,7 +76,7 @@ export function Landing() {
             variants={{
               show: {
                 transition: {
-                  staggerChildren: 0.25,
+                  staggerChildren: 0.35,
                 },
               },
             }}

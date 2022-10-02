@@ -5,4 +5,4 @@ export { getworkspaces } from "./getworkspaces";
 export { star } from "./star";
 export { addfield, deletefield, editfield } from "./field";
 export { addcard } from "./card";
-export { togglevisibility } from "./togglevisibility";
+export { togglevisibility } from "./visibility";

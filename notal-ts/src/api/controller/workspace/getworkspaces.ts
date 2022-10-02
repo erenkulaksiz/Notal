@@ -1,10 +1,7 @@
 import { connectToDatabase } from "@lib/mongodb";
-import { getTokenFromHeader } from "@utils/api/getTokenFromHeader";
-import { Log } from "@utils/logger";
 import { NextApiRequest, NextApiResponse } from "next";
 
-const { ValidateUser } = require("@utils/api/validateUser");
-const { accept, reject } = require("@api/utils");
+const { accept } = require("@api/utils");
 
 export async function getworkspaces(req: NextApiRequest, res: NextApiResponse) {
   const { db } = await connectToDatabase();

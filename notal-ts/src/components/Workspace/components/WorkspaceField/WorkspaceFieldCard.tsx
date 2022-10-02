@@ -10,11 +10,14 @@ export function WorkspaceFieldCard({ card }: { card: CardTypes }) {
           style={{ backgroundColor: card.color }}
         />
       )}
-      <div className="text-xl">{card?.title}</div>
+      {card?.title && <div className="text-xl">{card?.title}</div>}
       {card?.desc && (
         <div className="text-sm dark:text-neutral-500 text-neutral-600">
           {card?.desc}
         </div>
+      )}
+      {card?.image && (
+        <img src={card?.image?.url} className="object-contain rounded-md" />
       )}
       {card._id && (
         <>

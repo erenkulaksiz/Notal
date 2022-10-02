@@ -2,8 +2,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { ObjectId } from "mongodb";
 
 import { connectToDatabase } from "@lib/mongodb";
-import { getTokenFromHeader } from "@utils/api/getTokenFromHeader";
-import { ValidateUser } from "@utils/api/validateUser";
 import { accept, reject } from "@api/utils";
 
 export async function star(req: NextApiRequest, res: NextApiResponse) {
