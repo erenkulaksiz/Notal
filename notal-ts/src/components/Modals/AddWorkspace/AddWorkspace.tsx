@@ -62,24 +62,27 @@ export function AddWorkspaceModal({
   }
 
   async function submit() {
-    if (state.title.length < LIMITS.MIN.WORKSPACE_TITLE_CHARACTER) {
+    if (state.title.length < LIMITS.MIN.WORKSPACE_TITLE_CHARACTER_LENGTH) {
       setNewWorkspaceErr({
         ...newWorkspaceErr,
-        title: `Title must be minimum ${LIMITS.MIN.WORKSPACE_TITLE_CHARACTER} characters long.`,
+        title: `Title must be minimum ${LIMITS.MIN.WORKSPACE_TITLE_CHARACTER_LENGTH} characters long.`,
       });
       return;
     }
-    if (state.title.length > LIMITS.MAX.WORKSPACE_TITLE_CHARACTER) {
+    if (state.title.length > LIMITS.MAX.WORKSPACE_TITLE_CHARACTER_LENGTH) {
       setNewWorkspaceErr({
         ...newWorkspaceErr,
-        title: `Title must be maximum ${LIMITS.MAX.WORKSPACE_TITLE_CHARACTER} characters long.`,
+        title: `Title must be maximum ${LIMITS.MAX.WORKSPACE_TITLE_CHARACTER_LENGTH} characters long.`,
       });
       return;
     }
-    if (state.desc && state.desc.length > LIMITS.MAX.WORKSPACE_DESC_CHARACTER) {
+    if (
+      state.desc &&
+      state.desc.length > LIMITS.MAX.WORKSPACE_DESC_CHARACTER_LENGTH
+    ) {
       setNewWorkspaceErr({
         ...newWorkspaceErr,
-        desc: `Description must be maximum ${LIMITS.MAX.WORKSPACE_DESC_CHARACTER} characters long.`,
+        desc: `Description must be maximum ${LIMITS.MAX.WORKSPACE_DESC_CHARACTER_LENGTH} characters long.`,
       });
       return;
     }

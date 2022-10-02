@@ -54,7 +54,7 @@ export function WorkspaceFieldHeader({
             <input
               type="text"
               className="flex p-1 rounded dark:bg-black bg-white dark:text-white text-black font-medium uppercase break-words"
-              maxLength={LIMITS.MAX.WORKSPACE_FIELD_TITLE_CHARACTER}
+              maxLength={LIMITS.MAX.WORKSPACE_FIELD_TITLE_CHARACTER_LENGTH}
               value={editTitleValue}
               onChange={(e) => setEditTitleValue(e.target.value)}
               onKeyDown={(e) => {

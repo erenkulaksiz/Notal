@@ -24,14 +24,18 @@ export function AddFieldModal({
   }
 
   function submit() {
-    if (newField.title.length < LIMITS.MIN.WORKSPACE_FIELD_TITLE_CHARACTER) {
+    if (
+      newField.title.length < LIMITS.MIN.WORKSPACE_FIELD_TITLE_CHARACTER_LENGTH
+    ) {
       setNewFieldErr({
         ...newFieldErr,
         title: "Field title must be minimum 2 characters.",
       });
       return;
     }
-    if (newField.title.length > LIMITS.MAX.WORKSPACE_FIELD_TITLE_CHARACTER) {
+    if (
+      newField.title.length > LIMITS.MAX.WORKSPACE_FIELD_TITLE_CHARACTER_LENGTH
+    ) {
       setNewFieldErr({
         ...newFieldErr,
         title: "Field title must be maximum 28 characters.",
