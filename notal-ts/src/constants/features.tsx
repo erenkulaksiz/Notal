@@ -1,11 +1,11 @@
-import { AddIcon, UserIcon, ShareIcon, PeopleIcon } from "@icons";
+import { UserIcon, ShareIcon, PeopleIcon, TaskIcon } from "@icons";
 
 export const Features = [
   {
-    title: "Create Workspace",
-    desc: "You can create workspace and add fields, cards & images.",
+    title: "Create Tasks",
+    desc: "Create tasks and assign them to your team members.",
     icon: (
-      <AddIcon
+      <TaskIcon
         size={20}
         fill="currentColor"
         style={{ transform: "scale(.8)" }}

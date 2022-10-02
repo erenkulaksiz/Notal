@@ -6,8 +6,8 @@ import {
   getworkspace,
   star,
   create,
-  deleteWorkspace,
-  toggleVisibility,
+  deleteworkspace,
+  togglevisibility,
   addfield,
   deletefield,
   editfield,
@@ -26,7 +26,7 @@ export interface ControllerReturnType {
     star: (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
     create: (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
     delete: (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
-    toggleVisibility: (
+    togglevisibility: (
       req: NextApiRequest,
       res: NextApiResponse
     ) => Promise<void>;
@@ -46,8 +46,8 @@ export function Controller() {
       getworkspace,
       star,
       create,
-      delete: deleteWorkspace,
-      toggleVisibility,
+      delete: deleteworkspace,
+      togglevisibility,
       field: {
         add: addfield,
         delete: deletefield,

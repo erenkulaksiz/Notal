@@ -4,7 +4,7 @@ import { ObjectId } from "mongodb";
 import { connectToDatabase } from "@lib/mongodb";
 import { accept, reject } from "@api/utils";
 
-export async function deleteWorkspace(
+export async function deleteworkspace(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -12,7 +12,7 @@ export async function deleteWorkspace(
   const workspacesCollection = await db.collection("workspaces");
 
   const { body } = req;
-  if (!body.uid || !body.id) return reject({ res });
+  if (!body.id) return reject({ res });
   const { id } = body;
 
   return await workspacesCollection

@@ -62,6 +62,7 @@ export { default as SpeedIcon } from "../../public/icons/speed.svg";
 export { default as StarFilledIcon } from "../../public/icons/star_filled.svg";
 export { default as StarOutlineIcon } from "../../public/icons/star_outline.svg";
 export { default as SyncIcon } from "../../public/icons/sync.svg";
+export { default as TaskIcon } from "../../public/icons/task.svg";
 export { default as TimeIcon } from "../../public/icons/time.svg";
 export { default as TwitterIcon } from "../../public/icons/twitter.svg";
 export { default as UpIcon } from "../../public/icons/up.svg";

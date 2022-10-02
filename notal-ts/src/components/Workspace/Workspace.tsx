@@ -47,7 +47,7 @@ export function Workspace() {
               style={{ transform: "scale(.7)" }}
             />
           }
-          className="relative w-full flex overflow-auto pb-2 gap-2 px-2 flex-row"
+          className="relative w-full h-full flex overflow-auto pb-2 gap-2 px-2 flex-row"
         >
           {workspace.isWorkspaceOwner && (
             <div className="sticky left-0 flex flex-col h-full items-center gap-1 z-40">

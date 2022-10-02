@@ -1,3 +1,7 @@
+function formatStringToColorful(str: TemplateStringsArray | string) {
+  return `<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>${str}</span>`;
+}
+
 export const CONSTANTS = {
   DEFAULT_WORKSPACE_ID_LENGTH: 4,
   DEFAULT_WORKSPACE_THUMBNAIL_GRADIENT: {
@@ -10,12 +14,12 @@ export const CONSTANTS = {
   MICHAEL:
     "https://i.pinimg.com/474x/78/8f/f7/788ff7a1a2c291a33ea995dc8de5dbcc.jpg",
   LANDING_PAGE_STRINGS: [
-    "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>Empowering</span> user and developer relations",
-    "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>New way of</span> planning to your projects",
-    "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>Empowering</span> user feedbacks",
-    "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>Featuring</span> roadmaps to your users",
-    "<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>Empowering</span> collaborating with your team to develop together",
+    `${formatStringToColorful`Empowering`} user and developer relations`,
+    `${formatStringToColorful`New way of`} planning to your projects`,
+    `${formatStringToColorful`Empowering`} user feedbacks`,
+    `${formatStringToColorful`Featuring`} roadmaps to your users`,
+    `${formatStringToColorful`Collaborating`} collaborating with your team to develop together`,
   ],
   LANDING_PAGE_SUBDESC:
-    "Data between users and developers is important. Notal is the solution.",
+    "Developer and client relations were hard in the past. Notal is here to help you to make it easier.",
 };

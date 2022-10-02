@@ -10,14 +10,13 @@ import { formatDate, SendTelegramMessage } from "@utils";
  * Send Telegram notification about new login and data
  */
 export async function login(req: NextApiRequest, res: NextApiResponse) {
-  let token = "";
   const { db } = await connectToDatabase();
   const usersCollection = await db.collection("users");
 
   const { body } = req;
-  if (!body) return reject({ reason: "no-token", res });
+  if (!body || !body.token) return reject({ reason: "no-token", res });
+  const { token } = body;
 
-  token = body.token;
   if (!token || token.length == 0) return reject({ reason: "no-token", res });
 
   const validateUser = await ValidateUser({ token });

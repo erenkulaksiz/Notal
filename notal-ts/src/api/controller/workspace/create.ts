@@ -4,11 +4,9 @@ import { customAlphabet } from "nanoid";
 import * as admin from "firebase-admin";
 
 import { connectToDatabase } from "@lib/mongodb";
-import { getTokenFromHeader } from "@utils/api/getTokenFromHeader";
 import { LIMITS } from "@constants/limits";
 import { CONSTANTS } from "@constants";
 import { WorkspaceTypes } from "@types";
-import { ValidateUser } from "@utils/api/validateUser";
 import { accept, reject } from "@api/utils";
 import { Log } from "@utils";
 
@@ -17,18 +15,19 @@ export async function create(req: NextApiRequest, res: NextApiResponse) {
   const workspacesCollection = await db.collection("workspaces");
 
   const { body } = req;
-  if (!body.uid) return reject({ reason: "no-uid", res });
   // we have uid of user request in body.uid now
   if (!body.title) return reject({ reason: "no-title", res });
   if (!body.thumbnail) return reject({ reason: "no-thumbnail", res });
   if (!body.owner) return reject({ reason: "no-owner", res });
 
-  const { title, desc, starred, workspaceVisible, thumbnail, owner, uid } =
-    body;
+  const { title, desc, starred, workspaceVisible, thumbnail, uid } = body;
 
-  if (title?.length > 32) return reject({ res, reason: "title-maxlength" });
-  if (desc?.length > 96) return reject({ res, reason: "desc-maxlength" });
-  if (title?.length < 3) return reject({ res, reason: "title-minlength" });
+  if (title?.length > LIMITS.MAX.WORKSPACE_TITLE_CHARACTER_LENGTH)
+    return reject({ res, reason: "title-maxlength" });
+  if (desc?.length > LIMITS.MAX.WORKSPACE_DESC_CHARACTER_LENGTH)
+    return reject({ res, reason: "desc-maxlength" });
+  if (title?.length < LIMITS.MIN.WORKSPACE_TITLE_CHARACTER_LENGTH)
+    return reject({ res, reason: "title-minlength" });
   if (
     thumbnail?.type == "singleColor" &&
     thumbnail?.color.length > LIMITS.MAX.WORKSPACE_SINGLECOLOR_COLOR_LENGTH
@@ -43,17 +42,12 @@ export async function create(req: NextApiRequest, res: NextApiResponse) {
   )
     return reject({ res, reason: "invalid-color" });
 
-  const bearer = getTokenFromHeader(req);
-  const validateUser = await ValidateUser({ token: bearer });
-
-  if (validateUser && !validateUser.decodedToken)
-    return reject({ reason: validateUser.decodedToken.errorCode, res });
-
   const workspacesCount = await workspacesCollection
     .find({ owner: uid, _deleted: { $in: [null, false] } })
     .count();
 
-  if (workspacesCount >= 20) return reject({ reason: "max-workspaces", res });
+  if (workspacesCount >= LIMITS.MAX.WORKSPACES)
+    return reject({ reason: "max-workspaces", res });
 
   let givenId: string | boolean = false;
   let length: number = CONSTANTS.DEFAULT_WORKSPACE_ID_LENGTH; // default id length

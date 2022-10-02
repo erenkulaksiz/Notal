@@ -11,20 +11,11 @@ export async function getworkspaces(req: NextApiRequest, res: NextApiResponse) {
   const workspacesCollection = await db.collection("workspaces");
 
   const { body } = req;
-  if (!body.uid) return reject({ reason: "no-uid", res });
-  // we have uid of user request in body.uid now
-
-  const bearer = getTokenFromHeader(req);
-  const validateUser = await ValidateUser({ token: bearer });
-  if (!validateUser || !validateUser?.decodedToken)
-    return reject({
-      reason: validateUser?.decodedToken?.errorCode ?? "no-token",
-      res,
-    });
+  const { uid } = body;
 
   const workspaces = await workspacesCollection
     .find({
-      owner: validateUser.decodedToken.user_id,
+      owner: uid,
       _deleted: { $in: [null, false] },
     })
     .toArray();

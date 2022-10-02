@@ -15,7 +15,7 @@ export async function toggleVisibility(
     },
     {
       token,
-      action: "toggleVisibility",
+      action: "togglevisibility",
     }
   );
 

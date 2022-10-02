@@ -11,20 +11,9 @@ export async function star(req: NextApiRequest, res: NextApiResponse) {
   const workspacesCollection = await db.collection("workspaces");
 
   const { body } = req;
-  if (!body.uid) return reject({ reason: "no-uid", res });
-  // we have uid of user request in body.uid now
-
   // get id of workspace
   if (!body.id) return reject({ res });
-
   const { id } = body;
-
-  const bearer = getTokenFromHeader(req);
-
-  const validateUser = await ValidateUser({ token: bearer });
-
-  if (validateUser && !validateUser.decodedToken)
-    return reject({ reason: validateUser.decodedToken.errorCode, res });
 
   const workspace = await workspacesCollection.findOne({
     _id: new ObjectId(id),

@@ -4,6 +4,8 @@ const admin = require("firebase-admin");
 import { Log } from "@utils/logger";
 import { Controller } from "@api/controller";
 import { accept, reject } from "@api/utils";
+import { getTokenFromHeader } from "@utils/api/getTokenFromHeader";
+import { ValidateUser } from "@utils/api/validateUser";
 
 const googleService = JSON.parse(process.env.GOOGLE_SERVICE ?? "");
 
@@ -27,6 +29,20 @@ export default async function handler(
   const { slug } = req.query;
   if (slug.length == 0) return reject({ res });
   if (!Array.isArray(slug)) return reject({ res });
+
+  /**
+   * Check if this request is authed
+   */
+  const { body } = req;
+  if (!body && !body.uid) return reject({ res, reason: "no-auth-params" });
+  const { uid } = body;
+  const bearer = getTokenFromHeader(req);
+  if (!bearer) return reject({ res, reason: "no-auth" });
+  const validateUser = await ValidateUser({ token: bearer });
+  if (validateUser && !validateUser.decodedToken)
+    return reject({ reason: validateUser.decodedToken.errorCode, res });
+  if (validateUser.decodedToken.uid !== uid)
+    return reject({ res, reason: "auth-uid-error" });
 
   let ExecuteController: any = Controller(); // #TODO: REMOVE ANY HERE!!!!!
 

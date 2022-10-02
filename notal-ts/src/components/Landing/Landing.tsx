@@ -7,7 +7,7 @@ import { Container, Footer, Button, LandingFeatureCard } from "@components";
 import { Features } from "@constants/features";
 import { CONSTANTS } from "@constants";
 import type { LandingFeatureCardProps } from "./components/FeatureCard";
-import { BoltIcon } from "@icons";
+import { BoltIcon, ArrowDownIcon } from "@icons";
 import { useNotalUI } from "@hooks";
 
 export function Landing() {
@@ -17,6 +17,18 @@ export function Landing() {
     <>
       <Container>
         <div className="flex px-4 flex-col h-full sm:h-screen pt-14 sm:p-0 justify-center -z-20 overflow-hidden">
+          <div
+            className="absolute left-0 right-0 top-0 bottom-4 sm:flex hidden justify-center items-end"
+            data-scroll
+            data-scroll-speed="4"
+          >
+            <div>
+              <div className="cursor-pointer flex flex-col items-center animate-[landingBounce_5s_ease-in-out_infinite]">
+                <span className="text-sm">Scroll to discover</span>
+                <ArrowDownIcon width={20} height={20} fill="currentColor" />
+              </div>
+            </div>
+          </div>
           <div className="absolute left-0 right-0 -top-20">
             <div className="absolute bg-gradient-to-t dark:from-black from-white w-full h-[800px] z-20 transition-all ease-in-out duration-500" />
             <div className="relative z-10 dark:opacity-30 opacity-40 w-full h-[800px]">
@@ -37,7 +49,7 @@ export function Landing() {
                 //pauseFor: 2500,
                 autoStart: true,
                 loop: true,
-                delay: 80,
+                delay: 70,
                 skipAddStyles: true,
                 wrapperClassName: "notal-writer",
                 cursorClassName: "notal-cursor",
@@ -47,7 +59,7 @@ export function Landing() {
           <h5 className="dark:text-neutral-400 text-gray-600 z-50 drop-shadow-lg text-md sm:text-lg font-semibold">
             {CONSTANTS.LANDING_PAGE_SUBDESC}
           </h5>
-          <Button
+          {/*<Button
             rounded
             className="w-40 z-40 mt-4"
             aria-label="Discover more button"
@@ -61,12 +73,12 @@ export function Landing() {
             }
           >
             Discover More
-          </Button>
+          </Button>*/}
           <motion.div
             variants={{
               show: {
                 transition: {
-                  staggerChildren: 0.15,
+                  staggerChildren: 0.25,
                 },
               },
             }}
@@ -89,7 +101,7 @@ export function Landing() {
               style={{ transform: "scale(.8)" }}
             />
             <h1 className="text-4xl font-light">
-              Add workspace to quickly start
+              Add workspace to start quickly
             </h1>
           </div>
             </div>*/}
