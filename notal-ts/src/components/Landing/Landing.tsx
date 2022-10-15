@@ -8,11 +8,8 @@ import { Features } from "@constants/features";
 import { CONSTANTS } from "@constants";
 import type { LandingFeatureCardProps } from "./components/FeatureCard";
 import { BoltIcon, ArrowDownIcon } from "@icons";
-import { useNotalUI } from "@hooks";
 
 export function Landing() {
-  const NotalUI = useNotalUI();
-
   return (
     <>
       <Container>
@@ -23,7 +20,7 @@ export function Landing() {
             data-scroll-speed="4"
           >
             <div className="cursor-pointer flex flex-col items-center animate-[landingBounce_5s_ease-in-out_infinite]">
-              <span className="text-sm">Scroll to discover</span>
+              <span className="text-sm">Scroll to discover more</span>
               <ArrowDownIcon width={20} height={20} fill="currentColor" />
             </div>
           </div>
@@ -57,21 +54,6 @@ export function Landing() {
           <h5 className="dark:text-neutral-400 text-gray-600 z-50 drop-shadow-lg text-md sm:text-lg font-semibold">
             {CONSTANTS.LANDING_PAGE_SUBDESC}
           </h5>
-          {/*<Button
-            rounded
-            className="w-40 z-40 mt-4"
-            aria-label="Discover more button"
-            onClick={() =>
-              NotalUI.Toast.show({
-                once: true,
-                title: "Coming soon.",
-                type: "info",
-                id: "info_soon",
-              })
-            }
-          >
-            Discover More
-          </Button>*/}
           <motion.div
             variants={{
               show: {

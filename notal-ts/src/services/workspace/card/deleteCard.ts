@@ -2,14 +2,17 @@ import { getAuth } from "firebase/auth";
 import { workspaceFetch } from "@utils/workspaceFetch";
 
 /**
- * remove field from workspace
+ * remove card from field in workspace
+ * @param id string
  */
-export async function deleteField({
+export async function deleteCard({
   workspaceId,
+  fieldId,
   id,
 }: {
   id: string;
   workspaceId: string;
+  fieldId: string;
 }): Promise<{ success: boolean; error?: string }> {
   const auth = getAuth();
   const token = await auth.currentUser?.getIdToken();
@@ -17,12 +20,13 @@ export async function deleteField({
   const data = await workspaceFetch(
     {
       workspaceId,
+      fieldId,
       uid: auth?.currentUser?.uid,
       id,
     },
     {
       token,
-      action: "field/delete",
+      action: "card/delete",
     }
   );
 

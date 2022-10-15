@@ -3,6 +3,7 @@ function formatStringToColorful(str: TemplateStringsArray | string) {
 }
 
 export const CONSTANTS = {
+  APP_NAME: "Notal",
   DEFAULT_WORKSPACE_ID_LENGTH: 4,
   DEFAULT_WORKSPACE_THUMBNAIL_GRADIENT: {
     start: "#0eeaed",
@@ -21,5 +22,7 @@ export const CONSTANTS = {
     `${formatStringToColorful`Collaborating`} collaborating with your team to develop together`,
   ],
   LANDING_PAGE_SUBDESC:
-    "Developer and client relations were hard in the past. Notal is here to help you to make it easier.",
+    "Open source task management and devrels platform from the future.",
+  SEO_DESCRIPTION:
+    "Open source task management and devrels platform from the future.",
 };

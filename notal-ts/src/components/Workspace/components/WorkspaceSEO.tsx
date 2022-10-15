@@ -1,4 +1,6 @@
+import { CONSTANTS } from "@constants/index";
 import { NotalRootProps } from "@types";
+import { server } from "@utils";
 
 export function WorkspaceSEO({
   workspace,
@@ -13,7 +15,7 @@ export function WorkspaceSEO({
         content={
           workspace?.data?.owner?.username
             ? `📍 @${workspace.data.owner.username}'s workspace`
-            : "Take your notes to next level with Notal"
+            : CONSTANTS.SEO_DESCRIPTION
         }
       />
       <meta
@@ -22,7 +24,7 @@ export function WorkspaceSEO({
         content={
           workspace?.data?.owner?.username
             ? `📍 @${workspace.data.owner.username}'s workspace`
-            : "Take your notes to next level with Notal"
+            : CONSTANTS.SEO_DESCRIPTION
         }
       />
       <meta
@@ -31,7 +33,7 @@ export function WorkspaceSEO({
         content={
           workspace?.data?.owner?.username
             ? `📍 @${workspace.data.owner.username}'s workspace`
-            : "Take your notes to next level with Notal"
+            : CONSTANTS.SEO_DESCRIPTION
         }
       />
       <meta
@@ -41,7 +43,7 @@ export function WorkspaceSEO({
           workspace?.data?.thumbnail?.type == "image" &&
           typeof workspace.data.thumbnail.file == "string"
             ? workspace.data.thumbnail.file
-            : "https://notal.app/icon_big.png"
+            : `https://${server}/icon_big.png`
         }
       />
       <meta
@@ -51,7 +53,7 @@ export function WorkspaceSEO({
           workspace?.data?.thumbnail?.type == "image" &&
           typeof workspace.data.thumbnail.file == "string"
             ? workspace.data.thumbnail.file
-            : "https://notal.app/icon_big.png"
+            : `https://${server}/icon_big.png`
         }
       />
       <meta
@@ -60,7 +62,7 @@ export function WorkspaceSEO({
         content={
           workspace?.data?.title
             ? `${workspace.data.title} • notal.app`
-            : "Notal"
+            : CONSTANTS.APP_NAME
         }
       />
       <meta
@@ -69,7 +71,7 @@ export function WorkspaceSEO({
         content={
           workspace?.data?.title
             ? `${workspace.data.title} • notal.app`
-            : "Notal"
+            : CONSTANTS.APP_NAME
         }
       />
       <meta
@@ -78,7 +80,7 @@ export function WorkspaceSEO({
         content={
           workspace?.data?.title
             ? `${workspace.data.title} • notal.app`
-            : "Notal"
+            : CONSTANTS.APP_NAME
         }
       />
     </>

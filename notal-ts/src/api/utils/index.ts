@@ -22,8 +22,11 @@ export function accept({
   res,
 }: acceptProps) {
   Log.debug("accept: ", data, status, action);
-  if (data) return res.status(status).send({ success: true, data });
-  return res.status(status).send({ success: true });
+  if (data) {
+    res.status(status).json({ success: true, data });
+    return;
+  }
+  res.status(status).json({ success: true });
 }
 
 export function reject({
@@ -32,7 +35,7 @@ export function reject({
   res,
 }: rejectProps) {
   Log.debug("reject: ", reason);
-  return res.status(status).send({ success: false, error: reason });
+  res.status(status).json({ success: false, error: reason });
 }
 
 export function generateRandomUsername({ email }: { email: string }) {

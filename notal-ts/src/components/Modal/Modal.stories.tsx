@@ -34,6 +34,25 @@ const Template: ComponentStory<typeof Modal> = (args) => {
   );
 };
 
+const TemplateAnimated: ComponentStory<typeof Modal> = (args) => {
+  const [visible, setVisible] = useState(true);
+
+  return (
+    <>
+      <Button onClick={() => setVisible(true)} className="shadow-xl">
+        Open Modal
+      </Button>
+      <Modal
+        {...args}
+        animate
+        open={visible}
+        onClose={() => setVisible(false)}
+        className="w-[90%] sm:w-[440px]"
+      />
+    </>
+  );
+};
+
 export const Default = Template.bind({});
 Default.args = {
   children: (
@@ -45,7 +64,7 @@ Default.args = {
   ),
 };
 
-export const AnimatedComponents = Template.bind({});
+export const AnimatedComponents = TemplateAnimated.bind({});
 AnimatedComponents.args = {
   children: (
     <>
@@ -62,7 +81,7 @@ AnimatedComponents.args = {
   ),
 };
 
-export const AnimatedForm = Template.bind({});
+export const AnimatedForm = TemplateAnimated.bind({});
 AnimatedForm.args = {
   children: (
     <>
@@ -118,15 +137,9 @@ BlurBackground.args = {
   blur: true,
   children: (
     <>
-      <Modal.Title animate className="font-bold text-xl">
-        Modal.Title
-      </Modal.Title>
-      <Modal.Body animate className="px-4">
-        Modal.Body
-      </Modal.Body>
-      <Modal.Footer animate className="p-4">
-        Modal.Footer
-      </Modal.Footer>
+      <Modal.Title className="font-bold text-xl">Modal.Title</Modal.Title>
+      <Modal.Body className="px-4">Modal.Body</Modal.Body>
+      <Modal.Footer className="p-4">Modal.Footer</Modal.Footer>
     </>
   ),
 };

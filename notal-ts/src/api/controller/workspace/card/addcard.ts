@@ -2,8 +2,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { ObjectId } from "mongodb";
 
 import { connectToDatabase } from "@lib/mongodb";
-import { getTokenFromHeader } from "@utils/api/getTokenFromHeader";
-import { ValidateUser } from "@utils/api/validateUser";
 import { accept, reject } from "@api/utils";
 import { CardTypes, FieldTypes } from "@types";
 import { LIMITS } from "@constants/limits";
@@ -14,8 +12,6 @@ export async function addcard(req: NextApiRequest, res: NextApiResponse) {
   const workspacesCollection = await db.collection("workspaces");
 
   const { body } = req;
-  if (!body.uid) return reject({ reason: "no-uid", res });
-  // we have uid of user request in body.uid now
   const { uid } = body;
 
   // get field id
@@ -42,13 +38,6 @@ export async function addcard(req: NextApiRequest, res: NextApiResponse) {
 
   if (card.desc && card.desc.length > LIMITS.MAX.WORKSPACE_CARD_DESC_LENGTH)
     return reject({ reason: "max-desc-length", res });
-
-  const bearer = getTokenFromHeader(req);
-
-  const validateUser = await ValidateUser({ token: bearer });
-
-  if (validateUser && !validateUser.decodedToken)
-    return reject({ reason: validateUser.decodedToken.errorCode, res });
 
   const workspace = await workspacesCollection.findOne({
     _id: new ObjectId(workspaceId),

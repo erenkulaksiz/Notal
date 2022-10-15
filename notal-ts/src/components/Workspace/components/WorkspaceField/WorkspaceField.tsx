@@ -25,7 +25,11 @@ export function WorkspaceField({ field }: { field: WorkspaceTypes["fields"] }) {
       <div className="flex flex-1 flex-col px-2 pt-2 gap-2 w-full">
         {Array.isArray(field?.cards) &&
           field?.cards.map((card: CardTypes) => (
-            <WorkspaceFieldCard card={card} key={card._id} />
+            <WorkspaceFieldCard
+              card={card}
+              fieldId={field._id}
+              key={card._id}
+            />
           ))}
       </div>
     </motion.div>

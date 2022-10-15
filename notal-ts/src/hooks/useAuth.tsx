@@ -33,7 +33,7 @@ interface UsersTypes {
   getIdToken: () => Promise<{ success: boolean; res?: string; error?: any }>;
 }
 
-interface AuthContextProps {
+export interface AuthContextProps {
   authUser: null | User;
   authError?: string | null | undefined;
   setUser: Dispatch<SetStateAction<User | null>> | null;

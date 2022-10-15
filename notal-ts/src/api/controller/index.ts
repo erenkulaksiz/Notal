@@ -12,24 +12,36 @@ import {
   deletefield,
   editfield,
   addcard,
+  deletecard,
 } from "./workspace";
 import { accept } from "@api/utils";
 
+type APIReturnType = (req: NextApiRequest, res: NextApiResponse) => void;
+
 export interface ControllerReturnType {
-  ping: (req: NextApiRequest, res: NextApiResponse) => void;
+  ping: APIReturnType;
   user: {
-    login: (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
+    login: APIReturnType;
   };
   workspace: {
-    getworkspaces: (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
-    getworkspace: (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
-    star: (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
-    create: (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
-    delete: (req: NextApiRequest, res: NextApiResponse) => Promise<void>;
+    getworkspaces: APIReturnType;
+    getworkspace: APIReturnType;
+    star: APIReturnType;
+    create: APIReturnType;
+    delete: APIReturnType;
     togglevisibility: (
       req: NextApiRequest,
       res: NextApiResponse
     ) => Promise<void>;
+    field: {
+      add: APIReturnType;
+      delete: APIReturnType;
+      edit: APIReturnType;
+    };
+    card: {
+      add: APIReturnType;
+      delete: APIReturnType;
+    };
   };
 }
 
@@ -55,6 +67,7 @@ export function Controller() {
       },
       card: {
         add: addcard,
+        delete: deletecard,
       },
     },
   } as ControllerReturnType;

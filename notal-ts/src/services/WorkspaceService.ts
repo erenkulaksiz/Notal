@@ -9,6 +9,7 @@ import {
   deleteField,
   editField,
   addCard,
+  deleteCard,
 } from "./workspace";
 import type { AddFieldParams } from "./workspace/field/addField";
 import type { EditFieldParams } from "./workspace/field/editField";
@@ -54,6 +55,15 @@ interface WorkspaceServiceTypes {
         id: string;
         workspaceId: string;
       }) => Promise<ReturnType>;
+      delete: ({
+        id,
+        fieldId,
+        workspaceId,
+      }: {
+        id: string;
+        fieldId: string;
+        workspaceId: string;
+      }) => Promise<ReturnType>;
     };
   };
 }
@@ -72,6 +82,7 @@ export const WorkspaceService = {
     },
     card: {
       add: addCard,
+      delete: deleteCard,
     },
   },
 } as WorkspaceServiceTypes;

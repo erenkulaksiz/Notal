@@ -40,7 +40,7 @@ export default async function handler(
   if (!bearer) return reject({ res, reason: "no-auth" });
   const validateUser = await ValidateUser({ token: bearer });
   if (validateUser && !validateUser.decodedToken)
-    return reject({ reason: validateUser.decodedToken.errorCode, res });
+    return reject({ reason: validateUser.errorCode, res });
   if (validateUser.decodedToken.uid !== uid)
     return reject({ res, reason: "auth-uid-error" });
 

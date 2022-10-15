@@ -17,6 +17,8 @@ import {
 } from "@icons";
 import { WorkspaceSidebarItem } from "./components";
 
+import { IconLibrary } from "@icons";
+
 export function Workspace() {
   const workspace = useWorkspace();
   const auth = useAuth();

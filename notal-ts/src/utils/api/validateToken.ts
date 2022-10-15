@@ -5,7 +5,7 @@ import { connectToDatabase } from "@lib/mongodb";
 import { ValidateUser } from "./validateUser";
 import { formatString, formatDate } from "@utils";
 import { generateRandomUsername } from "@api/utils";
-import { SendTelegramMessage } from "@utils";
+import { SendTelegramMessage, server } from "@utils";
 
 export interface ValidateTokenReturnType {
   success: boolean;
@@ -110,11 +110,13 @@ export async function ValidateToken({
 
     SendTelegramMessage({
       message: `NEW USER
-EMAIL: ${validateUser.decodedToken.email}
 USERNAME: ${newUser.username}
+EMAIL: ${validateUser.decodedToken.email}
 UID: ${validateUser.decodedToken.user_id}
 TIME: ${formatDate(Date.now())}
 TS: ${Date.now()}
+URL: ${server}
+ENV: ${process.env.NODE_ENV}
 PROVIDER: ${validateUser.decodedToken.firebase.sign_in_provider}
 VER: ${process.env.NEXT_PUBLIC_APP_VERSION}
 PLATFORM: web`,

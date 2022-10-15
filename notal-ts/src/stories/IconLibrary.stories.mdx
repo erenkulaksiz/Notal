@@ -1,0 +1,18 @@
+import { Meta } from '@storybook/addon-docs';
+import { IconLibrary } from "@icons";
+
+<Meta title="Icon Library" />
+
+<Canvas>
+    <div className="flex flex-row flex-wrap gap-2">
+        {Object.keys(IconLibrary).map((iconName) => {
+            const Icon = IconLibrary[iconName];
+            return (
+                <div className="w-32 h-16 rounded-md flex flex-col justify-center items-center" style={{backgroundColor: "#e3e3e3"}}>
+                    <Icon width={24} height={24} size={24} fill="currentColor"/>
+                    <div style={{fontSize: ".6em", marginTop: ".6em"}}>{iconName}</div>
+                </div>
+            );
+        })}
+    </div>
+</Canvas>

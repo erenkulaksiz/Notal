@@ -16,4 +16,5 @@ export interface ButtonProps {
   onClick?: Function;
   title?: string;
   type?: HTMLInputElement["type"];
+  testId?: string;
 }

@@ -33,6 +33,13 @@ export interface WorkspaceContextProps {
   };
   card: {
     add: ({ card, id }: { card: CardTypes; id: string }) => Promise<void>;
+    delete: ({
+      id,
+      fieldId,
+    }: {
+      id?: string;
+      fieldId: string;
+    }) => Promise<void>;
   };
 }
 
@@ -366,6 +373,51 @@ export function WorkspaceProvider(props: PropsWithChildren) {
     }
   }
 
+  async function deleteCard({ id, fieldId }: { id: string; fieldId: string }) {
+    if (!workspace?.data?.data) return;
+
+    const newFields = workspace?.data?.data?.fields;
+    const field = workspace?.data?.data?.fields.findIndex(
+      (el: FieldTypes) => el._id == fieldId
+    );
+    const card = newFields[field].cards.findIndex(
+      (el: CardTypes) => el._id == id
+    );
+
+    newFields[field].cards.splice(card, 1);
+
+    workspace?.mutate(
+      {
+        ...workspace.data,
+        data: { ...workspace?.data?.data, fields: newFields },
+      },
+      false
+    );
+
+    const data = await WorkspaceService.workspace.card.delete({
+      id,
+      workspaceId: workspace?.data?.data?._id,
+      fieldId,
+    });
+
+    Log.debug("deleteCard data:", data);
+    if (data?.success) {
+      window.gtag("event", "deleteCard", {
+        login: auth?.validatedUser?.email,
+        workspaceId: workspace?.data?.data?._id,
+      });
+      workspace?.mutate();
+    } else {
+      NotalUI.Alert.show({
+        title: "Error",
+        desc: data?.error,
+        showCloseButton: true,
+        notCloseable: false,
+      });
+      //workspace?.mutate();
+    }
+  }
+
   const value = {
     workspace,
     field: {
@@ -375,6 +427,7 @@ export function WorkspaceProvider(props: PropsWithChildren) {
     },
     card: {
       add: addCard,
+      delete: deleteCard,
     },
     setWorkspace,
     workspaceNotFound,

@@ -1,4 +1,3 @@
-// Icons
 export { default as AddIcon } from "../../public/icons/add.svg";
 export { default as ArrowDownIcon } from "../../public/icons/arrow_down.svg";
 export { default as ArrowUpIcon } from "../../public/icons/arrow_up.svg";
@@ -74,3 +73,5 @@ export { default as WarningIcon } from "../../public/icons/warning.svg";
 export { default as WebsiteIcon } from "../../public/icons/website.svg";
 
 export { default as EmptyImage } from "../../public/addfieldbanner.png";
+
+export { IconLibrary } from "./library";

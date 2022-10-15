@@ -2,20 +2,13 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { ObjectId } from "mongodb";
 
 import { connectToDatabase } from "@lib/mongodb";
-import { getTokenFromHeader } from "@utils/api/getTokenFromHeader";
-import { ValidateUser } from "@utils/api/validateUser";
 import { accept, reject } from "@api/utils";
-
-import { Log } from "@utils";
 
 export async function editfield(req: NextApiRequest, res: NextApiResponse) {
   const { db } = await connectToDatabase();
   const workspacesCollection = await db.collection("workspaces");
 
   const { body } = req;
-  if (!body.uid) return reject({ reason: "no-uid", res });
-
-  // get field id to edit
   if (!body.id) return reject({ reason: "no-id", res });
 
   const { id } = body;
@@ -23,13 +16,6 @@ export async function editfield(req: NextApiRequest, res: NextApiResponse) {
   // get workspaceId to edit field from
   if (!body.workspaceId) return reject({ res });
   const { workspaceId } = body;
-
-  const bearer = getTokenFromHeader(req);
-
-  const validateUser = await ValidateUser({ token: bearer });
-
-  if (validateUser && !validateUser.decodedToken)
-    return reject({ reason: validateUser.decodedToken.errorCode, res });
 
   const workspace = await workspacesCollection.findOne({
     _id: new ObjectId(workspaceId),
