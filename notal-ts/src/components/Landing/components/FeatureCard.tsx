@@ -33,8 +33,9 @@ export function LandingFeatureCard({ feature }: LandingFeatureCardTypes) {
           },
         },
       }}
-      className="dark:bg-white/5 bg-white/40 dark:text-white text-black p-4 flex-col rounded-xl drop-shadow-xl"
+      className="dark:bg-white/5 bg-white/40 relative dark:text-white text-black p-4 flex-col rounded-xl drop-shadow-xl group"
     >
+      <div className="rounded-xl absolute -z-20 -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 blur opacity-0 dark:opacity-10 group-hover:opacity-10 dark:group-hover:opacity-40 transition duration-700"></div>
       <div className="flex flex-row">
         <div className="p-1 self-start rounded-full mr-2 dark:bg-neutral-700/20 bg-neutral-300/20">
           {feature.icon}

@@ -13,13 +13,15 @@ import {
   editfield,
   addcard,
   deletecard,
+  reorderfield,
 } from "./workspace";
-import { accept } from "@api/utils";
+import { accept, checkUserAuth } from "@api/utils";
 
 type APIReturnType = (req: NextApiRequest, res: NextApiResponse) => void;
 
 export interface ControllerReturnType {
   ping: APIReturnType;
+  isAuthed: APIReturnType;
   user: {
     login: APIReturnType;
   };
@@ -37,6 +39,7 @@ export interface ControllerReturnType {
       add: APIReturnType;
       delete: APIReturnType;
       edit: APIReturnType;
+      reorder: APIReturnType;
     };
     card: {
       add: APIReturnType;
@@ -47,27 +50,31 @@ export interface ControllerReturnType {
 
 export function Controller() {
   return {
-    ping: (req, res) => {
+    ping: (req: NextApiRequest, res: NextApiResponse) => {
       return accept({ res, data: { pong: true } });
     },
+    isAuthed: (req, res) => checkUserAuth({ req, res, func: login }), // experimental feature
     user: {
-      login,
+      login: (req, res) => checkUserAuth({ req, res, func: login }),
     },
     workspace: {
-      getworkspaces,
+      getworkspaces: (req, res) =>
+        checkUserAuth({ req, res, func: getworkspaces }),
       getworkspace,
-      star,
-      create,
-      delete: deleteworkspace,
-      togglevisibility,
+      star: (req, res) => checkUserAuth({ req, res, func: star }),
+      create: (req, res) => checkUserAuth({ req, res, func: create }),
+      delete: (req, res) => checkUserAuth({ req, res, func: deleteworkspace }),
+      togglevisibility: (req, res) =>
+        checkUserAuth({ req, res, func: togglevisibility }),
       field: {
-        add: addfield,
-        delete: deletefield,
-        edit: editfield,
+        add: (req, res) => checkUserAuth({ req, res, func: addfield }),
+        delete: (req, res) => checkUserAuth({ req, res, func: deletefield }),
+        edit: (req, res) => checkUserAuth({ req, res, func: editfield }),
+        reorder: (req, res) => checkUserAuth({ req, res, func: reorderfield }),
       },
       card: {
-        add: addcard,
-        delete: deletecard,
+        add: (req, res) => checkUserAuth({ req, res, func: addcard }),
+        delete: (req, res) => checkUserAuth({ req, res, func: deletecard }),
       },
     },
   } as ControllerReturnType;

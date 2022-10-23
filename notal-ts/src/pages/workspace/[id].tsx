@@ -3,6 +3,7 @@ import Head from "next/head";
 import useSWR from "swr";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
+import { DragDropContext } from "@hello-pangea/dnd";
 
 import { Log } from "@utils";
 import {
@@ -37,7 +38,6 @@ function Workspace(props: NotalRootProps) {
   );
 
   useEffect(() => {
-    Log.debug("workspace:", workspace);
     workspaceHook.setWorkspace(workspace);
   }, [workspace.data]);
 
@@ -56,7 +56,27 @@ function Workspace(props: NotalRootProps) {
         <WorkspaceSEO workspace={props.workspace} />
       </Head>
       <Navbar showCollapse />
-      <NotalWorkspace />
+      <DragDropContext
+        onDragEnd={(result) => {
+          if (!result.destination) return;
+          if (
+            result.destination.index == result.source.index &&
+            result.destination.droppableId == result.source.droppableId
+          )
+            return;
+          Log.debug("drag drop result", result);
+          if (result.destination.droppableId == "board") {
+            // reorder field
+            workspaceHook.field.reorder({
+              source: result.source,
+              destination: result.destination,
+              fieldId: result.draggableId,
+            });
+          }
+        }}
+      >
+        <NotalWorkspace />
+      </DragDropContext>
     </Layout>
   );
 }

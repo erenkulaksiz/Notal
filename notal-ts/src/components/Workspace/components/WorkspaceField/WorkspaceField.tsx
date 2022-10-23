@@ -1,37 +1,68 @@
 import { motion } from "framer-motion";
+import { Draggable } from "@hello-pangea/dnd";
+import type {
+  DraggableProvided,
+  DraggableStateSnapshot,
+} from "@hello-pangea/dnd";
 
+import { BuildComponent } from "@utils/style";
 import { WorkspaceFieldHeader, WorkspaceFieldCard } from "@components";
 import type { WorkspaceTypes, CardTypes } from "@types";
 
-export function WorkspaceField({ field }: { field: WorkspaceTypes["fields"] }) {
+export function WorkspaceField({
+  field,
+  index,
+}: {
+  field: WorkspaceTypes["fields"];
+  index: number;
+}) {
   return (
-    <motion.div
-      animate="normal"
-      variants={{
-        collapse: {
-          width: "140px",
-          minWidth: "140px",
-          maxWidth: "140px",
-        },
-        normal: {
-          minWidth: "280px",
-          width: "280px",
-          maxWidth: "280px",
-        },
-      }}
-      className="rounded-md group h-full overflow-y-auto overflow-x-hidden max-h-full flex items-start pb-2 border-neutral-300 flex-col dark:bg-black bg-white hover:bg-neutral-200 dark:hover:bg-neutral-900/40 transition-all ease-in-out"
-    >
-      <WorkspaceFieldHeader field={field} />
-      <div className="flex flex-1 flex-col px-2 pt-2 gap-2 w-full">
-        {Array.isArray(field?.cards) &&
-          field?.cards.map((card: CardTypes) => (
-            <WorkspaceFieldCard
-              card={card}
-              fieldId={field._id}
-              key={card._id}
-            />
-          ))}
-      </div>
-    </motion.div>
+    <Draggable draggableId={field._id} index={index}>
+      {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+        <motion.div
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          animate="normal"
+          variants={{
+            collapse: {
+              width: "140px",
+              minWidth: "140px",
+              maxWidth: "140px",
+            },
+            normal: {
+              minWidth: "280px",
+              width: "280px",
+              maxWidth: "280px",
+            },
+          }}
+          className={
+            BuildComponent({
+              name: "WorkspaceField",
+              defaultClasses:
+                "rounded-md group h-full overflow-y-auto overflow-x-hidden max-h-full flex items-start pb-2 flex-col dark:bg-black bg-white hover:bg-neutral-200 dark:hover:bg-neutral-900/40 transition-all ease-in-out",
+              conditionalClasses: [
+                {
+                  true: "border-2 border-neutral-300 dark:border-neutral-700",
+                  false: "border-2 border-transparent",
+                },
+              ],
+              selectedClasses: [snapshot.isDragging],
+            }).classes
+          }
+        >
+          <WorkspaceFieldHeader field={field} {...provided.dragHandleProps} />
+          <div className="flex flex-1 flex-col px-2 pt-2 gap-2 w-full">
+            {Array.isArray(field?.cards) &&
+              field?.cards.map((card: CardTypes) => (
+                <WorkspaceFieldCard
+                  card={card}
+                  fieldId={field._id}
+                  key={card._id}
+                />
+              ))}
+          </div>
+        </motion.div>
+      )}
+    </Draggable>
   );
 }

@@ -26,17 +26,23 @@ export async function addcard(req: NextApiRequest, res: NextApiResponse) {
   if (!body.card) return reject({ res });
   const { card }: { card: CardTypes } = body;
 
-  if (card.color && card.color.length > LIMITS.MAX.WORKSPACE_CARD_COLOR_LENGTH)
+  if (
+    card.color &&
+    card.color.length > LIMITS.MAX.WORKSPACE_CARD_COLOR_CHARACTER_LENGTH
+  )
     return reject({ reason: "max-color-length", res });
 
   if (!card.title) return reject({ res, reason: "no-card-title" });
 
-  if (card.title.length > LIMITS.MAX.WORKSPACE_CARD_TITLE_LENGTH)
+  if (card.title.length > LIMITS.MAX.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH)
     return reject({ reason: "max-title-length", res });
-  if (card.title.length < LIMITS.MIN.WORKSPACE_CARD_TITLE_LENGTH)
+  if (card.title.length < LIMITS.MIN.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH)
     return reject({ reason: "min-title-length", res });
 
-  if (card.desc && card.desc.length > LIMITS.MAX.WORKSPACE_CARD_DESC_LENGTH)
+  if (
+    card.desc &&
+    card.desc.length > LIMITS.MAX.WORKSPACE_CARD_DESC_CHARACTER_LENGTH
+  )
     return reject({ reason: "max-desc-length", res });
 
   const workspace = await workspacesCollection.findOne({

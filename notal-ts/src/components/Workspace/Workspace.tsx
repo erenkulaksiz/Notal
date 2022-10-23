@@ -1,4 +1,9 @@
 import { useState } from "react";
+import { Droppable } from "@hello-pangea/dnd";
+import type {
+  DroppableProvided,
+  DroppableStateSnapshot,
+} from "@hello-pangea/dnd";
 
 import {
   WorkspaceNotFound,
@@ -17,7 +22,7 @@ import {
 } from "@icons";
 import { WorkspaceSidebarItem } from "./components";
 
-import { IconLibrary } from "@icons";
+import type { FieldTypes } from "@types";
 
 export function Workspace() {
   const workspace = useWorkspace();
@@ -40,37 +45,53 @@ export function Workspace() {
         headerContainerClassName="px-2"
         headerVisible={false}
       >
-        <Tab.TabView
-          title="Board"
-          icon={
-            <DashboardOutlineIcon
-              size={24}
-              className="fill-neutral-800 dark:fill-neutral-200"
-              style={{ transform: "scale(.7)" }}
-            />
-          }
-          className="relative w-full h-full flex overflow-auto pb-2 gap-2 px-2 flex-row"
-        >
-          {workspace.isWorkspaceOwner && (
-            <div className="sticky left-0 flex flex-col h-full items-center gap-1 z-40">
-              <div className="p-1 rounded-lg backdrop-blur-md dark:bg-black/20 bg-white/20">
-                <WorkspaceSidebarItem
-                  icon={
-                    <AddIcon size={24} className="dark:fill-white fill-black" />
-                  }
-                  title="Add Field"
-                  onClick={async () => setAddFieldModalOpen(true)}
+        <Droppable droppableId="board" type="COLUMN" direction="horizontal">
+          {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
+            <Tab.TabView
+              title="Board"
+              icon={
+                <DashboardOutlineIcon
+                  size={24}
+                  className="fill-neutral-800 dark:fill-neutral-200"
+                  style={{ transform: "scale(.7)" }}
                 />
-              </div>
-              <div className="dark:bg-neutral-900 bg-neutral-200 h-[2px] rounded-full w-1/2" />
-              <WorkspaceSidebar />
-            </div>
+              }
+              className="w-full h-full flex overflow-auto pb-2 px-2 flex-row"
+              _ref={provided.innerRef}
+              {...provided.droppableProps}
+            >
+              {workspace.isWorkspaceOwner && (
+                <div className="sticky left-0 flex flex-col h-full items-center gap-1 z-40">
+                  <div className="p-1 rounded-lg backdrop-blur-md dark:bg-black/20 bg-white/20">
+                    <WorkspaceSidebarItem
+                      icon={
+                        <AddIcon
+                          size={24}
+                          className="dark:fill-white fill-black"
+                        />
+                      }
+                      title="Add Field"
+                      onClick={async () => setAddFieldModalOpen(true)}
+                    />
+                  </div>
+                  <div className="dark:bg-neutral-900 bg-neutral-200 h-[2px] rounded-full w-1/2" />
+                  <WorkspaceSidebar />
+                </div>
+              )}
+              {Array.isArray(workspace.workspace?.data?.data?.fields) &&
+                workspace.workspace?.data?.data?.fields.map(
+                  (field, index: number) => (
+                    <WorkspaceField
+                      field={field}
+                      key={field._id}
+                      index={index}
+                    />
+                  )
+                )}
+              {provided.placeholder}
+            </Tab.TabView>
           )}
-          {Array.isArray(workspace.workspace?.data?.data?.fields) &&
-            workspace.workspace?.data?.data?.fields.map((field) => (
-              <WorkspaceField field={field} key={field._id} />
-            ))}
-        </Tab.TabView>
+        </Droppable>
 
         <Tab.TabView
           title="Roadmap"

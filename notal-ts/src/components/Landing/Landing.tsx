@@ -13,13 +13,9 @@ export function Landing() {
   return (
     <>
       <Container>
-        <div className="flex px-4 flex-col h-full sm:h-screen pt-14 sm:p-0 justify-center -z-20 overflow-hidden">
-          <div
-            className="absolute left-0 right-0 top-0 bottom-4 sm:flex hidden justify-center items-end"
-            data-scroll
-            data-scroll-speed="4"
-          >
-            <div className="cursor-pointer flex flex-col items-center animate-[landingBounce_5s_ease-in-out_infinite]">
+        <div className="flex flex-col h-full sm:h-screen pt-14 sm:p-0 justify-center -z-20 overflow-hidden">
+          <div className="absolute left-0 right-0 top-0 bottom-4 sm:flex hidden justify-center items-end z-40">
+            <div className="flex flex-col items-center animate-[landingBounce_5s_ease-in-out_infinite]">
               <span className="text-sm">Scroll to discover more</span>
               <ArrowDownIcon width={20} height={20} fill="currentColor" />
             </div>
@@ -37,7 +33,7 @@ export function Landing() {
               />
             </div>
           </div>
-          <h1 className="dark:text-white text-black mr-2 z-50 relative flex flex-col drop-shadow-xl sm:text-4xl text-xl font-bold font-sans">
+          <h1 className="dark:text-white text-black px-4 mr-2 z-50 relative flex flex-col drop-shadow-xl sm:text-4xl text-xl font-bold font-sans">
             <Typewriter
               options={{
                 strings: CONSTANTS.LANDING_PAGE_STRINGS,
@@ -51,7 +47,7 @@ export function Landing() {
               }}
             />
           </h1>
-          <h5 className="dark:text-neutral-400 text-gray-600 z-50 drop-shadow-lg text-md sm:text-lg font-semibold">
+          <h5 className="dark:text-neutral-400 px-4 text-gray-600 z-50 drop-shadow-lg text-md sm:text-lg font-semibold">
             {CONSTANTS.LANDING_PAGE_SUBDESC}
           </h5>
           <motion.div
@@ -64,7 +60,7 @@ export function Landing() {
             }}
             initial="hidden"
             animate="show"
-            className="mb-16 mt-16 z-40 relative flex-row grid gap-4 h-auto grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+            className="mb-16 mt-16 z-40 px-4 relative flex-row grid gap-4 h-auto grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
           >
             {Features.map((feature: LandingFeatureCardProps, index: number) => (
               <LandingFeatureCard feature={feature} key={index} />

@@ -30,6 +30,15 @@ export interface WorkspaceContextProps {
     add: (title: FieldTypes) => Promise<void>;
     delete: ({ id }: { id: string }) => Promise<void>;
     edit: ({ id, title }: { id: string; title: string }) => Promise<void>;
+    reorder: ({
+      destination,
+      source,
+      fieldId,
+    }: {
+      destination: { droppableId: string; index: number };
+      source: { droppableId: string; index: number };
+      fieldId: string;
+    }) => Promise<void>;
   };
   card: {
     add: ({ card, id }: { card: CardTypes; id: string }) => Promise<void>;
@@ -198,7 +207,7 @@ export function WorkspaceProvider(props: PropsWithChildren) {
         data: {
           ...workspace.data.data,
           fields: [
-            ...workspace.data.data.fields,
+            ...workspace?.data?.data?.fields,
             {
               _id: Date.now().toString(),
               title,
@@ -418,12 +427,63 @@ export function WorkspaceProvider(props: PropsWithChildren) {
     }
   }
 
+  async function reorderField({
+    destination,
+    source,
+    fieldId,
+  }: {
+    destination: { droppableId: string; index: number };
+    source: { droppableId: string; index: number };
+    fieldId: string;
+  }) {
+    if (!workspace?.data?.data) return;
+
+    const newFields = workspace?.data?.data?.fields;
+    const [copy] = newFields.splice(source.index, 1);
+    newFields.splice(destination.index, 0, copy);
+
+    workspace?.mutate(
+      {
+        ...workspace.data,
+        data: {
+          ...workspace.data.data,
+          fields: newFields,
+        },
+      },
+      false
+    );
+
+    const data = await WorkspaceService.workspace.field.reorder({
+      id: workspace?.data?.data?._id,
+      fieldId,
+      destination,
+      source,
+    });
+
+    Log.debug("reorderField data:", data);
+    if (data?.success) {
+      window.gtag("event", "reorderField", {
+        login: auth?.validatedUser?.email,
+        workspaceId: workspace?.data?.data?._id,
+      });
+      //workspace.mutate();
+    } else {
+      NotalUI.Alert.show({
+        title: "Error",
+        desc: data?.error,
+        showCloseButton: true,
+        notCloseable: false,
+      });
+    }
+  }
+
   const value = {
     workspace,
     field: {
       add: addField,
       delete: deleteField,
       edit: editField,
+      reorder: reorderField,
     },
     card: {
       add: addCard,

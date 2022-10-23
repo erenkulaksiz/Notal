@@ -4,6 +4,8 @@ import Head from "next/head";
 import { Layout, Landing, Navbar, Home, LoadingOverlay } from "@components";
 import { ValidateToken } from "@utils/api/validateToken";
 import { useAuth, useWorkspace } from "@hooks";
+import { CONSTANTS } from "@constants";
+import { server, Log } from "@utils";
 import type { ValidateTokenReturnType } from "@utils/api/validateToken";
 import type { NotalRootProps } from "@types";
 import type { GetServerSidePropsContext } from "next";
@@ -14,6 +16,7 @@ function Root(props: NotalRootProps) {
 
   useEffect(() => {
     setWorkspace(null);
+    Log.debug("notal.app");
   }, []);
 
   return (
@@ -21,9 +24,49 @@ function Root(props: NotalRootProps) {
       <Head>
         <title>
           {auth?.validatedUser || auth?.authUser
-            ? "Workspaces • notal.app"
-            : "Notal"}
+            ? `Workspaces • ${CONSTANTS.SEO_APP_NAME}`
+            : CONSTANTS.APP_NAME}
         </title>
+        <meta
+          property="twitter:description"
+          name="twitter:description"
+          content={CONSTANTS.SEO_DESCRIPTION}
+        />
+        <meta
+          property="og:description"
+          name="og:description"
+          content={CONSTANTS.SEO_DESCRIPTION}
+        />
+        <meta
+          property="description"
+          name="description"
+          content={CONSTANTS.SEO_DESCRIPTION}
+        />
+        <meta
+          property="twitter:image"
+          name="twitter:image"
+          content={`https://${server}/icon_big.png`}
+        />
+        <meta
+          property="og:image"
+          name="og:image"
+          content={`https://${server}/icon_big.png`}
+        />
+        <meta
+          property="apple-mobile-web-app-title"
+          name="apple-mobile-web-app-title"
+          content={CONSTANTS.APP_NAME}
+        />
+        <meta
+          property="twitter:title"
+          name="twitter:title"
+          content={CONSTANTS.APP_NAME}
+        />
+        <meta
+          property="og:title"
+          name="og:title"
+          content={CONSTANTS.APP_NAME}
+        />
       </Head>
       <Navbar showCollapse={auth?.validatedUser != null} />
       {auth?.authLoading ? (

@@ -29,7 +29,7 @@ export function AddFieldModal({
     ) {
       setNewFieldErr({
         ...newFieldErr,
-        title: "Field title must be minimum 2 characters.",
+        title: `Field title must be minimum ${LIMITS.MIN.WORKSPACE_FIELD_TITLE_CHARACTER_LENGTH} characters.`,
       });
       return;
     }
@@ -38,7 +38,7 @@ export function AddFieldModal({
     ) {
       setNewFieldErr({
         ...newFieldErr,
-        title: "Field title must be maximum 28 characters.",
+        title: `Field title must be maximum ${LIMITS.MAX.WORKSPACE_FIELD_TITLE_CHARACTER_LENGTH} characters.`,
       });
       return;
     }
@@ -67,7 +67,7 @@ export function AddFieldModal({
           onChange={(e) => setNewField({ ...newField, title: e.target.value })}
           value={newField.title}
           id="fieldTitle"
-          maxLength={28}
+          maxLength={LIMITS.MAX.WORKSPACE_FIELD_TITLE_CHARACTER_LENGTH}
           onEnterPress={() => submit()}
         />
         {newFieldErr.title != false && (

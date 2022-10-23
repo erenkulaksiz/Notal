@@ -19,10 +19,15 @@ export const CONSTANTS = {
     `${formatStringToColorful`New way of`} planning to your projects`,
     `${formatStringToColorful`Empowering`} user feedbacks`,
     `${formatStringToColorful`Featuring`} roadmaps to your users`,
-    `${formatStringToColorful`Collaborating`} collaborating with your team to develop together`,
+    `${formatStringToColorful`Collaborating`} with your team to develop together`,
   ],
   LANDING_PAGE_SUBDESC:
     "Open source task management and devrels platform from the future.",
   SEO_DESCRIPTION:
     "Open source task management and devrels platform from the future.",
+  SEO_APP_NAME: "notal.app",
+  SEO_APP_LINK: "https://notal.app",
+  SEO_APP_TWIITER: "@notalapp",
+  SEO_APP_THEME_COLOR: "#292524",
+  SEO_APP_AUTHOR: "@erencode",
 };

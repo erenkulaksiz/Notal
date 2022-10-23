@@ -126,13 +126,6 @@ export function AuthProvider(props: PropsWithChildren) {
           timeEnabled: true,
           closeable: true,
         });
-        NotalUI.Alert.show({
-          title: "Welcome to Notal!",
-          desc: "This is an experimental application and growing fast day by day. If you find any bugs or have any suggestions, please let me know!",
-          showCloseButton: true,
-          notCloseable: false,
-          animate: true,
-        });
       }
 
       return { authError: error ?? null, authUser: user ?? null };

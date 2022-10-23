@@ -102,7 +102,7 @@ export function Input({
           if (e.key != "Enter") return;
 
           if (typeof onEnterPress === "function") {
-            onEnterPress();
+            onEnterPress(e);
           }
         }}
       />

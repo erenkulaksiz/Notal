@@ -1,6 +1,8 @@
 import { Html, Head, Main, NextScript } from "next/document";
 import { readFileSync } from "fs";
 import { join } from "path";
+import { server } from "@utils";
+import { CONSTANTS } from "@constants";
 
 const SEO = (
   <>
@@ -26,7 +28,7 @@ const SEO = (
     />
     <link
       rel="apple-touch-icon"
-      href="https://notal.app/apple-touch-icon.png"
+      href={`https://${server}/apple-touch-icon.png`}
     ></link>
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -36,17 +38,29 @@ const SEO = (
     <meta
       property="twitter:url"
       name="twitter:url"
-      content="https://notal.app"
+      content={CONSTANTS.SEO_APP_LINK}
     />
     <meta
       property="twitter:creator"
       name="twitter:creator"
-      content="@erencode"
+      content={CONSTANTS.SEO_APP_AUTHOR}
     />
-    <meta property="twitter:site" name="twitter:site" content="@notalapp" />
+    <meta
+      property="twitter:site"
+      name="twitter:site"
+      content={CONSTANTS.SEO_APP_TWIITER}
+    />
     <meta property="og:type" name="og:type" content="website" />
-    <meta property="og:site_name" name="og:site_name" content="notal.app" />
-    <meta property="theme-color" name="theme-color" content="#292524" />
+    <meta
+      property="og:site_name"
+      name="og:site_name"
+      content={CONSTANTS.SEO_APP_NAME}
+    />
+    <meta
+      property="theme-color"
+      name="theme-color"
+      content={CONSTANTS.SEO_APP_THEME_COLOR}
+    />
   </>
 );
 

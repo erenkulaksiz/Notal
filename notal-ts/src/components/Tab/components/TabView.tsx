@@ -1,15 +1,18 @@
-import { ReactNode } from "react";
+import { ReactNode, Ref } from "react";
 
 import { BuildComponent } from "@utils/style";
 
 export default function TabView({
   children,
   className,
+  _ref,
+  ...props
 }: {
   children?: ReactNode;
   className?: string;
   title?: string;
   icon?: ReactNode;
+  _ref?: Ref<HTMLDivElement>;
 }) {
   const BuildTabView = BuildComponent({
     name: "Notal UI Tab View",
@@ -17,5 +20,9 @@ export default function TabView({
     extraClasses: className,
   });
 
-  return <div className={BuildTabView.classes}>{children}</div>;
+  return (
+    <div className={BuildTabView.classes} {...props} ref={_ref}>
+      {children}
+    </div>
+  );
 }

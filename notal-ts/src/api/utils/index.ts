@@ -1,6 +1,8 @@
-import { NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 
-const { Log } = require("@utils");
+import { getTokenFromHeader } from "@utils/api/getTokenFromHeader";
+import { ValidateUser } from "@utils/api/validateUser";
+import { Log } from "@utils";
 
 interface acceptProps {
   data?: any;
@@ -41,4 +43,30 @@ export function reject({
 export function generateRandomUsername({ email }: { email: string }) {
   const now = Date.now().toString();
   return email.split("@")[0] + now.substring(now.length - 3);
+}
+
+/**
+ * check whether user is authenticated or not
+ */
+export async function checkUserAuth({
+  req,
+  res,
+  func,
+}: {
+  req: NextApiRequest;
+  res: NextApiResponse;
+  func: (req: NextApiRequest, res: NextApiResponse<any>) => Promise<void>;
+}): Promise<void> {
+  const { body } = req;
+  if (!body && !body.uid) return reject({ res, reason: "no-auth-params" }); // assuming all auth routes have uid in body
+  const { uid } = body;
+  const bearer = getTokenFromHeader(req);
+  if (!bearer) return reject({ res, reason: "no-auth" });
+  const validateUser = await ValidateUser({ token: bearer });
+  if (validateUser && !validateUser.decodedToken)
+    return reject({ reason: validateUser.errorCode, res });
+  if (validateUser.decodedToken.uid !== uid)
+    return reject({ res, reason: "auth-uid-error" });
+
+  return func(req, res);
 }

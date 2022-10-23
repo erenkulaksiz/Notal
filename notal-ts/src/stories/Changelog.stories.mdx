@@ -12,8 +12,21 @@ import { Meta } from '@storybook/addon-docs';
 - feat means feature that is new feature added to application
 - chore means chore that is changes to the build process or auxiliary tools and libraries such as documentation generation
 - fix means application bug fixes or documentation fixes
+- todo means that is something that not implemented yet
 
 # Changelog
+
+## 2.1 - 16.10.2022 23.10.2022
+
+- [feat] Fix that max character limits on inputs were hardcoded instead of pulling them from limits file 
+- [feat] Added a feature that workspace fields will be able to draggable and saved to backend
+- [fix] Fix an issue where if fresh workspace has no fields and user tries to add a new field, it would crash
+- [fix] Fix an issue where Landing page didn't had any SEO content in header
+- [fix] Fix an issue where some browsers were seeing wrong placement of elements in landing page
+- [fix] Fix an issue where non logined users couldnt view public workspaces
+- [fix] Fix an issue where uploading image in `AddWorkpsaceModal` would throw errors
+- [todo] Add constants to Workspace and Notal SEO
+- [todo] If user signouts and inside a private workspace, will still be able to view the workspace but not edit it, refresh will fix this issue but need another implementation
 
 ## 2.0.62 - 03.10.2022 16.10.2022
 

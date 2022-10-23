@@ -243,7 +243,7 @@ export function AddWorkspaceModal({
               }
               value={state.title}
               id="workspaceTitle"
-              maxLength={32}
+              maxLength={LIMITS.MAX.WORKSPACE_TITLE_CHARACTER_LENGTH}
             />
             {newWorkspaceErr.title != false && (
               <span className="text-red-500">{newWorkspaceErr.title}</span>
@@ -260,7 +260,7 @@ export function AddWorkspaceModal({
               }
               value={state.desc}
               id="workspaceDescription"
-              maxLength={96}
+              maxLength={LIMITS.MAX.WORKSPACE_DESC_CHARACTER_LENGTH}
             />
             {newWorkspaceErr.desc != false && (
               <span className="text-red-500">{newWorkspaceErr.desc}</span>

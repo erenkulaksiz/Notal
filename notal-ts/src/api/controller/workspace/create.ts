@@ -83,8 +83,8 @@ export async function create(req: NextApiRequest, res: NextApiResponse) {
     gradient: {
       type: "gradient",
       colors: {
-        start: thumbnail.colors.start,
-        end: thumbnail.colors.end,
+        start: thumbnail?.colors?.start,
+        end: thumbnail?.colors?.end,
       },
     },
     singleColor: {
@@ -103,6 +103,7 @@ export async function create(req: NextApiRequest, res: NextApiResponse) {
       owner: uid,
       workspaceVisible,
       thumbnail: thumbnailTypes[thumbnail.type],
+      fields: [],
       users: [uid], // Add owner as default user
       id: givenId,
     })

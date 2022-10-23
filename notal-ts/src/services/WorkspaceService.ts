@@ -10,6 +10,7 @@ import {
   editField,
   addCard,
   deleteCard,
+  reorderField,
 } from "./workspace";
 import type { AddFieldParams } from "./workspace/field/addField";
 import type { EditFieldParams } from "./workspace/field/editField";
@@ -44,6 +45,17 @@ interface WorkspaceServiceTypes {
         workspaceId,
         title,
       }: EditFieldParams) => Promise<ReturnType>;
+      reorder: ({
+        destination,
+        source,
+        fieldId,
+        id,
+      }: {
+        destination: { droppableId: string; index: number };
+        source: { droppableId: string; index: number };
+        fieldId: string;
+        id: string; // workspace id
+      }) => Promise<ReturnType>;
     };
     card: {
       add: ({
@@ -79,6 +91,7 @@ export const WorkspaceService = {
       add: addField,
       delete: deleteField,
       edit: editField,
+      reorder: reorderField,
     },
     card: {
       add: addCard,

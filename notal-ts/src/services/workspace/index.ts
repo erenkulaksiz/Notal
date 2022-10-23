@@ -4,6 +4,6 @@ export { deleteWorkspace } from "./deleteWorkspace";
 export { toggleVisibility } from "./toggleVisibility";
 export { uploadThumbnail } from "./uploadThumbnail";
 
-export { addField, deleteField, editField } from "./field";
+export { addField, deleteField, editField, reorderField } from "./field";
 
 export { addCard, deleteCard } from "./card";

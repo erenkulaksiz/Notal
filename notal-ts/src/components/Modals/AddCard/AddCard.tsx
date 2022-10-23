@@ -12,6 +12,7 @@ import {
 import { AddIcon, CrossIcon, CheckIcon } from "@icons";
 import { AddCardModalProps, AddCardActionType } from "./AddCard.d";
 import { reducer } from "./reducer";
+import { LIMITS } from "@constants/limits";
 
 export function AddCardModal({
   open,
@@ -90,7 +91,8 @@ export function AddCardModal({
               }
               value={state.title}
               id="cardTitle"
-              maxLength={40}
+              maxLength={LIMITS.MAX.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH}
+              onEnterPress={() => submit()}
             />
 
             <label htmlFor="cardTitle">Card Description</label>
@@ -107,7 +109,7 @@ export function AddCardModal({
               className="p-2"
               value={state.desc}
               id="cardDesc"
-              maxLength={356}
+              maxLength={LIMITS.MAX.WORKSPACE_FIELD_TITLE_CHARACTER_LENGTH}
               textarea
             />
 

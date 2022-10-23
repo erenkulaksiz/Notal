@@ -8,6 +8,7 @@ import { LIMITS } from "@constants/limits";
 
 export function WorkspaceFieldHeader({
   field,
+  ...props
 }: {
   field: WorkspaceTypes["fields"];
 }) {
@@ -34,8 +35,11 @@ export function WorkspaceFieldHeader({
   }
 
   return (
-    <div className="w-full z-20 sticky top-0 flex justify-between items-center p-2 max-h-10 dark:bg-black/40 bg-white/40 backdrop-blur-md">
-      <div className="flex flex-row gap-1 items-center">
+    <div
+      className="w-full z-20 sticky top-0 flex justify-between items-center p-2 max-h-10 dark:bg-black/40 bg-white/40 backdrop-blur-md"
+      {...props}
+    >
+      <div className="flex flex-row gap-1 items-center max-w-full">
         {!editingTitle && (
           <div className="w-6 h-6 mr-2 bg-neutral-200 font-medium text-[.8em] uppercase dark:bg-neutral-900 rounded-md flex items-center justify-center">
             {field.cards?.length}
@@ -86,12 +90,12 @@ export function WorkspaceFieldHeader({
         )}
       </div>
       {workspace.isWorkspaceOwner && !editingTitle && (
-        <div className="flex flex-row gap-2">
+        <div className="flex flex-row gap-2 absolute right-2 dark:bg-black/60 bg-neutral-200/60 backdrop-blur-lg rounded-lg">
           <div className="relative group-hover:flex sm:hidden flex">
             <Tooltip
               content={`Delete field ${field.title}`}
               outline
-              direction="bottom"
+              direction="left"
             >
               <Button
                 light="active:opacity-50"
@@ -144,7 +148,7 @@ export function WorkspaceFieldHeader({
             <Tooltip
               content={`Add Card to ${field.title}`}
               outline
-              direction="bottom"
+              direction="left"
             >
               <Button
                 light="active:opacity-50"
@@ -159,7 +163,7 @@ export function WorkspaceFieldHeader({
                 />
               </Button>
             </Tooltip>
-            <Button
+            {/*<Button
               light="active:opacity-50"
               size="h-8 w-8"
               className="p-2 items-center justify-center"
@@ -169,7 +173,7 @@ export function WorkspaceFieldHeader({
                 size={24}
                 className="scale-75 fill-black dark:fill-white"
               />
-            </Button>
+              </Button>*/}
           </div>
         </div>
       )}

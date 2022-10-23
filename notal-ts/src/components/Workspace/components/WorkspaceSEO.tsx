@@ -61,7 +61,7 @@ export function WorkspaceSEO({
         name="apple-mobile-web-app-title"
         content={
           workspace?.data?.title
-            ? `${workspace.data.title} • notal.app`
+            ? `${workspace.data.title} • ${CONSTANTS.SEO_APP_NAME}`
             : CONSTANTS.APP_NAME
         }
       />
@@ -70,7 +70,7 @@ export function WorkspaceSEO({
         name="twitter:title"
         content={
           workspace?.data?.title
-            ? `${workspace.data.title} • notal.app`
+            ? `${workspace.data.title} • ${CONSTANTS.SEO_APP_NAME}`
             : CONSTANTS.APP_NAME
         }
       />
@@ -79,7 +79,7 @@ export function WorkspaceSEO({
         name="og:title"
         content={
           workspace?.data?.title
-            ? `${workspace.data.title} • notal.app`
+            ? `${workspace.data.title} • ${CONSTANTS.SEO_APP_NAME}`
             : CONSTANTS.APP_NAME
         }
       />
