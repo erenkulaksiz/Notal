@@ -14,7 +14,7 @@ export function WorkspaceOwnerProfile() {
   const BuildWorkspaceOwnerProfileContainer = BuildComponent({
     name: "Workspace Owner Profile Container",
     defaultClasses:
-      "flex flex-row ml-2 z-40 rounded-lg p-1 px-2 dark:bg-neutral-800/80 bg-neutral-300/70",
+      "flex flex-row z-40 rounded-lg p-1 px-2 dark:bg-neutral-800/80 bg-neutral-300/70",
     conditionalClasses: [{ true: "left-[4.3rem]", false: "left-4" }],
     selectedClasses: [isWorkspaceOwner],
   });

@@ -68,6 +68,7 @@ export function AddCardModal({
               color: state.useColor ? state.color : "",
             }}
             fieldId=""
+            index={0}
           />
         </div>
         <Tab

@@ -3,9 +3,9 @@ import { ObjectId } from "mongodb";
 
 import { connectToDatabase } from "@lib/mongodb";
 import { accept, reject } from "@api/utils";
-import type { FieldTypes } from "@types";
+import type { CardTypes, FieldTypes } from "@types";
 
-export async function reorderfield(req: NextApiRequest, res: NextApiResponse) {
+export async function reordercard(req: NextApiRequest, res: NextApiResponse) {
   const { db } = await connectToDatabase();
   const workspacesCollection = await db.collection("workspaces");
 
@@ -26,48 +26,55 @@ export async function reorderfield(req: NextApiRequest, res: NextApiResponse) {
     return reject({ reason: "no-destination-or-source", res });
   const { destination, source } = body;
 
-  // get field id
-  if (!body.fieldId) return reject({ reason: "no-field-id", res });
-  const { fieldId } = body;
+  if (!body.cardId) return reject({ reason: "no-card-id", res });
+  const { cardId } = body;
 
+  // get from field
   const fieldIndex = workspace.fields.findIndex(
-    (field: FieldTypes) => field._id == fieldId
+    (field: FieldTypes) => field._id == source.droppableId
   );
   const field = workspace.fields[fieldIndex];
+  const cardIndex = field.cards.findIndex(
+    (card: CardTypes) => card._id == cardId
+  );
+  const card = field.cards[cardIndex];
 
-  // first remove field
+  // first remove card from field
   await workspacesCollection.updateOne(
-    { _id: new ObjectId(id) },
+    { _id: new ObjectId(id), "fields._id": new ObjectId(source.droppableId) },
     {
       $pull: {
-        fields: {
-          _id: new ObjectId(fieldId),
+        "fields.$.cards": {
+          _id: new ObjectId(cardId),
         },
+      },
+      $set: {
+        "fields.$.updatedAt": Date.now(),
       },
     }
   );
 
-  // then add field to destination
+  // then add card to destination
   return await workspacesCollection
     .findOneAndUpdate(
-      { _id: new ObjectId(id) },
+      {
+        _id: new ObjectId(id),
+        "fields._id": new ObjectId(destination.droppableId),
+      },
       {
         // @ts-ignore
         $push: {
-          fields: {
-            $each: [field],
+          "fields.$.cards": {
+            $each: [card],
             $position: destination.index,
           },
-        },
-        $set: {
-          updatedAt: Date.now(),
         },
       }
     )
     .then(() =>
       accept({
         res,
-        action: "reorderfield",
+        action: "reordercard",
       })
     )
     .catch((error) => reject({ reason: error, res }));

@@ -1,8 +1,10 @@
 import { motion } from "framer-motion";
-import { Draggable } from "@hello-pangea/dnd";
+import { Draggable, Droppable } from "@hello-pangea/dnd";
 import type {
   DraggableProvided,
   DraggableStateSnapshot,
+  DroppableProvided,
+  DroppableStateSnapshot,
 } from "@hello-pangea/dnd";
 
 import { BuildComponent } from "@utils/style";
@@ -42,8 +44,8 @@ export function WorkspaceField({
                 "rounded-md group h-full overflow-y-auto overflow-x-hidden max-h-full flex items-start pb-2 flex-col dark:bg-black bg-white hover:bg-neutral-200 dark:hover:bg-neutral-900/40 transition-all ease-in-out",
               conditionalClasses: [
                 {
-                  true: "border-2 border-neutral-300 dark:border-neutral-700",
-                  false: "border-2 border-transparent",
+                  true: "border-dashed border-2 border-neutral-300 dark:border-neutral-700",
+                  false: "border-0 border-transparent",
                 },
               ],
               selectedClasses: [snapshot.isDragging],
@@ -51,16 +53,31 @@ export function WorkspaceField({
           }
         >
           <WorkspaceFieldHeader field={field} {...provided.dragHandleProps} />
-          <div className="flex flex-1 flex-col px-2 pt-2 gap-2 w-full">
-            {Array.isArray(field?.cards) &&
-              field?.cards.map((card: CardTypes) => (
-                <WorkspaceFieldCard
-                  card={card}
-                  fieldId={field._id}
-                  key={card._id}
-                />
-              ))}
-          </div>
+          <Droppable droppableId={field._id} type="FIELD" direction="vertical">
+            {(
+              dropProvided: DroppableProvided,
+              dropSnapshot: DroppableStateSnapshot
+            ) => (
+              <>
+                <div
+                  className="flex flex-1 flex-col px-2 pt-2 w-full"
+                  {...dropProvided.droppableProps}
+                  ref={dropProvided.innerRef}
+                >
+                  {Array.isArray(field?.cards) &&
+                    field?.cards.map((card: CardTypes, index: number) => (
+                      <WorkspaceFieldCard
+                        card={card}
+                        fieldId={field._id}
+                        key={card._id}
+                        index={index}
+                      />
+                    ))}
+                </div>
+                {dropProvided.placeholder}
+              </>
+            )}
+          </Droppable>
         </motion.div>
       )}
     </Draggable>

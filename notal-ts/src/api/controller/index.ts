@@ -14,6 +14,7 @@ import {
   addcard,
   deletecard,
   reorderfield,
+  reordercard,
 } from "./workspace";
 import { accept, checkUserAuth } from "@api/utils";
 
@@ -44,6 +45,7 @@ export interface ControllerReturnType {
     card: {
       add: APIReturnType;
       delete: APIReturnType;
+      reorder: APIReturnType;
     };
   };
 }
@@ -75,6 +77,7 @@ export function Controller() {
       card: {
         add: (req, res) => checkUserAuth({ req, res, func: addcard }),
         delete: (req, res) => checkUserAuth({ req, res, func: deletecard }),
+        reorder: (req, res) => checkUserAuth({ req, res, func: reordercard }),
       },
     },
   } as ControllerReturnType;

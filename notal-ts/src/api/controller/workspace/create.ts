@@ -19,6 +19,7 @@ export async function create(req: NextApiRequest, res: NextApiResponse) {
   if (!body.title) return reject({ reason: "no-title", res });
   if (!body.thumbnail) return reject({ reason: "no-thumbnail", res });
   if (!body.owner) return reject({ reason: "no-owner", res });
+  if (!body.uid) return reject({ reason: "no-uid", res });
 
   const { title, desc, starred, workspaceVisible, thumbnail, uid } = body;
 

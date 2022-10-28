@@ -6,4 +6,4 @@ export { uploadThumbnail } from "./uploadThumbnail";
 
 export { addField, deleteField, editField, reorderField } from "./field";
 
-export { addCard, deleteCard } from "./card";
+export { addCard, deleteCard, reorderCard } from "./card";

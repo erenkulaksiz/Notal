@@ -49,6 +49,15 @@ export interface WorkspaceContextProps {
       id?: string;
       fieldId: string;
     }) => Promise<void>;
+    reorder: ({
+      destination,
+      source,
+      cardId,
+    }: {
+      destination: { droppableId: string; index: number };
+      source: { droppableId: string; index: number };
+      cardId: string;
+    }) => Promise<void>;
   };
 }
 
@@ -438,11 +447,11 @@ export function WorkspaceProvider(props: PropsWithChildren) {
   }) {
     if (!workspace?.data?.data) return;
 
-    const newFields = workspace?.data?.data?.fields;
+    const newFields = [...workspace?.data?.data?.fields];
     const [copy] = newFields.splice(source.index, 1);
     newFields.splice(destination.index, 0, copy);
 
-    workspace?.mutate(
+    workspace.mutate(
       {
         ...workspace.data,
         data: {
@@ -477,6 +486,63 @@ export function WorkspaceProvider(props: PropsWithChildren) {
     }
   }
 
+  async function reorderCard({
+    destination,
+    source,
+    cardId,
+  }: {
+    destination: { droppableId: string; index: number };
+    source: { droppableId: string; index: number };
+    fieldId: string;
+    cardId: string;
+  }) {
+    if (!workspace?.data?.data) return;
+
+    const newFields = [...workspace?.data?.data?.fields];
+    const sourceField = newFields.findIndex(
+      (el: FieldTypes) => el._id == source.droppableId
+    );
+    const [copy] = newFields[sourceField].cards.splice(source.index, 1);
+    const destinationField = newFields.findIndex(
+      (el: FieldTypes) => el._id == destination.droppableId
+    );
+    newFields[destinationField].cards.splice(destination.index, 0, copy);
+
+    workspace.mutate(
+      {
+        ...workspace.data,
+        data: {
+          ...workspace.data.data,
+          fields: newFields,
+        },
+      },
+      false
+    );
+
+    const data = await WorkspaceService.workspace.card.reorder({
+      id: workspace?.data?.data?._id,
+      cardId,
+      destination,
+      source,
+    });
+
+    Log.debug("reorderCard data:", data);
+    if (data?.success) {
+      window.gtag("event", "reorderCard", {
+        login: auth?.validatedUser?.email,
+        workspaceId: workspace?.data?.data?._id,
+      });
+      //workspace.mutate();
+    } else {
+      NotalUI.Alert.show({
+        title: "Error",
+        desc: data?.error,
+        showCloseButton: true,
+        notCloseable: false,
+      });
+    }
+  }
+
   const value = {
     workspace,
     field: {
@@ -488,6 +554,7 @@ export function WorkspaceProvider(props: PropsWithChildren) {
     card: {
       add: addCard,
       delete: deleteCard,
+      reorder: reorderCard,
     },
     setWorkspace,
     workspaceNotFound,

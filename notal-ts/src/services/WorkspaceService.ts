@@ -11,6 +11,7 @@ import {
   addCard,
   deleteCard,
   reorderField,
+  reorderCard,
 } from "./workspace";
 import type { AddFieldParams } from "./workspace/field/addField";
 import type { EditFieldParams } from "./workspace/field/editField";
@@ -76,6 +77,17 @@ interface WorkspaceServiceTypes {
         fieldId: string;
         workspaceId: string;
       }) => Promise<ReturnType>;
+      reorder: ({
+        id,
+        destination,
+        source,
+        cardId,
+      }: {
+        id: string;
+        destination: { droppableId: string; index: number };
+        source: { droppableId: string; index: number };
+        cardId: string;
+      }) => Promise<ReturnType>;
     };
   };
 }
@@ -96,6 +108,7 @@ export const WorkspaceService = {
     card: {
       add: addCard,
       delete: deleteCard,
+      reorder: reorderCard,
     },
   },
 } as WorkspaceServiceTypes;

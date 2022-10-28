@@ -59,18 +59,31 @@ function Workspace(props: NotalRootProps) {
       <DragDropContext
         onDragEnd={(result) => {
           if (!result.destination) return;
+
           if (
             result.destination.index == result.source.index &&
             result.destination.droppableId == result.source.droppableId
           )
             return;
+
           Log.debug("drag drop result", result);
-          if (result.destination.droppableId == "board") {
+
+          if (result.type == "BOARD") {
             // reorder field
             workspaceHook.field.reorder({
               source: result.source,
               destination: result.destination,
               fieldId: result.draggableId,
+            });
+            return;
+          }
+
+          if (result.type == "FIELD") {
+            // reorder card in field
+            workspaceHook.card.reorder({
+              source: result.source,
+              destination: result.destination,
+              cardId: result.draggableId,
             });
           }
         }}
