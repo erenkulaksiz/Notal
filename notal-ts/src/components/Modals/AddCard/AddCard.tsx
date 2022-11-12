@@ -110,7 +110,7 @@ export function AddCardModal({
               className="p-2"
               value={state.desc}
               id="cardDesc"
-              maxLength={LIMITS.MAX.WORKSPACE_FIELD_TITLE_CHARACTER_LENGTH}
+              maxLength={LIMITS.MAX.WORKSPACE_CARD_DESC_CHARACTER_LENGTH}
               textarea
             />
 

@@ -1,6 +1,13 @@
 import { useState } from "react";
 
-import { AddIcon, DeleteIcon, DragIcon, CrossIcon, CheckIcon } from "@icons";
+import {
+  AddIcon,
+  DeleteIcon,
+  DragIcon,
+  CrossIcon,
+  CheckIcon,
+  EditIcon,
+} from "@icons";
 import { Button, Tooltip, AddCardModal } from "@components";
 import { useNotalUI, useWorkspace } from "@hooks";
 import type { CardTypes, WorkspaceTypes } from "@types";
@@ -51,6 +58,12 @@ export function WorkspaceFieldHeader({
             onClick={() => setEditingTitle(true)}
           >
             {field.title}
+            <div className="hidden group-hover:flex">
+              <EditIcon
+                fill="currentColor"
+                style={{ transform: "scale(.65)" }}
+              />
+            </div>
           </div>
         )}
         {editingTitle && (

@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { Draggable, Droppable } from "@hello-pangea/dnd";
 import type {
@@ -8,16 +9,20 @@ import type {
 } from "@hello-pangea/dnd";
 
 import { BuildComponent } from "@utils/style";
-import { WorkspaceFieldHeader, WorkspaceFieldCard } from "@components";
+import { WorkspaceFieldHeader } from "@components";
 import type { WorkspaceTypes, CardTypes } from "@types";
+import type { WorkspaceFieldCardProps } from "./WorkspaceFieldCard";
 
-export function WorkspaceField({
-  field,
-  index,
-}: {
+const WorkspaceFieldCard = dynamic<WorkspaceFieldCardProps>(() =>
+  import("./WorkspaceFieldCard").then((mod) => mod.WorkspaceFieldCard)
+);
+
+export interface WorkspaceFieldProps {
   field: WorkspaceTypes["fields"];
   index: number;
-}) {
+}
+
+export function WorkspaceField({ field, index }: WorkspaceFieldProps) {
   return (
     <Draggable draggableId={field._id} index={index}>
       {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
@@ -39,9 +44,9 @@ export function WorkspaceField({
           }}
           className={
             BuildComponent({
-              name: "WorkspaceField",
+              name: "Workspace Field",
               defaultClasses:
-                "rounded-md group h-full overflow-y-auto overflow-x-hidden max-h-full flex items-start pb-2 flex-col dark:bg-black bg-white hover:bg-neutral-200 dark:hover:bg-neutral-900/40 transition-all ease-in-out",
+                "rounded-md group h-full mr-1 overflow-y-auto overflow-x-hidden max-h-full flex items-start flex-col dark:bg-black bg-white hover:bg-neutral-200 dark:hover:bg-neutral-900/40 transition-all ease-in-out",
               conditionalClasses: [
                 {
                   true: "border-dashed border-2 border-neutral-300 dark:border-neutral-700",
@@ -60,7 +65,19 @@ export function WorkspaceField({
             ) => (
               <>
                 <div
-                  className="flex flex-1 flex-col px-2 pt-2 w-full"
+                  className={
+                    BuildComponent({
+                      name: "Workspace Field Card Container",
+                      defaultClasses: "flex flex-col px-2 pt-2 h-full w-full",
+                      conditionalClasses: [
+                        {
+                          true: "border-dashed border-2 border-neutral-300 dark:border-neutral-700",
+                          false: "border-0 border-transparent",
+                        },
+                      ],
+                      selectedClasses: [dropSnapshot.isDraggingOver],
+                    }).classes
+                  }
                   {...dropProvided.droppableProps}
                   ref={dropProvided.innerRef}
                 >
@@ -74,7 +91,6 @@ export function WorkspaceField({
                       />
                     ))}
                 </div>
-                {dropProvided.placeholder}
               </>
             )}
           </Droppable>

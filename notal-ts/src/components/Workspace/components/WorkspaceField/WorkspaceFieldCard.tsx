@@ -9,15 +9,17 @@ import type {
   DraggableStateSnapshot,
 } from "@hello-pangea/dnd";
 
+export interface WorkspaceFieldCardProps {
+  card: CardTypes;
+  index: number;
+  fieldId: string;
+}
+
 export function WorkspaceFieldCard({
   card,
   index,
   fieldId,
-}: {
-  card: CardTypes;
-  index: number;
-  fieldId: string;
-}) {
+}: WorkspaceFieldCardProps) {
   const workspace = useWorkspace();
 
   function onCardDelete() {
@@ -25,14 +27,14 @@ export function WorkspaceFieldCard({
   }
 
   return (
-    <Draggable draggableId={card._id ?? "default"} index={index}>
+    <Draggable draggableId={card._id ?? "_default"} index={index}>
       {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
         <div
           className={
             BuildComponent({
-              name: "WorkspaceFieldCard",
+              name: "Workspace Field Card",
               defaultClasses:
-                "bg-neutral-200 shadow-md dark:bg-neutral-900 relative p-3 w-full flex flex-col rounded-lg mb-2",
+                "bg-neutral-100 shadow-md dark:bg-neutral-900 relative p-3 w-full flex flex-col rounded-lg mb-2",
               conditionalClasses: [
                 {
                   true: "border-dashed border-2 border-neutral-300 dark:border-neutral-700",
@@ -53,7 +55,7 @@ export function WorkspaceFieldCard({
           )}
           {card?.title && <div className="text-xl">{card?.title}</div>}
           {card?.desc && (
-            <div className="text-sm dark:text-neutral-500 text-neutral-600">
+            <div className="break-words text-sm dark:text-neutral-500 text-neutral-600">
               {card?.desc}
             </div>
           )}
@@ -62,21 +64,22 @@ export function WorkspaceFieldCard({
           )}
           {card._id && (
             <>
-              <div className="absolute flex flex-col items-center gap-1 justify-center px-2 left-0 top-0 bottom-0 bg-gradient-to-l from-transparent to-neutral-400/50 dark:to-neutral-700/50 rounded-lg opacity-0 hover:opacity-100 transition-all ease-in-out duration-250">
-                <button onClick={() => onCardDelete()}>
-                  <DeleteIcon
-                    size={24}
-                    fill="currentColor"
-                    className="scale-75"
-                  />
-                </button>
-              </div>
               <button
+                onClick={() => onCardDelete()}
+                className="absolute flex flex-col items-center gap-1 justify-center px-2 left-0 top-0 bottom-0 bg-gradient-to-l from-transparent to-neutral-400/50 dark:to-neutral-700/50 rounded-lg opacity-0 hover:opacity-100 transition-all ease-in-out duration-250"
+              >
+                <DeleteIcon
+                  size={24}
+                  fill="currentColor"
+                  className="scale-75"
+                />
+              </button>
+              <div
                 className="absolute flex items-center justify-center px-2 right-0 top-0 bottom-0 bg-gradient-to-r from-transparent to-neutral-400/50 dark:to-neutral-700/50 rounded-lg opacity-0 hover:opacity-100 transition-all ease-in-out duration-250"
                 {...provided.dragHandleProps}
               >
                 <DragIcon size={24} fill="currentColor" className="scale-75" />
-              </button>
+              </div>
             </>
           )}
         </div>

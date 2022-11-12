@@ -25,8 +25,7 @@ export function accept({
 }: acceptProps) {
   Log.debug("accept: ", data, status, action);
   if (data) {
-    res.status(status).json({ success: true, data });
-    return;
+    return res.status(status).json({ success: true, data });
   }
   res.status(status).json({ success: true });
 }

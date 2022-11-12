@@ -28,7 +28,7 @@ export function Dropdown() {
           </div>
         </summary>
         <div
-          className="flex flex-col p-4 absolute top-full rounded-lg right-0 dark:bg-neutral-900/70 filter backdrop-blur-sm bg-white/70 border-2 border-neutral-400/30 dark:border-neutral-800/50 shadow-2xl w-60"
+          className="flex flex-col p-4 absolute top-full rounded-xl right-0 dark:bg-neutral-900/70 filter backdrop-blur-sm bg-white/70 border-2 border-neutral-400/30 dark:border-neutral-800/50 shadow-2xl w-60"
           style={{ zIndex: 999 }}
         >
           <div className="flex flex-row items-center">
@@ -51,14 +51,14 @@ export function Dropdown() {
             {auth?.validatedUser && auth.validatedUser.email}
           </span>
           <div className="mt-2 flex flex-col gap-2">
-            <Button
+            {/*<Button
               fullWidth
               icon={<UserIcon size={24} fill="white" className="ml-2" />}
               gradient
               aria-label="Profile Button"
             >
               <span>Profile</span>
-            </Button>
+            </Button>*/}
             <Button
               fullWidth
               icon={<LogoutIcon size={24} fill="white" className="ml-2" />}

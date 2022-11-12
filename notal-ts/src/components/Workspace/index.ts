@@ -1,12 +1,11 @@
 export { Workspace } from "./Workspace";
-export { 
-    WorkspaceField, 
-    WorkspaceFieldCard, 
-    WorkspaceFieldHeader 
+export {
+  WorkspaceField,
+  WorkspaceFieldCard,
+  WorkspaceFieldHeader,
 } from "./components/WorkspaceField";
-export { 
-    WorkspaceNotFound, 
-    WorkspaceSEO, 
-    WorkspaceSidebar, 
-    WorkspaceSidebarItem
+export {
+  WorkspaceNotFound,
+  WorkspaceSidebar,
+  WorkspaceSidebarItem,
 } from "./components";

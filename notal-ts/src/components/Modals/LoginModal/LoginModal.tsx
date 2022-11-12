@@ -6,21 +6,11 @@ import Link from "next/link";
 import IconWhite from "@public/icon_white.webp";
 import IconGalactic from "@public/icon_galactic.webp";
 import { Modal, Button, Loading } from "@components";
-import { GoogleIcon, GithubIcon } from "@icons";
+import { GoogleIcon, GithubIcon, EmailIcon } from "@icons";
 import { Log } from "@utils/logger";
 import { useAuth } from "@hooks";
+import type { PlatformLoginTypes } from "@types";
 import type { LoginModalProps } from "./LoginModal.d";
-
-interface PlatformLogin {
-  icon: ReactNode;
-  text: string;
-  id: string;
-}
-
-interface PlatformLoginTypes {
-  google: PlatformLogin;
-  github: PlatformLogin;
-}
 
 const PlatformLogins = {
   google: {
@@ -35,6 +25,13 @@ const PlatformLogins = {
     text: "Github",
     id: "github",
   },
+  /*
+  email: {
+    icon: <EmailIcon size={24} fill="currentColor" className="ml-2" />,
+    text: "E-mail",
+    id: "email",
+  },
+  */
 } as PlatformLoginTypes;
 
 export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
@@ -44,19 +41,23 @@ export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
 
   useEffect(() => {
     if (auth?.authUser && open) {
-      onClose();
+      close();
     }
   }, [auth?.authUser]);
 
   const onLoginWithPlatform = async (platform: string) => {
     Log.debug(`trying to login with platform ${platform}`);
     const login = await auth?.login?.platform(platform);
-    if (login?.authError == "auth/account-exists-with-different-credential") {
+    Log.debug("iiiiiiilogin", login);
+    if (
+      login?.authError?.errorCode ==
+      "auth/account-exists-with-different-credential"
+    ) {
       setOauthError(
         `This account exist with different credentials. Please try another method.`
       );
       return;
-    } else if (login?.authError == "auth/user-disabled") {
+    } else if (login?.authError?.errorCode == "auth/user-disabled") {
       setOauthError(
         `Your account has been disabled. Sorry for the inconvenience.`
       );
@@ -103,13 +104,13 @@ export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
                   />
                 </div>
               )}
-              <span className="text-2xl font-medium mt-8 text-black dark:text-white">
-                Sign up on Notal
+              <span className="text-lg sm:text-2xl text-center font-medium mt-6 text-black dark:text-white">
+                Sign up on Notal using...
               </span>
             </div>
           </Modal.Title>
-          <Modal.Body className="p-4 items-center" animate>
-            <div className="flex flex-col gap-2 pb-2 w-full sm:px-8">
+          <Modal.Body className="px-4 pt-6 items-center sm:px-8" animate>
+            <div className="flex flex-col gap-2 pb-2 w-full">
               {Object.keys(PlatformLogins).map((platform) => {
                 const currPlatform =
                   PlatformLogins[platform as keyof PlatformLoginTypes];
@@ -132,7 +133,9 @@ export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
             {oauthError && (
               <span className="text-red-600 text-center">{oauthError}</span>
             )}
-            <span className="text-neutral-500 text-sm text-center mt-1">
+          </Modal.Body>
+          <Modal.Footer className="items-center pb-2 px-4 sm:px-8" animate>
+            <span className="text-neutral-500 text-sm text-center">
               {
                 "We'll never post to any of your accounts without your permission. More info on"
               }{" "}
@@ -142,7 +145,7 @@ export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
                 </a>
               </Link>
             </span>
-          </Modal.Body>
+          </Modal.Footer>
         </>
       )}
     </Modal>

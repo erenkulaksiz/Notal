@@ -3,7 +3,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 
 import LandingBackground from "@public/landing_bg_banner_1.webp";
-import { Container, Footer, Button, LandingFeatureCard } from "@components";
+import { Container, Footer, LandingFeatureCard } from "@components";
 import { Features } from "@constants/features";
 import { CONSTANTS } from "@constants";
 import type { LandingFeatureCardProps } from "./components/FeatureCard";

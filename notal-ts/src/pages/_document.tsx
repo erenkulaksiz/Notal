@@ -26,10 +26,7 @@ const SEO = (
       name="mobile-web-app-capable"
       content="yes"
     />
-    <link
-      rel="apple-touch-icon"
-      href={`https://${server}/apple-touch-icon.png`}
-    ></link>
+    <link rel="apple-touch-icon" href={`${server}/apple-touch-icon.png`}></link>
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="manifest" href="/manifest.json" />
@@ -64,6 +61,7 @@ const SEO = (
   </>
 );
 
+/*
 interface StyleType {
   assetPrefix: string | undefined;
   file: string;
@@ -96,6 +94,7 @@ class CriticalCssHead extends Head {
       : null;
   }
 }
+*/
 
 export default function Notal() {
   return (

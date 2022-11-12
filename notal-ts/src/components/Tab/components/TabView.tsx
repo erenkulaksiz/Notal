@@ -6,6 +6,7 @@ export default function TabView({
   children,
   className,
   _ref,
+  icon,
   ...props
 }: {
   children?: ReactNode;
@@ -16,7 +17,7 @@ export default function TabView({
 }) {
   const BuildTabView = BuildComponent({
     name: "Notal UI Tab View",
-    defaultClasses: "w-full",
+    defaultClasses: "w-full h-full",
     extraClasses: className,
   });
 

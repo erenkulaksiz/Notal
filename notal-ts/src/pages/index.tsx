@@ -1,14 +1,23 @@
 import { useEffect } from "react";
 import Head from "next/head";
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
 
-import { Layout, Landing, Navbar, Home, LoadingOverlay } from "@components";
+import { Layout, Navbar, LoadingOverlay } from "@components";
 import { ValidateToken } from "@utils/api/validateToken";
 import { useAuth, useWorkspace } from "@hooks";
 import { CONSTANTS } from "@constants";
-import { server, Log } from "@utils";
+import { server } from "@utils";
 import type { ValidateTokenReturnType } from "@utils/api/validateToken";
 import type { NotalRootProps } from "@types";
 import type { GetServerSidePropsContext } from "next";
+
+const Home = dynamic<{}>(() =>
+  import("../components/Home").then((mod) => mod.Home)
+);
+const Landing = dynamic<{}>(() =>
+  import("../components/Landing").then((mod) => mod.Landing)
+);
 
 function Root(props: NotalRootProps) {
   const auth = useAuth();
@@ -16,7 +25,6 @@ function Root(props: NotalRootProps) {
 
   useEffect(() => {
     setWorkspace(null);
-    Log.debug("notal.app");
   }, []);
 
   return (
@@ -45,12 +53,12 @@ function Root(props: NotalRootProps) {
         <meta
           property="twitter:image"
           name="twitter:image"
-          content={`https://${server}/icon_big.png`}
+          content={`${server}/icon_big.png`}
         />
         <meta
           property="og:image"
           name="og:image"
-          content={`https://${server}/icon_big.png`}
+          content={`${server}/icon_big.png`}
         />
         <meta
           property="apple-mobile-web-app-title"
@@ -67,15 +75,18 @@ function Root(props: NotalRootProps) {
           name="og:title"
           content={CONSTANTS.APP_NAME}
         />
+        <meta property="og:url" content={server} />
       </Head>
       <Navbar showCollapse={auth?.validatedUser != null} />
-      {auth?.authLoading ? (
-        <LoadingOverlay />
-      ) : auth?.validatedUser || auth?.authUser ? (
-        <Home />
-      ) : (
-        <Landing />
-      )}
+      <Suspense fallback={<LoadingOverlay />}>
+        {auth?.authLoading ? (
+          <LoadingOverlay />
+        ) : auth?.validatedUser || auth?.authUser ? (
+          <Home />
+        ) : (
+          <Landing />
+        )}
+      </Suspense>
     </Layout>
   );
 }

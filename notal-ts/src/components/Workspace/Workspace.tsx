@@ -1,4 +1,5 @@
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { Droppable } from "@hello-pangea/dnd";
 import type {
   DroppableProvided,
@@ -8,7 +9,6 @@ import type {
 import {
   WorkspaceNotFound,
   WorkspaceSidebar,
-  WorkspaceField,
   LoadingOverlay,
   Tab,
   AddFieldModal,
@@ -21,8 +21,13 @@ import {
   AddIcon,
 } from "@icons";
 import { WorkspaceSidebarItem } from "./components";
+import type { WorkspaceFieldProps } from "./components/WorkspaceField/WorkspaceField";
 
-import type { FieldTypes } from "@types";
+const WorkspaceField = dynamic<WorkspaceFieldProps>(() =>
+  import("./components/WorkspaceField/WorkspaceField").then(
+    (mod) => mod.WorkspaceField
+  )
+);
 
 export function Workspace() {
   const workspace = useWorkspace();
@@ -35,14 +40,14 @@ export function Workspace() {
   if (workspace.workspaceNotFound) return <WorkspaceNotFound />;
 
   return (
-    <div className="relative flex flex-1 overflow-auto w-full flex-row bg-white dark:bg-black pt-2">
+    <div className="relative flex flex-1 overflow-auto w-full flex-row bg-white dark:bg-black">
       <Tab
         selected={workspaceTab}
         onSelect={(index) => setWorkspaceTab(index)}
         id="workspaceTab"
         headerClassName="dark:bg-transparent bg-white max-w-[700px]"
         className="flex flex-col w-full"
-        headerContainerClassName="px-2"
+        headerContainerClassName="px-3"
         headerVisible={false}
       >
         <Tab.TabView
@@ -54,7 +59,7 @@ export function Workspace() {
               style={{ transform: "scale(.7)" }}
             />
           }
-          className="w-full h-full flex overflow-auto pb-2 px-2 flex-row"
+          className="h-full flex overflow-auto pb-2 px-2 flex-row"
         >
           {workspace.isWorkspaceOwner && (
             <div className="sticky left-0 flex flex-col h-full items-center gap-1 z-40">
@@ -77,7 +82,7 @@ export function Workspace() {
               snapshot: DroppableStateSnapshot
             ) => (
               <div
-                className="flex flex-row w-full h-full"
+                className="flex flex-row w-full h-full pl-1"
                 ref={provided.innerRef}
                 {...provided.droppableProps}
               >

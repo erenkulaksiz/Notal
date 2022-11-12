@@ -17,4 +17,5 @@ export interface ButtonProps {
   title?: string;
   type?: HTMLInputElement["type"];
   testId?: string;
+  disabled?: boolean;
 }

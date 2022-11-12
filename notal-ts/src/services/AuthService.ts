@@ -5,6 +5,8 @@ import {
   signInWithPopup,
   User,
 } from "firebase/auth";
+import type { PlatformLogins } from "@types";
+import { Log } from "@utils/logger";
 
 interface AuthServiceReturnType {
   user?: User;
@@ -24,25 +26,21 @@ interface AuthServiceTypes {
   };
 }
 
-interface loginPlatforms {
-  google: () => void;
-  github: () => void;
-}
-
 export const AuthService = {
   login: {
     platform: async function (type: string): Promise<AuthServiceReturnType> {
       const auth = getAuth();
       let provider = null;
       const loginType = {
-        google: async function () {
+        google: function () {
           provider = new GoogleAuthProvider();
         },
-        github: async function () {
+        github: function () {
           provider = new GithubAuthProvider();
         },
-      } as loginPlatforms;
-      loginType[type as keyof loginPlatforms]();
+        email: function () {},
+      } as PlatformLogins;
+      loginType[type as keyof PlatformLogins]();
       if (!provider)
         return {
           error: {
@@ -52,7 +50,15 @@ export const AuthService = {
         };
       const signin = await signInWithPopup(auth, provider)
         .then(async (result) => {
-          const credential = GoogleAuthProvider.credentialFromResult(result);
+          let credential;
+          switch (type) {
+            case "google":
+              credential = GoogleAuthProvider.credentialFromResult(result);
+              break;
+            case "github":
+              credential = GithubAuthProvider.credentialFromResult(result);
+              break;
+          }
           const token = credential?.accessToken;
           const { user } = result;
 
@@ -60,15 +66,27 @@ export const AuthService = {
             login: `type:${type}/` + user.email,
           });
 
-          //Router.replace(Router.asPath);
-
           return { user, token };
         })
         .catch((error) => {
+          let credential;
+          switch (type) {
+            case "google":
+              credential = GoogleAuthProvider.credentialFromError(error);
+              break;
+            case "github":
+              credential = GithubAuthProvider.credentialFromError(error);
+              break;
+          }
           const errorCode = error.code;
           const errorMessage = error.message;
           const email = error.email;
-          const credential = GoogleAuthProvider.credentialFromError(error);
+
+          Log.error(
+            "Login auth error, AuthService.ts",
+            errorCode,
+            errorMessage
+          );
 
           return { error: { errorCode, errorMessage } };
         });

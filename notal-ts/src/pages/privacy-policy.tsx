@@ -6,6 +6,8 @@ import { SecureIcon } from "@icons";
 import { Navbar, Footer, Layout, Container } from "@components";
 import type { NotalRootProps } from "@types";
 import { useWorkspace } from "@hooks";
+import { server } from "@utils";
+import { CONSTANTS } from "@constants";
 import type { GetServerSidePropsContext } from "next";
 import type { ValidateTokenReturnType } from "@utils/api/validateToken";
 
@@ -21,23 +23,46 @@ export function PrivacyPolicy(props: NotalRootProps) {
       <Head>
         <title>Privacy Policy · Notal</title>
         <meta
+          property="twitter:description"
           name="twitter:description"
-          content="Take your notes to next level with Notal"
+          content={CONSTANTS.SEO_DESCRIPTION}
         />
         <meta
           property="og:description"
-          content="Take your notes to next level with Notal"
+          name="og:description"
+          content={CONSTANTS.SEO_DESCRIPTION}
         />
         <meta
+          property="description"
           name="description"
-          content="Take your notes to next level with Notal"
+          content={CONSTANTS.SEO_DESCRIPTION}
         />
-        <meta name="twitter:image" content="https://notal.app/icon_big.png" />
-        <meta property="og:image" content="https://notal.app/icon_big.png" />
-        <meta name="apple-mobile-web-app-title" content="Notal" />
-        <meta name="twitter:title" content="Notal" />
-        <meta property="og:title" content="Notal" />
-        <meta property="og:url" content="https://notal.app/privacy-policy" />
+        <meta
+          property="twitter:image"
+          name="twitter:image"
+          content={`${server}/icon_big.png`}
+        />
+        <meta
+          property="og:image"
+          name="og:image"
+          content={`${server}/icon_big.png`}
+        />
+        <meta
+          property="apple-mobile-web-app-title"
+          name="apple-mobile-web-app-title"
+          content={CONSTANTS.APP_NAME}
+        />
+        <meta
+          property="twitter:title"
+          name="twitter:title"
+          content={CONSTANTS.APP_NAME}
+        />
+        <meta
+          property="og:title"
+          name="og:title"
+          content={CONSTANTS.APP_NAME}
+        />
+        <meta property="og:url" content={`${server}/privacy-policy`} />
       </Head>
       <Navbar />
       <Container>
@@ -436,7 +461,6 @@ export function PrivacyPolicy(props: NotalRootProps) {
             </a>
           </div>
         </div>
-
         <Footer className="pt-4" />
       </Container>
     </Layout>

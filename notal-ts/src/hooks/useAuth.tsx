@@ -35,7 +35,10 @@ interface UsersTypes {
 
 export interface AuthContextProps {
   authUser: null | User;
-  authError?: string | null | undefined;
+  authError?: {
+    errorCode: string | number;
+    errorMessage: string;
+  } | null;
   setUser: Dispatch<SetStateAction<User | null>> | null;
   login: LoginTypes;
   user: UsersTypes;
@@ -63,7 +66,10 @@ export function AuthProvider(props: PropsWithChildren) {
   const [validatedUser, setValidatedUser] = useState(null);
 
   const [user, setUser] = useState<null | User>(null);
-  const [error, setError] = useState<null | undefined | string>(null);
+  const [authError, setError] =
+    useState<
+      null | undefined | { errorCode: string | number; errorMessage: string }
+    >(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -111,7 +117,7 @@ export function AuthProvider(props: PropsWithChildren) {
 
       const { user, error } = res;
       setUser(user ?? null);
-      setError(error?.errorMessage ?? null);
+      setError(error ?? null);
 
       setLoading(false);
 
@@ -169,7 +175,7 @@ export function AuthProvider(props: PropsWithChildren) {
 
   const value = {
     authUser: user,
-    authError: error,
+    authError,
     setUser,
     login,
     user: users,

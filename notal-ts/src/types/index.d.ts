@@ -86,6 +86,24 @@ export interface WorkspaceTypes {
   fields?: Array[FieldTypes];
 }
 
+export interface PlatformLogin {
+  icon: ReactNode;
+  text: string;
+  id: string;
+}
+
+export interface PlatformLoginTypes {
+  google: PlatformLogin;
+  github: PlatformLogin;
+  email: PlatformLogin;
+}
+
+export interface PlatformLogins {
+  google: () => void;
+  github: () => void;
+  email: () => void;
+}
+
 /*
 export declare module WorkboxWindow {
   class Workbox {

@@ -26,7 +26,7 @@ export function WorkspaceSidebar() {
   }
 
   return (
-    <nav className="flex flex-col h-full justify-between items-center sticky left-0 p-1 z-40 rounded-lg backdrop-blur-md">
+    <nav className="flex flex-col justify-between items-center sticky left-0 p-1 z-40 rounded-lg backdrop-blur-md">
       <div className="flex flex-col gap-2">
         <WorkspaceSidebarItem
           icon={
@@ -46,12 +46,12 @@ export function WorkspaceSidebar() {
           }
           onClick={async () => await starWorkspace()}
         />
-        <WorkspaceSidebarItem
+        {/*<WorkspaceSidebarItem
           icon={
             <SettingsIcon size={24} className="dark:fill-white fill-black" />
           }
           title="Workspace Settings"
-        />
+        />*/}
         <WorkspaceSidebarItem
           icon={
             workspace?.data?.data?.workspaceVisible ? (

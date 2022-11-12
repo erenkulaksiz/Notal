@@ -1,19 +1,18 @@
-export {     
-    Workspace, 
-    WorkspaceField,
-    WorkspaceFieldCard,
-    WorkspaceFieldHeader,
-    WorkspaceNotFound, 
-    WorkspaceSEO, 
-    WorkspaceSidebar,
+export {
+  Workspace,
+  WorkspaceField,
+  WorkspaceFieldCard,
+  WorkspaceFieldHeader,
+  WorkspaceNotFound,
+  WorkspaceSidebar,
 } from "./Workspace";
 export { AcceptCookies } from "./AcceptCookies";
 export { AddWorkspaceButton } from "./Home";
-export { 
-    AddWorkspaceModal, 
-    AddCardModal,
-    AddFieldModal,
-    LoginModal
+export {
+  AddWorkspaceModal,
+  AddCardModal,
+  AddFieldModal,
+  LoginModal,
 } from "./Modals";
 export { AlertModal } from "./Alert";
 export { Button } from "./Button";
@@ -25,19 +24,12 @@ export { Footer } from "./Footer";
 export { Home } from "./Home";
 export { HomeWorkspaceCard } from "./Home";
 export { Input } from "./Input";
-export { 
-    Landing, 
-    LandingFeatureCard 
-} from "./Landing";
+export { Landing, LandingFeatureCard } from "./Landing";
 export { Layout } from "./Layout";
 export { Loading } from "./Loading";
 export { LoadingOverlay } from "./LoadingOverlay";
 export { Modal } from "./Modal";
-export { 
-    Navbar, 
-    ThemeSwitcher, 
-    WorkspaceOwnerProfile 
-} from "./Navbar";
+export { Navbar, ThemeSwitcher, WorkspaceOwnerProfile } from "./Navbar";
 export { Select } from "./Select";
 export { Switch } from "./Switch";
 export { Tab } from "./Tab";
