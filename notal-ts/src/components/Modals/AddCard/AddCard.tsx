@@ -34,6 +34,15 @@ export function AddCardModal({
   }
 
   function submit() {
+    if (
+      !state.title ||
+      state.title.length < LIMITS.MIN.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH
+    ) {
+      return dispatch({
+        type: AddCardActionType.SET_TITLE_ERROR,
+        payload: `Title must be atleast ${LIMITS.MIN.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH} characters long.`,
+      });
+    }
     onAdd({
       title: state.title,
       desc: state.desc,
@@ -46,7 +55,7 @@ export function AddCardModal({
     <Modal
       open={open}
       onClose={close}
-      className="w-[90%] sm:w-[400px] min-h-[550px] p-4 px-5 relative"
+      className="w-[90%] sm:w-[400px] p-4 px-5 relative"
       animate
     >
       <Modal.Title animate>
@@ -61,10 +70,8 @@ export function AddCardModal({
             card={{
               title: state.title || "Enter card title",
               desc: state.desc,
-              _id: "",
               createdAt: Date.now(),
               updatedAt: Date.now(),
-              owner: "",
               color: state.useColor ? state.color : "",
             }}
             fieldId=""
@@ -95,6 +102,9 @@ export function AddCardModal({
               maxLength={LIMITS.MAX.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH}
               onEnterPress={() => submit()}
             />
+            {state.errors && state?.errors?.title && (
+              <span className="text-red-500">{state.errors.title}</span>
+            )}
 
             <label htmlFor="cardTitle">Card Description</label>
             <Input
@@ -131,12 +141,18 @@ export function AddCardModal({
               {state.useColor && (
                 <Colorpicker
                   color={state.color}
-                  onChange={(color) =>
+                  onChange={(color) => {
+                    if (color.length == 1) {
+                      return dispatch({
+                        type: AddCardActionType.SET_USE_COLOR,
+                        payload: false,
+                      });
+                    }
                     dispatch({
                       type: AddCardActionType.SET_COLOR,
                       payload: color,
-                    })
-                  }
+                    });
+                  }}
                   id="cardColor"
                 />
               )}
@@ -146,7 +162,7 @@ export function AddCardModal({
           <Tab.TabView title="Image">selam</Tab.TabView>
         </Tab>
       </Modal.Body>
-      <Modal.Footer className="justify-between items-end flex-1" animate>
+      <Modal.Footer className="justify-between items-end flex-1 pt-4" animate>
         <Button
           light="bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500"
           onClick={() => close()}

@@ -5,22 +5,16 @@ import type {
   DroppableProvided,
   DroppableStateSnapshot,
 } from "@hello-pangea/dnd";
+import { useTheme } from "next-themes";
 
 import {
   WorkspaceNotFound,
   WorkspaceSidebar,
   LoadingOverlay,
   Tab,
-  AddFieldModal,
 } from "@components";
 import { useAuth, useWorkspace } from "@hooks";
-import {
-  DashboardOutlineIcon,
-  RoadIcon,
-  BookmarkOutlineIcon,
-  AddIcon,
-} from "@icons";
-import { WorkspaceSidebarItem } from "./components";
+import { DashboardOutlineIcon, RoadIcon, BookmarkOutlineIcon } from "@icons";
 import type { WorkspaceFieldProps } from "./components/WorkspaceField/WorkspaceField";
 
 const WorkspaceField = dynamic<WorkspaceFieldProps>(() =>
@@ -32,8 +26,8 @@ const WorkspaceField = dynamic<WorkspaceFieldProps>(() =>
 export function Workspace() {
   const workspace = useWorkspace();
   const auth = useAuth();
+  const { resolvedTheme } = useTheme();
   const [workspaceTab, setWorkspaceTab] = useState(0);
-  const [addFieldModalOpen, setAddFieldModalOpen] = useState(false);
 
   if (workspace.workspaceLoading || auth?.authLoading)
     return <LoadingOverlay />;
@@ -63,16 +57,6 @@ export function Workspace() {
         >
           {workspace.isWorkspaceOwner && (
             <div className="sticky left-0 flex flex-col h-full items-center gap-1 z-40">
-              <div className="p-1 rounded-lg backdrop-blur-md dark:bg-black/20 bg-white/20">
-                <WorkspaceSidebarItem
-                  icon={
-                    <AddIcon size={24} className="dark:fill-white fill-black" />
-                  }
-                  title="Add Field"
-                  onClick={() => setAddFieldModalOpen(true)}
-                />
-              </div>
-              <div className="dark:bg-neutral-900 bg-neutral-200 h-[2px] rounded-full w-1/2" />
               <WorkspaceSidebar />
             </div>
           )}
@@ -86,6 +70,23 @@ export function Workspace() {
                 ref={provided.innerRef}
                 {...provided.droppableProps}
               >
+                {Array.isArray(workspace.workspace?.data?.data?.fields) &&
+                  workspace.workspace?.data?.data?.fields.length == 0 && (
+                    <div className="w-full h-full flex flex-col gap-6 items-center justify-center">
+                      {resolvedTheme == "light" ? (
+                        <img
+                          src="/empty_state_workspace_light.png"
+                          className="object-contain w-[200px]"
+                        />
+                      ) : (
+                        <img
+                          src="/empty_state_workspace_dark.png"
+                          className="object-contain w-[200px]"
+                        />
+                      )}
+                      <span>This workspace is empty :(</span>
+                    </div>
+                  )}
                 {Array.isArray(workspace.workspace?.data?.data?.fields) &&
                   workspace.workspace?.data?.data?.fields.map(
                     (field, index: number) => (
@@ -133,12 +134,6 @@ export function Workspace() {
           {workspace.isWorkspaceOwner && <WorkspaceSidebar />}
         </Tab.TabView>
       </Tab>
-      <AddFieldModal
-        open={addFieldModalOpen}
-        onClose={() => setAddFieldModalOpen(false)}
-        onAdd={(field) => workspace.field.add({ title: field.title })}
-        workspaceTitle={workspace.workspace?.data?.data?.title}
-      />
     </div>
   );
 }

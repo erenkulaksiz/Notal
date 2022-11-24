@@ -200,9 +200,11 @@ export function Footer({ className }: { className?: string }) {
               </span>
             </a>
           </Tooltip>
-          <span className="uppercase mt-8 sm:mt-0 text-xs text-neutral-400 text-left">
-            Development build
-          </span>
+          {process.env.NEXT_PUBLIC_DEBUG_LOG == "true" && (
+            <span className="uppercase mt-8 sm:mt-0 text-xs text-neutral-400 text-left">
+              Development build
+            </span>
+          )}
         </div>
         <div className="flex items-end text-neutral-400 sm:text-md text-xs text-right">
           © 2022 notal.app, All Rights Reserved.

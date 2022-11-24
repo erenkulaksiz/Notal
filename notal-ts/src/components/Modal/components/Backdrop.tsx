@@ -43,7 +43,9 @@ export default function Backdrop({
       }}
       initial="hidden"
       animate={open ? "show" : "hidden"}
-      onAnimationComplete={() => !open && setShow(false)}
+      onAnimationComplete={() =>
+        !open && typeof setShow == "function" && setShow(false)
+      }
       onKeyDown={() => typeof onKeyDown == "function" && onKeyDown()}
       className={BuildModalBackdrop.classes}
       onClick={() => onClose()}

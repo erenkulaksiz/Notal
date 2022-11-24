@@ -15,4 +15,5 @@ module.exports = withBundleAnalyzer({
     return config
   },
   experimental: { optimizeCss: true },
+  swcMinify: true,
 });

@@ -10,13 +10,22 @@ export function reducer(state: AddCardTypes, action: CardAction): AddCardTypes {
       return { ...state, desc: action.payload };
 
     case AddCardActionType.RESET_ALL:
-      return { ...state, title: "", desc: "" };
+      return { ...state, title: "", desc: "", errors: {} };
 
     case AddCardActionType.SET_COLOR:
       return { ...state, color: action.payload };
 
     case AddCardActionType.SET_USE_COLOR:
       return { ...state, useColor: action.payload };
+
+    case AddCardActionType.SET_TITLE_ERROR:
+      return {
+        ...state,
+        errors: {
+          ...state.errors,
+          title: action.payload,
+        },
+      };
 
     default:
       return state;

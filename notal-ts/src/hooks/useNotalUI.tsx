@@ -1,7 +1,7 @@
 import {
   createContext,
   PropsWithChildren,
-  ReactNode,
+  useMemo,
   useContext,
   useEffect,
   useState,
@@ -10,14 +10,10 @@ import { AnimateSharedLayout, motion } from "framer-motion";
 
 import { Toast as ToastComponent, AlertModal } from "@components";
 import { CreatePortal as Portal } from "@components";
-import { isClient } from "@utils/isClient";
+import { isClient, Log } from "@utils";
 
-import type { ToastProps } from "components/Toast/Toast.d";
-import type { AlertProps } from "components/Alert/Alert.d";
-
-function HOC({ children }: { children: ReactNode }) {
-  return <>{children}</>;
-}
+import type { ToastProps } from "@components/Toast/Toast.d";
+import type { AlertProps } from "@components/Alert/Alert.d";
 
 export interface NotalUIContextProps {
   Toast: {
@@ -51,15 +47,17 @@ export function NotalUIProvider(props: PropsWithChildren) {
   const [showToastPortal, setShowToastPortal] = useState<boolean>(false);
   const [toastBuffer, setToastBuffer] = useState<ToastProps[]>([]);
 
+  let interval: NodeJS.Timer | null = null;
+
   useEffect(() => {
+    Log.debug("ToastBufferUpdate", toastBuffer);
     if (toastBuffer.length > 0) {
       setShowToastPortal(true);
     } else {
       // remove toast portal after delay
-      setTimeout(() => setShowToastPortal(false), 500);
+      if (showToastPortal) setTimeout(() => setShowToastPortal(false), 500);
+      return;
     }
-
-    let interval: NodeJS.Timer | null = null;
     if (toastBuffer.filter((el) => el.timeEnabled).length > 0) {
       const filterToasts = toastBuffer.filter((el) => el.timeEnabled);
       if (filterToasts.length == 0) return;
@@ -219,55 +217,56 @@ export function NotalUIProvider(props: PropsWithChildren) {
     },
   };
 
-  const value = { Toast, Alert, AlertState: alert };
+  const value = useMemo(
+    () => ({ Toast, Alert, AlertState: alert }),
+    [Toast, Alert, alert]
+  );
 
   return (
     <notalUIContext.Provider value={value} {...props}>
       {props.children}
-      <HOC>
-        {isClient() && showToastPortal && (
-          <Portal portalName="notal-toast">
-            {/* @ts-ignore */}
-            <AnimateSharedLayout>
-              <motion.div
-                layout
-                variants={{
-                  show: { opacity: 1, y: 0 },
-                  hidden: { opacity: 0, y: 70 },
-                }}
-                initial="hidden"
-                animate="show"
-                exit="hidden"
-                className="absolute pointer-events-none left-0 right-0 top-0 bottom-0 z-50 flex flex-col justify-end items-end"
-              >
-                {toastBuffer.map((toast, index) => (
-                  <ToastComponent
-                    toast={toast}
-                    key={toast.id}
-                    onClick={() => {
-                      if (!toast?.closeable) return;
+      {showToastPortal && (
+        <Portal portalName="notal-toast">
+          {/* @ts-ignore */}
+          <AnimateSharedLayout>
+            <motion.div
+              layout
+              variants={{
+                show: { opacity: 1, y: 0 },
+                hidden: { opacity: 0, y: 70 },
+              }}
+              initial="hidden"
+              animate="show"
+              exit="hidden"
+              className="absolute pointer-events-none left-0 right-0 top-0 bottom-0 z-50 flex flex-col justify-end items-end"
+            >
+              {toastBuffer.map((toast, index) => (
+                <ToastComponent
+                  toast={toast}
+                  key={toast.id}
+                  onClick={() => {
+                    if (!toast?.closeable) return;
 
-                      if (typeof Toast?.onClick == "function")
-                        Toast?.onClick({ toast, index });
-                      else Toast?.close(index);
-                    }}
-                    onRender={() => Toast.render && Toast?.render(index)}
-                  />
-                ))}
-              </motion.div>
-            </AnimateSharedLayout>
-          </Portal>
-        )}
-        <AlertModal
-          alert={alert}
-          onClose={() => {
-            if (alert.notCloseable) return;
+                    if (typeof Toast?.onClick == "function")
+                      Toast?.onClick({ toast, index });
+                    else Toast?.close(index);
+                  }}
+                  onRender={() => Toast.render && Toast?.render(index)}
+                />
+              ))}
+            </motion.div>
+          </AnimateSharedLayout>
+        </Portal>
+      )}
+      <AlertModal
+        alert={alert}
+        onClose={() => {
+          if (alert.notCloseable) return;
 
-            if (typeof Alert?.onClose == "function") Alert?.onClose();
-            else Alert?.close();
-          }}
-        />
-      </HOC>
+          if (typeof Alert?.onClose == "function") Alert?.onClose();
+          else Alert?.close();
+        }}
+      />
     </notalUIContext.Provider>
   );
 }

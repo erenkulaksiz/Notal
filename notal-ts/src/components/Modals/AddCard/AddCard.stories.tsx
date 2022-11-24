@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { DragDropContext } from "@hello-pangea/dnd";
 
 import { Button, AddCardModal } from "@components";
 
@@ -14,11 +15,13 @@ const Template: ComponentStory<typeof AddCardModal> = (args) => {
   return (
     <>
       <Button onClick={() => setVisible(true)}>Open Modal</Button>
-      <AddCardModal
-        open={visible}
-        onClose={() => setVisible(false)}
-        onAdd={() => setVisible(false)}
-      />
+      <DragDropContext onDragEnd={() => {}}>
+        <AddCardModal
+          open={visible}
+          onClose={() => setVisible(false)}
+          onAdd={() => setVisible(false)}
+        />
+      </DragDropContext>
     </>
   );
 };

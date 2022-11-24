@@ -48,7 +48,6 @@ export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
   const onLoginWithPlatform = async (platform: string) => {
     Log.debug(`trying to login with platform ${platform}`);
     const login = await auth?.login?.platform(platform);
-    Log.debug("iiiiiiilogin", login);
     if (
       login?.authError?.errorCode ==
       "auth/account-exists-with-different-credential"
@@ -62,10 +61,7 @@ export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
         `Your account has been disabled. Sorry for the inconvenience.`
       );
       return;
-    } /*else if (login?.authError?.errorCode == "auth/popup-closed-by-user") {
-
-      return;
-    }*/
+    }
     onLoginSuccess();
   };
 

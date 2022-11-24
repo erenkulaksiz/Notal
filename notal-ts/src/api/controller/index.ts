@@ -16,6 +16,8 @@ import {
   reorderfield,
   reordercard,
 } from "./workspace";
+import { complete } from "./onboarding/complete";
+
 import { accept, checkUserAuth } from "@api/utils";
 
 type APIReturnType = (req: NextApiRequest, res: NextApiResponse) => void;
@@ -47,6 +49,9 @@ export interface ControllerReturnType {
       delete: APIReturnType;
       reorder: APIReturnType;
     };
+  };
+  onboarding: {
+    complete: APIReturnType;
   };
 }
 
@@ -85,6 +90,9 @@ export function Controller() {
         delete: (req, res) => checkUserAuth({ req, res, func: deletecard }),
         reorder: (req, res) => checkUserAuth({ req, res, func: reordercard }),
       },
+    },
+    onboarding: {
+      complete: (req, res) => checkUserAuth({ req, res, func: complete }),
     },
   } as ControllerReturnType;
 }

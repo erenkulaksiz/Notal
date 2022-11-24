@@ -130,6 +130,7 @@ export async function create(req: NextApiRequest, res: NextApiResponse) {
           action: "read",
           expires: "03-09-2491",
         });
+        Log.debug("New file URL: ", url[0]);
         return await workspacesCollection
           .updateOne(
             { _id: new ObjectId(resId) },

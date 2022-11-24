@@ -1,31 +1,28 @@
-import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useMemo } from "react";
+import { motion } from "framer-motion";
 
 import { DashboardFilledIcon } from "@icons";
-import { LIMITS } from "@constants/limits";
-import {
-  HomeWorkspaceCard,
-  AddWorkspaceModal,
-  AddWorkspaceButton,
-} from "@components";
+import { HomeWorkspaceCard, AddWorkspaceButton } from "@components";
 import { HomeNavTitle } from "./components/NavTitle";
-import { useNotalUI, useWorkspaces } from "@hooks";
+import { useWorkspaces } from "@hooks";
 import type { WorkspaceTypes } from "@types";
 
 export function Home() {
-  const NotalUI = useNotalUI();
   const _workspaces = useWorkspaces();
 
-  const [addWorkspaceModal, setAddWorkspaceModal] = useState(false);
-
-  const starredWorkspaces = _workspaces.isValidating
-    ? []
-    : _workspaces?.data?.data?.filter((el: WorkspaceTypes) => !!el.starred);
-  const privateWorkspaces = _workspaces.isValidating
-    ? []
-    : _workspaces?.data?.data?.filter(
-        (el: WorkspaceTypes) => !el.workspaceVisible
+  const starredWorkspaces =
+    useMemo(() => {
+      return _workspaces?.data?.data?.filter(
+        (workspace: WorkspaceTypes) => !!workspace.starred
       );
+    }, [_workspaces?.data?.data]) ?? [];
+
+  const privateWorkspaces =
+    useMemo(() => {
+      return _workspaces?.data?.data?.filter(
+        (workspace: WorkspaceTypes) => !workspace.workspaceVisible
+      );
+    }, [_workspaces?.data?.data]) ?? [];
 
   return (
     <>
@@ -35,8 +32,8 @@ export function Home() {
           workspaces: _workspaces.isValidating
             ? 0
             : _workspaces?.data?.data?.length,
-          privateWorkspaces: privateWorkspaces?.length,
-          starredWorkspaces: starredWorkspaces?.length,
+          privateWorkspaces: privateWorkspaces.length,
+          starredWorkspaces: starredWorkspaces.length,
         }}
       >
         <DashboardFilledIcon size={24} fill="currentColor" />
@@ -46,48 +43,23 @@ export function Home() {
         animate="show"
         className="w-full relative pb-4 px-4 mt-4 grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 items-start auto-rows-max"
       >
-        <AnimatePresence>
-          {!_workspaces.isValidating && (
-            <AddWorkspaceButton
-              onClick={() => {
-                if (_workspaces.data?.data?.length >= LIMITS.MAX.WORKSPACES) {
-                  NotalUI.Toast.show({
-                    title: "Error",
-                    desc: `You can only have ${LIMITS.MAX.WORKSPACES} workspaces maximum at the moment.`,
-                    type: "error",
-                    once: true,
-                    id: "workspace-limit-toast",
-                  });
-                  return;
-                }
-                setAddWorkspaceModal(true);
-              }}
-            />
+        {!_workspaces.isValidating && <AddWorkspaceButton />}
+        {!_workspaces.isValidating &&
+          Array.isArray(_workspaces?.data?.data) &&
+          _workspaces?.data?.data.map(
+            (workspace: WorkspaceTypes, index: number) => (
+              <HomeWorkspaceCard
+                workspace={workspace}
+                onStar={() => _workspaces.workspace.star(workspace._id)}
+                onDelete={() => _workspaces.workspace.delete(workspace._id)}
+                key={workspace._id}
+                index={index}
+              />
+            )
           )}
-          {!_workspaces.isValidating &&
-            _workspaces?.data?.data &&
-            _workspaces?.data?.data.map(
-              (workspace: WorkspaceTypes, index: number) => (
-                <HomeWorkspaceCard
-                  workspace={workspace}
-                  onStar={() => _workspaces.workspace.star(workspace._id)}
-                  onDelete={() => _workspaces.workspace.delete(workspace._id)}
-                  key={workspace._id}
-                  index={index}
-                />
-              )
-            )}
-          {_workspaces.isValidating &&
-            [1, 2, 3].map((item) => <HomeWorkspaceCard skeleton key={item} />)}
-        </AnimatePresence>
+        {_workspaces.isValidating &&
+          [1, 2, 3].map((item) => <HomeWorkspaceCard skeleton key={item} />)}
       </motion.div>
-      <AddWorkspaceModal
-        open={addWorkspaceModal}
-        onClose={() => setAddWorkspaceModal(false)}
-        onAdd={(workspace: WorkspaceTypes) =>
-          _workspaces.workspace.add(workspace)
-        }
-      />
     </>
   );
 }

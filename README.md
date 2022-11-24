@@ -92,4 +92,18 @@ While first creating this project, i didn't yet knew these projects. When i was 
 
 ## Questions & Contact
 
-Contact [me@erenk.dev](mailto:me@erenk.dev)
+Contact [erenkulaksz@gmail.com](mailto:erenkulaksz@gmail.com)
+
+## tokei
+```
+===============================================================================
+ CSS                     1           39           33            0            6
+ JavaScript              4           85           72            3           10
+ JSON                    2           61           61            0            0
+ SVG                    76          103          103            0            0
+ TSX                    79         7619         6968          133          518
+ TypeScript            128         3496         2976          198          322
+===============================================================================
+ Total                 290        11403        10213          334          856
+===============================================================================
+```

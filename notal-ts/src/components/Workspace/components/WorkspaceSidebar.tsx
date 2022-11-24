@@ -1,21 +1,24 @@
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 import { WorkspaceSidebarItem } from "./WorkspaceSidebarItem";
-import { Button } from "@components";
+import { Button, AddFieldModal } from "@components";
 import {
   StarFilledIcon,
-  SettingsIcon,
   VisibleIcon,
   VisibleOffIcon,
   StarOutlineIcon,
   DeleteIcon,
   CrossIcon,
   CheckIcon,
+  AddIcon,
 } from "@icons";
 import { useNotalUI, useWorkspace } from "@hooks";
+
 export function WorkspaceSidebar() {
-  const { workspace, starWorkspace, visibilityToggle, deleteWorkspace } =
+  const { workspace, starWorkspace, visibilityToggle, deleteWorkspace, field } =
     useWorkspace();
+  const [addFieldModalOpen, setAddFieldModalOpen] = useState(false);
   const NotalUI = useNotalUI();
   const router = useRouter();
 
@@ -28,6 +31,11 @@ export function WorkspaceSidebar() {
   return (
     <nav className="flex flex-col justify-between items-center sticky left-0 p-1 z-40 rounded-lg backdrop-blur-md">
       <div className="flex flex-col gap-2">
+        <WorkspaceSidebarItem
+          icon={<AddIcon size={24} className="dark:fill-white fill-black" />}
+          title="Add Field"
+          onClick={() => setAddFieldModalOpen(true)}
+        />
         <WorkspaceSidebarItem
           icon={
             workspace?.data?.data?.starred ? (
@@ -46,12 +54,6 @@ export function WorkspaceSidebar() {
           }
           onClick={async () => await starWorkspace()}
         />
-        {/*<WorkspaceSidebarItem
-          icon={
-            <SettingsIcon size={24} className="dark:fill-white fill-black" />
-          }
-          title="Workspace Settings"
-        />*/}
         <WorkspaceSidebarItem
           icon={
             workspace?.data?.data?.workspaceVisible ? (
@@ -115,6 +117,12 @@ export function WorkspaceSidebar() {
         />
       </div>
       <div></div>
+      <AddFieldModal
+        open={addFieldModalOpen}
+        onClose={() => setAddFieldModalOpen(false)}
+        onAdd={(_field) => field.add({ title: _field.title })}
+        workspaceTitle={workspace?.data?.data?.title}
+      />
     </nav>
   );
 }

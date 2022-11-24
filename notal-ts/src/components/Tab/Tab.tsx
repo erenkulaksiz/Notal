@@ -1,21 +1,10 @@
-import React, { ReactNode, useState, cloneElement } from "react";
-import { LayoutGroup } from "framer-motion";
+import React, { useState, cloneElement } from "react";
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 
 import { BuildComponent } from "@utils/style/buildComponent";
 import { TabView, TabHeader, TabButton } from "./components";
 
-interface TabProps {
-  children?: ReactNode;
-  selected: number; // index of selected tab
-  onSelect: (index: number) => void; // callback when tab is selected
-  headerClassName?: string; // classname for header
-  loadingWorkspace?: boolean; // boolean to show loading indicator
-  id: string; // id of tab
-  className?: string; // classname for tab
-  headerContainerClassName?: string; // classname for header container
-  globalTabViewClassName?: string;
-  headerVisible?: boolean;
-}
+import type { TabProps } from "./Tab.d";
 
 function Tab({
   children,
@@ -28,6 +17,8 @@ function Tab({
   globalTabViewClassName, // applies these classnames to all tabviews inside tab
   loadingWorkspace = false,
   headerVisible = true,
+  animated = false, // animate tabview transitions
+  animatedTabViewClassName = "w-full h-full",
 }: TabProps) {
   const [hover, setHover] = useState(-1);
 
@@ -79,7 +70,34 @@ function Tab({
           </TabHeader>
         </div>
       )}
-      {Array.isArray(children) &&
+      {animated ? (
+        <AnimatePresence exitBeforeEnter>
+          <motion.div
+            key={selected}
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -10, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className={animatedTabViewClassName}
+          >
+            {Array.isArray(children) &&
+              children?.map((child, index) => {
+                if (index != selected) return;
+
+                if (globalTabViewClassName) {
+                  // check if theres global classname
+                  const clone = cloneElement(child, {
+                    className: globalTabViewClassName,
+                    key: index,
+                  });
+                  return clone;
+                }
+                return child;
+              })}
+          </motion.div>
+        </AnimatePresence>
+      ) : (
+        Array.isArray(children) &&
         children?.map((child, index) => {
           if (index != selected) return;
 
@@ -92,7 +110,8 @@ function Tab({
             return clone;
           }
           return child;
-        })}
+        })
+      )}
     </div>
   );
 }

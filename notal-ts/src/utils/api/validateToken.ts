@@ -14,19 +14,8 @@ export interface ValidateTokenReturnType {
     | {
         errorCode: string;
       };
-  data?: object;
+  data?: any; // #TODO: define data type
 }
-
-/*
-  email: validateUser.decodedToken.email,
-  username: generateUsername,
-  uid: validateUser.decodedToken.user_id,
-  createdAt: Date.now(),
-  updatedAt: Date.now(),
-  fullname: validateUser.decodedToken.name,
-  avatar: validateUser.decodedToken.picture,
-  provider: validateUser.decodedToken.firebase.sign_in_provider || "",
- */
 
 interface UserTypes {
   email?: string;
@@ -38,6 +27,10 @@ interface UserTypes {
   avatar?: string;
   provider?: string;
   _id?: ObjectId;
+  onboarding?: {
+    completed: boolean;
+    date?: number; // timestamp
+  };
 }
 
 /**
@@ -93,6 +86,9 @@ export async function ValidateToken({
       fullname: validateUser.decodedToken.name,
       avatar: validateUser.decodedToken.picture,
       provider: validateUser.decodedToken.firebase.sign_in_provider || "",
+      onboarding: {
+        completed: false,
+      },
     };
 
     Log.debug("USER NOT FOUND | GENERATED USER:", newUser);
@@ -131,6 +127,7 @@ PLATFORM: web`,
       fullname: user?.fullname,
       avatar: user?.avatar,
       email: user?.email,
+      onboarding: user?.onboarding ?? null,
     },
   };
 }

@@ -25,7 +25,7 @@ export async function uploadThumbnail({
   const storage = getStorage();
   const storageRef = stRef(
     storage,
-    `cardImages/temp/user_${auth.currentUser.uid}`
+    `thumbnails/temp/user_${auth.currentUser.uid}`
   );
 
   return await uploadBytes(storageRef, image)

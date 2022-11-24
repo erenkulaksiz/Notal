@@ -9,6 +9,7 @@ import { WorkspaceService } from "@services";
 import { Button } from "@components";
 import { DeleteIcon, CrossIcon, CheckIcon } from "@icons";
 import type { WorkspaceTypes } from "@types";
+import type { WorkspaceFunctionReturnType } from "./useWorkspace";
 
 export default function useWorkspaces() {
   const auth = useAuth();
@@ -65,6 +66,8 @@ export default function useWorkspaces() {
   }, [workspacesData]);
 
   function deleteWorkspace(id: string) {
+    if (!Array.isArray(workspacesData.data.data))
+      return { success: false, error: "no-workspace" };
     async function onDelete() {
       const data = await WorkspaceService.workspace.delete(id);
       Log.debug("remove data:", data);
@@ -122,7 +125,11 @@ export default function useWorkspaces() {
     });
   }
 
-  async function addWorkspace(workspace: WorkspaceTypes) {
+  async function addWorkspace(
+    workspace: WorkspaceTypes
+  ): Promise<WorkspaceFunctionReturnType> {
+    if (!Array.isArray(workspacesData.data.data))
+      return { success: false, error: "no-workspace" };
     workspacesData.mutate(
       {
         ...workspacesData.data,
@@ -133,30 +140,35 @@ export default function useWorkspaces() {
     const data = await WorkspaceService.workspace.add(workspace);
     if (data.success == true) {
       workspacesData.mutate(); // get refreshed workspaces
-    } else if (data.success == false) {
-      if (data.error == "max-workspaces") {
-        NotalUI.Toast.show({
-          id: "workspace-max-workspaces-toast",
-          once: true,
-          title: "Error",
-          type: "error",
-          desc: "You have reached the maximum number of workspaces.",
-        });
-        return;
-      }
-      Log.debug("RES ERR create workspace -> ", data);
-      NotalUI.Toast.show({
-        title: "Error",
-        desc: "Couldn't create the workspace, check the console for more info.",
-        type: "error",
-        id: "workspace-create-error-toast",
-        once: true,
-      });
-      workspacesData.mutate();
+      return { success: true };
     }
+    if (data.error == "max-workspaces") {
+      NotalUI.Toast.show({
+        id: "workspace-max-workspaces-toast",
+        once: true,
+        title: "Error",
+        type: "error",
+        desc: "You have reached the maximum number of workspaces.",
+      });
+      return { success: false, error: "max-workspaces" };
+    }
+    Log.debug("RES ERR create workspace -> ", data);
+    NotalUI.Toast.show({
+      title: "Error",
+      desc: "Couldn't create the workspace, check the console for more info.",
+      type: "error",
+      id: "workspace-create-error-toast",
+      once: true,
+    });
+    workspacesData.mutate();
+    return { success: false, error: data?.error };
   }
 
-  async function starWorkspace(id: string) {
+  async function starWorkspace(
+    id: string
+  ): Promise<WorkspaceFunctionReturnType> {
+    if (!Array.isArray(workspacesData.data.data))
+      return { success: false, error: "no-workspace" };
     const newWorkspaces = [...workspacesData.data.data];
     const workspace = newWorkspaces.findIndex((el) => el._id === id);
     if (workspace != -1)
@@ -175,13 +187,14 @@ export default function useWorkspaces() {
         login: auth?.validatedUser?.email,
         workspaceId: newWorkspaces[workspace]._id,
       });
-    } else {
-      NotalUI.Alert.show({
-        title: "Error",
-        desc: data?.error,
-      });
-      workspacesData.mutate();
+      return { success: true };
     }
+    NotalUI.Alert.show({
+      title: "Error",
+      desc: data?.error,
+    });
+    workspacesData.mutate();
+    return { success: false, error: data?.error };
   }
 
   return {

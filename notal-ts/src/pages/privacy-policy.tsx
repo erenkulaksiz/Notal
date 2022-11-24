@@ -21,7 +21,7 @@ export function PrivacyPolicy(props: NotalRootProps) {
   return (
     <Layout {...props}>
       <Head>
-        <title>Privacy Policy · Notal</title>
+        <title>Privacy Policy · notal.app</title>
         <meta
           property="twitter:description"
           name="twitter:description"

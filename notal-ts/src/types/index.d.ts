@@ -19,6 +19,10 @@ export interface NotalRootProps extends PropsWithChildren {
       fullname?: string;
       uid: string;
       username: string;
+      onboarding?: {
+        completed: boolean;
+        date?: number;
+      };
     };
     error?: string | object;
   };

@@ -4,6 +4,8 @@ import ReactDOM from "react-dom";
 import { isClient } from "@utils";
 import type { PortalProps } from "./Portal.d";
 
+import { Log } from "@utils";
+
 export function CreatePortal({
   children,
   parent,
@@ -29,7 +31,7 @@ export function CreatePortal({
     return () => {
       target.removeChild(el);
     };
-  }, [el, parent, className]);
+  }, [el]);
 
   return ReactDOM.createPortal(children, el);
 }

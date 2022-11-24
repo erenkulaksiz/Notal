@@ -23,13 +23,19 @@ export interface WorkspaceContextProps {
   workspaceNotFound: boolean;
   isWorkspaceOwner: boolean;
   workspaceLoading: boolean;
-  starWorkspace: () => Promise<void>;
-  visibilityToggle: () => Promise<void>;
-  deleteWorkspace: () => Promise<void>;
+  starWorkspace: () => Promise<WorkspaceFunctionReturnType>;
+  visibilityToggle: () => Promise<WorkspaceFunctionReturnType>;
+  deleteWorkspace: () => Promise<WorkspaceFunctionReturnType>;
   field: {
-    add: (title: FieldTypes) => Promise<void>;
-    delete: ({ id }: { id: string }) => Promise<void>;
-    edit: ({ id, title }: { id: string; title: string }) => Promise<void>;
+    add: (title: FieldTypes) => Promise<WorkspaceFunctionReturnType>;
+    delete: ({ id }: { id: string }) => Promise<WorkspaceFunctionReturnType>;
+    edit: ({
+      id,
+      title,
+    }: {
+      id: string;
+      title: string;
+    }) => Promise<WorkspaceFunctionReturnType>;
     reorder: ({
       destination,
       source,
@@ -38,17 +44,23 @@ export interface WorkspaceContextProps {
       destination: { droppableId: string; index: number };
       source: { droppableId: string; index: number };
       fieldId: string;
-    }) => Promise<void>;
+    }) => Promise<WorkspaceFunctionReturnType>;
   };
   card: {
-    add: ({ card, id }: { card: CardTypes; id: string }) => Promise<void>;
+    add: ({
+      card,
+      id,
+    }: {
+      card: CardTypes;
+      id: string;
+    }) => Promise<WorkspaceFunctionReturnType>;
     delete: ({
       id,
       fieldId,
     }: {
       id?: string;
       fieldId: string;
-    }) => Promise<void>;
+    }) => Promise<WorkspaceFunctionReturnType>;
     reorder: ({
       destination,
       source,
@@ -57,8 +69,13 @@ export interface WorkspaceContextProps {
       destination: { droppableId: string; index: number };
       source: { droppableId: string; index: number };
       cardId: string;
-    }) => Promise<void>;
+    }) => Promise<WorkspaceFunctionReturnType>;
   };
+}
+
+export interface WorkspaceFunctionReturnType {
+  success?: boolean;
+  error?: string;
 }
 
 const WorkspaceContext = createContext<WorkspaceContextProps>(
@@ -108,8 +125,9 @@ export function WorkspaceProvider(props: PropsWithChildren) {
     }
   }, [workspace]);
 
-  async function starWorkspace() {
-    if (!workspace?.data?.data) return;
+  async function starWorkspace(): Promise<WorkspaceFunctionReturnType> {
+    if (!workspace?.data?.data)
+      return { success: false, error: "no-workspace" };
     workspace?.mutate(
       {
         ...workspace.data,
@@ -130,6 +148,7 @@ export function WorkspaceProvider(props: PropsWithChildren) {
         login: auth?.validatedUser?.email,
         workspaceId: workspace?.data?.data?._id,
       });
+      return { success: true };
     } else {
       NotalUI.Alert.show({
         title: "Error",
@@ -138,11 +157,13 @@ export function WorkspaceProvider(props: PropsWithChildren) {
         notCloseable: false,
       });
       workspace?.mutate();
+      return { success: false, error: data?.error };
     }
   }
 
-  async function visibilityToggle() {
-    if (!workspace?.data?.data) return;
+  async function visibilityToggle(): Promise<WorkspaceFunctionReturnType> {
+    if (!workspace?.data?.data)
+      return { success: false, error: "no-workspace" };
     workspace?.mutate(
       {
         ...workspace.data,
@@ -163,6 +184,7 @@ export function WorkspaceProvider(props: PropsWithChildren) {
         login: auth?.validatedUser?.email,
         workspaceId: workspace?.data?.data?._id,
       });
+      return { success: true };
     } else {
       NotalUI.Alert.show({
         title: "Error",
@@ -171,11 +193,13 @@ export function WorkspaceProvider(props: PropsWithChildren) {
         notCloseable: false,
       });
       workspace?.mutate();
+      return { success: false, error: data?.error };
     }
   }
 
-  async function deleteWorkspace() {
-    if (!workspace?.data?.data) return;
+  async function deleteWorkspace(): Promise<WorkspaceFunctionReturnType> {
+    if (!workspace?.data?.data)
+      return { success: false, error: "no-workspace" };
     workspace?.mutate(
       {
         ...workspace.data,
@@ -196,6 +220,7 @@ export function WorkspaceProvider(props: PropsWithChildren) {
         login: auth?.validatedUser?.email,
         workspaceId: workspace?.data?.data?._id,
       });
+      return { success: true };
     } else {
       NotalUI.Alert.show({
         title: "Error",
@@ -204,11 +229,17 @@ export function WorkspaceProvider(props: PropsWithChildren) {
         notCloseable: false,
       });
       workspace?.mutate();
+      return { success: false, error: data?.error };
     }
   }
 
-  async function addField({ title }: { title: string }) {
-    if (!workspace?.data?.data) return;
+  async function addField({
+    title,
+  }: {
+    title: string;
+  }): Promise<WorkspaceFunctionReturnType> {
+    if (!workspace?.data?.data)
+      return { success: false, error: "no-workspace" };
 
     workspace?.mutate(
       {
@@ -243,6 +274,7 @@ export function WorkspaceProvider(props: PropsWithChildren) {
         workspaceId: workspace?.data?.data?._id,
       });
       workspace?.mutate();
+      return { success: true };
     } else {
       NotalUI.Alert.show({
         title: "Error",
@@ -251,11 +283,17 @@ export function WorkspaceProvider(props: PropsWithChildren) {
         notCloseable: false,
       });
       workspace?.mutate();
+      return { success: false, error: data?.error };
     }
   }
 
-  async function deleteField({ id }: { id: string }) {
-    if (!workspace?.data?.data) return;
+  async function deleteField({
+    id,
+  }: {
+    id: string;
+  }): Promise<WorkspaceFunctionReturnType> {
+    if (!workspace?.data?.data)
+      return { success: false, error: "no-workspace" };
 
     const newFields = workspace?.data?.data?.fields;
     newFields.splice(
@@ -282,6 +320,7 @@ export function WorkspaceProvider(props: PropsWithChildren) {
         workspaceId: workspace?.data?.data?._id,
       });
       workspace?.mutate();
+      return { success: true };
     } else {
       NotalUI.Alert.show({
         title: "Error",
@@ -290,11 +329,19 @@ export function WorkspaceProvider(props: PropsWithChildren) {
         notCloseable: false,
       });
       workspace?.mutate();
+      return { success: false, error: data?.error };
     }
   }
 
-  async function editField({ title, id }: { title: string; id: string }) {
-    if (!workspace?.data?.data) return;
+  async function editField({
+    title,
+    id,
+  }: {
+    title: string;
+    id: string;
+  }): Promise<WorkspaceFunctionReturnType> {
+    if (!workspace?.data?.data)
+      return { success: false, error: "no-workspace" };
 
     const editFieldIndex = workspace?.data?.data?.fields.findIndex(
       (field: FieldTypes) => field._id == id
@@ -331,6 +378,7 @@ export function WorkspaceProvider(props: PropsWithChildren) {
         workspaceId: workspace?.data?.data?._id,
       });
       workspace?.mutate();
+      return { success: true };
     } else {
       NotalUI.Alert.show({
         title: "Error",
@@ -339,11 +387,19 @@ export function WorkspaceProvider(props: PropsWithChildren) {
         notCloseable: false,
       });
       workspace?.mutate();
+      return { success: false, error: data?.error };
     }
   }
 
-  async function addCard({ card, id }: { card: CardTypes; id: string }) {
-    if (!workspace?.data?.data) return;
+  async function addCard({
+    card,
+    id,
+  }: {
+    card: CardTypes;
+    id: string;
+  }): Promise<WorkspaceFunctionReturnType> {
+    if (!workspace?.data?.data)
+      return { success: false, error: "no-workspace" };
 
     const addCardFieldIndex = workspace?.data?.data?.fields.findIndex(
       (field: FieldTypes) => field._id == id
@@ -380,6 +436,7 @@ export function WorkspaceProvider(props: PropsWithChildren) {
         workspaceId: workspace?.data?.data?._id,
       });
       workspace?.mutate();
+      return { success: true };
     } else {
       NotalUI.Alert.show({
         title: "Error",
@@ -388,11 +445,19 @@ export function WorkspaceProvider(props: PropsWithChildren) {
         notCloseable: false,
       });
       workspace?.mutate();
+      return { success: false, error: data?.error };
     }
   }
 
-  async function deleteCard({ id, fieldId }: { id: string; fieldId: string }) {
-    if (!workspace?.data?.data) return;
+  async function deleteCard({
+    id,
+    fieldId,
+  }: {
+    id: string;
+    fieldId: string;
+  }): Promise<WorkspaceFunctionReturnType> {
+    if (!workspace?.data?.data)
+      return { success: false, error: "no-workspace" };
 
     const newFields = workspace?.data?.data?.fields;
     const field = workspace?.data?.data?.fields.findIndex(
@@ -424,7 +489,8 @@ export function WorkspaceProvider(props: PropsWithChildren) {
         login: auth?.validatedUser?.email,
         workspaceId: workspace?.data?.data?._id,
       });
-      workspace?.mutate();
+      //workspace?.mutate();
+      return { success: true };
     } else {
       NotalUI.Alert.show({
         title: "Error",
@@ -432,7 +498,8 @@ export function WorkspaceProvider(props: PropsWithChildren) {
         showCloseButton: true,
         notCloseable: false,
       });
-      //workspace?.mutate();
+      workspace?.mutate();
+      return { success: false, error: data?.error };
     }
   }
 
@@ -444,8 +511,9 @@ export function WorkspaceProvider(props: PropsWithChildren) {
     destination: { droppableId: string; index: number };
     source: { droppableId: string; index: number };
     fieldId: string;
-  }) {
-    if (!workspace?.data?.data) return;
+  }): Promise<WorkspaceFunctionReturnType> {
+    if (!workspace?.data?.data)
+      return { success: false, error: "no-workspace" };
 
     const newFields = [...workspace?.data?.data?.fields];
     const [copy] = newFields.splice(source.index, 1);
@@ -476,6 +544,7 @@ export function WorkspaceProvider(props: PropsWithChildren) {
         workspaceId: workspace?.data?.data?._id,
       });
       //workspace.mutate();
+      return { success: true };
     } else {
       NotalUI.Alert.show({
         title: "Error",
@@ -483,6 +552,7 @@ export function WorkspaceProvider(props: PropsWithChildren) {
         showCloseButton: true,
         notCloseable: false,
       });
+      return { success: false, error: data?.error };
     }
   }
 
@@ -495,8 +565,9 @@ export function WorkspaceProvider(props: PropsWithChildren) {
     source: { droppableId: string; index: number };
     fieldId: string;
     cardId: string;
-  }) {
-    if (!workspace?.data?.data) return;
+  }): Promise<WorkspaceFunctionReturnType> {
+    if (!workspace?.data?.data)
+      return { success: false, error: "no-workspace" };
 
     const newFields = [...workspace?.data?.data?.fields];
     const sourceField = newFields.findIndex(
@@ -533,6 +604,7 @@ export function WorkspaceProvider(props: PropsWithChildren) {
         workspaceId: workspace?.data?.data?._id,
       });
       //workspace.mutate();
+      return { success: true };
     } else {
       NotalUI.Alert.show({
         title: "Error",
@@ -540,6 +612,7 @@ export function WorkspaceProvider(props: PropsWithChildren) {
         showCloseButton: true,
         notCloseable: false,
       });
+      return { success: false, error: data?.error };
     }
   }
 

@@ -1,4 +1,11 @@
 import { UserIcon, ShareIcon, PeopleIcon, TaskIcon } from "@icons";
+import { ReactNode } from "react";
+
+interface Feature {
+  title: string;
+  desc: string;
+  icon: ReactNode;
+}
 
 export const Features = [
   {
@@ -45,4 +52,4 @@ export const Features = [
       />
     ),
   },
-];
+] as Array<Feature>;

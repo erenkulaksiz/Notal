@@ -15,7 +15,7 @@ export interface ModalBackdropProps {
   blur?: boolean;
   onClose: Function;
   open: boolean;
-  setShow: Function;
+  setShow?: (open: boolean) => void;
   onKeyDown?: Function;
   className?: string;
 }

@@ -32,6 +32,19 @@ export function WorkspaceFieldHeader({
   }
 
   async function onFinishEditingTitle() {
+    if (
+      editTitleValue.length < LIMITS.MIN.WORKSPACE_FIELD_TITLE_CHARACTER_LENGTH
+    ) {
+      return NotalUI.Alert.show({
+        title: "Error",
+        desc: `Title must be atleast ${LIMITS.MIN.WORKSPACE_FIELD_TITLE_CHARACTER_LENGTH} characters long.`,
+        showCloseButton: true,
+        notCloseable: false,
+      });
+    }
+    if (editTitleValue == field.title) {
+      return setEditingTitle(false);
+    }
     await workspace.field.edit({ id: field._id, title: editTitleValue });
     setEditingTitle(false);
   }

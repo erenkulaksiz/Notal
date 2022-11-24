@@ -13,10 +13,10 @@ import {
   GetWorkspaceData,
   WorkspaceDataReturnType,
 } from "@utils/api/workspaceData";
-import { useWorkspace } from "@hooks";
+import { useNotalUI, useWorkspace } from "@hooks";
 import { NotalRootProps } from "@types";
 import { ValidateToken } from "@utils/api/validateToken";
-import { fetchWorkspace } from "@utils";
+import { fetchWorkspace, Log } from "@utils";
 import type { GetServerSidePropsContext } from "next";
 import type { ValidateTokenReturnType } from "@utils/api/validateToken";
 
@@ -27,6 +27,7 @@ const NotalWorkspace = dynamic<{}>(() =>
 function Workspace(props: NotalRootProps) {
   const router = useRouter();
   const workspaceHook = useWorkspace();
+  const NotalUI = useNotalUI();
 
   const workspace = useSWR(
     [`api/fetchWorkspace/${router?.query?.id ?? ""}`],
@@ -135,7 +136,7 @@ function Workspace(props: NotalRootProps) {
       </Head>
       <Navbar showCollapse />
       <DragDropContext
-        onDragEnd={(result) => {
+        onDragEnd={async (result) => {
           if (!result.destination) return;
 
           if (
@@ -146,21 +147,37 @@ function Workspace(props: NotalRootProps) {
 
           if (result.type == "BOARD") {
             // reorder field
-            workspaceHook.field.reorder({
+            const reorder = await workspaceHook.field.reorder({
               source: result.source,
               destination: result.destination,
               fieldId: result.draggableId,
             });
+            if (!reorder.success) {
+              NotalUI.Alert.show({
+                title: "Error",
+                desc: reorder.error,
+                notCloseable: false,
+                showCloseButton: true,
+              });
+            }
             return;
           }
 
           if (result.type == "FIELD") {
             // reorder card in field
-            workspaceHook.card.reorder({
+            const reorder = await workspaceHook.card.reorder({
               source: result.source,
               destination: result.destination,
               cardId: result.draggableId,
             });
+            if (!reorder.success) {
+              NotalUI.Alert.show({
+                title: "Error",
+                desc: reorder.error,
+                notCloseable: false,
+                showCloseButton: true,
+              });
+            }
           }
         }}
       >

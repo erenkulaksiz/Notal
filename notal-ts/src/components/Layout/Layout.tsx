@@ -6,6 +6,8 @@ import { useAuth } from "@hooks";
 import { CheckToken } from "@utils/api/checkToken";
 import type { NotalRootProps } from "@types";
 
+import { Log } from "@utils/logger";
+
 /**
  * Layout is a component that features in all pages root.
  * It is used to check if the user is logged in or not.
@@ -34,6 +36,10 @@ export function Layout(props: NotalRootProps) {
     if (props.validate && Cookies.get("auth")) {
       if (props.validate.success)
         auth && auth.setValidatedUser(props.validate.data);
+      if (!props.validate.data?.onboarding?.completed) {
+        // check onboarding
+        router.asPath !== "/onboarding" && router.replace("/onboarding");
+      }
     }
   }, [props.validate]);
 

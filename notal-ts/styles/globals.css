@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: CorpGames;
+  src: url("/fonts/corp_games.otf") format("opentype");
+}
+
 @layer base {
   html,
   body {
@@ -11,6 +16,25 @@
     @apply overflow-hidden;
     @apply bg-white;
     @apply dark:bg-black;
+  }
+}
+
+@layer components {
+  .navbar-bg {
+    @apply absolute;
+    @apply left-0;
+    @apply right-0;
+    @apply top-0;
+    @apply bottom-0;
+    @apply -z-10;
+    @apply shadow-none;
+    @apply dark:shadow-md;
+    @apply backdrop-blur-sm;
+    @apply dark:backdrop-blur-sm;
+    @apply dark:bg-black/40;
+    @apply bg-navbar_light;
+    @apply dark:bg-navbar_dark;
+    background-size: 4px 4px;
   }
 }
 

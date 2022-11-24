@@ -37,7 +37,7 @@ export function AddWorkspaceModal({
   onClose,
   onAdd,
 }: AddWorkspaceModalProps) {
-  const NotalUI = useNotalUI();
+  //const NotalUI = useNotalUI();
   const [state, dispatch] = useReducer(reducer, WorkspaceDefaults);
 
   const [newWorkspaceErr, setNewWorkspaceErr] = useState<{
@@ -102,6 +102,7 @@ export function AddWorkspaceModal({
     // check file size
     const file = Math.round(state.thumbnail.fileData.size / 1024);
     if (file >= LIMITS.MAX.WORKSPACE_THUMBNAIL_IMAGE_SIZE) {
+      /*
       NotalUI.Toast.show({
         title: "Error",
         desc: `File size must be less than ${LIMITS.MAX.WORKSPACE_THUMBNAIL_IMAGE_SIZE.toString().charAt(
@@ -111,6 +112,7 @@ export function AddWorkspaceModal({
         once: true,
         id: "add-workspace-thumbnail-error",
       });
+      */
       return;
     }
 
@@ -159,6 +161,7 @@ export function AddWorkspaceModal({
         Log.debug("thumbnail upload error: ", res);
         setThumbnailLoading(false);
 
+        /*
         NotalUI.Toast.show({
           title: "Error",
           desc: "An error occurred while uploading the file. Please check the console.",
@@ -166,6 +169,7 @@ export function AddWorkspaceModal({
           once: true,
           id: "add-workspace-thumbnail-error",
         });
+        */
         return;
       }
     }
@@ -195,20 +199,23 @@ export function AddWorkspaceModal({
     <Modal
       open={open}
       onClose={() => !thumbnailLoading && close()}
-      className="w-[90%] sm:w-[400px] h-[580px] p-4 px-5 relative"
+      className="w-[90%] sm:w-[400px] h-[640px] p-4 px-5 relative"
       animate
     >
       <Modal.Title animate>
         <AddIcon size={24} fill="currentColor" />
         <span className="text-lg font-medium ml-1">Add Workspace</span>
       </Modal.Title>
-      <Modal.Body className="flex flex-col pb-2 min-h-[400px]" animate>
+      <Modal.Body className="flex flex-col pb-2 " animate>
         {thumbnailLoading && (
           <div className="absolute left-0 right-0 bottom-0 top-0 flex items-center justify-center bg-neutral-300/40 dark:bg-neutral-800/40 rounded-xl z-50">
             <Loading size="xl" />
           </div>
         )}
-        <div className="w-full mb-4">
+        <div className="w-full mb-4 relative pointer-events-none">
+          <div className="text-3xl font-medium absolute left-2 top-0 z-50 uppercase dark:text-white/50 text-black/50">
+            Preview
+          </div>
           <HomeWorkspaceCard
             preview
             workspace={{
@@ -228,10 +235,11 @@ export function AddWorkspaceModal({
           selected={tab}
           onSelect={(index) => setTab(index)}
           id="workspaceTab"
-          globalTabViewClassName="pt-2 grid grid-cols-1 gap-2"
+          globalTabViewClassName="pt-2 flex flex-col gap-2"
+          animated
         >
           <Tab.TabView title="Workspace">
-            <label htmlFor="workspaceTitle">Workspace Title</label>
+            <label htmlFor="workspaceTitle">Workspace Title*</label>
             <Input
               fullWidth
               placeholder="Workspace Title"
@@ -266,65 +274,76 @@ export function AddWorkspaceModal({
               <span className="text-red-500">{newWorkspaceErr.desc}</span>
             )}
             <div className="py-1 grid grid-cols-1 gap-2">
-              <div className="flex flex-row items-center">
-                {state.starred ? (
-                  <StarFilledIcon
-                    size={24}
-                    fill="currentColor"
-                    style={{ transform: "scale(0.7)" }}
-                    className="-ml-1"
-                  />
-                ) : (
-                  <StarOutlineIcon
-                    size={24}
-                    fill="currentColor"
-                    style={{ transform: "scale(0.7)" }}
-                    className="-ml-1"
-                  />
-                )}
-                <Checkbox
-                  id="starredWorkspace"
-                  checked={state.starred}
-                  onChange={(starred) =>
-                    dispatch({
-                      type: AddWorkspaceActionType.SET_STARRED,
-                      payload: starred,
-                    })
-                  }
-                >
-                  Add to favorites
-                </Checkbox>
+              <div className="flex flex-col">
+                <div className="flex flex-row items-center">
+                  {state.starred ? (
+                    <StarFilledIcon
+                      size={24}
+                      fill="currentColor"
+                      style={{ transform: "scale(0.7)" }}
+                      className="-ml-1"
+                    />
+                  ) : (
+                    <StarOutlineIcon
+                      size={24}
+                      fill="currentColor"
+                      style={{ transform: "scale(0.7)" }}
+                      className="-ml-1"
+                    />
+                  )}
+                  <Checkbox
+                    id="starredWorkspace"
+                    checked={state.starred}
+                    onChange={(starred) =>
+                      dispatch({
+                        type: AddWorkspaceActionType.SET_STARRED,
+                        payload: starred,
+                      })
+                    }
+                  >
+                    Add to favorites
+                  </Checkbox>
+                </div>
+                <div className="text-sm dark:text-neutral-400">
+                  Add this workspace to your favorites.
+                </div>
               </div>
-              <div className="flex flex-row items-center">
-                {state.workspaceVisible ? (
-                  <VisibleIcon
-                    width={24}
-                    height={24}
-                    fill="currentColor"
-                    style={{ transform: "scale(0.7)" }}
-                    className="-ml-1"
-                  />
-                ) : (
-                  <VisibleOffIcon
-                    width={24}
-                    height={24}
-                    fill="currentColor"
-                    style={{ transform: "scale(0.7)" }}
-                    className="-ml-1"
-                  />
-                )}
-                <Checkbox
-                  id="privateWorkspace"
-                  checked={state.workspaceVisible}
-                  onChange={(workspaceVisible) =>
-                    dispatch({
-                      type: AddWorkspaceActionType.SET_VISIBLE,
-                      payload: workspaceVisible,
-                    })
-                  }
-                >
-                  Public Workspace
-                </Checkbox>
+              <div className="flex flex-col">
+                <div className="flex flex-row items-center">
+                  {state.workspaceVisible ? (
+                    <VisibleIcon
+                      width={24}
+                      height={24}
+                      fill="currentColor"
+                      style={{ transform: "scale(0.7)" }}
+                      className="-ml-1"
+                    />
+                  ) : (
+                    <VisibleOffIcon
+                      width={24}
+                      height={24}
+                      fill="currentColor"
+                      style={{ transform: "scale(0.7)" }}
+                      className="-ml-1"
+                    />
+                  )}
+                  <Checkbox
+                    id="privateWorkspace"
+                    checked={state.workspaceVisible}
+                    onChange={(workspaceVisible) =>
+                      dispatch({
+                        type: AddWorkspaceActionType.SET_VISIBLE,
+                        payload: workspaceVisible,
+                      })
+                    }
+                  >
+                    Public Workspace
+                  </Checkbox>
+                </div>
+                <div className="text-sm dark:text-neutral-400">
+                  If enabled, anyone can see your workspace even if they arent
+                  signed in.
+                </div>
               </div>
             </div>
           </Tab.TabView>

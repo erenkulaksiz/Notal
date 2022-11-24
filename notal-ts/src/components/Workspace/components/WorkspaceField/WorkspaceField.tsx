@@ -46,7 +46,7 @@ export function WorkspaceField({ field, index }: WorkspaceFieldProps) {
             BuildComponent({
               name: "Workspace Field",
               defaultClasses:
-                "rounded-md group h-full mr-1 overflow-y-auto overflow-x-hidden max-h-full flex items-start flex-col dark:bg-black bg-white hover:bg-neutral-200 dark:hover:bg-neutral-900/40 transition-all ease-in-out",
+                "rounded-md group h-full mr-1 overflow-y-auto overflow-x-hidden max-h-full flex items-start flex-col dark:bg-black/70 bg-white/70 hover:bg-neutral-200 dark:hover:bg-neutral-900/40 transition-all ease-in-out",
               conditionalClasses: [
                 {
                   true: "border-dashed border-2 border-neutral-300 dark:border-neutral-700",
@@ -90,6 +90,7 @@ export function WorkspaceField({ field, index }: WorkspaceFieldProps) {
                         index={index}
                       />
                     ))}
+                  {dropProvided.placeholder}
                 </div>
               </>
             )}
