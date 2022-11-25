@@ -6,6 +6,7 @@ import { ValidateUser } from "./validateUser";
 import { formatString, formatDate } from "@utils";
 import { generateRandomUsername } from "@api/utils";
 import { SendTelegramMessage, server } from "@utils";
+import { CONSTANTS } from "@constants";
 
 export interface ValidateTokenReturnType {
   success: boolean;
@@ -114,7 +115,7 @@ TS: ${Date.now()}
 URL: ${server}
 ENV: ${process.env.NODE_ENV}
 PROVIDER: ${validateUser.decodedToken.firebase.sign_in_provider}
-VER: ${process.env.NEXT_PUBLIC_APP_VERSION}
+VER: ${CONSTANTS.APP_VERSION}
 PLATFORM: web`,
     });
   }

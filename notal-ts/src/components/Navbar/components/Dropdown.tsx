@@ -2,6 +2,7 @@ import { UserIcon, LogoutIcon } from "@icons";
 import { useAuth } from "@hooks";
 import { Button } from "@components";
 import { ThemeSwitcher } from "./ThemeSwitcher";
+import { CONSTANTS } from "@constants";
 
 export function Dropdown() {
   const auth = useAuth();
@@ -33,7 +34,7 @@ export function Dropdown() {
         >
           <div className="flex flex-row items-center">
             <ThemeSwitcher />
-            <span className="ml-1 text-xs dark:text-neutral-600 text-neutral-400 break-words">{`v${process.env.NEXT_PUBLIC_APP_VERSION}`}</span>
+            <span className="ml-1 text-xs dark:text-neutral-600 text-neutral-400 break-words">{`v${CONSTANTS.APP_VERSION}`}</span>
           </div>
           <span
             className="text-current font-bold text-xl break-words"

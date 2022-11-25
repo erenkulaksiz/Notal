@@ -5,21 +5,6 @@ import IconWhite from "@public/icon_white.webp";
 import IconGalactic from "@public/icon_galactic.webp";
 import { BoltIcon } from "@icons";
 
-function Header() {
-  return <div>header</div>;
-}
-
-function Body() {
-  return <div>body</div>;
-}
-
-function Notice({ children }: { children: ReactNode }) {
-  return <div className="flex flex-col bg-red-200">{children}</div>;
-}
-
-Notice.Body = Body;
-Notice.Header = Header;
-
 export function Welcome() {
   return (
     <div className="flex flex-col">
@@ -82,10 +67,6 @@ export function Welcome() {
         Lets go trough about how to create workspace and then adding things to
         that workspace.
       </span>
-      {/*<Notice>
-        <Notice.Header>Header</Notice.Header>
-        <Notice.Body>Body</Notice.Body>
-      </Notice>*/}
     </div>
   );
 }

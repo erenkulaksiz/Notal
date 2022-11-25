@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import useSWR from "swr";
 import Cookies from "js-cookie";
 
-import { Log } from "@utils";
 import { Navbar, Workspace as NotalWorkspace } from "@components";
 import { useWorkspace, useWorkspaces } from "@hooks";
 import { fetchWorkspace } from "@utils";

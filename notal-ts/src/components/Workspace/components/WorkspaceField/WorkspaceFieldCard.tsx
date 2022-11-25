@@ -34,7 +34,7 @@ export function WorkspaceFieldCard({
             BuildComponent({
               name: "Workspace Field Card",
               defaultClasses:
-                "bg-neutral-100 shadow-md dark:bg-neutral-900 relative p-3 w-full flex flex-col rounded-lg mb-2 z-50",
+                "bg-neutral-100 shadow-md dark:bg-neutral-900 relative p-3 w-full flex flex-col rounded-lg mb-2",
               conditionalClasses: [
                 {
                   true: "border-dashed border-2 border-neutral-300 dark:border-neutral-700",

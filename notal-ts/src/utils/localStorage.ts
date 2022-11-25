@@ -1,4 +1,5 @@
 import { isClient } from "@utils/isClient";
+import { CONSTANTS } from "@constants";
 
 interface DefaultSettingsTypes {
   cookies: boolean;
@@ -9,7 +10,7 @@ interface DefaultSettingsTypes {
 
 const DefaultSettings: DefaultSettingsTypes = {
   cookies: false,
-  installedVersion: process.env.NEXT_PUBLIC_APP_VERSION || "",
+  installedVersion: CONSTANTS.APP_VERSION || "",
   installedEnv: process.env.NODE_ENV,
   navbarCollapsed: false,
 };

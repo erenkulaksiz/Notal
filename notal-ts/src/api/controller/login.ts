@@ -5,6 +5,7 @@ import { server } from "@utils/server";
 import { ValidateUser } from "@utils/api/validateUser";
 import { accept, reject } from "@api/utils";
 import { formatDate, SendTelegramMessage } from "@utils";
+import { CONSTANTS } from "@constants";
 
 /**
  * Send Telegram notification about new login and data
@@ -36,7 +37,7 @@ TIME: ${formatDate(Date.now())}
 TS: ${Date.now()}
 URL: ${server}
 ENV: ${process.env.NODE_ENV}
-VER: ${process.env.NEXT_PUBLIC_APP_VERSION}
+VER: ${CONSTANTS.APP_VERSION}
 PROVIDER: ${validateUser.decodedToken.firebase.sign_in_provider}
 PLATFORM: web`,
   });

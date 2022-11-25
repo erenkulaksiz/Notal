@@ -5,6 +5,7 @@ import { connectToDatabase } from "@lib/mongodb";
 import { accept, reject } from "@api/utils";
 import { SendTelegramMessage, server, formatDate } from "@utils";
 import { ValidateUser } from "@utils/api/validateUser";
+import { CONSTANTS } from "@constants";
 
 export async function complete(req: NextApiRequest, res: NextApiResponse) {
   const { db } = await connectToDatabase();
@@ -47,7 +48,7 @@ TIME: ${formatDate(Date.now())}
 TS: ${Date.now()}
 URL: ${server}
 ENV: ${process.env.NODE_ENV}
-VER: ${process.env.NEXT_PUBLIC_APP_VERSION}
+VER: ${CONSTANTS.APP_VERSION}
 PROVIDER: ${validateUser.decodedToken.firebase.sign_in_provider}
 PLATFORM: web`,
   });

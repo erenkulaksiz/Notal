@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Log } from "@utils";
 
 import { AddWorkspaceButton, Navbar, HomeWorkspaceCard } from "@components";
@@ -8,10 +7,6 @@ import type { WorkspaceTypes } from "@types";
 
 export function CreateWorkspace({ onCreate }: { onCreate: () => void }) {
   const workspaces = useWorkspaces();
-
-  useEffect(() => {
-    Log.debug(workspaces);
-  }, [workspaces]);
 
   return (
     <>
