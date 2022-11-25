@@ -21,8 +21,8 @@ import {
   VisibleOffIcon,
   CloudUploadIcon,
 } from "@icons";
+import { Log, getRandomQuote, QUOTE_TYPES } from "@utils";
 import { useNotalUI } from "@hooks";
-import { Log } from "@utils";
 import { WorkspaceService } from "@services/WorkspaceService";
 import { LIMITS } from "@constants/limits";
 import { WorkspaceDefaults } from "@constants/workspacedefaults";
@@ -37,8 +37,11 @@ export function AddWorkspaceModal({
   onClose,
   onAdd,
 }: AddWorkspaceModalProps) {
-  //const NotalUI = useNotalUI();
   const [state, dispatch] = useReducer(reducer, WorkspaceDefaults);
+  const NotalUI = useNotalUI();
+  const randomWorkspacePlaceholder = useRef(
+    getRandomQuote(QUOTE_TYPES.WORKSPACE_TITLE)
+  );
 
   const [newWorkspaceErr, setNewWorkspaceErr] = useState<{
     title: string | boolean;
@@ -53,6 +56,9 @@ export function AddWorkspaceModal({
 
   function close() {
     onClose();
+    randomWorkspacePlaceholder.current = getRandomQuote(
+      QUOTE_TYPES.WORKSPACE_TITLE
+    );
     setNewWorkspaceErr({ ...newWorkspaceErr, title: false, desc: false });
     dispatch({
       type: AddWorkspaceActionType.SET_WORKSPACE,
@@ -102,7 +108,6 @@ export function AddWorkspaceModal({
     // check file size
     const file = Math.round(state.thumbnail.fileData.size / 1024);
     if (file >= LIMITS.MAX.WORKSPACE_THUMBNAIL_IMAGE_SIZE) {
-      /*
       NotalUI.Toast.show({
         title: "Error",
         desc: `File size must be less than ${LIMITS.MAX.WORKSPACE_THUMBNAIL_IMAGE_SIZE.toString().charAt(
@@ -112,7 +117,6 @@ export function AddWorkspaceModal({
         once: true,
         id: "add-workspace-thumbnail-error",
       });
-      */
       return;
     }
 
@@ -157,11 +161,9 @@ export function AddWorkspaceModal({
         close();
         return;
       } else {
-        // error
+        // handle error
         Log.debug("thumbnail upload error: ", res);
         setThumbnailLoading(false);
-
-        /*
         NotalUI.Toast.show({
           title: "Error",
           desc: "An error occurred while uploading the file. Please check the console.",
@@ -169,7 +171,6 @@ export function AddWorkspaceModal({
           once: true,
           id: "add-workspace-thumbnail-error",
         });
-        */
         return;
       }
     }
@@ -239,10 +240,19 @@ export function AddWorkspaceModal({
           animated
         >
           <Tab.TabView title="Workspace">
-            <label htmlFor="workspaceTitle">Workspace Title*</label>
+            <label
+              htmlFor="workspaceTitle"
+              className="flex flex-row items-center gap-2"
+            >
+              <span>Workspace Title*</span>
+              <div className="text-xs text-neutral-400">
+                {state.title.length} /{" "}
+                {LIMITS.MAX.WORKSPACE_TITLE_CHARACTER_LENGTH}
+              </div>
+            </label>
             <Input
               fullWidth
-              placeholder="Workspace Title"
+              placeholder={randomWorkspacePlaceholder.current}
               onChange={(e) =>
                 dispatch({
                   type: AddWorkspaceActionType.SET_TITLE,
@@ -256,7 +266,18 @@ export function AddWorkspaceModal({
             {newWorkspaceErr.title != false && (
               <span className="text-red-500">{newWorkspaceErr.title}</span>
             )}
-            <label htmlFor="workspaceDescription">Workspace Description</label>
+            <label
+              htmlFor="workspaceDescription"
+              className="flex flex-row items-center gap-2"
+            >
+              Workspace Description
+              {state.desc?.length != 0 && (
+                <div className="text-xs text-neutral-400">
+                  {state?.desc?.length} /{" "}
+                  {LIMITS.MAX.WORKSPACE_DESC_CHARACTER_LENGTH}
+                </div>
+              )}
+            </label>
             <Input
               fullWidth
               placeholder="Workspace Description"
@@ -273,7 +294,7 @@ export function AddWorkspaceModal({
             {newWorkspaceErr.desc != false && (
               <span className="text-red-500">{newWorkspaceErr.desc}</span>
             )}
-            <div className="py-1 grid grid-cols-1 gap-2">
+            <div className="grid grid-cols-1 gap-2">
               <div className="flex flex-col">
                 <div className="flex flex-row items-center">
                   {state.starred ? (
@@ -304,7 +325,7 @@ export function AddWorkspaceModal({
                     Add to favorites
                   </Checkbox>
                 </div>
-                <div className="text-sm dark:text-neutral-400">
+                <div className="text-sm text-neutral-400">
                   Add this workspace to your favorites.
                 </div>
               </div>
@@ -340,9 +361,9 @@ export function AddWorkspaceModal({
                     Public Workspace
                   </Checkbox>
                 </div>
-                <div className="text-sm dark:text-neutral-400">
+                <div className="text-sm text-neutral-400">
                   If enabled, anyone can see your workspace even if they arent
-                  signed in.
+                  signed in using the workspace link.
                 </div>
               </div>
             </div>

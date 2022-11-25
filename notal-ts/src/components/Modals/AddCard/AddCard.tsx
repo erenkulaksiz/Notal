@@ -1,4 +1,4 @@
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState, useRef } from "react";
 
 import {
   Modal,
@@ -13,6 +13,7 @@ import { AddIcon, CrossIcon, CheckIcon } from "@icons";
 import { AddCardModalProps, AddCardActionType } from "./AddCard.d";
 import { reducer } from "./reducer";
 import { LIMITS } from "@constants/limits";
+import { getRandomQuote, QUOTE_TYPES } from "@utils";
 
 export function AddCardModal({
   open,
@@ -27,9 +28,16 @@ export function AddCardModal({
     useColor: false,
     color: "#ff0000",
   });
+  const randomCardPlaceholder = useRef(
+    getRandomQuote(QUOTE_TYPES.WORKSPACE_CARD_TITLE)
+  );
 
   function close() {
     onClose();
+    // get a random quote on close
+    randomCardPlaceholder.current = getRandomQuote(
+      QUOTE_TYPES.WORKSPACE_CARD_TITLE
+    );
     dispatch({ type: AddCardActionType.RESET_ALL, payload: "" });
   }
 
@@ -90,7 +98,7 @@ export function AddCardModal({
             <label htmlFor="cardTitle">Card Title</label>
             <Input
               fullWidth
-              placeholder="Card Title"
+              placeholder={randomCardPlaceholder.current}
               onChange={(e) =>
                 dispatch({
                   type: AddCardActionType.SET_TITLE,

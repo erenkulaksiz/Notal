@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { Modal, Input, Button } from "@components";
 import { AddIcon, CrossIcon, CheckIcon } from "@icons";
 
 import type { AddFieldModalProps } from "./AddField.d";
 import { LIMITS } from "@constants/limits";
+import { getRandomQuote, QUOTE_TYPES } from "@utils/quote";
 
 export function AddFieldModal({
   open,
@@ -12,15 +13,21 @@ export function AddFieldModal({
   onAdd,
   workspaceTitle,
 }: AddFieldModalProps) {
-  const [newField, setNewField] = useState({ title: "Untitled" });
+  const [newField, setNewField] = useState({ title: "" });
   const [newFieldErr, setNewFieldErr] = useState<{ title: string | boolean }>({
     title: false,
   });
+  const randomFieldTitlePlaceholder = useRef(
+    getRandomQuote(QUOTE_TYPES.WORKSPACE_FIELD_TITLE)
+  );
 
   function close() {
     onClose();
     setNewFieldErr({ title: false });
-    setNewField({ title: "Untitled" });
+    randomFieldTitlePlaceholder.current = getRandomQuote(
+      QUOTE_TYPES.WORKSPACE_FIELD_TITLE
+    );
+    setNewField({ title: "" });
   }
 
   function submit() {
@@ -63,7 +70,7 @@ export function AddFieldModal({
         <label htmlFor="fieldTitle">Field Title</label>
         <Input
           fullWidth
-          placeholder="Field Title"
+          placeholder={randomFieldTitlePlaceholder.current}
           onChange={(e) => setNewField({ ...newField, title: e.target.value })}
           value={newField.title}
           id="fieldTitle"

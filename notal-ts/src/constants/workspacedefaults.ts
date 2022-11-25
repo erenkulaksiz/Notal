@@ -13,7 +13,7 @@ export const WorkspaceDefaults: WorkspaceTypes = {
   },
   createdAt: Date.now(),
   updatedAt: Date.now(),
-  title: CONSTANTS.DEFAULT_WORKSPACE_TITLE,
+  title: "",
   desc: "",
   starred: false,
   workspaceVisible: false,
