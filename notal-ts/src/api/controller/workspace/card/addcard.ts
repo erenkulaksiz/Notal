@@ -32,11 +32,18 @@ export async function addcard(req: NextApiRequest, res: NextApiResponse) {
   )
     return reject({ reason: "max-color-length", res });
 
-  if (!card.title) return reject({ res, reason: "no-card-title" });
+  if (!card.title && !card.desc)
+    return reject({ res, reason: "no-card-title" });
 
-  if (card.title.length > LIMITS.MAX.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH)
+  if (
+    card.title &&
+    card?.title?.length > LIMITS.MAX.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH
+  )
     return reject({ reason: "max-title-length", res });
-  if (card.title.length < LIMITS.MIN.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH)
+  if (
+    card.title &&
+    card?.title?.length < LIMITS.MIN.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH
+  )
     return reject({ reason: "min-title-length", res });
 
   if (

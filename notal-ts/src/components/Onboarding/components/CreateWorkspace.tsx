@@ -18,7 +18,7 @@ export function CreateWorkspace({ onCreate }: { onCreate: () => void }) {
           This is your home screen. It seems a bit empty right now, but dont
           worry. New features are on the way.
         </p>
-        <div className="mt-2 h-full border-2 rounded-md border-neutral-300 dark:border-neutral-800 overflow-hidden">
+        <div className="mt-2 h-full border-2 overflow-y-auto overflow-x-hidden rounded-md border-neutral-300 dark:border-neutral-800">
           <Navbar disableRightSide />
           <div className="w-full relative pb-4 px-4 mt-4">
             <div className="relative grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 items-start auto-rows-max">

@@ -31,7 +31,7 @@ export const CheckToken = async ({
     (props.validate?.error == "no-token" && user)
   ) {
     if (token) await Cookies.set("auth", token);
-    Log.debug("Have to reload! checkToken");
+    Log.error("Have to reload! checkToken");
     return false;
   } else {
     if (!props.validate?.error) {

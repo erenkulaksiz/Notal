@@ -27,6 +27,15 @@ export function reducer(state: AddCardTypes, action: CardAction): AddCardTypes {
         },
       };
 
+    case AddCardActionType.SET_DESC_ERROR:
+      return {
+        ...state,
+        errors: {
+          ...state.errors,
+          desc: action.payload,
+        },
+      };
+
     default:
       return state;
   }

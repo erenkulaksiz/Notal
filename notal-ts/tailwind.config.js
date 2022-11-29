@@ -11,7 +11,7 @@ module.exports = {
         "landing_bg_2": "url('../public/landing_bg_2.png')",
         "landing_bg_3": "url('../public/landing_bg_3.png')",
         "navbar_light": "radial-gradient(rgba(0, 0, 0, 0) 1px, white 1px)",
-        "navbar_dark": "radial-gradient(rgba(0, 0, 0, 0) 1px, black 6px)"
+        "navbar_dark": "radial-gradient(rgba(0, 0, 0, 0) 1px, black 7px)"
       },
       keyframes: {
         landingBounce: {

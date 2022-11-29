@@ -62,25 +62,30 @@ export async function ValidateToken({
 
   if (!user) {
     // register user - check and register username
-    let generateUsername = "";
+    let generatedUsername = "";
+    let generatedLength = 3; // Defaults to 3 characters
     let generated = false;
 
-    while (generated == false) {
+    while (!generated) {
       Log.debug("validateUser:", validateUser);
-      generateUsername = formatString(
+      generatedUsername = formatString(
         generateRandomUsername({
           email: validateUser.decodedToken.email ?? "error",
+          length: generatedLength,
         })
       ).toLowerCase();
       const checkusername = await usersCollection.findOne({
-        username: generateUsername,
+        username: generatedUsername,
       });
       if (!checkusername) generated = true;
+      else {
+        generatedLength++;
+      }
     }
 
     const newUser: UserTypes = {
       email: validateUser.decodedToken.email,
-      username: generateUsername,
+      username: generatedUsername,
       uid: validateUser.decodedToken.user_id,
       createdAt: Date.now(),
       updatedAt: Date.now(),

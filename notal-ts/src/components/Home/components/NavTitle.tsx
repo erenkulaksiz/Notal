@@ -1,7 +1,31 @@
 import { ReactNode } from "react";
 
 import { Tooltip } from "@components";
-import { StarFilledIcon, VisibleOffIcon } from "@icons";
+import { DashboardFilledIcon, StarFilledIcon, VisibleOffIcon } from "@icons";
+
+function Count({
+  count,
+  text,
+  children,
+  onClick,
+}: {
+  count: number;
+  text: string;
+  children?: ReactNode;
+  onClick?: () => void;
+}) {
+  return (
+    <Tooltip content={text} direction="bottom" blockContent outline>
+      <button
+        className="flex gap-1 flex-row items-center dark:bg-neutral-800 bg-white p-1 px-1 pr-2 rounded-lg"
+        onClick={onClick}
+      >
+        {children}
+        {count}
+      </button>
+    </Tooltip>
+  );
+}
 
 export function HomeNavTitle({
   children,
@@ -28,50 +52,37 @@ export function HomeNavTitle({
         {title}
       </h1>
       {count?.workspaces > 0 && (
-        <Tooltip
-          content="Total workspaces"
-          direction="bottom"
-          blockContent
-          outline
-        >
-          <div className="dark:bg-neutral-800 bg-white text-md p-1 px-2 rounded-lg">
-            {count?.workspaces}
-          </div>
-        </Tooltip>
+        <Count count={count?.workspaces} text={"Total Workspaces"}>
+          <DashboardFilledIcon
+            width={20}
+            height={24}
+            fill="currentColor"
+            style={{ transform: "scale(.8)" }}
+          />
+        </Count>
       )}
       {count?.privateWorkspaces > 0 || count?.starredWorkspaces ? (
         <div className="w-[1px] h-1/3 bg-neutral-300 dark:bg-neutral-600" />
       ) : null}
       {count?.starredWorkspaces > 0 && (
-        <Tooltip
-          content="Favorite workspaces"
-          direction="bottom"
-          blockContent
-          outline
-        >
-          <div className="flex gap-1 flex-row items-center dark:bg-neutral-800 bg-white p-1 px-1 pr-2 rounded-lg">
-            <StarFilledIcon
-              width={20}
-              height={24}
-              fill="currentColor"
-              style={{ transform: "scale(.8)" }}
-            />
-            {count?.starredWorkspaces}
-          </div>
-        </Tooltip>
+        <Count count={count?.starredWorkspaces} text={"Favorite Workspaces"}>
+          <StarFilledIcon
+            width={20}
+            height={24}
+            fill="currentColor"
+            style={{ transform: "scale(.8)" }}
+          />
+        </Count>
       )}
       {count?.privateWorkspaces > 0 && (
-        <Tooltip content="Private workspaces" direction="bottom" outline>
-          <div className="flex gap-1 flex-row items-center dark:bg-neutral-800 bg-white p-1 px-1 pr-2 rounded-lg">
-            <VisibleOffIcon
-              width={24}
-              height={24}
-              fill="currentColor"
-              style={{ transform: "scale(.8)" }}
-            />
-            {count?.privateWorkspaces}
-          </div>
-        </Tooltip>
+        <Count count={count?.privateWorkspaces} text={"Private Workspaces"}>
+          <VisibleOffIcon
+            width={24}
+            height={24}
+            fill="currentColor"
+            style={{ transform: "scale(.8)" }}
+          />
+        </Count>
       )}
     </div>
   );

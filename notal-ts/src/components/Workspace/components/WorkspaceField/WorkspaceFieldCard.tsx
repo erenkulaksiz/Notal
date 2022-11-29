@@ -53,7 +53,9 @@ export function WorkspaceFieldCard({
               style={{ backgroundColor: card.color }}
             />
           )}
-          {card?.title && <div className="text-xl">{card?.title}</div>}
+          {card?.title && (
+            <div className="text-xl w-full break-words">{card?.title}</div>
+          )}
           {card?.desc && (
             <div className="break-words text-sm dark:text-neutral-500 text-neutral-600">
               {card?.desc}
@@ -62,7 +64,7 @@ export function WorkspaceFieldCard({
           {card?.image && (
             <img src={card?.image?.url} className="object-contain rounded-md" />
           )}
-          {card._id && (
+          {card._id && workspace.isWorkspaceOwner && (
             <>
               <button
                 onClick={() => onCardDelete()}

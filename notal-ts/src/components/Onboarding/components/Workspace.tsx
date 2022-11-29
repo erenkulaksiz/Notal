@@ -1,12 +1,17 @@
 import { useEffect } from "react";
 import useSWR from "swr";
 import Cookies from "js-cookie";
+import dynamic from "next/dynamic";
 
-import { Navbar, Workspace as NotalWorkspace } from "@components";
+import { Navbar } from "@components";
 import { useWorkspace, useWorkspaces } from "@hooks";
 import { fetchWorkspace } from "@utils";
 import { DragDropContext } from "@hello-pangea/dnd";
 import type { NotalRootProps } from "@types";
+
+const NotalWorkspace = dynamic<{}>(() =>
+  import("../../Workspace").then((mod) => mod.Workspace)
+);
 
 export function Workspace(props: NotalRootProps) {
   const workspaceHook = useWorkspace();

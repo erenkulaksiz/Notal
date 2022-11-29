@@ -39,9 +39,17 @@ export function reject({
   res.status(status).json({ success: false, error: reason });
 }
 
-export function generateRandomUsername({ email }: { email: string }) {
+export function generateRandomUsername({
+  email,
+  length,
+}: {
+  email: string;
+  length: number;
+}) {
   const now = Date.now().toString();
-  return email.split("@")[0] + now.substring(now.length - 3);
+  return (
+    email.split("@")[0].substring(0, 10) + now.substring(now.length - length)
+  );
 }
 
 /**

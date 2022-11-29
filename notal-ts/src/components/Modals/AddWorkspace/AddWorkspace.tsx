@@ -161,8 +161,8 @@ export function AddWorkspaceModal({
         close();
         return;
       } else {
-        // handle error
-        Log.debug("thumbnail upload error: ", res);
+        // error
+        Log.error("thumbnail upload error: ", res);
         setThumbnailLoading(false);
         NotalUI.Toast.show({
           title: "Error",
@@ -246,8 +246,7 @@ export function AddWorkspaceModal({
             >
               <span>Workspace Title*</span>
               <div className="text-xs text-neutral-400">
-                {state.title.length} /{" "}
-                {LIMITS.MAX.WORKSPACE_TITLE_CHARACTER_LENGTH}
+                {`${state.title.length} / ${LIMITS.MAX.WORKSPACE_TITLE_CHARACTER_LENGTH}`}
               </div>
             </label>
             <Input

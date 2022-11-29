@@ -10,8 +10,10 @@ import type {
 
 import { BuildComponent } from "@utils/style";
 import { WorkspaceFieldHeader } from "@components";
+import { AddCardButton } from "./AddCardButton";
 import type { WorkspaceTypes, CardTypes } from "@types";
 import type { WorkspaceFieldCardProps } from "./WorkspaceFieldCard";
+import { useWorkspace } from "@hooks";
 
 const WorkspaceFieldCard = dynamic<WorkspaceFieldCardProps>(() =>
   import("./WorkspaceFieldCard").then((mod) => mod.WorkspaceFieldCard)
@@ -23,6 +25,8 @@ export interface WorkspaceFieldProps {
 }
 
 export function WorkspaceField({ field, index }: WorkspaceFieldProps) {
+  const workspace = useWorkspace();
+
   return (
     <Draggable draggableId={field._id} index={index}>
       {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
@@ -91,6 +95,9 @@ export function WorkspaceField({ field, index }: WorkspaceFieldProps) {
                       />
                     ))}
                   {dropProvided.placeholder}
+                  {workspace.isWorkspaceOwner && (
+                    <AddCardButton fieldId={field._id} />
+                  )}
                 </div>
               </>
             )}

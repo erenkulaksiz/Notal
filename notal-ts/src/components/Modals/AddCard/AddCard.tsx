@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState, useRef } from "react";
+import { useReducer, useState, useRef } from "react";
 
 import {
   Modal,
@@ -42,13 +42,57 @@ export function AddCardModal({
   }
 
   function submit() {
-    if (
-      !state.title ||
-      state.title.length < LIMITS.MIN.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH
-    ) {
-      return dispatch({
+    if (state.title && state.desc) {
+      if (
+        state.title.length < LIMITS.MIN.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH
+      ) {
+        return dispatch({
+          type: AddCardActionType.SET_TITLE_ERROR,
+          payload: `Title must be atleast ${LIMITS.MIN.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH} characters long.`,
+        });
+      }
+      if (
+        state.title.length > LIMITS.MAX.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH
+      ) {
+        return dispatch({
+          type: AddCardActionType.SET_TITLE_ERROR,
+          payload: `Title can be maximum ${LIMITS.MAX.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH} characters long.`,
+        });
+      }
+      if (
+        state.desc &&
+        state.desc.length > LIMITS.MAX.WORKSPACE_CARD_DESC_CHARACTER_LENGTH
+      ) {
+        return dispatch({
+          type: AddCardActionType.SET_DESC_ERROR,
+          payload: `Description can be maximum ${LIMITS.MAX.WORKSPACE_CARD_DESC_CHARACTER_LENGTH} characters long.`,
+        });
+      }
+    } else if (state.title && !state.desc) {
+      if (
+        state.title.length < LIMITS.MIN.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH
+      ) {
+        return dispatch({
+          type: AddCardActionType.SET_TITLE_ERROR,
+          payload: `Title must be atleast ${LIMITS.MIN.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH} characters long.`,
+        });
+      }
+      if (
+        state.title.length > LIMITS.MAX.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH
+      ) {
+        return dispatch({
+          type: AddCardActionType.SET_TITLE_ERROR,
+          payload: `Title can be maximum ${LIMITS.MAX.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH} characters long.`,
+        });
+      }
+    } else if (!state.title && !state.desc) {
+      dispatch({
         type: AddCardActionType.SET_TITLE_ERROR,
-        payload: `Title must be atleast ${LIMITS.MIN.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH} characters long.`,
+        payload: `Please enter an title or description.`,
+      });
+      return dispatch({
+        type: AddCardActionType.SET_DESC_ERROR,
+        payload: `Please enter an title or description.`,
       });
     }
     onAdd({
@@ -95,7 +139,17 @@ export function AddCardModal({
           headerVisible={false}
         >
           <Tab.TabView title="Card">
-            <label htmlFor="cardTitle">Card Title</label>
+            <label
+              htmlFor="cardTitle"
+              className="flex flex-row items-center gap-2"
+            >
+              <span>Card Title</span>
+              {state.title && (
+                <div className="text-xs text-neutral-400">
+                  {`${state?.title?.length} / ${LIMITS.MAX.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH}`}
+                </div>
+              )}
+            </label>
             <Input
               fullWidth
               placeholder={randomCardPlaceholder.current}
@@ -113,8 +167,17 @@ export function AddCardModal({
             {state.errors && state?.errors?.title && (
               <span className="text-red-500">{state.errors.title}</span>
             )}
-
-            <label htmlFor="cardTitle">Card Description</label>
+            <label
+              htmlFor="cardDesc"
+              className="flex flex-row items-center gap-2"
+            >
+              <span>Card Description</span>
+              {state.desc && (
+                <div className="text-xs text-neutral-400">
+                  {`${state?.desc?.length} / ${LIMITS.MAX.WORKSPACE_CARD_DESC_CHARACTER_LENGTH}`}
+                </div>
+              )}
+            </label>
             <Input
               fullWidth
               placeholder="Card Description"
@@ -131,7 +194,9 @@ export function AddCardModal({
               maxLength={LIMITS.MAX.WORKSPACE_CARD_DESC_CHARACTER_LENGTH}
               textarea
             />
-
+            {state.errors && state?.errors?.desc && (
+              <span className="text-red-500">{state.errors.desc}</span>
+            )}
             <label htmlFor="cardColor">Card Color</label>
             <div className="w-full flex flex-row gap-2 h-6">
               <Checkbox

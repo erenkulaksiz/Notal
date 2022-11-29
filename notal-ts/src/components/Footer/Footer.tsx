@@ -11,6 +11,7 @@ import { BuildComponent } from "@utils/style/buildComponent";
 import StorybookLogo from "@public/storybook_logo.png";
 import { isClient } from "@utils";
 import { Tooltip } from "@components";
+import { CONSTANTS } from "@constants";
 
 export function Footer({ className }: { className?: string }) {
   const { resolvedTheme } = useTheme();
@@ -202,7 +203,7 @@ export function Footer({ className }: { className?: string }) {
           </Tooltip>
           {process.env.NEXT_PUBLIC_DEBUG_LOG == "true" && (
             <span className="uppercase mt-8 sm:mt-0 text-xs text-neutral-400 text-left">
-              Development build
+              Development build {CONSTANTS.APP_VERSION}
             </span>
           )}
         </div>

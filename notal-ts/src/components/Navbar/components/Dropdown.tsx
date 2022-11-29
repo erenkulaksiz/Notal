@@ -1,4 +1,6 @@
-import { UserIcon, LogoutIcon } from "@icons";
+import { useRouter } from "next/router";
+
+import { LogoutIcon } from "@icons";
 import { useAuth } from "@hooks";
 import { Button } from "@components";
 import { ThemeSwitcher } from "./ThemeSwitcher";
@@ -6,6 +8,7 @@ import { CONSTANTS } from "@constants";
 
 export function Dropdown() {
   const auth = useAuth();
+  const router = useRouter();
 
   return (
     <>
@@ -65,7 +68,10 @@ export function Dropdown() {
               icon={<LogoutIcon size={24} fill="white" className="ml-2" />}
               gradient
               aria-label="Sign Out Button"
-              onClick={() => auth?.login?.logout()}
+              onClick={() => {
+                auth?.login?.logout();
+                router.reload();
+              }}
             >
               <span>Sign Out</span>
             </Button>

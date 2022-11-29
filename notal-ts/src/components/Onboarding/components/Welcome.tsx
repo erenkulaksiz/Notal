@@ -8,9 +8,9 @@ import { BoltIcon } from "@icons";
 export function Welcome() {
   return (
     <div className="flex flex-col">
-      <div className="text-4xl font-bold flex flex-row items-center">
+      <div className="sm:text-4xl font-bold flex flex-row items-center">
         Welcome to
-        <div className="h-10 ml-2 dark:hidden flex">
+        <div className="h-4 sm:h-10 ml-2 dark:hidden flex">
           <Image
             src={IconGalactic}
             alt="Logo of Notal"
@@ -21,7 +21,7 @@ export function Welcome() {
             height={30}
           />
         </div>
-        <div className="h-10 ml-2 dark:flex hidden">
+        <div className="h-4 sm:h-10 ml-2 dark:flex hidden">
           <Image
             src={IconWhite}
             alt="Logo of Notal"
@@ -43,25 +43,25 @@ export function Welcome() {
           />
         </div>
         <div>
-          <p className="text-lg">
+          <p className="sm:text-lg">
             Notal is a simple, open source task management and devrels platform
             from the future.
           </p>
         </div>
       </div>
-      <p className="text-lg">
+      <p className="sm:text-lg">
         Im taking Notal each day far away in terms of features and design.
       </p>
-      <p className="text-lg">
+      <p className="sm:text-lg">
         You can track your projects, tasks, and notes in one place.
       </p>
       <img
         src="/onboarding_thumb_light.png"
-        className="object-contain w-full h-[400px] dark:flex hidden"
+        className="object-contain w-full h-[200px] sm:h-[400px] dark:flex hidden"
       />
       <img
         src="/onboarding_thumb_dark.png"
-        className="object-contain w-full h-[400px] dark:hidden flex"
+        className="object-contain w-full h-[200px] sm:h-[400px] dark:hidden flex"
       />
       <span>
         Lets go trough about how to create workspace and then adding things to

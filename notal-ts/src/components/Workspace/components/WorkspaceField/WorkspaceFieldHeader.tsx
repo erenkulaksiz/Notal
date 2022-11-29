@@ -68,15 +68,17 @@ export function WorkspaceFieldHeader({
         {!editingTitle && (
           <div
             className="flex font-medium uppercase break-words"
-            onClick={() => setEditingTitle(true)}
+            onClick={() => workspace.isWorkspaceOwner && setEditingTitle(true)}
           >
             {field.title}
-            <div className="hidden group-hover:flex">
-              <EditIcon
-                fill="currentColor"
-                style={{ transform: "scale(.65)" }}
-              />
-            </div>
+            {workspace.isWorkspaceOwner && (
+              <div className="hidden group-hover:flex">
+                <EditIcon
+                  fill="currentColor"
+                  style={{ transform: "scale(.65)" }}
+                />
+              </div>
+            )}
           </div>
         )}
         {editingTitle && (

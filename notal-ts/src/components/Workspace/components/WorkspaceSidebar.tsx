@@ -116,7 +116,6 @@ export function WorkspaceSidebar() {
           }
         />
       </div>
-      <div></div>
       <AddFieldModal
         open={addFieldModalOpen}
         onClose={() => setAddFieldModalOpen(false)}

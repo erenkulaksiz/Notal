@@ -67,7 +67,15 @@ export function AddFieldModal({
         </span>
       </Modal.Title>
       <Modal.Body className="grid grid-cols-1 gap-2 pb-2" animate>
-        <label htmlFor="fieldTitle">Field Title</label>
+        <label
+          htmlFor="fieldTitle"
+          className="flex flex-row items-center gap-2"
+        >
+          <span>Field Title</span>
+          <div className="text-xs text-neutral-400">
+            {`${newField.title.length} / ${LIMITS.MAX.WORKSPACE_FIELD_TITLE_CHARACTER_LENGTH}`}
+          </div>
+        </label>
         <Input
           fullWidth
           placeholder={randomFieldTitlePlaceholder.current}

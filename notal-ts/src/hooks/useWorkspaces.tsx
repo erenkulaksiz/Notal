@@ -152,7 +152,7 @@ export default function useWorkspaces() {
       });
       return { success: false, error: "max-workspaces" };
     }
-    Log.debug("RES ERR create workspace -> ", data);
+    Log.error("RES ERR create workspace -> ", data);
     NotalUI.Toast.show({
       title: "Error",
       desc: "Couldn't create the workspace, check the console for more info.",

@@ -5,6 +5,7 @@ import { BuildComponent } from "@utils/style/buildComponent";
 import { TabView, TabHeader, TabButton } from "./components";
 
 import type { TabProps } from "./Tab.d";
+import { Log } from "@utils";
 
 function Tab({
   children,
@@ -18,7 +19,7 @@ function Tab({
   loadingWorkspace = false,
   headerVisible = true,
   animated = false, // animate tabview transitions
-  animatedTabViewClassName = "w-full h-full",
+  animatedTabViewClassName = "h-full w-full", // classnames to apply to animated tabview
 }: TabProps) {
   const [hover, setHover] = useState(-1);
 
