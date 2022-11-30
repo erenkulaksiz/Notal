@@ -14,6 +14,7 @@ import { AddCardButton } from "./AddCardButton";
 import type { WorkspaceTypes, CardTypes } from "@types";
 import type { WorkspaceFieldCardProps } from "./WorkspaceFieldCard";
 import { useWorkspace } from "@hooks";
+import { LIMITS } from "@constants/limits";
 
 const WorkspaceFieldCard = dynamic<WorkspaceFieldCardProps>(() =>
   import("./WorkspaceFieldCard").then((mod) => mod.WorkspaceFieldCard)
@@ -50,7 +51,7 @@ export function WorkspaceField({ field, index }: WorkspaceFieldProps) {
             BuildComponent({
               name: "Workspace Field",
               defaultClasses:
-                "rounded-md group h-full mr-1 overflow-y-auto overflow-x-hidden max-h-full flex items-start flex-col dark:bg-black/70 bg-white/70 hover:bg-neutral-200 dark:hover:bg-neutral-900/40 transition-all ease-in-out",
+                "rounded-md group h-full mr-1 overflow-hidden max-h-full flex items-start flex-col dark:bg-black/70 bg-white/70 hover:bg-neutral-200 dark:hover:bg-neutral-900/40 transition-all ease-in-out",
               conditionalClasses: [
                 {
                   true: "border-dashed border-2 border-neutral-300 dark:border-neutral-700",
@@ -72,7 +73,8 @@ export function WorkspaceField({ field, index }: WorkspaceFieldProps) {
                   className={
                     BuildComponent({
                       name: "Workspace Field Card Container",
-                      defaultClasses: "flex flex-col px-2 pt-2 h-full w-full",
+                      defaultClasses:
+                        "flex flex-col px-2 pt-2 h-full w-full overflow-y-auto overflow-x-hidden",
                       conditionalClasses: [
                         {
                           true: "border-dashed border-2 border-neutral-300 dark:border-neutral-700",
@@ -95,9 +97,10 @@ export function WorkspaceField({ field, index }: WorkspaceFieldProps) {
                       />
                     ))}
                   {dropProvided.placeholder}
-                  {workspace.isWorkspaceOwner && (
-                    <AddCardButton fieldId={field._id} />
-                  )}
+                  {workspace.isWorkspaceOwner &&
+                    field.cards.length < LIMITS.MAX.WORKSPACE_CARD_LENGTH && (
+                      <AddCardButton fieldId={field._id} />
+                    )}
                 </div>
               </>
             )}

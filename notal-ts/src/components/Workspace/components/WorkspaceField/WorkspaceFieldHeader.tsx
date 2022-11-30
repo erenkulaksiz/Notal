@@ -173,35 +173,26 @@ export function WorkspaceFieldHeader({
                 />
               </Button>
             </Tooltip>
-            <Tooltip
-              content={`Add Card to ${field.title}`}
-              outline
-              direction="left"
-            >
-              <Button
-                light="active:opacity-50"
-                size="h-8 w-8"
-                className="p-0"
-                onClick={() => setAddCardModalOpen(true)}
-                title={`Add Card to ${field.title}`}
+            {field.cards.length < LIMITS.MAX.WORKSPACE_CARD_LENGTH && (
+              <Tooltip
+                content={`Add Card to ${field.title}`}
+                outline
+                direction="left"
               >
-                <AddIcon
-                  size={24}
-                  className="scale-75 fill-black dark:fill-white"
-                />
-              </Button>
-            </Tooltip>
-            {/*<Button
-              light="active:opacity-50"
-              size="h-8 w-8"
-              className="p-2 items-center justify-center"
-              title={`Drag field ${field.title}`}
-            >
-              <DragIcon
-                size={24}
-                className="scale-75 fill-black dark:fill-white"
-              />
-              </Button>*/}
+                <Button
+                  light="active:opacity-50"
+                  size="h-8 w-8"
+                  className="p-0"
+                  onClick={() => setAddCardModalOpen(true)}
+                  title={`Add Card to ${field.title}`}
+                >
+                  <AddIcon
+                    size={24}
+                    className="scale-75 fill-black dark:fill-white"
+                  />
+                </Button>
+              </Tooltip>
+            )}
           </div>
         </div>
       )}

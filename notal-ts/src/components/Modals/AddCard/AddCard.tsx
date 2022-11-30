@@ -193,6 +193,7 @@ export function AddCardModal({
               id="cardDesc"
               maxLength={LIMITS.MAX.WORKSPACE_CARD_DESC_CHARACTER_LENGTH}
               textarea
+              onEnterPress={() => submit()}
             />
             {state.errors && state?.errors?.desc && (
               <span className="text-red-500">{state.errors.desc}</span>

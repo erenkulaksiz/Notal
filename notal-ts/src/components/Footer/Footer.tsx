@@ -110,10 +110,7 @@ export function Footer({ className }: { className?: string }) {
               Home
             </a>
           </Link>
-          <Link
-            href="http://notalui.vercel.app/?path=/docs/changelog--page"
-            passHref
-          >
+          <Link href="http://ui.notal.app/?path=/docs/changelog--page" passHref>
             <a
               className="uppercase mt-2 text-sm cursor-pointer hover:opacity-60 transition-opacity ease-in-out"
               about="_blank"
@@ -184,7 +181,7 @@ export function Footer({ className }: { className?: string }) {
           </Tooltip>
           <Tooltip content="Storybook" direction="right">
             <a
-              href="https://notalui.vercel.app"
+              href="https://ui.notal.app"
               target="_blank"
               rel="noreferrer"
               className="flex flex-row gap-2 items-center"

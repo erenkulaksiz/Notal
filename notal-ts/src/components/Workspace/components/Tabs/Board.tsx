@@ -8,7 +8,9 @@ import { useTheme } from "next-themes";
 
 import { WorkspaceSidebar } from "@components";
 import { useWorkspace } from "@hooks";
+import AddFieldButton from "./AddFieldButton";
 import type { WorkspaceFieldProps } from "../WorkspaceField/WorkspaceField";
+import { LIMITS } from "@constants/limits";
 
 const WorkspaceField = dynamic<WorkspaceFieldProps>(() =>
   import("../WorkspaceField/WorkspaceField").then((mod) => mod.WorkspaceField)
@@ -52,6 +54,9 @@ export default function Board() {
                 )
               )}
             {provided.placeholder}
+            {workspace.isWorkspaceOwner &&
+              workspace?.workspace?.data?.data?.fields.length <
+                LIMITS.MAX.WORKSPACE_FIELD_LENGTH && <AddFieldButton />}
           </div>
         )}
       </Droppable>

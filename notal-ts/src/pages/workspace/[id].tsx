@@ -16,7 +16,7 @@ import {
 import { useNotalUI, useWorkspace } from "@hooks";
 import { NotalRootProps } from "@types";
 import { ValidateToken } from "@utils/api/validateToken";
-import { fetchWorkspace, Log } from "@utils";
+import { fetchWorkspace } from "@utils";
 import type { GetServerSidePropsContext } from "next";
 import type { ValidateTokenReturnType } from "@utils/api/validateToken";
 

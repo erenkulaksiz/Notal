@@ -57,7 +57,7 @@ export function WorkspaceFieldCard({
             <div className="text-xl w-full break-words">{card?.title}</div>
           )}
           {card?.desc && (
-            <div className="break-words text-sm dark:text-neutral-500 text-neutral-600">
+            <div className="break-words text-sm dark:text-neutral-400 text-neutral-600">
               {card?.desc}
             </div>
           )}
