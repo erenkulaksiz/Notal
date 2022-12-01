@@ -32,8 +32,7 @@ export async function addcard(req: NextApiRequest, res: NextApiResponse) {
   )
     return reject({ reason: "max-color-length", res });
 
-  if (!card.title && !card.desc)
-    return reject({ res, reason: "no-card-title" });
+  if (!card.title && !card.desc) return reject({ res, reason: "no-card-data" });
 
   if (
     card.title &&

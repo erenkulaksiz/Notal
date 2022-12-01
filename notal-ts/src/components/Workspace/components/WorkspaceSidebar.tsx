@@ -14,6 +14,7 @@ import {
   AddIcon,
 } from "@icons";
 import { useNotalUI, useWorkspace } from "@hooks";
+import { LIMITS } from "@constants/limits";
 
 export function WorkspaceSidebar() {
   const { workspace, starWorkspace, visibilityToggle, deleteWorkspace, field } =
@@ -31,11 +32,14 @@ export function WorkspaceSidebar() {
   return (
     <nav className="flex flex-col justify-between items-center sticky left-0 p-1 z-40 rounded-lg backdrop-blur-md">
       <div className="flex flex-col gap-2">
-        <WorkspaceSidebarItem
-          icon={<AddIcon size={24} className="dark:fill-white fill-black" />}
-          title="Add Field"
-          onClick={() => setAddFieldModalOpen(true)}
-        />
+        {workspace?.data?.data?.fields.length <=
+          LIMITS.MAX.WORKSPACE_FIELD_LENGTH && (
+          <WorkspaceSidebarItem
+            icon={<AddIcon size={24} className="dark:fill-white fill-black" />}
+            title="Add Field"
+            onClick={() => setAddFieldModalOpen(true)}
+          />
+        )}
         <WorkspaceSidebarItem
           icon={
             workspace?.data?.data?.starred ? (

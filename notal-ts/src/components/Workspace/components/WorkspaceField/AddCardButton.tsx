@@ -59,7 +59,7 @@ export function AddCardButton({ fieldId }: { fieldId: string }) {
         placeholder={randomCardPlaceholder.current}
         maxLength={LIMITS.MAX.WORKSPACE_CARD_DESC_CHARACTER_LENGTH}
       />
-      {input.length >= LIMITS.MIN.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH &&
+      {input.length > LIMITS.MIN.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH &&
         input.length <= LIMITS.MAX.WORKSPACE_CARD_DESC_CHARACTER_LENGTH && (
           <div className="flex flex-row mt-2 justify-end">
             <Button onClick={addCard} size="sm">

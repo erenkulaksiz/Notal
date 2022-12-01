@@ -362,7 +362,7 @@ export function AddWorkspaceModal({
                 </div>
                 <div className="text-sm text-neutral-400">
                   If enabled, anyone can see your workspace even if they arent
-                  signed in using the workspace link.
+                  signed in.
                 </div>
               </div>
             </div>

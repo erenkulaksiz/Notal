@@ -26,13 +26,13 @@ export default function Board() {
       <Droppable droppableId="BOARD" type="BOARD" direction="horizontal">
         {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
           <div
-            className="flex flex-row w-full h-full pl-1"
+            className="flex flex-row h-full pl-1"
             ref={provided.innerRef}
             {...provided.droppableProps}
           >
             {Array.isArray(workspace.workspace?.data?.data?.fields) &&
               workspace.workspace?.data?.data?.fields.length == 0 && (
-                <div className="w-full h-full flex flex-col gap-6 items-center justify-center">
+                <div className="absolute top-0 bottom-0 right-0 left-0 flex z-0 flex-col gap-6 items-center justify-center">
                   {resolvedTheme == "light" ? (
                     <img
                       src="/empty_state_workspace_light.png"
@@ -55,7 +55,7 @@ export default function Board() {
               )}
             {provided.placeholder}
             {workspace.isWorkspaceOwner &&
-              workspace?.workspace?.data?.data?.fields.length <
+              workspace?.workspace?.data?.data?.fields.length <=
                 LIMITS.MAX.WORKSPACE_FIELD_LENGTH && <AddFieldButton />}
           </div>
         )}
