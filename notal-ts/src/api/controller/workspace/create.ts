@@ -105,7 +105,7 @@ export async function create(req: NextApiRequest, res: NextApiResponse) {
       workspaceVisible,
       thumbnail: thumbnailTypes[thumbnail.type],
       fields: [],
-      //users: [uid], // Add owner as default user
+      users: [uid], // Add owner as default user
       id: givenId,
     })
     .then(async (result) => {

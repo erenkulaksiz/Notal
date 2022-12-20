@@ -14,7 +14,23 @@ import { Meta } from '@storybook/addon-docs';
 - fix means application bug fixes or documentation fixes
 - todo means that is something that not implemented yet
 
+- [todo] Fix `WorkspaceFieldHeader` dont fit title properly
+- [todo] Fix `WorkspaceField` layout issue while dropping field
+- [todo] Fix `AddCardModal` inside the Storybook
+- [todo] Add Teaming feature
+- [todo] Add constants to Workspace and Notal SEO
+
 # Changelog
+
+## 2.1.8 - 1.12.2022 - 20.12.2022
+
+- [feat] Added `ViewCard` component to view card details
+- [feat] Clicking `WorkspaceFieldCard` now shows `ViewCard` modal that has card details
+- [feat] `AddCardModal` is now bigger in width and height
+- [feat] `AddWorkspaceModal` now pressing enter on title input adds the workspace
+- [fix] Fix an issue where modals didn't had scrolls on height overflows
+- [fix] Fix an issue where dragging `WorkspaceField` wont scroll trough other fields
+- [fix] Fix an issue where `WorkspaceFieldCard` wont show description properly with whitespaces
 
 ## 2.1.7 - 30.11.2022
 
@@ -22,7 +38,6 @@ import { Meta } from '@storybook/addon-docs';
 - [fix] Fix `WorkspaceField` wont scroll while dragging
 - [fix] Fix an issue where min and max length of card and fields wasnt in sync with add buttons
 - [fix] Fix README.md links to use new domain
-- [todo] Fix `WorkspaceField` layout issue while dropping field
 
 ## 2.1.6 - 30.11.2022
 
@@ -30,8 +45,6 @@ import { Meta } from '@storybook/addon-docs';
 - [feat] Changed [https://notalui.vercel.app](https://notalui.vercel.app) domain to [https://ui.notal.app](https://ui.notal.app)
 - [feat] Auto-add feature now can add `WorkspaceField` just with a click
 - [fix] Fix an issue where dropping cards in fields caused issues and not ordered properly
-- [todo] Fix `AddCardModal` inside the Storybook
-- [todo] Add Teaming feature
 
 ## 2.1.5 - 28.11.2022 - 29.11.2022
 
@@ -91,8 +104,6 @@ import { Meta } from '@storybook/addon-docs';
 - [fix] Fix an issue where some browsers were seeing wrong placement of elements in landing page
 - [fix] Fix an issue where non logined users couldnt view public workspaces
 - [fix] Fix an issue where uploading image in `AddWorkpsaceModal` would throw errors
-- [todo] Add constants to Workspace and Notal SEO
-- [todo] If user signouts and inside a private workspace, will still be able to view the workspace but not edit it, refresh will fix this issue but need another implementation
 
 ## 2.0.62 - 03.10.2022 - 16.10.2022
 

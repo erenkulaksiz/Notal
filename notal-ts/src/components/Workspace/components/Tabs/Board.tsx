@@ -22,14 +22,14 @@ export default function Board() {
 
   return (
     <>
-      {workspace.isWorkspaceOwner && <WorkspaceSidebar />}
       <Droppable droppableId="BOARD" type="BOARD" direction="horizontal">
         {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
           <div
-            className="flex flex-row h-full pl-1"
+            className="flex flex-row h-full w-full overflow-auto"
             ref={provided.innerRef}
             {...provided.droppableProps}
           >
+            {workspace.isWorkspaceOwner && <WorkspaceSidebar />}
             {Array.isArray(workspace.workspace?.data?.data?.fields) &&
               workspace.workspace?.data?.data?.fields.length == 0 && (
                 <div className="absolute top-0 bottom-0 right-0 left-0 flex z-0 flex-col gap-6 items-center justify-center">

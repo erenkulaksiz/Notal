@@ -73,6 +73,7 @@ export async function GetWorkspaceData({
       updatedAt: findWorkspace.updatedAt,
       createdAt: findWorkspace.createdAt,
       workspaceVisible: findWorkspace.workspaceVisible,
+      users: findWorkspace.users ?? [findWorkspace.owner],
     },
   };
 }

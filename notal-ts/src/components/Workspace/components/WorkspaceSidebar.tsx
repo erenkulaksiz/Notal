@@ -1,8 +1,9 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
+import Link from "next/link";
 
 import { WorkspaceSidebarItem } from "./WorkspaceSidebarItem";
-import { Button, AddFieldModal } from "@components";
+import { Button, AddFieldModal, Tooltip, Avatar } from "@components";
 import {
   StarFilledIcon,
   VisibleIcon,
@@ -15,6 +16,12 @@ import {
 } from "@icons";
 import { useNotalUI, useWorkspace } from "@hooks";
 import { LIMITS } from "@constants/limits";
+import { Log } from "@utils";
+import { OwnerTypes } from "@types";
+
+interface WorkspaceUsers extends OwnerTypes {
+  owner?: boolean;
+}
 
 export function WorkspaceSidebar() {
   const { workspace, starWorkspace, visibilityToggle, deleteWorkspace, field } =
@@ -23,6 +30,24 @@ export function WorkspaceSidebar() {
   const NotalUI = useNotalUI();
   const router = useRouter();
 
+  function getWorkspaceUsers() {
+    if (typeof workspace?.data?.data?.users === "object") {
+      return Object.keys(workspace?.data?.data?.users).map((userId: string) => {
+        if (userId == workspace?.data?.data?.owner?.uid)
+          return {
+            owner: true,
+            ...workspace?.data?.data?.users?.[userId],
+          } as WorkspaceUsers;
+        return workspace?.data?.data?.users?.[userId] as WorkspaceUsers;
+      });
+    }
+    return [];
+  }
+
+  const users = getWorkspaceUsers();
+
+  Log.debug(users);
+
   async function onDelete() {
     await deleteWorkspace();
     NotalUI.Alert.close();
@@ -30,7 +55,7 @@ export function WorkspaceSidebar() {
   }
 
   return (
-    <nav className="flex flex-col justify-between items-center sticky left-0 p-1 z-40 rounded-lg backdrop-blur-md">
+    <nav className="flex flex-col justify-between items-center sticky left-0 pb-6 p-1 top-0 z-40 backdrop-blur-md">
       <div className="flex flex-col gap-2">
         {workspace?.data?.data?.fields.length <=
           LIMITS.MAX.WORKSPACE_FIELD_LENGTH && (
@@ -119,6 +144,44 @@ export function WorkspaceSidebar() {
             })
           }
         />
+      </div>
+      <div className="flex flex-col gap-1">
+        {users.map((user: WorkspaceUsers, index: number) => (
+          <Tooltip
+            containerClassName="px-2"
+            key={`sidebarWorkspaceUsers_${user.uid}`}
+            content={
+              <div className="items-center flex-row flex">
+                <div className="flex flex-col">
+                  {user?.owner && (
+                    <div className="text-[.6em] -mb-2 text-neutral-400">
+                      Workspace Owner
+                    </div>
+                  )}
+                  <span className="h-4">
+                    {user.fullname ? user.fullname : `@${user.username}`}
+                  </span>
+                  {user.fullname && (
+                    <span className="text-xs dark:text-neutral-500 text-neutral-400">
+                      {`@${user.username}`}
+                    </span>
+                  )}
+                </div>
+              </div>
+            }
+            direction="right"
+          >
+            <Link
+              href="/profile/[username]"
+              as={`/profile/${user?.username || "not-found"}`}
+              passHref
+            >
+              <a target="_blank">
+                <Avatar src={user?.avatar} size="xl" />
+              </a>
+            </Link>
+          </Tooltip>
+        ))}
       </div>
       <AddFieldModal
         open={addFieldModalOpen}

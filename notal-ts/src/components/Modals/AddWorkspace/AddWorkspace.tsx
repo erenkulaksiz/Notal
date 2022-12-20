@@ -200,7 +200,7 @@ export function AddWorkspaceModal({
     <Modal
       open={open}
       onClose={() => !thumbnailLoading && close()}
-      className="w-[90%] sm:w-[400px] h-[640px] p-4 px-5 relative"
+      className="w-[90%] sm:w-[400px] p-4 px-5 relative overflow-auto"
       animate
     >
       <Modal.Title animate>
@@ -261,6 +261,7 @@ export function AddWorkspaceModal({
               value={state.title}
               id="workspaceTitle"
               maxLength={LIMITS.MAX.WORKSPACE_TITLE_CHARACTER_LENGTH}
+              onEnterPress={() => !thumbnailLoading && submit()}
             />
             {newWorkspaceErr.title != false && (
               <span className="text-red-500">{newWorkspaceErr.title}</span>

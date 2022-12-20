@@ -35,3 +35,4 @@ export { Switch } from "./Switch";
 export { Tab } from "./Tab";
 export { Toast } from "./Toast";
 export { Tooltip } from "./Tooltip";
+export { Avatar } from "./Avatar";

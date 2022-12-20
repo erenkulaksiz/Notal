@@ -39,7 +39,7 @@ export function HomeWorkspaceCard({
           duration: 0.02,
           damping: 25,
         }}
-        className="w-full h-32 flex flex-col justify-end shadow-2xl rounded-xl dark:bg-neutral-800 bg-neutral-400/30 overflow-hidden"
+        className="w-full h-32 flex flex-col justify-end shadow-2xl rounded-xl dark:bg-neutral-800 bg-neutral-200/30 overflow-hidden"
       >
         <div className="animate-pulse w-full h-18 px-4 pb-4">
           <div className="w-[65%] h-6 bg-neutral-300 dark:bg-neutral-700" />

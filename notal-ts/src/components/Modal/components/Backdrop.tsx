@@ -15,7 +15,7 @@ export default function Backdrop({
   const BuildModalBackdrop = BuildComponent({
     name: "Modal Backdrop",
     defaultClasses:
-      "fixed top-0 right-0 bottom-0 left-0 flex items-center justify-center z-50",
+      "fixed top-0 right-0 bottom-0 left-0 flex items-center justify-center z-50 overflow-auto",
     extraClasses: className,
     conditionalClasses: [
       { true: "bg-black/50 backdrop-blur-sm", default: "bg-black/60" },

@@ -15,7 +15,7 @@ export default function Content({
   const BuildModalContent = BuildComponent({
     name: "Modal Content",
     defaultClasses:
-      "z-50 relative box-border flex flex-col overflow-y-visible overflow-x-visible sm:overflow-visible shadow-2xl p-2 rounded-xl",
+      "z-50 relative box-border flex flex-col shadow-2xl p-2 rounded-xl",
     conditionalClasses: [
       {
         true: "backdrop-brightness-75 dark:bg-black/50 bg-white",

@@ -56,21 +56,21 @@ export function WorkspaceFieldHeader({
 
   return (
     <div
-      className="w-full z-20 sticky top-0 flex justify-between items-center p-2 max-h-10 dark:bg-black/40 bg-white/40 backdrop-blur-md"
+      className="w-full z-20 sticky top-0 flex gap-1 items-center p-2 max-h-10 dark:bg-black/40 bg-white/40 backdrop-blur-md"
       {...props}
     >
+      {!editingTitle && (
+        <div className="w-6 h-6 bg-neutral-100 font-medium text-[.8em] uppercase dark:bg-neutral-900 rounded-md flex items-center justify-center">
+          {field.cards?.length}
+        </div>
+      )}
       <div className="flex flex-row gap-1 items-center max-w-full">
-        {!editingTitle && (
-          <div className="w-6 h-6 mr-2 bg-neutral-200 font-medium text-[.8em] uppercase dark:bg-neutral-900 rounded-md flex items-center justify-center">
-            {field.cards?.length}
-          </div>
-        )}
         {!editingTitle && (
           <div
             className="flex font-medium uppercase break-words"
             onClick={() => workspace.isWorkspaceOwner && setEditingTitle(true)}
           >
-            {field.title}
+            <span>{field.title}</span>
             {workspace.isWorkspaceOwner && (
               <div className="hidden group-hover:flex">
                 <EditIcon

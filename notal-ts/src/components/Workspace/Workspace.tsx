@@ -44,7 +44,7 @@ export function Workspace() {
               style={{ transform: "scale(.7)" }}
             />
           }
-          className="items-start flex overflow-auto pb-2 px-2 flex-row"
+          className="items-start flex overflow-auto flex-row"
         >
           <TabsBoard />
         </Tab.TabView>

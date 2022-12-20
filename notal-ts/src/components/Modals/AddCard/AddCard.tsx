@@ -107,7 +107,7 @@ export function AddCardModal({
     <Modal
       open={open}
       onClose={close}
-      className="w-[90%] sm:w-[400px] p-4 px-5 relative"
+      className="w-[90%] sm:w-[600px] p-4 px-5 relative"
       animate
     >
       <Modal.Title animate>
@@ -187,13 +187,12 @@ export function AddCardModal({
                   payload: e.target.value,
                 })
               }
-              height="h-20"
+              height="h-40"
               className="p-2"
               value={state.desc}
               id="cardDesc"
               maxLength={LIMITS.MAX.WORKSPACE_CARD_DESC_CHARACTER_LENGTH}
               textarea
-              onEnterPress={() => submit()}
             />
             {state.errors && state?.errors?.desc && (
               <span className="text-red-500">{state.errors.desc}</span>

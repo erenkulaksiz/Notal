@@ -1,7 +1,9 @@
 import { connectToDatabase } from "@lib/mongodb";
 import { getTokenFromHeader } from "@utils/api/getTokenFromHeader";
+import { ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 
+const { Log } = require("@utils");
 const { ValidateUser } = require("@utils/api/validateUser");
 const { accept, reject } = require("@api/utils");
 
@@ -49,6 +51,30 @@ export async function getworkspace(req: NextApiRequest, res: NextApiResponse) {
   if (!workspaceOwner) {
     return reject({ res, reason: "no-owner" });
   }
+
+  Log.debug("workspace", workspace);
+
+  let workspaceUserIds = workspace?.users || [workspace.owner]; // if users is undefined, set it to owner
+  let workspaceUsers = {};
+  for (let user of workspaceUserIds) {
+    const findUser = await usersCollection.findOne({
+      uid: user,
+    });
+    if (!findUser) {
+      Log.error("User not found in database, workspace users");
+      return reject({ res, reason: "no-user" });
+    }
+    workspaceUsers = {
+      ...workspaceUsers,
+      [user]: {
+        username: findUser.username,
+        avatar: findUser.avatar,
+        fullname: findUser.fullname ?? null,
+        uid: findUser.uid,
+      },
+    };
+  }
+
   workspace = {
     ...workspace,
     owner: {
@@ -57,11 +83,12 @@ export async function getworkspace(req: NextApiRequest, res: NextApiResponse) {
       avatar: workspaceOwner?.avatar,
       fullname: workspaceOwner?.fullname,
     },
+    users: workspaceUsers, // overrides the users array with the object
   };
 
   return accept({
     data: workspace,
     res,
-    action: "getworkspaces",
+    action: "getworkspace",
   });
 }

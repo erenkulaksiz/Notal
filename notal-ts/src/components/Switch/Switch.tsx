@@ -25,7 +25,7 @@ export function Switch({
     conditionalClasses: [
       {
         true: "bg-green-700 justify-end",
-        false: "dark:bg-neutral-600 bg-neutral-500/40 justify-start",
+        false: "dark:bg-neutral-600 bg-neutral-300/50 justify-start",
       },
     ],
     selectedClasses: [value],

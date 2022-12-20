@@ -88,6 +88,9 @@ export interface WorkspaceTypes {
   workspaceVisible: boolean;
   thumbnail: ThumbnailTypes;
   fields?: Array[FieldTypes];
+  users?: {
+    [key: string]: Array[OwnerTypes];
+  };
 }
 
 export interface PlatformLogin {
