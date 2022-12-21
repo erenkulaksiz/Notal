@@ -37,12 +37,12 @@ export function WorkspaceFieldCard({
 
   function getCardOwnerData() {
     if (!workspace?.workspace?.data?.data?.users) return null;
-    return workspace.workspace.data.data.users[card.owner as string];
+    return workspace.workspace.data.data.users[card?.owner as string];
   }
 
   return (
     <>
-      <Draggable draggableId={card._id ?? "_default"} index={index}>
+      <Draggable draggableId={card?._id ?? "_default"} index={index}>
         {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
           <div
             className={
@@ -63,10 +63,10 @@ export function WorkspaceFieldCard({
             ref={provided.innerRef}
             {...provided.draggableProps}
           >
-            {card.color && (
+            {card?.color && (
               <div
                 className="flex absolute left-[.5px] top-[.5px] bottom-[.5px] w-[5px] rounded-bl-lg rounded-tl-lg shadow"
-                style={{ backgroundColor: card.color }}
+                style={{ backgroundColor: card?.color }}
               />
             )}
             {card?.title && (
@@ -83,7 +83,7 @@ export function WorkspaceFieldCard({
                 className="object-contain rounded-md"
               />
             )}
-            {card._id && workspace.isWorkspaceOwner && (
+            {card?._id && workspace.isWorkspaceOwner && (
               <>
                 <button
                   onClick={(event: React.MouseEvent<HTMLElement>) => {

@@ -4,7 +4,7 @@ function formatStringToColorful(str: TemplateStringsArray | string) {
 
 export const CONSTANTS = {
   APP_NAME: "Notal",
-  APP_VERSION: "2.1.8",
+  APP_VERSION: "2.1.9",
   DEFAULT_WORKSPACE_ID_LENGTH: 4,
   DEFAULT_WORKSPACE_THUMBNAIL_GRADIENT: {
     start: "#0eeaed",

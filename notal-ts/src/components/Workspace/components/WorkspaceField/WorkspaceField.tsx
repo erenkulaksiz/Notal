@@ -11,10 +11,11 @@ import type {
 import { BuildComponent } from "@utils/style";
 import { WorkspaceFieldHeader } from "@components";
 import { AddCardButton } from "./AddCardButton";
-import type { WorkspaceTypes, CardTypes } from "@types";
-import type { WorkspaceFieldCardProps } from "./WorkspaceFieldCard";
 import { useWorkspace } from "@hooks";
 import { LIMITS } from "@constants/limits";
+import { Log } from "@utils";
+import type { WorkspaceTypes, CardTypes } from "@types";
+import type { WorkspaceFieldCardProps } from "./WorkspaceFieldCard";
 
 const WorkspaceFieldCard = dynamic<WorkspaceFieldCardProps>(() =>
   import("./WorkspaceFieldCard").then((mod) => mod.WorkspaceFieldCard)
@@ -91,8 +92,8 @@ export function WorkspaceField({ field, index }: WorkspaceFieldProps) {
                     field?.cards.map((card: CardTypes, index: number) => (
                       <WorkspaceFieldCard
                         card={card}
-                        fieldId={field._id}
-                        key={card._id}
+                        fieldId={field?._id}
+                        key={card?._id}
                         index={index}
                       />
                     ))}

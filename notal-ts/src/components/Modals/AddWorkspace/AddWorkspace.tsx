@@ -200,7 +200,7 @@ export function AddWorkspaceModal({
     <Modal
       open={open}
       onClose={() => !thumbnailLoading && close()}
-      className="w-[90%] sm:w-[400px] p-4 px-5 relative overflow-auto"
+      className="w-[90%] sm:w-[400px] p-4 px-5 relative"
       animate
     >
       <Modal.Title animate>
