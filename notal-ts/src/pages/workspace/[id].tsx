@@ -59,6 +59,7 @@ function Workspace(props: NotalRootProps) {
           property="twitter:description"
           name="twitter:description"
           content={
+            typeof props?.workspace?.data?.owner == "object" &&
             props?.workspace?.data?.owner?.username
               ? `📍 @${props.workspace.data.owner.username}'s workspace`
               : CONSTANTS.SEO_DESCRIPTION
@@ -68,6 +69,7 @@ function Workspace(props: NotalRootProps) {
           property="og:description"
           name="og:description"
           content={
+            typeof props?.workspace?.data?.owner == "object" &&
             props?.workspace?.data?.owner?.username
               ? `📍 @${props.workspace.data.owner.username}'s workspace`
               : CONSTANTS.SEO_DESCRIPTION
@@ -77,6 +79,7 @@ function Workspace(props: NotalRootProps) {
           property="description"
           name="description"
           content={
+            typeof props?.workspace?.data?.owner == "object" &&
             props?.workspace?.data?.owner?.username
               ? `📍 @${props.workspace.data.owner.username}'s workspace`
               : CONSTANTS.SEO_DESCRIPTION

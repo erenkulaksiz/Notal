@@ -23,7 +23,7 @@ interface ReturnType {
 
 interface WorkspaceServiceTypes {
   workspace: {
-    add: (arg: WorkspaceTypes) => Promise<ReturnType>;
+    add: (workspace: WorkspaceTypes) => Promise<ReturnType>;
     star: (id: string) => Promise<ReturnType>;
     delete: (id: string) => Promise<ReturnType>;
     toggleVisibility: (id: string) => Promise<ReturnType>;
@@ -33,7 +33,7 @@ interface WorkspaceServiceTypes {
       image: File;
     }) => Promise<{ success: boolean; error?: string; url?: string }>;
     field: {
-      add: (arg: AddFieldParams) => Promise<ReturnType>;
+      add: (field: AddFieldParams) => Promise<ReturnType>;
       delete: ({
         id,
         workspaceId,

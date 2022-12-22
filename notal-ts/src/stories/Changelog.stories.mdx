@@ -19,12 +19,33 @@ import { Meta } from '@storybook/addon-docs';
 - [todo] Fix `AddCardModal` inside the Storybook
 - [todo] Add Teaming feature
 - [todo] Add constants to Workspace and Notal SEO
+- [todo] Fix workspace.data.owner.username
+- [todo] Shorten `AddWorkspaceModal` by seperating each tab to component
+
+- [bug] Workspace auto reload causes app to give `Workspace not found` error if workspace is private (reload fixes this issue) - probably token issue
+- [bug] Check Storybook for each component, they are probably broken since the last check
+- [bug] API allows any signed in users to add/edit workspace
 
 # Changelog
 
+## 2.1.10 - 21.12.2022 - 22.12.2022
+
+- [feat] Added that you can add users to workspace (Teaming) while creating the workspace
+- [feat] Added that workspace users (Teaming) now can edit workspaces
+- [feat] Added that workspace users (Teaming) now show up on `WorkspaceSidebar`
+- [feat] Added that if you add any user to workspace (Teaming), the workspace will show up in their home
+- [feat] Added that `WrokspaceCard` will show users (Teaming) of that workspace with their avatars
+- [feat] Added whitespace checks to API and `WorkspaceAddModal`, `AddCardModal` and `AddCardButton` components so user cant just enter empty spaces as title or descriptions
+- [feat] Added that pressing Escape while viewing any modal closes that modal
+- [fix] Fix an issue where min workspace title length was 0 instead of 1
+- [fix] Fix an issue where long modals were scrollable but title couldn't fit to screen
+- [fix] Fix an issue where some avatar images wasn't using `Avatar` component
+- [fix] Fix an issue where `WorkspaceField` could be dragged by users who are not signed in or workspace user
+- [fix] Fix an issue where some workspace errors caused app to crash entirely, now it just shows error message
+
 ## 2.1.9 - 21.12.2022
 
-- [fix] Fix issues where card id's were undefined and crashing the app
+- [fix] Fix an issue where some card id's was undefined and crashing the app
 
 ## 2.1.8 - 1.12.2022 - 20.12.2022
 
@@ -45,9 +66,10 @@ import { Meta } from '@storybook/addon-docs';
 
 ## 2.1.6 - 30.11.2022
 
-- [feat] If a `WorkspaceField` has maximum amount of `WorkspaceFieldCard`, add card button will be disabled
-- [feat] Changed [https://notalui.vercel.app](https://notalui.vercel.app) domain to [https://ui.notal.app](https://ui.notal.app)
 - [feat] Auto-add feature now can add `WorkspaceField` just with a click
+- [feat] If a `WorkspaceField` has maximum amount of `WorkspaceFieldCard`, add card button will be disabled
+- [feat] If a workspace has maximum amount of `WorkspaceField`, add field button will be disabled
+- [feat] Changed [https://notalui.vercel.app](https://notalui.vercel.app) domain to [https://ui.notal.app](https://ui.notal.app)
 - [fix] Fix an issue where dropping cards in fields caused issues and not ordered properly
 
 ## 2.1.5 - 28.11.2022 - 29.11.2022
@@ -58,12 +80,12 @@ import { Meta } from '@storybook/addon-docs';
 - [feat] Clicking Sign out button on `Dropdown` which is inside `Navbar` now refreshes page
 - [feat] `AddWorkpsaceModal`, `AddCardModal` and `AddFieldModal` now shows max title and desc length next to the text inputs
 - [feat] Users can now add cards without any title
-- [fix] Fix an issue where `WorkspaceSidebar` uses 100% height
+- [fix] Fix an issue where `WorkspaceSidebar` used 100% height
 - [fix] `WorkspaceFieldCard` now fits the title text instead of overflowing
 
 ## 2.1.4 - 25.11.2022
 
-- [feat] Added dynamic random placeholders for workspace title and workspace field card title
+- [feat] Added dynamic random placeholders for workspace title and `WorkspaceFieldCard` title
 
 ## 2.1.3_1 - 25.11.2022
 
@@ -157,11 +179,11 @@ import { Meta } from '@storybook/addon-docs';
 - [feat] Add `WorkspaceField` and `WorkspaceFieldCard` component
 - [feat] Add functionality that `useWorkspace` hook can now control workspace's status (loading, starred, visible, ...etc)
 - [feat] Add API functions for workspace `Star`, `ToggleVisibility`, `Delete`
-- [fix] Fix where landing screen was using padding instead of 100vh for spaces
-- [fix] Fix where all components didn't use index.ts files
+- [fix] Fix where landing screen was using padding instead of 100vh for spacing
+- [fix] Fix where all components didn't use `index.ts` files
 - [fix] Fix where all component stories used local components instead of `@components` global usage
 - [fix] Fix where min title and max title lengths were not in `LIMITS` file
-- [fix] Fix where AddWorkspaceModal component used alot of states, switched to `useReducer` hook
+- [fix] Fix where `AddWorkspaceModal` component used alot of states, switched to `useReducer` hook
 - [fix] Fix where landing page background images was overlapping with other contents and had wrong positioning
 - [fix] Fix where workspace cannot finish loading
 - [fix] Fix where workspace initial loaded was an 404 page for a short time

@@ -21,14 +21,19 @@ export async function create(req: NextApiRequest, res: NextApiResponse) {
   if (!body.owner) return reject({ reason: "no-owner", res });
   if (!body.uid) return reject({ reason: "no-uid", res });
 
+  let users = [];
+  if (body?.users?.length > 0) {
+    users = body.users;
+  }
+
   const { title, desc, starred, workspaceVisible, thumbnail, uid } = body;
 
-  if (title?.length > LIMITS.MAX.WORKSPACE_TITLE_CHARACTER_LENGTH)
+  if (title?.trim().length > LIMITS.MAX.WORKSPACE_TITLE_CHARACTER_LENGTH)
     return reject({ res, reason: "title-maxlength" });
-  if (desc?.length > LIMITS.MAX.WORKSPACE_DESC_CHARACTER_LENGTH)
-    return reject({ res, reason: "desc-maxlength" });
-  if (title?.length < LIMITS.MIN.WORKSPACE_TITLE_CHARACTER_LENGTH)
+  if (title?.trim().length < LIMITS.MIN.WORKSPACE_TITLE_CHARACTER_LENGTH)
     return reject({ res, reason: "title-minlength" });
+  if (desc?.trim().length > LIMITS.MAX.WORKSPACE_DESC_CHARACTER_LENGTH)
+    return reject({ res, reason: "desc-maxlength" });
   if (
     thumbnail?.type == "singleColor" &&
     thumbnail?.color.length > LIMITS.MAX.WORKSPACE_SINGLECOLOR_COLOR_LENGTH
@@ -96,8 +101,8 @@ export async function create(req: NextApiRequest, res: NextApiResponse) {
 
   return await workspacesCollection
     .insertOne({
-      title,
-      desc,
+      title: title.trim(),
+      desc: desc?.trim(),
       starred,
       createdAt: Date.now(),
       updatedAt: Date.now(),
@@ -105,7 +110,7 @@ export async function create(req: NextApiRequest, res: NextApiResponse) {
       workspaceVisible,
       thumbnail: thumbnailTypes[thumbnail.type],
       fields: [],
-      users: [uid], // Add owner as default user
+      users: [uid, ...users], // Add owner as default user
       id: givenId,
     })
     .then(async (result) => {

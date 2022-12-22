@@ -42,9 +42,10 @@ export function AddCardModal({
   }
 
   function submit() {
-    if (state.title && state.desc) {
+    if (state.title?.trim() && state.desc?.trim()) {
       if (
-        state.title.length < LIMITS.MIN.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH
+        state.title?.trim().length <
+        LIMITS.MIN.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH
       ) {
         return dispatch({
           type: AddCardActionType.SET_TITLE_ERROR,
@@ -52,7 +53,8 @@ export function AddCardModal({
         });
       }
       if (
-        state.title.length > LIMITS.MAX.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH
+        state.title?.trim().length >
+        LIMITS.MAX.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH
       ) {
         return dispatch({
           type: AddCardActionType.SET_TITLE_ERROR,
@@ -61,16 +63,18 @@ export function AddCardModal({
       }
       if (
         state.desc &&
-        state.desc.length > LIMITS.MAX.WORKSPACE_CARD_DESC_CHARACTER_LENGTH
+        state.desc?.trim().length >
+          LIMITS.MAX.WORKSPACE_CARD_DESC_CHARACTER_LENGTH
       ) {
         return dispatch({
           type: AddCardActionType.SET_DESC_ERROR,
           payload: `Description can be maximum ${LIMITS.MAX.WORKSPACE_CARD_DESC_CHARACTER_LENGTH} characters long.`,
         });
       }
-    } else if (state.title && !state.desc) {
+    } else if (state.title?.trim() && !state.desc?.trim()) {
       if (
-        state.title.length < LIMITS.MIN.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH
+        state.title?.trim().length <
+        LIMITS.MIN.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH
       ) {
         return dispatch({
           type: AddCardActionType.SET_TITLE_ERROR,
@@ -78,14 +82,15 @@ export function AddCardModal({
         });
       }
       if (
-        state.title.length > LIMITS.MAX.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH
+        state.title?.trim().length >
+        LIMITS.MAX.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH
       ) {
         return dispatch({
           type: AddCardActionType.SET_TITLE_ERROR,
           payload: `Title can be maximum ${LIMITS.MAX.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH} characters long.`,
         });
       }
-    } else if (!state.title && !state.desc) {
+    } else if (!state.title?.trim() && !state.desc?.trim()) {
       dispatch({
         type: AddCardActionType.SET_TITLE_ERROR,
         payload: `Please enter an title or description.`,
@@ -107,7 +112,7 @@ export function AddCardModal({
     <Modal
       open={open}
       onClose={close}
-      className="w-[90%] sm:w-[600px] p-4 px-5 relative"
+      className="w-[90%] sm:w-[600px] p-4 px-5"
       animate
     >
       <Modal.Title animate>
@@ -120,8 +125,8 @@ export function AddCardModal({
         <div className="dark:p-1 dark:border-2 dark:border-neutral-800 w-full mt-2 rounded-lg">
           <WorkspaceFieldCard
             card={{
-              title: state.title || "Enter card title",
-              desc: state.desc,
+              title: state.title?.trim() || "Enter card title",
+              desc: state.desc?.trim(),
               createdAt: Date.now(),
               updatedAt: Date.now(),
               color: state.useColor ? state.color : "",
@@ -146,7 +151,9 @@ export function AddCardModal({
               <span>Card Title</span>
               {state.title && (
                 <div className="text-xs text-neutral-400">
-                  {`${state?.title?.length} / ${LIMITS.MAX.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH}`}
+                  {`${state?.title?.trim().length} / ${
+                    LIMITS.MAX.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH
+                  }`}
                 </div>
               )}
             </label>
@@ -174,13 +181,15 @@ export function AddCardModal({
               <span>Card Description</span>
               {state.desc && (
                 <div className="text-xs text-neutral-400">
-                  {`${state?.desc?.length} / ${LIMITS.MAX.WORKSPACE_CARD_DESC_CHARACTER_LENGTH}`}
+                  {`${state?.desc?.trim().length} / ${
+                    LIMITS.MAX.WORKSPACE_CARD_DESC_CHARACTER_LENGTH
+                  }`}
                 </div>
               )}
             </label>
             <Input
               fullWidth
-              placeholder="Card Description"
+              placeholder="Start typing..."
               onChange={(e) =>
                 dispatch({
                   type: AddCardActionType.SET_DESC,

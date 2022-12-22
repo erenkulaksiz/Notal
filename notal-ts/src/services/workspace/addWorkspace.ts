@@ -1,6 +1,6 @@
 import { getAuth } from "firebase/auth";
 import { workspaceFetch } from "@utils/workspaceFetch";
-import type { WorkspaceTypes } from "@types";
+import type { OwnerTypes, WorkspaceReducer } from "@types";
 
 export async function addWorkspace({
   title,
@@ -8,7 +8,8 @@ export async function addWorkspace({
   starred,
   workspaceVisible,
   thumbnail,
-}: WorkspaceTypes): Promise<{ success: boolean; error?: string }> {
+  team,
+}: WorkspaceReducer): Promise<{ success: boolean; error?: string }> {
   const auth = getAuth();
   const token = await auth.currentUser?.getIdToken();
 
@@ -25,6 +26,7 @@ export async function addWorkspace({
       },
       owner: auth?.currentUser?.uid,
       uid: auth?.currentUser?.uid,
+      users: team?.users?.map((user: OwnerTypes) => user.uid || []),
     },
     {
       token,

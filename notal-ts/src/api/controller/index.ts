@@ -15,6 +15,7 @@ import {
   deletecard,
   reorderfield,
   reordercard,
+  getuserdata,
 } from "./workspace";
 import { complete } from "./onboarding/complete";
 
@@ -31,6 +32,7 @@ export interface ControllerReturnType {
   workspace: {
     getworkspaces: APIReturnType;
     getworkspace: APIReturnType;
+    getuserdata: APIReturnType;
     star: APIReturnType;
     create: APIReturnType;
     delete: APIReturnType;
@@ -74,6 +76,7 @@ export function Controller() {
       getworkspaces: (req, res) =>
         checkUserAuth({ req, res, func: getworkspaces }),
       getworkspace,
+      getuserdata: (req, res) => checkUserAuth({ req, res, func: getuserdata }),
       star: (req, res) => checkUserAuth({ req, res, func: star }),
       create: (req, res) => checkUserAuth({ req, res, func: create }),
       delete: (req, res) => checkUserAuth({ req, res, func: deleteworkspace }),

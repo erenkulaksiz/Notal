@@ -2,8 +2,10 @@ import { useState, useEffect } from "react";
 
 import { CreatePortal as Portal } from "@components";
 import { CrossIcon } from "@icons";
+import { Log } from "@utils/logger";
 import { Backdrop, Content, Body, Title, Footer } from "./components";
 import type { ModalProps } from "./Modal.d";
+import type { KeyboardEvent } from "react";
 
 export const ChildrenAnim = {
   hidden: {
@@ -49,7 +51,15 @@ function Modal({
 
   return show ? (
     <Portal portalName="notal-modal">
-      <Backdrop blur={blur} onClose={onClose} open={open} setShow={setShow}>
+      <Backdrop
+        blur={blur}
+        onClose={onClose}
+        open={open}
+        setShow={setShow}
+        onKeyDown={(event: KeyboardEvent<HTMLDivElement>) =>
+          event.key === "Escape" && onClose()
+        }
+      >
         <Content blur={blur} className={className} animate={animate}>
           {closeBtn && (
             <div className="absolute right-2 top-2 z-50">

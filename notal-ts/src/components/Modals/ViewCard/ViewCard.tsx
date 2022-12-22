@@ -23,8 +23,8 @@ export function ViewCardModal({
         />
       )}
       {cardOwner && (
-        <div className="flex flex-col items-start mb-1">
-          <div className="uppercase text-xs dark:text-neutral-600 text-neutral-400">
+        <div className="flex flex-col items-start">
+          <div className="uppercase text-xs dark:text-neutral-600 text-neutral-400 font-semibold">
             author
           </div>
           <Tooltip content={`@${cardOwner.username}`}>
@@ -40,27 +40,23 @@ export function ViewCardModal({
           </Tooltip>
         </div>
       )}
-      <div className="flex flex-row justify-between relative">
-        <div className="flex flex-col gap-1">
-          {card?.title && (
-            <div className="flex flex-col">
-              <div className="uppercase text-xs dark:text-neutral-600 text-neutral-400 h-2">
-                title
-              </div>
-              <h1 className="text-2xl break-words">{card.title}</h1>
+      <div className="flex flex-col">
+        {card?.title && (
+          <div className="flex flex-col">
+            <div className="uppercase text-xs dark:text-neutral-600 text-neutral-400 font-semibold">
+              title
             </div>
-          )}
-          {card?.desc && (
-            <div className="flex flex-col">
-              <div className="uppercase text-xs dark:text-neutral-600 text-neutral-400">
-                description
-              </div>
-              <span className="break-words whitespace-pre-line">
-                {card.desc}
-              </span>
+            <h1 className="text-2xl break-words">{card.title}</h1>
+          </div>
+        )}
+        {card?.desc && (
+          <div className="flex flex-col">
+            <div className="uppercase text-xs dark:text-neutral-600 text-neutral-400 font-semibold">
+              description
             </div>
-          )}
-        </div>
+            <span className="break-words whitespace-pre-line">{card.desc}</span>
+          </div>
+        )}
       </div>
     </Modal>
   );

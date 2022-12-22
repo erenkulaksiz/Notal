@@ -4,7 +4,7 @@ function formatStringToColorful(str: TemplateStringsArray | string) {
 
 export const CONSTANTS = {
   APP_NAME: "Notal",
-  APP_VERSION: "2.1.9",
+  APP_VERSION: "2.1.10",
   DEFAULT_WORKSPACE_ID_LENGTH: 4,
   DEFAULT_WORKSPACE_THUMBNAIL_GRADIENT: {
     start: "#0eeaed",
@@ -31,7 +31,7 @@ export const CONSTANTS = {
   SEO_APP_THEME_COLOR: "#292524",
   SEO_APP_AUTHOR: "@erencode",
   PLACEHOLDER_WORKSPACE_CARD_TITLES: [
-    "Buy grociries",
+    "Buy groceries",
     "Buy a new laptop",
     "Buy a new phone",
     "Buy a new car",

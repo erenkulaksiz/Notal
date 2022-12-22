@@ -6,3 +6,4 @@ export { star } from "./star";
 export { addfield, deletefield, editfield, reorderfield } from "./field";
 export { addcard, deletecard, reordercard } from "./card";
 export { togglevisibility } from "./visibility";
+export { getuserdata } from "./getuserdata";

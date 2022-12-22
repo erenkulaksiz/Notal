@@ -1,6 +1,7 @@
 import { ValidateUser } from "@utils/api/validateUser";
 import { connectToDatabase } from "@lib/mongodb";
 import { WorkspaceTypes } from "@types";
+import { Log } from "..";
 
 export interface WorkspaceDataReturnType {
   success?: boolean;
@@ -43,7 +44,7 @@ export async function GetWorkspaceData({
     if (validateUser && !validateUser.decodedToken) {
       return {
         success: false,
-        error: validateUser.decodedToken?.errorCode || validateUser?.error,
+        error: validateUser?.errorCode,
       };
     }
 
@@ -59,7 +60,7 @@ export async function GetWorkspaceData({
     success: true,
     data: {
       title: findWorkspace.title,
-      desc: findWorkspace.desc,
+      desc: findWorkspace.desc ?? null,
       thumbnail: findWorkspace.thumbnail,
       owner: {
         username: findWorkspaceOwner.username,

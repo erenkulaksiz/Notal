@@ -82,7 +82,7 @@ export interface WorkspaceTypes {
   createdAt: number;
   desc?: string;
   title: string;
-  owner?: OwnerTypes;
+  owner?: OwnerTypes | string;
   starred: boolean;
   updatedAt: number;
   workspaceVisible: boolean;
@@ -91,6 +91,15 @@ export interface WorkspaceTypes {
   users?: {
     [key: string]: Array[OwnerTypes];
   };
+}
+
+export interface WorkspaceReducer extends WorkspaceTypes {
+  team?: {
+    username?: string;
+    users?: Array<OwnerTypes>;
+  };
+  thumbnailLoading: boolean;
+  addUserLoading: boolean;
 }
 
 export interface PlatformLogin {

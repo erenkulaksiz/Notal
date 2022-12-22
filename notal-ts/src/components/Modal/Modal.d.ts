@@ -1,10 +1,10 @@
-import { FC, ReactNode } from "react";
+import { FC, ReactNode, MouseEvent } from "react";
 
 export interface ModalProps {
   children?: ReactNode;
   open: boolean;
   blur?: boolean;
-  onClose: Function;
+  onClose: (event?: MouseEvent<HTMLButtonElement | HTMLDivElement>) => void;
   className?: string;
   animate?: boolean;
   closeBtn?: boolean;
@@ -13,10 +13,10 @@ export interface ModalProps {
 export interface ModalBackdropProps {
   children?: ReactNode;
   blur?: boolean;
-  onClose: Function;
+  onClose: (event: MouseEvent<HTMLButtonElement | HTMLDivElement>) => void;
   open: boolean;
   setShow?: (open: boolean) => void;
-  onKeyDown?: Function;
+  onKeyDown?: (event: KeyboardEvent<HTMLDivElement>) => void;
   className?: string;
 }
 

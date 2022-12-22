@@ -1,10 +1,10 @@
 import { WorkspaceAction, AddWorkspaceActionType } from "./AddWorkspace.d";
-import { WorkspaceTypes } from "@types";
+import type { WorkspaceReducer } from "@types";
 
 export function reducer(
-  state: WorkspaceTypes,
+  state: WorkspaceReducer,
   action: WorkspaceAction
-): WorkspaceTypes {
+): WorkspaceReducer {
   switch (action.type) {
     case AddWorkspaceActionType.SET_TITLE:
       return { ...state, title: action.payload };
@@ -48,6 +48,61 @@ export function reducer(
             ...state.thumbnail.colors,
             ...action.payload,
           },
+        },
+      };
+
+    case AddWorkspaceActionType.SET_THUMB_LOADING:
+      return { ...state, thumbnailLoading: action.payload };
+
+    case AddWorkspaceActionType.SET_ADD_USER_LOADING:
+      return { ...state, addUserLoading: action.payload };
+
+    case AddWorkspaceActionType.SET_ALL_LOADING:
+      return {
+        ...state,
+        thumbnailLoading: action.payload,
+        addUserLoading: action.payload,
+      };
+
+    case AddWorkspaceActionType.SET_WORKSPACE_TEAM_USERNAME:
+      return {
+        ...state,
+        team: {
+          ...state.team,
+          username: action.payload,
+        },
+      };
+
+    case AddWorkspaceActionType.ADD_USER:
+      const users = state.team?.users || [];
+      return {
+        ...state,
+        team: {
+          ...state.team,
+          users: [...users, action.payload],
+          username: "",
+        },
+        addUserLoading: false,
+      };
+
+    case AddWorkspaceActionType.RESET_USERS:
+      return {
+        ...state,
+        team: {
+          ...state.team,
+          users: [],
+        },
+      };
+
+    case AddWorkspaceActionType.REMOVE_USER:
+      const newUsers = state.team?.users?.filter(
+        (user) => user.username !== action.payload
+      );
+      return {
+        ...state,
+        team: {
+          ...state.team,
+          users: newUsers,
         },
       };
 

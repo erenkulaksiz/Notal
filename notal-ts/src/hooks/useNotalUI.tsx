@@ -198,6 +198,7 @@ export function NotalUIProvider(props: PropsWithChildren) {
       animate = true,
       customContent = false,
     }: AlertProps) => {
+      Log.debug("Show alert:", "title:", title);
       setAlert({
         visible: true,
         title,

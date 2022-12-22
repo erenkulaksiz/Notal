@@ -13,6 +13,7 @@ import {
   CrossIcon,
   CheckIcon,
   AddIcon,
+  SettingsIcon,
 } from "@icons";
 import { useNotalUI, useWorkspace } from "@hooks";
 import { LIMITS } from "@constants/limits";
@@ -30,15 +31,17 @@ export function WorkspaceSidebar() {
   const NotalUI = useNotalUI();
   const router = useRouter();
 
-  function getWorkspaceUsers() {
+  function getWorkspaceUsers(): Array<WorkspaceUsers> {
     if (typeof workspace?.data?.data?.users === "object") {
       return Object.keys(workspace?.data?.data?.users).map((userId: string) => {
+        if (typeof workspace?.data?.data?.owner === "string")
+          return workspace?.data?.data?.users?.[userId];
         if (userId == workspace?.data?.data?.owner?.uid)
           return {
             owner: true,
             ...workspace?.data?.data?.users?.[userId],
           } as WorkspaceUsers;
-        return workspace?.data?.data?.users?.[userId] as WorkspaceUsers;
+        return workspace?.data?.data?.users?.[userId];
       });
     }
     return [];
@@ -143,6 +146,17 @@ export function WorkspaceSidebar() {
               ],
             })
           }
+        />
+        <WorkspaceSidebarItem
+          icon={
+            <SettingsIcon
+              width={24}
+              height={24}
+              className="dark:fill-white fill-black"
+            />
+          }
+          title="Workspace Settings"
+          onClick={async () => {}}
         />
       </div>
       <div className="flex flex-col gap-1">

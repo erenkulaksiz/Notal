@@ -10,6 +10,7 @@ import {
   Loading,
   Tab,
   Colorpicker,
+  Avatar,
 } from "@components";
 import {
   AddIcon,
@@ -20,9 +21,11 @@ import {
   VisibleIcon,
   VisibleOffIcon,
   CloudUploadIcon,
+  AtIcon,
+  DeleteIcon,
 } from "@icons";
 import { Log, getRandomQuote, QUOTE_TYPES } from "@utils";
-import { useNotalUI } from "@hooks";
+import { useAuth, useNotalUI } from "@hooks";
 import { WorkspaceService } from "@services/WorkspaceService";
 import { LIMITS } from "@constants/limits";
 import { WorkspaceDefaults } from "@constants/workspacedefaults";
@@ -31,13 +34,20 @@ import {
   AddWorkspaceActionType,
 } from "./AddWorkspace.d";
 import { reducer } from "./reducer";
+import { fetchUserData } from "@utils/fetcher/userdata";
+import { OwnerTypes } from "@types";
 
 export function AddWorkspaceModal({
   open,
   onClose,
   onAdd,
 }: AddWorkspaceModalProps) {
-  const [state, dispatch] = useReducer(reducer, WorkspaceDefaults);
+  const auth = useAuth();
+  const [state, dispatch] = useReducer(reducer, {
+    ...WorkspaceDefaults,
+    thumbnailLoading: false,
+    addUserLoading: false,
+  });
   const NotalUI = useNotalUI();
   const randomWorkspacePlaceholder = useRef(
     getRandomQuote(QUOTE_TYPES.WORKSPACE_TITLE)
@@ -50,8 +60,7 @@ export function AddWorkspaceModal({
     title: false,
     desc: false,
   });
-  const [thumbnailLoading, setThumbnailLoading] = useState(false);
-  const [tab, setTab] = useState(0);
+  const [tab, setTab] = useState<number>(0);
   const thumbnailRef = useRef<HTMLInputElement>(null);
 
   function close() {
@@ -64,18 +73,33 @@ export function AddWorkspaceModal({
       type: AddWorkspaceActionType.SET_WORKSPACE,
       payload: WorkspaceDefaults,
     });
+    dispatch({
+      type: AddWorkspaceActionType.SET_ALL_LOADING, // Sets thumbnailLoading and addUserLoading to false
+      payload: false,
+    });
+    dispatch({
+      type: AddWorkspaceActionType.SET_WORKSPACE_TEAM_USERNAME,
+      payload: "",
+    });
+    dispatch({
+      type: AddWorkspaceActionType.RESET_USERS,
+    });
     setTab(0);
   }
 
   async function submit() {
-    if (state.title.length < LIMITS.MIN.WORKSPACE_TITLE_CHARACTER_LENGTH) {
+    if (
+      state.title.trim().length < LIMITS.MIN.WORKSPACE_TITLE_CHARACTER_LENGTH
+    ) {
       setNewWorkspaceErr({
         ...newWorkspaceErr,
         title: `Title must be minimum ${LIMITS.MIN.WORKSPACE_TITLE_CHARACTER_LENGTH} characters long.`,
       });
       return;
     }
-    if (state.title.length > LIMITS.MAX.WORKSPACE_TITLE_CHARACTER_LENGTH) {
+    if (
+      state.title.trim().length > LIMITS.MAX.WORKSPACE_TITLE_CHARACTER_LENGTH
+    ) {
       setNewWorkspaceErr({
         ...newWorkspaceErr,
         title: `Title must be maximum ${LIMITS.MAX.WORKSPACE_TITLE_CHARACTER_LENGTH} characters long.`,
@@ -84,7 +108,7 @@ export function AddWorkspaceModal({
     }
     if (
       state.desc &&
-      state.desc.length > LIMITS.MAX.WORKSPACE_DESC_CHARACTER_LENGTH
+      state.desc.trim().length > LIMITS.MAX.WORKSPACE_DESC_CHARACTER_LENGTH
     ) {
       setNewWorkspaceErr({
         ...newWorkspaceErr,
@@ -122,18 +146,25 @@ export function AddWorkspaceModal({
 
     // check file type
     const fileType = state.thumbnail.fileData.type;
+
     if (
       fileType == "image/jpeg" ||
       fileType == "image/png" ||
       fileType == "image/jpg"
     ) {
-      setThumbnailLoading(true);
+      dispatch({
+        type: AddWorkspaceActionType.SET_THUMB_LOADING,
+        payload: true,
+      });
       const res = await WorkspaceService.workspace.uploadThumbnail({
         image: state.thumbnail.fileData,
       });
 
       if (res && res.success) {
-        setThumbnailLoading(false);
+        dispatch({
+          type: AddWorkspaceActionType.SET_THUMB_LOADING,
+          payload: false,
+        });
         dispatch({
           type: AddWorkspaceActionType.SET_THUMBNAIL,
           payload: {
@@ -163,7 +194,10 @@ export function AddWorkspaceModal({
       } else {
         // error
         Log.error("thumbnail upload error: ", res);
-        setThumbnailLoading(false);
+        dispatch({
+          type: AddWorkspaceActionType.SET_THUMB_LOADING,
+          payload: false,
+        });
         NotalUI.Toast.show({
           title: "Error",
           desc: "An error occurred while uploading the file. Please check the console.",
@@ -196,10 +230,77 @@ export function AddWorkspaceModal({
     }
   }
 
+  async function addUserToWorkspace() {
+    // First, fetch user details from the server and make sure user exists
+    dispatch({
+      type: AddWorkspaceActionType.SET_ADD_USER_LOADING,
+      payload: true,
+    });
+    if (!state.team?.username) return;
+
+    // Check if user trying to add himself
+    if (state.team.username == auth?.validatedUser?.username) {
+      NotalUI.Toast.show({
+        title: "Error",
+        desc: `You cant add yourself to your own workspace.`,
+        type: "error",
+        id: "add-user-own-workspace-error",
+        once: true,
+      });
+      dispatch({
+        type: AddWorkspaceActionType.SET_ADD_USER_LOADING,
+        payload: false,
+      });
+      return;
+    }
+
+    const token = await auth?.user.getIdToken();
+    if (!token?.success) return;
+    const user = await fetchUserData({
+      username: state.team.username?.trim(),
+      token: token.res,
+      uid: auth?.authUser?.uid,
+    });
+    if (!user?.success) {
+      dispatch({
+        type: AddWorkspaceActionType.SET_ADD_USER_LOADING,
+        payload: false,
+      });
+      if (user?.error == "no-user-found") {
+        NotalUI.Toast.show({
+          title: "Error",
+          desc: `Theres no user with username @${state?.team?.username?.trim()}`,
+          type: "error",
+        });
+        return;
+      }
+      NotalUI.Toast.show({
+        title: "Error",
+        desc: "An error occurred while adding the user. Please check the console.",
+        type: "error",
+        once: true,
+        id: "add-user-workspace-error",
+      });
+      return;
+    }
+    Log.debug("user: ", user);
+    dispatch({
+      type: AddWorkspaceActionType.ADD_USER,
+      payload: user.data,
+    });
+  }
+
+  function removeUserFromWorkspace(user: OwnerTypes) {
+    dispatch({
+      type: AddWorkspaceActionType.REMOVE_USER,
+      payload: user?.username,
+    });
+  }
+
   return (
     <Modal
       open={open}
-      onClose={() => !thumbnailLoading && close()}
+      onClose={() => !state.thumbnailLoading && close()}
       className="w-[90%] sm:w-[400px] p-4 px-5 relative"
       animate
     >
@@ -208,21 +309,21 @@ export function AddWorkspaceModal({
         <span className="text-lg font-medium ml-1">Add Workspace</span>
       </Modal.Title>
       <Modal.Body className="flex flex-col pb-2 " animate>
-        {thumbnailLoading && (
-          <div className="absolute left-0 right-0 bottom-0 top-0 flex items-center justify-center bg-neutral-300/40 dark:bg-neutral-800/40 rounded-xl z-50">
+        {(state.thumbnailLoading || state.addUserLoading) && (
+          <div className="absolute left-0 right-0 bottom-0 top-0 flex items-center justify-center bg-neutral-300/40 dark:bg-neutral-800/40 rounded-xl z-[999]">
             <Loading size="xl" />
           </div>
         )}
         <div className="w-full mb-4 relative pointer-events-none">
-          <div className="text-3xl font-medium absolute left-2 top-0 z-50 uppercase dark:text-white/50 text-black/50">
+          <div className="text-3xl font-medium absolute left-2 top-0 z-50 uppercase dark:text-white/50 text-black/30">
             Preview
           </div>
           <HomeWorkspaceCard
             preview
             workspace={{
               workspaceVisible: state.workspaceVisible,
-              title: state.title || "Enter a title",
-              desc: state.desc,
+              title: state.title.trim() || "Enter a title",
+              desc: state.desc?.trim(),
               starred: state.starred,
               thumbnail: state.thumbnail,
               _id: WorkspaceDefaults._id,
@@ -246,7 +347,9 @@ export function AddWorkspaceModal({
             >
               <span>Workspace Title*</span>
               <div className="text-xs text-neutral-400">
-                {`${state.title.length} / ${LIMITS.MAX.WORKSPACE_TITLE_CHARACTER_LENGTH}`}
+                {`${state.title.trim().length} / ${
+                  LIMITS.MAX.WORKSPACE_TITLE_CHARACTER_LENGTH
+                }`}
               </div>
             </label>
             <Input
@@ -261,7 +364,7 @@ export function AddWorkspaceModal({
               value={state.title}
               id="workspaceTitle"
               maxLength={LIMITS.MAX.WORKSPACE_TITLE_CHARACTER_LENGTH}
-              onEnterPress={() => !thumbnailLoading && submit()}
+              onEnterPress={() => !state.thumbnailLoading && submit()}
             />
             {newWorkspaceErr.title != false && (
               <span className="text-red-500">{newWorkspaceErr.title}</span>
@@ -271,10 +374,11 @@ export function AddWorkspaceModal({
               className="flex flex-row items-center gap-2"
             >
               Workspace Description
-              {state.desc?.length != 0 && (
+              {state.desc?.trim().length != 0 && (
                 <div className="text-xs text-neutral-400">
-                  {state?.desc?.length} /{" "}
-                  {LIMITS.MAX.WORKSPACE_DESC_CHARACTER_LENGTH}
+                  {`${state?.desc?.trim().length} / ${
+                    LIMITS.MAX.WORKSPACE_DESC_CHARACTER_LENGTH
+                  }`}
                 </div>
               )}
             </label>
@@ -325,7 +429,7 @@ export function AddWorkspaceModal({
                     Add to favorites
                   </Checkbox>
                 </div>
-                <div className="text-sm text-neutral-400">
+                <div className="text-sm dark:text-neutral-400 text-neutral-500">
                   Add this workspace to your favorites.
                 </div>
               </div>
@@ -361,7 +465,7 @@ export function AddWorkspaceModal({
                     Public Workspace
                   </Checkbox>
                 </div>
-                <div className="text-sm text-neutral-400">
+                <div className="text-sm dark:text-neutral-400 text-neutral-500">
                   If enabled, anyone can see your workspace even if they arent
                   signed in.
                 </div>
@@ -398,7 +502,7 @@ export function AddWorkspaceModal({
               <div
                 className="flex flex-col text-blue-400 mt-2 items-center justify-center w-full h-16 border-2 border-solid border-blue-400 group hover:border-blue-300 hover:text-blue-300 rounded-xl cursor-pointer"
                 onClick={() => {
-                  if (!thumbnailLoading) {
+                  if (!state.thumbnailLoading) {
                     thumbnailRef?.current?.click();
                   }
                 }}
@@ -432,9 +536,9 @@ export function AddWorkspaceModal({
             {state?.thumbnail?.type == "gradient" && (
               <div className="flex items-center gap-2">
                 <div>
-                  <label htmlFor="cardStartColor">Start Color</label>
+                  <label htmlFor="workspaceStartColor">Start Color</label>
                   <Colorpicker
-                    id="cardStartColor"
+                    id="workspaceStartColor"
                     color={state?.thumbnail?.colors?.start}
                     onChange={(color) => {
                       dispatch({
@@ -447,9 +551,9 @@ export function AddWorkspaceModal({
                   />
                 </div>
                 <div>
-                  <label htmlFor="cardEndColor">End Color</label>
+                  <label htmlFor="workspaceEndColor">End Color</label>
                   <Colorpicker
-                    id="cardEndColor"
+                    id="workspaceEndColor"
                     color={state?.thumbnail?.colors?.end}
                     onChange={(color) => {
                       dispatch({
@@ -464,20 +568,81 @@ export function AddWorkspaceModal({
               </div>
             )}
           </Tab.TabView>
+          <Tab.TabView title="Users">
+            <div className="text-sm dark:text-neutral-400 text-neutral-500">
+              Add users to this workspace to work with together. You can edit
+              users later.
+            </div>
+            <div className="flex flex-row gap-2">
+              <Input
+                fullWidth
+                placeholder="Enter username..."
+                onChange={(e) =>
+                  dispatch({
+                    type: AddWorkspaceActionType.SET_WORKSPACE_TEAM_USERNAME,
+                    payload: e.target.value,
+                  })
+                }
+                value={state.team?.username}
+                id="teamAddUser"
+                icon={<AtIcon width={24} height={24} fill="currentColor" />}
+                onEnterPress={() =>
+                  state.team?.username?.trim() && addUserToWorkspace()
+                }
+              />
+              {state.team?.username?.trim() && (
+                <Button
+                  onClick={() => addUserToWorkspace()}
+                  title="Add User"
+                  className="items-center justify-center"
+                >
+                  <AddIcon width={24} height={24} fill="currentColor" />
+                </Button>
+              )}
+            </div>
+            {Array.isArray(state.team?.users) && state?.team?.users && (
+              <div className="flex flex-col gap-2">
+                {state.team?.users?.map((user) => (
+                  <div
+                    className="flex items-center border-2 border-neutral-500/40 dark:border-neutral-700 rounded-xl p-2 justify-between"
+                    key={`workspaceUser_${user.uid}`}
+                  >
+                    <div className="flex flex-row gap-2 items-center">
+                      <Avatar size="3xl" src={user?.avatar} />
+                      <div className="flex flex-col">
+                        <div className="text-lg font-semibold">
+                          {`@${user?.username}`}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-row items-center justify-end">
+                      <button>
+                        <DeleteIcon
+                          onClick={() => removeUserFromWorkspace(user)}
+                          size={24}
+                          className="fill-red-600 scale-90"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Tab.TabView>
         </Tab>
       </Modal.Body>
       <Modal.Footer className="justify-between items-end flex-1" animate>
         <Button
           light="bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500"
-          onClick={() => !thumbnailLoading && close()}
+          onClick={() => !state.thumbnailLoading && close()}
           fullWidth="w-[49%]"
         >
           <CrossIcon size={24} fill="currentColor" />
           Cancel
         </Button>
         <Button
-          onClick={() => !thumbnailLoading && submit()}
-          loading={thumbnailLoading}
+          onClick={() => !state.thumbnailLoading && submit()}
+          loading={state.thumbnailLoading}
           fullWidth="w-[49%]"
         >
           <CheckIcon size={24} fill="currentColor" />

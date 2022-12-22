@@ -1,8 +1,12 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 
-import { Button, Tooltip } from "@components";
-import type { WorkspaceTypes } from "@types";
+import { Button, Tooltip, Avatar } from "@components";
+import { useAuth } from "@hooks";
+import type { OwnerTypes } from "@types";
+import type { HomeWorkspaceCardProps } from "./WorkspaceCard.d";
+
+import { Log } from "@utils";
 
 import {
   StarOutlineIcon,
@@ -18,14 +22,10 @@ export function HomeWorkspaceCard({
   skeleton = false,
   preview = false,
   index = 0,
-}: {
-  workspace?: WorkspaceTypes;
-  onStar?: Function;
-  onDelete?: Function;
-  skeleton?: boolean;
-  preview?: boolean;
-  index?: number;
-}) {
+}: HomeWorkspaceCardProps) {
+  const auth = useAuth();
+  Log.debug("HomeWorkspaceCard", workspace?.users, workspace?.owner);
+
   if (skeleton)
     return (
       <motion.div
@@ -65,14 +65,32 @@ export function HomeWorkspaceCard({
       >
         <div className="flex flex-row justify-between group-hover:scale-[97%] transition-all ease-in-out z-20 pointer-events-none">
           <div className="flex items-start justify-end flex-col text-white max-w-[calc(100%-60px)]">
+            <div className="flex flex-row gap-1 pointer-events-auto mb-1">
+              {workspace?.users &&
+                workspace?.users
+                  ?.filter((user: OwnerTypes) => {
+                    return user.uid.toString() !== auth?.validatedUser?.uid;
+                  })
+                  .map((user: OwnerTypes) => (
+                    <Tooltip
+                      content={`@${user.username}`}
+                      outline
+                      key={`workspaceHomeUser_${user.uid}`}
+                    >
+                      <div className="p-[2px] rounded-full cursor-pointer bg-gradient-to-tr from-blue-700 to-pink-700  group-hover:opacity-75 ease-in-out duration-200">
+                        <Avatar src={user.avatar} size="xl" />
+                      </div>
+                    </Tooltip>
+                  ))}
+            </div>
             <div className="flex flex-row item-center pointer-events-auto">
               {!workspace?.workspaceVisible && (
-                <Tooltip content="Private workspace">
+                <Tooltip content="Private workspace" outline>
                   <VisibleOffIcon width={24} height={24} fill="white" />
                 </Tooltip>
               )}
               {workspace?.starred && preview && (
-                <Tooltip content="Favorite workspace">
+                <Tooltip content="Favorite workspace" outline>
                   {workspace?.starred ? (
                     <StarFilledIcon size={24} fill="currentColor" />
                   ) : (
@@ -87,7 +105,7 @@ export function HomeWorkspaceCard({
                 as={`/workspace/${workspace?.id ?? "not-found"}`}
                 passHref
               >
-                <a className="flex-col flex w-full mr-6">
+                <a className="flex-col flex w-full mr-6 group-hover:opacity-75 ease-in-out duration-200">
                   <span className="font-medium text-ellipsis overflow-hidden whitespace-nowrap drop-shadow break-words">
                     {workspace?.title}
                   </span>
@@ -99,7 +117,7 @@ export function HomeWorkspaceCard({
                 </a>
               </Link>
             ) : (
-              <div className="flex-col flex w-full">
+              <div className="flex-col flex w-full group-hover:opacity-75 ease-in-out duration-200">
                 {workspace?.title && (
                   <span className="font-medium text-ellipsis overflow-hidden whitespace-nowrap drop-shadow-xl break-words">
                     {workspace.title}
@@ -123,7 +141,11 @@ export function HomeWorkspaceCard({
                     : "Add to favorites"
                 }
               >
-                <Button className="mb-2 p-3 pt-1 pb-1" light onClick={onStar}>
+                <Button
+                  className="mb-2 p-3 pt-1 pb-1 group-hover:opacity-75"
+                  light
+                  onClick={onStar}
+                >
                   {workspace?.starred ? (
                     <StarFilledIcon size={24} fill="currentColor" />
                   ) : (
@@ -132,7 +154,11 @@ export function HomeWorkspaceCard({
                 </Button>
               </Tooltip>
               <Tooltip content="Delete workspace" outline>
-                <Button className="p-3 pt-1 pb-1" light onClick={onDelete}>
+                <Button
+                  className="p-3 pt-1 pb-1 group-hover:opacity-75 ease-in-out duration-200"
+                  light
+                  onClick={onDelete}
+                >
                   <DeleteIcon size={24} fill="currentColor" />
                 </Button>
               </Tooltip>

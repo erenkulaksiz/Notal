@@ -30,7 +30,11 @@ export function WorkspaceField({ field, index }: WorkspaceFieldProps) {
   const workspace = useWorkspace();
 
   return (
-    <Draggable draggableId={field._id} index={index}>
+    <Draggable
+      draggableId={field._id}
+      index={index}
+      isDragDisabled={!workspace.isWorkspaceOwner}
+    >
       {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
         <motion.div
           ref={provided.innerRef}
@@ -52,7 +56,7 @@ export function WorkspaceField({ field, index }: WorkspaceFieldProps) {
             BuildComponent({
               name: "Workspace Field",
               defaultClasses:
-                "rounded-md group h-full mr-1 overflow-hidden max-h-full flex items-start flex-col dark:bg-black/70 bg-white/70 hover:bg-neutral-100/50 dark:hover:bg-neutral-900/40 transition-all ease-in-out",
+                "rounded-md group h-full overflow-hidden max-h-full flex items-start flex-col dark:bg-black/70 bg-white/70 hover:bg-neutral-100/50 dark:hover:bg-neutral-900/40 transition-all ease-in-out",
               conditionalClasses: [
                 {
                   true: "border-dashed border-2 border-neutral-300 dark:border-neutral-700",

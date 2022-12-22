@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 
 import { LogoutIcon } from "@icons";
 import { useAuth } from "@hooks";
-import { Button } from "@components";
+import { Button, Avatar } from "@components";
 import { ThemeSwitcher } from "./ThemeSwitcher";
 import { CONSTANTS } from "@constants";
 
@@ -19,14 +19,15 @@ export function Dropdown() {
             listStyle: "none",
           }}
         >
-          <div className="p-[2px] w-10 h-10 rounded-full cursor-pointer bg-gradient-to-tr from-blue-700 to-pink-700">
-            <img
+          <div className="p-[2px] rounded-full cursor-pointer bg-gradient-to-tr from-blue-700 to-pink-700">
+            <Avatar
+              size="4xl"
               src={
                 auth?.validatedUser
                   ? auth.validatedUser.avatar
                   : "http://cdn.onlinewebfonts.com/svg/img_258083.png"
               }
-              className="w-10 h-9 rounded-full border-[2px] dark:border-black border-white"
+              className="border-[2px] dark:border-black border-white"
               alt="Avatar"
             />
           </div>

@@ -13,7 +13,7 @@ import { useAuth, useNotalUI } from "@hooks";
 import { WorkspaceService } from "@services";
 import { Log } from "@utils";
 import type { WorkspaceDataReturnType } from "@utils/api/workspaceData";
-import type { CardTypes, FieldTypes } from "@types";
+import type { CardTypes, FieldTypes, OwnerTypes } from "@types";
 
 export interface WorkspaceContextProps {
   workspace: SWRResponse<WorkspaceDataReturnType>;
@@ -110,8 +110,14 @@ export function WorkspaceProvider(props: PropsWithChildren) {
     setWorkspaceNotFound(notFound);
 
     if (!notFound) {
+      if (!workspace?.data?.data?.users) return;
+
       const isOwner =
-        workspace?.data?.data?.owner?.uid == auth?.validatedUser?.uid;
+        Object.keys(workspace?.data?.data?.users).findIndex(
+          (uid: string) => uid == auth?.validatedUser?.uid
+        ) == -1
+          ? false
+          : true;
 
       setIsWorkspaceOwner(isOwner);
     }

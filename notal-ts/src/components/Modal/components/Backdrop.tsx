@@ -1,6 +1,7 @@
 import { BuildComponent } from "@utils/style/buildComponent";
 import { motion } from "framer-motion";
 
+import type { KeyboardEvent, MouseEvent } from "react";
 import type { ModalBackdropProps } from "../Modal.d";
 
 export default function Backdrop({
@@ -15,7 +16,7 @@ export default function Backdrop({
   const BuildModalBackdrop = BuildComponent({
     name: "Modal Backdrop",
     defaultClasses:
-      "fixed top-0 right-0 bottom-0 left-0 flex items-center justify-center z-50 overflow-auto",
+      "fixed top-0 right-0 bottom-0 left-0 flex z-50 overflow-auto items-start pt-4 pb-4",
     extraClasses: className,
     conditionalClasses: [
       { true: "bg-black/50 backdrop-blur-sm", default: "bg-black/60" },
@@ -46,9 +47,12 @@ export default function Backdrop({
       onAnimationComplete={() =>
         !open && typeof setShow == "function" && setShow(false)
       }
-      onKeyDown={() => typeof onKeyDown == "function" && onKeyDown()}
+      onKeyDown={(event: KeyboardEvent<HTMLDivElement>) =>
+        typeof onKeyDown == "function" && onKeyDown(event)
+      }
+      tabIndex={-1}
       className={BuildModalBackdrop.classes}
-      onClick={() => onClose()}
+      onClick={(e: MouseEvent<HTMLDivElement>) => onClose(e)}
     >
       {children}
     </motion.div>

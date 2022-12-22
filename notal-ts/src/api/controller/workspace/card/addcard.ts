@@ -36,18 +36,20 @@ export async function addcard(req: NextApiRequest, res: NextApiResponse) {
 
   if (
     card.title &&
-    card?.title?.length > LIMITS.MAX.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH
+    card?.title?.trim().length >
+      LIMITS.MAX.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH
   )
     return reject({ reason: "max-title-length", res });
   if (
     card.title &&
-    card?.title?.length < LIMITS.MIN.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH
+    card?.title?.trim().length <
+      LIMITS.MIN.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH
   )
     return reject({ reason: "min-title-length", res });
 
   if (
     card.desc &&
-    card.desc.length > LIMITS.MAX.WORKSPACE_CARD_DESC_CHARACTER_LENGTH
+    card.desc?.trim().length > LIMITS.MAX.WORKSPACE_CARD_DESC_CHARACTER_LENGTH
   )
     return reject({ reason: "max-desc-length", res });
 
@@ -77,8 +79,8 @@ export async function addcard(req: NextApiRequest, res: NextApiResponse) {
         // @ts-ignore
         $push: {
           "fields.$.cards": {
-            title: card.title,
-            desc: card.desc,
+            title: card.title?.trim(),
+            desc: card.desc?.trim(),
             color: card.color,
             createdAt: Date.now(),
             updatedAt: Date.now(),

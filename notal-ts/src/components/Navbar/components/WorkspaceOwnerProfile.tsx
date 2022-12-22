@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { Avatar } from "@components";
 import { BuildComponent } from "@utils/style";
 import { useWorkspace } from "@hooks";
 
@@ -37,28 +38,37 @@ export function WorkspaceOwnerProfile() {
         <Link
           href="/profile/[username]"
           as={`/profile/${
-            workspace?.data?.data?.owner?.username || "not-found"
+            (typeof workspace?.data?.data?.owner == "object" &&
+              workspace?.data?.data?.owner?.username) ||
+            "not-found"
           }`}
           passHref
         >
           <a className="flex flex-row items-center ml-2 min-w-max">
-            <div className="p-[2px] w-7 h-7 rounded-full cursor-pointer bg-gradient-to-tr from-blue-700 to-pink-700">
-              <img
-                src={workspace?.data?.data?.owner?.avatar}
-                className="w-7 h-6 rounded-full border-[2px] dark:border-black border-white"
+            <div className="p-[2px] rounded-full cursor-pointer bg-gradient-to-tr from-blue-700 to-pink-700">
+              <Avatar
+                src={
+                  (typeof workspace?.data?.data?.owner == "object" &&
+                    workspace?.data?.data?.owner?.avatar) ||
+                  ""
+                }
+                size="2xl"
+                className="border-[2px] dark:border-black border-white"
               />
             </div>
             <div className="flex flex-col ml-1">
               <span className="text-md h-4">
-                {workspace?.data?.data?.owner?.fullname
-                  ? `${workspace?.data?.data?.owner?.fullname}`
-                  : `@${workspace?.data?.data?.owner?.username}`}
+                {typeof workspace?.data?.data?.owner == "object" &&
+                  (workspace?.data?.data?.owner?.fullname
+                    ? `${workspace?.data?.data?.owner?.fullname}`
+                    : `@${workspace?.data?.data?.owner?.username}`)}
               </span>
-              {workspace?.data?.data?.owner?.fullname && (
-                <span className="text-sm text-neutral-600">
-                  {`@${workspace?.data?.data?.owner?.username}`}
-                </span>
-              )}
+              {typeof workspace?.data?.data?.owner == "object" &&
+                workspace?.data?.data?.owner?.username && (
+                  <span className="text-sm text-neutral-600">
+                    {`@${workspace?.data?.data?.owner?.username}`}
+                  </span>
+                )}
             </div>
           </a>
         </Link>
