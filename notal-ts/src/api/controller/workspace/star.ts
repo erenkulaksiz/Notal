@@ -4,7 +4,6 @@ import { ObjectId } from "mongodb";
 import { connectToDatabase } from "@lib/mongodb";
 import { accept, reject } from "@api/utils";
 import Pusher from "@lib/pusherServer";
-import { Log } from "@utils";
 import type { ValidateUserReturnType } from "@utils/api/validateUser";
 
 export async function star(
@@ -37,16 +36,16 @@ export async function star(
       }
     )
     .then(() => {
-      accept({
-        res,
-        action: "starworkspace",
-      });
       Pusher?.trigger("notal-workspace", "workspace_updated", {
         workspaceId: id,
         sender: validateUser.decodedToken.user_id,
         sendTime: Date.now(),
         change: !workspace.starred ? "starred" : "unstarred",
-      }).then(() => Log.debug("Pusher", "workspace starred"));
+      });
+      accept({
+        res,
+        action: "starworkspace",
+      });
     })
     .catch((error) => reject({ reason: error, res }));
 }

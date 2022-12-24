@@ -9,9 +9,10 @@ const pusherConfig = {
 
 let pusher: Pusher | undefined;
 
-if (!pusher)
+if (!pusher) {
   pusher = new Pusher(pusherConfig.key, {
     cluster: pusherConfig.cluster,
   });
+}
 
 export default pusher;

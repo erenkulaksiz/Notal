@@ -4,7 +4,6 @@ import Pusher from "@lib/pusherServer";
 
 import { connectToDatabase } from "@lib/mongodb";
 import { accept, reject } from "@api/utils";
-import { Log } from "@utils/logger";
 import type { CardTypes, FieldTypes } from "@types";
 import type { ValidateUserReturnType } from "@utils/api/validateUser";
 
@@ -79,16 +78,16 @@ export async function reordercard(
       }
     )
     .then(async () => {
-      accept({
-        res,
-        action: "reordercard",
-      });
       Pusher?.trigger("notal-workspace", "workspace_updated", {
         workspaceId: id,
         sender: validateUser.decodedToken.user_id,
         sendTime: Date.now(),
         change: "card_reorder",
-      }).then(() => Log.debug("Pusher", "Card reordered"));
+      });
+      accept({
+        res,
+        action: "reordercard",
+      });
     })
     .catch((error) => reject({ reason: error, res }));
 }
