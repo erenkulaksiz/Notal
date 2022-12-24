@@ -6,6 +6,7 @@ import { connectToDatabase } from "@lib/mongodb";
 import { accept, reject } from "@api/utils";
 import type { CardTypes, FieldTypes } from "@types";
 import type { ValidateUserReturnType } from "@utils/api/validateUser";
+import { Log } from "@utils/logger";
 
 export async function reordercard(
   req: NextApiRequest,
@@ -78,8 +79,7 @@ export async function reordercard(
       }
     )
     .then(async () => {
-      Pusher?.trigger("notal-workspace", "workspace_updated", "ping");
-      Pusher?.trigger("notal-workspace", "workspace_updated", {
+      await Pusher?.trigger("notal-workspace", "workspace_updated", {
         workspaceId: id,
         sender: validateUser.decodedToken.user_id,
         sendTime: Date.now(),

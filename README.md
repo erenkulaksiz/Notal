@@ -56,7 +56,7 @@ You should run `npm run build` again any time you make changes to the site
 
 ## Changelog
 
-[View changelog here](https://notalui.vercel.app/?path=/story/changelog--page)
+[View changelog here](https://ui.notal.app/?path=/story/changelog--page)
 
 ## Configuring
 
@@ -72,7 +72,7 @@ Run `npm run analyze` to view bundle sizes for client and server
 
 ## Storybook
 
-[View deployed Storybook here](https://notalui.vercel.app)
+[View deployed Storybook here](https://ui.notal.app)
 
 Notal introduces Storybook to view each component individually without running the project.
 
@@ -93,17 +93,3 @@ While first creating this project, i didn't yet knew these projects. When i was 
 ## Questions & Contact
 
 Contact [erenkulaksz@gmail.com](mailto:erenkulaksz@gmail.com)
-
-## tokei
-```
-===============================================================================
- CSS                     1           39           33            0            6
- JavaScript              4           85           72            3           10
- JSON                    2           61           61            0            0
- SVG                    76          103          103            0            0
- TSX                    79         7619         6968          133          518
- TypeScript            128         3496         2976          198          322
-===============================================================================
- Total                 290        11403        10213          334          856
-===============================================================================
-```

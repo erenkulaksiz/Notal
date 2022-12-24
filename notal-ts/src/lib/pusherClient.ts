@@ -1,7 +1,9 @@
 import Pusher from "pusher-js";
 import { isClient } from "@utils/isClient";
+import { Log } from "@utils/logger";
 
 Pusher.logToConsole = true;
+Pusher.log = (message) => Log.debug(message);
 
 const pusherConfig = {
   key: process.env.NEXT_PUBLIC_PUSHER_KEY ?? "",
