@@ -6,8 +6,10 @@ import {
   useContext,
   useEffect,
   useState,
+  useRef,
 } from "react";
 import { SWRResponse } from "swr";
+import Pusher from "@utils/api/pusherClient";
 
 import { useAuth, useNotalUI } from "@hooks";
 import { WorkspaceService } from "@services";
@@ -95,6 +97,11 @@ export function WorkspaceProvider(props: PropsWithChildren) {
   const [workspaceLoading, setWorkspaceLoading] = useState(false);
   const [workspace, setWorkspace] =
     useState<WorkspaceContextProps["workspace"]>();
+  const subscribed = useRef(false);
+
+  function refreshWorkspace() {
+    workspace?.mutate();
+  }
 
   useEffect(() => {
     if (!workspace) return;
@@ -120,9 +127,18 @@ export function WorkspaceProvider(props: PropsWithChildren) {
           : true;
 
       setIsWorkspaceOwner(isOwner);
-    }
 
-    Log.debug("workspace", workspace);
+      if (!subscribed.current) {
+        const channel = Pusher.subscribe("notal-workspace");
+
+        channel.bind("card-reordered", function (data: any) {
+          if (data.sender == auth?.validatedUser?.uid) return;
+          refreshWorkspace();
+          Log.debug("card-reordered", data);
+        });
+        subscribed.current = true;
+      }
+    }
 
     if (workspace?.data?.success) {
       setWorkspaceLoading(false);
@@ -521,20 +537,24 @@ export function WorkspaceProvider(props: PropsWithChildren) {
     if (!workspace?.data?.data)
       return { success: false, error: "no-workspace" };
 
+    /*
     const newFields = [...workspace?.data?.data?.fields];
-    const [copy] = newFields.splice(source.index, 1);
+    //const [copy] = newFields.splice(source.index, 1);
+    // get copy
+    const copy = newFields[source.index];
+    // remove from old position
+    newFields.splice(source.index, 1);
+    // insert into new position
     newFields.splice(destination.index, 0, copy);
 
-    workspace.mutate(
+    workspace?.mutate(
       {
         ...workspace.data,
-        data: {
-          ...workspace.data.data,
-          fields: newFields,
-        },
+        data: { ...workspace?.data?.data, fields: newFields },
       },
       false
     );
+    */
 
     const data = await WorkspaceService.workspace.field.reorder({
       id: workspace?.data?.data?._id,

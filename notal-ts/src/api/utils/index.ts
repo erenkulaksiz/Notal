@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { getTokenFromHeader } from "@utils/api/getTokenFromHeader";
-import { ValidateUser } from "@utils/api/validateUser";
+import { ValidateUser, ValidateUserReturnType } from "@utils/api/validateUser";
 import { Log } from "@utils";
 
 interface acceptProps {
@@ -62,7 +62,11 @@ export async function checkUserAuth({
 }: {
   req: NextApiRequest;
   res: NextApiResponse;
-  func: (req: NextApiRequest, res: NextApiResponse<any>) => Promise<void>;
+  func: (
+    req: NextApiRequest,
+    res: NextApiResponse<any>,
+    validateUser: ValidateUserReturnType
+  ) => Promise<void>;
 }): Promise<void> {
   const { body } = req;
   if (!body && !body.uid) return reject({ res, reason: "no-auth-params" }); // assuming all auth routes have uid in body
@@ -75,5 +79,5 @@ export async function checkUserAuth({
   if (validateUser.decodedToken.uid !== uid)
     return reject({ res, reason: "auth-uid-error" });
 
-  return func(req, res);
+  return func(req, res, validateUser);
 }

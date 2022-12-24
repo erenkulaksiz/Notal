@@ -7,31 +7,9 @@ import { BoltIcon } from "@icons";
 
 export function Welcome() {
   return (
-    <div className="flex flex-col">
-      <div className="sm:text-4xl font-bold flex flex-row items-center">
-        Welcome to
-        <div className="h-4 sm:h-10 ml-2 dark:hidden flex">
-          <Image
-            src={IconGalactic}
-            alt="Logo of Notal"
-            priority
-            placeholder="blur"
-            className="object-contain"
-            width={140}
-            height={30}
-          />
-        </div>
-        <div className="h-4 sm:h-10 ml-2 dark:flex hidden">
-          <Image
-            src={IconWhite}
-            alt="Logo of Notal"
-            priority
-            placeholder="blur"
-            className="object-contain"
-            width={140}
-            height={30}
-          />
-        </div>
+    <div className="flex flex-col gap-4 h-full">
+      <div className="sm:text-4xl text-2xl font-bold flex flex-row items-center">
+        <span>Welcome to Notal.</span>
       </div>
       <div className="flex flex-row items-center mt-2">
         <div>
@@ -55,17 +33,19 @@ export function Welcome() {
       <p className="sm:text-lg">
         You can track your projects, tasks, and notes in one place.
       </p>
-      <img
-        src="/onboarding_thumb_light.png"
-        className="object-contain w-full h-[200px] sm:h-[400px] dark:flex hidden"
-      />
-      <img
-        src="/onboarding_thumb_dark.png"
-        className="object-contain w-full h-[200px] sm:h-[400px] dark:hidden flex"
-      />
+      <div className="flex h-full items-center justify-center">
+        <img
+          src="/onboarding_thumb_light.png"
+          className="object-contain w-full h-[200px] sm:h-[300px] dark:flex hidden"
+        />
+        <img
+          src="/onboarding_thumb_dark.png"
+          className="object-contain w-full h-[200px] sm:h-[300px] dark:hidden flex"
+        />
+      </div>
       <span>
-        Lets go trough about how to create workspace and then adding things to
-        that workspace.
+        Lets go trough about how to create a workspace and then adding things to
+        it.
       </span>
     </div>
   );

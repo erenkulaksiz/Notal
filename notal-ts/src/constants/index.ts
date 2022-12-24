@@ -1,10 +1,10 @@
-function formatStringToColorful(str: TemplateStringsArray | string) {
+function formatStringToColorful(str: TemplateStringsArray | string): string {
   return `<span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600'>${str}</span>`;
 }
 
 export const CONSTANTS = {
   APP_NAME: "Notal",
-  APP_VERSION: "2.1.10",
+  APP_VERSION: "2.2.0",
   DEFAULT_WORKSPACE_ID_LENGTH: 4,
   DEFAULT_WORKSPACE_THUMBNAIL_GRADIENT: {
     start: "#0eeaed",

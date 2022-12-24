@@ -2,11 +2,11 @@ import { useEffect } from "react";
 import useSWR from "swr";
 import Cookies from "js-cookie";
 import dynamic from "next/dynamic";
-
-import { Navbar } from "@components";
-import { useWorkspace, useWorkspaces } from "@hooks";
-import { fetchWorkspace } from "@utils";
 import { DragDropContext } from "@hello-pangea/dnd";
+
+import { LoadingOverlay, Navbar } from "@components";
+import { useWorkspace, useWorkspaces } from "@hooks";
+import { fetchWorkspace, Log } from "@utils";
 import type { NotalRootProps } from "@types";
 
 const NotalWorkspace = dynamic<{}>(() =>
@@ -40,7 +40,7 @@ export function Workspace(props: NotalRootProps) {
         Feel free to explore. Theres more content inside the real application
         instead of this onboarding.
       </p>
-      <div className="mt-2 h-full border-2 rounded-md border-neutral-300 dark:border-neutral-800 overflow-hidden">
+      <div className="mt-2 flex flex-col h-full border-2 rounded-md border-neutral-300 dark:border-neutral-800 overflow-hidden">
         <Navbar disableRightSide />
         <DragDropContext
           onDragEnd={(result) => {

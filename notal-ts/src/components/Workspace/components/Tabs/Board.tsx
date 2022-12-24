@@ -1,16 +1,20 @@
+import { useMemo } from "react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { Droppable } from "@hello-pangea/dnd";
 import type {
   DroppableProvided,
   DroppableStateSnapshot,
 } from "@hello-pangea/dnd";
-import { useTheme } from "next-themes";
 
 import { WorkspaceSidebar } from "@components";
 import { useWorkspace } from "@hooks";
 import AddFieldButton from "./AddFieldButton";
-import type { WorkspaceFieldProps } from "../WorkspaceField/WorkspaceField";
 import { LIMITS } from "@constants/limits";
+import type { WorkspaceFieldProps } from "../WorkspaceField/WorkspaceField";
+
+import EmptyStateLight from "@public/empty_state_workspace_light.png";
+import EmptyStateDark from "@public/empty_state_workspace_dark.png";
 
 const WorkspaceField = dynamic<WorkspaceFieldProps>(() =>
   import("../WorkspaceField/WorkspaceField").then((mod) => mod.WorkspaceField)
@@ -18,7 +22,14 @@ const WorkspaceField = dynamic<WorkspaceFieldProps>(() =>
 
 export default function Board() {
   const workspace = useWorkspace();
-  const { resolvedTheme } = useTheme();
+
+  const fields = useMemo(
+    () =>
+      Array.isArray(workspace.workspace?.data?.data?.fields)
+        ? workspace.workspace?.data?.data?.fields
+        : [],
+    [workspace.workspace?.data?.data?.fields]
+  );
 
   return (
     <>
@@ -30,33 +41,27 @@ export default function Board() {
             {...provided.droppableProps}
           >
             {workspace.isWorkspaceOwner && <WorkspaceSidebar />}
-            {Array.isArray(workspace.workspace?.data?.data?.fields) &&
-              workspace.workspace?.data?.data?.fields.length == 0 && (
-                <div className="absolute top-0 bottom-0 right-0 left-0 flex z-0 flex-col gap-6 items-center justify-center">
-                  {resolvedTheme == "light" ? (
-                    <img
-                      src="/empty_state_workspace_light.png"
-                      className="object-contain w-[200px]"
-                    />
-                  ) : (
-                    <img
-                      src="/empty_state_workspace_dark.png"
-                      className="object-contain w-[200px]"
-                    />
-                  )}
-                  <span>This workspace is empty :(</span>
+            {fields && fields.length == 0 && (
+              <div className="absolute top-0 bottom-0 right-0 left-0 flex z-0 flex-col gap-6 items-center justify-center">
+                <div className="flex dark:hidden">
+                  <Image src={EmptyStateLight} objectFit="contain" />
                 </div>
-              )}
-            {Array.isArray(workspace.workspace?.data?.data?.fields) &&
-              workspace.workspace?.data?.data?.fields.map(
-                (field, index: number) => (
-                  <WorkspaceField field={field} key={field._id} index={index} />
-                )
-              )}
+                <div className="hidden dark:flex">
+                  <Image src={EmptyStateDark} objectFit="contain" />
+                </div>
+                <span>This workspace is empty :(</span>
+              </div>
+            )}
+            {fields &&
+              fields.map((field, index: number) => (
+                <WorkspaceField field={field} key={field._id} index={index} />
+              ))}
             {provided.placeholder}
             {workspace.isWorkspaceOwner &&
-              workspace?.workspace?.data?.data?.fields.length <=
-                LIMITS.MAX.WORKSPACE_FIELD_LENGTH && <AddFieldButton />}
+              fields &&
+              fields.length <= LIMITS.MAX.WORKSPACE_FIELD_LENGTH && (
+                <AddFieldButton />
+              )}
           </div>
         )}
       </Droppable>

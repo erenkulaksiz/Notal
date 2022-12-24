@@ -24,9 +24,17 @@ import { Meta } from '@storybook/addon-docs';
 
 - [bug] Workspace auto reload causes app to give `Workspace not found` error if workspace is private (reload fixes this issue) - probably token issue
 - [bug] Check Storybook for each component, they are probably broken since the last check
-- [bug] API allows any signed in users to add/edit workspace
+- [bug] API allows any signed in users to add/edit workspace on private workpsaces (this is a security issue)
 
 # Changelog
+
+## 2.2.0 - 23.12.2022 - 24.12.2022
+
+- [feat] Added realtime updates on `WorkspaceFieldCard` reorders via Pusher
+- [feat] Removed gradient border on `Avatar` inside `WorkspaceCard`
+- [feat] Removed background from `WorkspaceSidebar` component
+- [fix] Fix an issue where onboarding page wasn't using any container
+- [fix] Fix an issue where Workspace screen in onboarding page didn't had 100% height
 
 ## 2.1.10 - 21.12.2022 - 22.12.2022
 

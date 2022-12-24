@@ -1,4 +1,13 @@
-export const LIMITS = {
+interface LimitsTypes {
+  MAX: {
+    [key: string]: number;
+  };
+  MIN: {
+    [key: string]: number;
+  };
+}
+
+export const LIMITS: LimitsTypes = {
   MAX: {
     WORKSPACE_TITLE_CHARACTER_LENGTH: 32,
     WORKSPACE_DESC_CHARACTER_LENGTH: 48,
@@ -16,7 +25,7 @@ export const LIMITS = {
   },
   MIN: {
     WORKSPACE_TITLE_CHARACTER_LENGTH: 1,
-    WORKSPACE_FIELD_TITLE_CHARACTER_LENGTH: 2,
+    WORKSPACE_FIELD_TITLE_CHARACTER_LENGTH: 1,
     WORKSPACE_CARD_TITLE_CHARACTER_LENGTH: 3,
     WORKSPACE_CARD_DESC_CHARACTER_LENGTH: 0,
     WORKSPACE_CARD_TAGS_CHARACTER_LENGTH: 0,

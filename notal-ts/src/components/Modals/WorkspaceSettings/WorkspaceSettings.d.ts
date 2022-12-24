@@ -1,7 +1,8 @@
 import type { WorkspaceTypes } from "@types";
 
 export interface WorkspaceSettingsProps {
-  workspace: WorkspaceTypes;
+  open: boolean;
+  workspace?: WorkspaceTypes;
   onClose: () => void;
-  onWorkspaceUpdate: (workspace: WorkspaceTypes) => void;
+  onWorkspaceUpdate?: (workspace: WorkspaceTypes) => void;
 }

@@ -10,7 +10,7 @@ if (!admin.apps.length) {
   });
 }
 
-interface ValidateUserReturnType {
+export interface ValidateUserReturnType {
   success: boolean;
   error?: AuthError | string;
   errorCode?: string;

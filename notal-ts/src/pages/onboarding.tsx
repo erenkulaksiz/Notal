@@ -101,12 +101,12 @@ function Onboarding(props: NotalRootProps) {
         <Head>
           <title>Onboarding · notal.app</title>
         </Head>
-        <Container className="flex flex-col justify-between h-full py-6">
+        <div className="flex flex-col h-full max-w-full justify-between py-6 px-4">
           <Tab // Uses my own tab component!
             selected={currentPage}
             onSelect={(index) => setCurrentPage(index)}
             id="onboardingTab"
-            globalTabViewClassName="h-full pt-2 pb-2"
+            globalTabViewClassName="pt-2 pb-2"
             className="h-full"
             headerVisible={false}
             animated
@@ -145,7 +145,7 @@ function Onboarding(props: NotalRootProps) {
               )}
             </div>
           </div>
-        </Container>
+        </div>
       </Layout>
     </Suspense>
   );

@@ -24,7 +24,6 @@ export function HomeWorkspaceCard({
   index = 0,
 }: HomeWorkspaceCardProps) {
   const auth = useAuth();
-  Log.debug("HomeWorkspaceCard", workspace?.users, workspace?.owner);
 
   if (skeleton)
     return (
@@ -77,9 +76,7 @@ export function HomeWorkspaceCard({
                       outline
                       key={`workspaceHomeUser_${user.uid}`}
                     >
-                      <div className="p-[2px] rounded-full cursor-pointer bg-gradient-to-tr from-blue-700 to-pink-700  group-hover:opacity-75 ease-in-out duration-200">
-                        <Avatar src={user.avatar} size="xl" />
-                      </div>
+                      <Avatar src={user.avatar} size="xl" />
                     </Tooltip>
                   ))}
             </div>

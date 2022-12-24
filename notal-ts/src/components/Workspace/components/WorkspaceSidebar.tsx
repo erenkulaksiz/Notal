@@ -3,7 +3,13 @@ import { useState } from "react";
 import Link from "next/link";
 
 import { WorkspaceSidebarItem } from "./WorkspaceSidebarItem";
-import { Button, AddFieldModal, Tooltip, Avatar } from "@components";
+import {
+  Button,
+  AddFieldModal,
+  Tooltip,
+  Avatar,
+  WorkspaceSettingsModal,
+} from "@components";
 import {
   StarFilledIcon,
   VisibleIcon,
@@ -17,7 +23,6 @@ import {
 } from "@icons";
 import { useNotalUI, useWorkspace } from "@hooks";
 import { LIMITS } from "@constants/limits";
-import { Log } from "@utils";
 import { OwnerTypes } from "@types";
 
 interface WorkspaceUsers extends OwnerTypes {
@@ -27,7 +32,9 @@ interface WorkspaceUsers extends OwnerTypes {
 export function WorkspaceSidebar() {
   const { workspace, starWorkspace, visibilityToggle, deleteWorkspace, field } =
     useWorkspace();
-  const [addFieldModalOpen, setAddFieldModalOpen] = useState(false);
+  const [addFieldModalOpen, setAddFieldModalOpen] = useState<boolean>(false);
+  const [workspaceSettingsModalOpen, setWorkspaceSettingsModalOpen] =
+    useState<boolean>(false);
   const NotalUI = useNotalUI();
   const router = useRouter();
 
@@ -49,8 +56,6 @@ export function WorkspaceSidebar() {
 
   const users = getWorkspaceUsers();
 
-  Log.debug(users);
-
   async function onDelete() {
     await deleteWorkspace();
     NotalUI.Alert.close();
@@ -58,7 +63,7 @@ export function WorkspaceSidebar() {
   }
 
   return (
-    <nav className="flex flex-col justify-between items-center sticky left-0 pb-6 p-1 top-0 z-40 backdrop-blur-md">
+    <nav className="flex flex-col justify-between items-center sticky left-0 pb-6 p-1 top-0 z-40 mr-1">
       <div className="flex flex-col gap-2">
         {workspace?.data?.data?.fields.length <=
           LIMITS.MAX.WORKSPACE_FIELD_LENGTH && (
@@ -156,7 +161,7 @@ export function WorkspaceSidebar() {
             />
           }
           title="Workspace Settings"
-          onClick={async () => {}}
+          onClick={async () => setWorkspaceSettingsModalOpen(true)}
         />
       </div>
       <div className="flex flex-col gap-1">
@@ -202,6 +207,11 @@ export function WorkspaceSidebar() {
         onClose={() => setAddFieldModalOpen(false)}
         onAdd={(_field) => field.add({ title: _field.title })}
         workspaceTitle={workspace?.data?.data?.title}
+      />
+      <WorkspaceSettingsModal
+        open={workspaceSettingsModalOpen}
+        onClose={() => setWorkspaceSettingsModalOpen(false)}
+        onWorkspaceUpdate={() => {}}
       />
     </nav>
   );
