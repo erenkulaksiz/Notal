@@ -18,7 +18,6 @@ import {
   getuserdata,
 } from "./workspace";
 import { complete } from "./onboarding/complete";
-
 import { accept, checkUserAuth } from "@api/utils";
 
 type APIReturnType = (req: NextApiRequest, res: NextApiResponse) => void;

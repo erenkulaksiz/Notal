@@ -78,6 +78,7 @@ export async function reordercard(
       }
     )
     .then(async () => {
+      Pusher?.trigger("notal-workspace", "workspace_updated", "ping");
       Pusher?.trigger("notal-workspace", "workspace_updated", {
         workspaceId: id,
         sender: validateUser.decodedToken.user_id,

@@ -1,4 +1,5 @@
 import Pusher from "pusher-js";
+import { isClient } from "@utils/isClient";
 
 Pusher.logToConsole = true;
 
@@ -9,7 +10,7 @@ const pusherConfig = {
 
 let pusher: Pusher | undefined;
 
-if (!pusher) {
+if (!pusher && isClient()) {
   pusher = new Pusher(pusherConfig.key, {
     cluster: pusherConfig.cluster,
   });
