@@ -48,7 +48,14 @@ export async function GetWorkspaceData({
       };
     }
 
-    if (validateUser.decodedToken.user_id != findWorkspace.owner) {
+    const isOwner =
+      findWorkspace?.users?.findIndex(
+        (uid: string) => uid == validateUser.decodedToken.uid
+      ) == -1
+        ? false
+        : true;
+
+    if (!isOwner) {
       return {
         success: false,
         error: "not-found",

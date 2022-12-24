@@ -63,7 +63,7 @@ export function WorkspaceSidebar() {
   }
 
   return (
-    <nav className="flex flex-col justify-between items-center sticky left-0 pb-6 p-1 top-0 z-40 mr-1">
+    <nav className="flex flex-col justify-between items-center sticky left-0 pb-6 p-1 top-0 z-40">
       <div className="flex flex-col gap-2">
         {workspace?.data?.data?.fields.length <=
           LIMITS.MAX.WORKSPACE_FIELD_LENGTH && (

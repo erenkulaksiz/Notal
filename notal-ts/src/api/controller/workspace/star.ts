@@ -45,7 +45,7 @@ export async function star(
         workspaceId: id,
         sender: validateUser.decodedToken.user_id,
         sendTime: Date.now(),
-        change: "starred",
+        change: !workspace.starred ? "starred" : "unstarred",
       }).then(() => Log.debug("Pusher", "workspace starred"));
     })
     .catch((error) => reject({ reason: error, res }));
