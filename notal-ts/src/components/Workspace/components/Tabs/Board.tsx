@@ -53,9 +53,11 @@ export default function Board() {
               </div>
             )}
             {fields &&
-              fields.map((field, index: number) => (
-                <WorkspaceField field={field} key={field._id} index={index} />
-              ))}
+              fields.map((field, index: number) =>
+                field ? (
+                  <WorkspaceField field={field} key={field._id} index={index} />
+                ) : null
+              )}
             {provided.placeholder}
             {workspace.isWorkspaceOwner &&
               fields &&

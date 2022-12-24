@@ -36,7 +36,7 @@ export async function star(
       }
     )
     .then(async () => {
-      await Pusher?.trigger("notal-workspace", "workspace_updated", {
+      await Pusher?.trigger(`notal-workspace-${id}`, "workspace-updated", {
         workspaceId: id,
         sender: validateUser.decodedToken.user_id,
         sendTime: Date.now(),

@@ -3,10 +3,13 @@ import { ObjectId } from "mongodb";
 
 import { connectToDatabase } from "@lib/mongodb";
 import { accept, reject } from "@api/utils";
+import Pusher from "@lib/pusherServer";
+import type { ValidateUserReturnType } from "@utils/api/validateUser";
 
 export async function togglevisibility(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
+  validateUser: ValidateUserReturnType
 ) {
   const { db } = await connectToDatabase();
   const workspacesCollection = await db.collection("workspaces");
@@ -31,11 +34,17 @@ export async function togglevisibility(
         },
       }
     )
-    .then(() =>
+    .then(async () => {
+      await Pusher?.trigger(`notal-workspace-${id}`, "workspace-updated", {
+        workspaceId: id,
+        sender: validateUser.decodedToken.user_id,
+        sendTime: Date.now(),
+        change: "workspace_visibility",
+      });
       accept({
         res,
         action: "toggleVisibility",
-      })
-    )
+      });
+    })
     .catch((error) => reject({ reason: error, res }));
 }

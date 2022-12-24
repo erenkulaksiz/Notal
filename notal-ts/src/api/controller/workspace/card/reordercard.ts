@@ -4,6 +4,7 @@ import Pusher from "@lib/pusherServer";
 
 import { connectToDatabase } from "@lib/mongodb";
 import { accept, reject } from "@api/utils";
+import { LIMITS } from "@constants/limits";
 import type { CardTypes, FieldTypes } from "@types";
 import type { ValidateUserReturnType } from "@utils/api/validateUser";
 import { Log } from "@utils/logger";
@@ -36,14 +37,31 @@ export async function reordercard(
   if (!body.cardId) return reject({ reason: "no-card-id", res });
   const { cardId } = body;
 
+  const sourceField = workspace.fields.find(
+    (field: FieldTypes) => field._id == source.droppableId
+  );
+  const destinationField = workspace.fields.find(
+    (field: FieldTypes) => field._id == destination.droppableId
+  );
+
+  // check cards in source and destination
+  if (!sourceField) return reject({ reason: "no-source-field", res });
+  if (!destinationField) return reject({ reason: "no-destination-field", res });
+
+  if (sourceField._id != destinationField._id) {
+    // if not same field
+    if (destinationField?.cards.length >= LIMITS.MAX.WORKSPACE_CARD_LENGTH)
+      return reject({ reason: "max-cards-length", res });
+  }
+
   // get from field
   const fieldIndex = workspace.fields.findIndex(
     (field: FieldTypes) => field._id == source.droppableId
   );
   const field = workspace.fields[fieldIndex];
-  const cardIndex = field.cards.findIndex(
-    (card: CardTypes) => card._id == cardId
-  );
+  const cardIndex = field.cards.findIndex((card: CardTypes) => {
+    return card?._id == cardId;
+  });
   const card = field.cards[cardIndex];
 
   // first remove card from field
@@ -79,7 +97,7 @@ export async function reordercard(
       }
     )
     .then(async () => {
-      await Pusher?.trigger("notal-workspace", "workspace_updated", {
+      await Pusher?.trigger(`notal-workspace-${id}`, "workspace-updated", {
         workspaceId: id,
         sender: validateUser.decodedToken.user_id,
         sendTime: Date.now(),

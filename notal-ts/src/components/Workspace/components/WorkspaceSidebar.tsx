@@ -195,7 +195,7 @@ export function WorkspaceSidebar() {
               as={`/profile/${user?.username || "not-found"}`}
               passHref
             >
-              <a target="_blank">
+              <a target="_blank" title={`@${user?.username}` ?? "not-found"}>
                 <Avatar src={user?.avatar} size="xl" />
               </a>
             </Link>

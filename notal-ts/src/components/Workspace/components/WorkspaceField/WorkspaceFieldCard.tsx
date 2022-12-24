@@ -65,6 +65,7 @@ export function WorkspaceFieldCard({
             }
             onClick={() => setShowViewCardModal(true)}
             ref={provided.innerRef}
+            title={card?.title ? card?.title : card?.desc ? card?.desc : ""}
             {...provided.draggableProps}
           >
             {card?.color && (

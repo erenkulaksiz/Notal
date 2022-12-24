@@ -57,6 +57,9 @@ export function ViewCardModal({
             <span className="break-words whitespace-pre-line">{card.desc}</span>
           </div>
         )}
+        <div className="uppercase text-xs dark:text-neutral-600 text-neutral-400 font-semibold">
+          comments
+        </div>
       </div>
     </Modal>
   );

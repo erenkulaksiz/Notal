@@ -162,6 +162,7 @@ function Workspace(props: NotalRootProps) {
                 notCloseable: false,
                 showCloseButton: true,
               });
+              workspaceHook.refreshWorkspace();
             }
             return;
           }
@@ -180,6 +181,7 @@ function Workspace(props: NotalRootProps) {
                 notCloseable: false,
                 showCloseButton: true,
               });
+              workspaceHook.refreshWorkspace();
             }
           }
         }}

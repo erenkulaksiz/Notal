@@ -6,8 +6,14 @@ import { accept, reject } from "@api/utils";
 import { CardTypes, FieldTypes } from "@types";
 import { LIMITS } from "@constants/limits";
 import { Log } from "@utils/index";
+import Pusher from "@lib/pusherServer";
+import type { ValidateUserReturnType } from "@utils/api/validateUser";
 
-export async function addcard(req: NextApiRequest, res: NextApiResponse) {
+export async function addcard(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  validateUser: ValidateUserReturnType
+) {
   const { db } = await connectToDatabase();
   const workspacesCollection = await db.collection("workspaces");
 
@@ -91,11 +97,17 @@ export async function addcard(req: NextApiRequest, res: NextApiResponse) {
         },
       }
     )
-    .then(() =>
+    .then(async () => {
+      await Pusher?.trigger(`notal-workspace-${id}`, "workspace-updated", {
+        workspaceId: id,
+        sender: validateUser.decodedToken.user_id,
+        sendTime: Date.now(),
+        change: "card_add",
+      });
       accept({
         res,
         action: "addcard",
-      })
-    )
+      });
+    })
     .catch((error) => reject({ reason: error, res }));
 }

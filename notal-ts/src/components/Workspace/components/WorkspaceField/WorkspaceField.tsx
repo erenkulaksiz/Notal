@@ -93,14 +93,16 @@ export function WorkspaceField({ field, index }: WorkspaceFieldProps) {
                   ref={dropProvided.innerRef}
                 >
                   {Array.isArray(field?.cards) &&
-                    field?.cards.map((card: CardTypes, index: number) => (
-                      <WorkspaceFieldCard
-                        card={card}
-                        fieldId={field?._id}
-                        key={card?._id}
-                        index={index}
-                      />
-                    ))}
+                    field?.cards.map((card: CardTypes, index: number) =>
+                      card ? (
+                        <WorkspaceFieldCard
+                          card={card}
+                          fieldId={field?._id}
+                          key={card?._id}
+                          index={index}
+                        />
+                      ) : null
+                    )}
                   {dropProvided.placeholder}
                   {workspace.isWorkspaceOwner &&
                     field.cards.length < LIMITS.MAX.WORKSPACE_CARD_LENGTH && (

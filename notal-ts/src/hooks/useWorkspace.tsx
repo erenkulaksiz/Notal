@@ -73,6 +73,7 @@ export interface WorkspaceContextProps {
       cardId: string;
     }) => Promise<WorkspaceFunctionReturnType>;
   };
+  refreshWorkspace: () => void;
 }
 
 export interface WorkspaceFunctionReturnType {
@@ -127,23 +128,33 @@ export function WorkspaceProvider(props: PropsWithChildren) {
           : true;
 
       setIsWorkspaceOwner(isOwner);
+
+      subscribed.current = false;
     }
 
     if (workspace?.data?.success) {
       setWorkspaceLoading(false);
 
       if (!subscribed.current) {
-        const channel = Pusher?.subscribe("notal-workspace");
+        const channel = Pusher?.subscribe(
+          `notal-workspace-${workspace?.data?.data?._id}`
+        );
 
-        channel?.bind("workspace_updated", function (data: any) {
-          Log.debug("workspace_updated", data, "sendTime:", data.sendTime);
+        channel?.bind("workspace-updated", function (data: any) {
           if (data.sender == auth?.validatedUser?.uid) return; // Sender is self
           if (data.workspaceId != workspace?.data?.data?._id) return;
+          Log.debug(
+            `notal-workspace-${workspace?.data?.data?._id}`,
+            data,
+            "sendTime:",
+            data.sendTime
+          );
           refreshWorkspace();
         });
         subscribed.current = true;
       }
     } else {
+      subscribed.current = false;
       setWorkspaceLoading(workspace.isValidating);
     }
   }, [workspace]);
@@ -538,7 +549,6 @@ export function WorkspaceProvider(props: PropsWithChildren) {
     if (!workspace?.data?.data)
       return { success: false, error: "no-workspace" };
 
-    /*
     const newFields = [...workspace?.data?.data?.fields];
     //const [copy] = newFields.splice(source.index, 1);
     // get copy
@@ -555,7 +565,6 @@ export function WorkspaceProvider(props: PropsWithChildren) {
       },
       false
     );
-    */
 
     const data = await WorkspaceService.workspace.field.reorder({
       id: workspace?.data?.data?._id,
@@ -663,6 +672,7 @@ export function WorkspaceProvider(props: PropsWithChildren) {
     starWorkspace,
     deleteWorkspace,
     visibilityToggle,
+    refreshWorkspace,
   } as WorkspaceContextProps;
 
   return <WorkspaceContext.Provider value={value} {...props} />;
