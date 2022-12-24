@@ -25,8 +25,14 @@ import { Meta } from '@storybook/addon-docs';
 - [bug] Workspace auto reload causes app to give `Workspace not found` error if workspace is private (reload fixes this issue) - probably token issue
 - [bug] Check Storybook for each component, they are probably broken since the last check
 - [bug] API allows any signed in users to add/edit workspace on private workpsaces (this is a security issue)
+- [bug] Starred workspaces is not user specific, it is global on workspace users
 
 # Changelog
+
+## 2.2.1 - 24.12.2022
+
+- [feat] Added test stuff to test realtime updates via Pusher
+- [fix] Fix an internal issue where draggable inside `WorkspaceFieldCard` was still enabled even if user is not signed in or workspace user
 
 ## 2.2.0 - 23.12.2022 - 24.12.2022
 

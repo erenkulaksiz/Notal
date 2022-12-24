@@ -7,12 +7,15 @@ const pusherConfig = {
   cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER ?? "",
 };
 
-const pusher = new Pusher({
-  appId: pusherConfig.appId,
-  key: pusherConfig.key,
-  secret: pusherConfig.secret,
-  cluster: pusherConfig.cluster,
-  useTLS: true,
-});
+let pusher: Pusher | undefined;
+
+if (!pusher)
+  pusher = new Pusher({
+    appId: pusherConfig.appId,
+    key: pusherConfig.key,
+    secret: pusherConfig.secret,
+    cluster: pusherConfig.cluster,
+    useTLS: true,
+  });
 
 export default pusher;

@@ -42,7 +42,11 @@ export function WorkspaceFieldCard({
 
   return (
     <>
-      <Draggable draggableId={card?._id ?? "_default"} index={index}>
+      <Draggable
+        draggableId={card?._id ?? "_default"}
+        index={index}
+        isDragDisabled={!workspace.isWorkspaceOwner || !card?._id}
+      >
         {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
           <div
             className={

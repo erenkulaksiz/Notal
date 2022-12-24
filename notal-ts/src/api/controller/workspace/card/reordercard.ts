@@ -1,9 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { ObjectId } from "mongodb";
-import Pusher from "@utils/api/pusherServer";
+import Pusher from "@lib/pusherServer";
 
 import { connectToDatabase } from "@lib/mongodb";
 import { accept, reject } from "@api/utils";
+import { Log } from "@utils/logger";
 import type { CardTypes, FieldTypes } from "@types";
 import type { ValidateUserReturnType } from "@utils/api/validateUser";
 
@@ -82,14 +83,12 @@ export async function reordercard(
         res,
         action: "reordercard",
       });
-      const response = await Pusher.trigger(
-        "notal-workspace",
-        "card-reordered",
-        {
-          workspaceId: id,
-          sender: validateUser.decodedToken.user_id,
-        }
-      );
+      Pusher?.trigger("notal-workspace", "workspace_updated", {
+        workspaceId: id,
+        sender: validateUser.decodedToken.user_id,
+        sendTime: Date.now(),
+        change: "card_reorder",
+      }).then(() => Log.debug("Pusher", "Card reordered"));
     })
     .catch((error) => reject({ reason: error, res }));
 }

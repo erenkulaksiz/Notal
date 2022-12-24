@@ -9,7 +9,7 @@ import {
   useRef,
 } from "react";
 import { SWRResponse } from "swr";
-import Pusher from "@utils/api/pusherClient";
+import Pusher from "@lib/pusherClient";
 
 import { useAuth, useNotalUI } from "@hooks";
 import { WorkspaceService } from "@services";
@@ -127,21 +127,22 @@ export function WorkspaceProvider(props: PropsWithChildren) {
           : true;
 
       setIsWorkspaceOwner(isOwner);
-
-      if (!subscribed.current) {
-        const channel = Pusher.subscribe("notal-workspace");
-
-        channel.bind("card-reordered", function (data: any) {
-          if (data.sender == auth?.validatedUser?.uid) return;
-          refreshWorkspace();
-          Log.debug("card-reordered", data);
-        });
-        subscribed.current = true;
-      }
     }
 
     if (workspace?.data?.success) {
       setWorkspaceLoading(false);
+
+      if (!subscribed.current) {
+        const channel = Pusher?.subscribe("notal-workspace");
+
+        channel?.bind("workspace_updated", function (data: any) {
+          Log.debug("workspace_updated", data, "sendTime:", data.sendTime);
+          if (data.sender == auth?.validatedUser?.uid) return; // Sender is self
+          if (data.workspaceId != workspace?.data?.data?._id) return;
+          refreshWorkspace();
+        });
+        subscribed.current = true;
+      }
     } else {
       setWorkspaceLoading(workspace.isValidating);
     }

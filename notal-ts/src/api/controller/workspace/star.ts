@@ -3,8 +3,15 @@ import { ObjectId } from "mongodb";
 
 import { connectToDatabase } from "@lib/mongodb";
 import { accept, reject } from "@api/utils";
+import Pusher from "@lib/pusherServer";
+import { Log } from "@utils";
+import type { ValidateUserReturnType } from "@utils/api/validateUser";
 
-export async function star(req: NextApiRequest, res: NextApiResponse) {
+export async function star(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  validateUser: ValidateUserReturnType
+) {
   const { db } = await connectToDatabase();
   const workspacesCollection = await db.collection("workspaces");
 
@@ -29,11 +36,17 @@ export async function star(req: NextApiRequest, res: NextApiResponse) {
         },
       }
     )
-    .then(() =>
+    .then(() => {
       accept({
         res,
         action: "starworkspace",
-      })
-    )
+      });
+      Pusher?.trigger("notal-workspace", "workspace_updated", {
+        workspaceId: id,
+        sender: validateUser.decodedToken.user_id,
+        sendTime: Date.now(),
+        change: "starred",
+      }).then(() => Log.debug("Pusher", "workspace starred"));
+    })
     .catch((error) => reject({ reason: error, res }));
 }
