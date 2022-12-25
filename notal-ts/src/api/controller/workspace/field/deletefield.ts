@@ -1,10 +1,16 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { ObjectId } from "mongodb";
 
+import Pusher from "@lib/pusherServer";
 import { connectToDatabase } from "@lib/mongodb";
 import { accept, reject } from "@api/utils";
+import type { ValidateUserReturnType } from "@utils/api/validateUser";
 
-export async function deletefield(req: NextApiRequest, res: NextApiResponse) {
+export async function deletefield(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  validateUser: ValidateUserReturnType
+) {
   const { db } = await connectToDatabase();
   const workspacesCollection = await db.collection("workspaces");
 
@@ -33,11 +39,21 @@ export async function deletefield(req: NextApiRequest, res: NextApiResponse) {
         },
       }
     )
-    .then(() =>
+    .then(async () => {
+      await Pusher?.trigger(
+        `notal-workspace-${workspaceId}`,
+        "workspace-updated",
+        {
+          workspaceId,
+          sender: validateUser.decodedToken.user_id,
+          sendTime: Date.now(),
+          change: "field_delete",
+        }
+      );
       accept({
         res,
         action: "deletefield",
-      })
-    )
+      });
+    })
     .catch((error) => reject({ reason: error, res }));
 }

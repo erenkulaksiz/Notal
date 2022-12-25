@@ -7,6 +7,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      animation: {
+        border: 'border 4s ease infinite',
+      },
       backgroundImage: {
         "landing_bg_2": "url('../public/landing_bg_2.png')",
         "landing_bg_3": "url('../public/landing_bg_3.png')",
@@ -18,7 +21,11 @@ module.exports = {
           '0%': { transform: 'translateY(0px)', opacity: 1 },
           '50%': { transform: 'translateY(-16px)', opacity: .65 },
           '100%': { transform: 'translateY(0px)', opacity: 1 },
-        }
+        },
+        border: {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
       },
     }
   },

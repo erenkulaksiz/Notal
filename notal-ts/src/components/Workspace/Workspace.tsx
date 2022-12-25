@@ -31,7 +31,7 @@ export function Workspace() {
         onSelect={(index) => setWorkspaceTab(index)}
         id="workspaceTab"
         headerClassName="dark:bg-transparent bg-white max-w-[360px]"
-        className="flex flex-col overflow-x-auto overflow-y-hidden"
+        className="flex flex-col overflow-y-hidden"
         headerContainerClassName="px-3"
         headerVisible={false}
       >

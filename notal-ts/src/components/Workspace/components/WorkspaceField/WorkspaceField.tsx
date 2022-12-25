@@ -40,6 +40,7 @@ export function WorkspaceField({ field, index }: WorkspaceFieldProps) {
           ref={provided.innerRef}
           {...provided.draggableProps}
           animate="normal"
+          title={field?.title}
           variants={{
             collapse: {
               width: "140px",

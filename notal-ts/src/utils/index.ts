@@ -9,3 +9,4 @@ export { workspaceFetch } from "./workspaceFetch";
 export { fetchWorkspace } from "./fetcher/workspace";
 export { fetchWorkspaces } from "./fetcher/workspaces";
 export { getRandomQuote, QUOTE_TYPES } from "./quote";
+export { scale } from "./scale";

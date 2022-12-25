@@ -14,21 +14,15 @@ import { Meta } from '@storybook/addon-docs';
 - fix means application bug fixes or documentation fixes
 - todo means that is something that not implemented yet
 
-- [todo] Fix `WorkspaceFieldHeader` wont fit title properly
-- [todo] Fix `WorkspaceField` layout issue while dropping field
-- [todo] Fix `AddCardModal` inside the Storybook
-- [todo] Add Teaming feature
-- [todo] Add constants to Workspace and Notal SEO
-- [todo] Fix workspace.data.owner.username typing
-- [todo] Shorten `AddWorkspaceModal` by seperating each tab to component
-
-- [bug] Workspace auto reload causes app to give `Workspace not found` error if workspace is private (reload fixes this issue) - probably token issue
-- [bug] Check Storybook for each component, they are probably broken since the last check
-- [bug] API allows any signed in users to add/edit workspace on private workpsaces (this is a security issue)
-- [bug] Starred workspaces is not user specific, it is global on workspace users
-- [bug] Fix workspace not refreshing on `WorkspaceField` has reached max cards and giving error
-
 # Changelog
+
+## 2.2.4 - 25.12.2022
+
+- [feat] Added gradient animated border to `LoginModal` buttons
+- [feat] Changed versioning location to `package.json` instead of constants file
+- [feat] Added smart scroll feature to workspace (right bottom), makes easy to scroll trough fields if there is too much fields (doesnt support touch devices yet)
+- [fix] Fix an issue where live changes caused to subscribe to websocket again
+- [fix] Fix an issue where other live changes wasn't registering on client side
 
 ## 2.2.3 - 24.12.2022 - 25.12.2022
 

@@ -98,7 +98,6 @@ export function WorkspaceProvider(props: PropsWithChildren) {
   const [workspaceLoading, setWorkspaceLoading] = useState(false);
   const [workspace, setWorkspace] =
     useState<WorkspaceContextProps["workspace"]>();
-  const subscribed = useRef(false);
 
   function refreshWorkspace() {
     workspace?.mutate();
@@ -128,36 +127,37 @@ export function WorkspaceProvider(props: PropsWithChildren) {
           : true;
 
       setIsWorkspaceOwner(isOwner);
-
-      subscribed.current = false;
     }
 
     if (workspace?.data?.success) {
       setWorkspaceLoading(false);
-
-      if (!subscribed.current) {
-        const channel = Pusher?.subscribe(
-          `notal-workspace-${workspace?.data?.data?._id}`
-        );
-
-        channel?.bind("workspace-updated", function (data: any) {
-          if (data.sender == auth?.validatedUser?.uid) return; // Sender is self
-          if (data.workspaceId != workspace?.data?.data?._id) return;
-          Log.debug(
-            `notal-workspace-${workspace?.data?.data?._id}`,
-            data,
-            "sendTime:",
-            data.sendTime
-          );
-          refreshWorkspace();
-        });
-        subscribed.current = true;
-      }
     } else {
-      subscribed.current = false;
       setWorkspaceLoading(workspace.isValidating);
     }
   }, [workspace]);
+
+  useEffect(() => {
+    //Pusher?.unsubscribe(`notal-workspace-${workspace?.data?.data?._id}`);
+
+    if (!workspace?.data?.data) return;
+    if (workspaceLoading) return;
+
+    const channel = Pusher?.subscribe(
+      `notal-workspace-${workspace?.data?.data?._id}`
+    );
+
+    channel?.bind("workspace-updated", function (data: any) {
+      Log.debug(
+        `notal-workspace-${workspace?.data?.data?._id}`,
+        data,
+        "sendTime:",
+        data.sendTime
+      );
+      if (data.sender == auth?.validatedUser?.uid) return; // Sender is self
+      if (data.workspaceId != workspace?.data?.data?._id) return;
+      refreshWorkspace();
+    });
+  }, [workspace?.data?.data]);
 
   async function starWorkspace(): Promise<WorkspaceFunctionReturnType> {
     if (!workspace?.data?.data)

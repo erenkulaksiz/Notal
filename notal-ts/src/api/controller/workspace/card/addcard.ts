@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { ObjectId } from "mongodb";
 
+import Pusher from "@lib/pusherServer";
 import { connectToDatabase } from "@lib/mongodb";
 import { accept, reject } from "@api/utils";
 import { CardTypes, FieldTypes } from "@types";
 import { LIMITS } from "@constants/limits";
 import { Log } from "@utils/index";
-import Pusher from "@lib/pusherServer";
 import type { ValidateUserReturnType } from "@utils/api/validateUser";
 
 export async function addcard(
@@ -98,12 +98,16 @@ export async function addcard(
       }
     )
     .then(async () => {
-      await Pusher?.trigger(`notal-workspace-${id}`, "workspace-updated", {
-        workspaceId: id,
-        sender: validateUser.decodedToken.user_id,
-        sendTime: Date.now(),
-        change: "card_add",
-      });
+      await Pusher?.trigger(
+        `notal-workspace-${workspaceId}`,
+        "workspace-updated",
+        {
+          workspaceId,
+          sender: validateUser.decodedToken.user_id,
+          sendTime: Date.now(),
+          change: "card_add",
+        }
+      );
       accept({
         res,
         action: "addcard",

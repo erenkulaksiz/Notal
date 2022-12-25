@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { Droppable } from "@hello-pangea/dnd";
@@ -11,6 +11,7 @@ import { WorkspaceSidebar } from "@components";
 import { useWorkspace } from "@hooks";
 import AddFieldButton from "./AddFieldButton";
 import { LIMITS } from "@constants/limits";
+import { SmartScroll } from "../SmartScroll";
 import type { WorkspaceFieldProps } from "../WorkspaceField/WorkspaceField";
 
 import EmptyStateLight from "@public/empty_state_workspace_light.png";
@@ -22,6 +23,7 @@ const WorkspaceField = dynamic<WorkspaceFieldProps>(() =>
 
 export default function Board() {
   const workspace = useWorkspace();
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   const fields = useMemo(
     () =>
@@ -36,8 +38,11 @@ export default function Board() {
       <Droppable droppableId="BOARD" type="BOARD" direction="horizontal">
         {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
           <div
-            className="flex flex-row h-full w-full overflow-auto"
-            ref={provided.innerRef}
+            className="flex flex-row h-full w-full overflow-auto relative"
+            ref={(ref) => {
+              provided.innerRef(ref);
+              containerRef.current = ref;
+            }}
             {...provided.droppableProps}
           >
             {workspace.isWorkspaceOwner && <WorkspaceSidebar />}
@@ -64,6 +69,7 @@ export default function Board() {
               fields.length <= LIMITS.MAX.WORKSPACE_FIELD_LENGTH && (
                 <AddFieldButton />
               )}
+            <SmartScroll containerRef={containerRef} />
           </div>
         )}
       </Droppable>

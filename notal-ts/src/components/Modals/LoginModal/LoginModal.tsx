@@ -111,18 +111,21 @@ export function LoginModal({ open, onClose, onLoginSuccess }: LoginModalProps) {
                 const currPlatform =
                   PlatformLogins[platform as keyof PlatformLoginTypes];
                 return (
-                  <Button
-                    onClick={() => onLoginWithPlatform(currPlatform.id)}
-                    size="lg"
-                    className="text-[1.2em]"
-                    gradient
-                    fullWidth
-                    icon={currPlatform.icon}
+                  <div
                     key={currPlatform.id}
-                    aria-label={`Sign in with ${currPlatform.text}`}
+                    className="animate-border bg-transparent rounded-xl from-pink-500 via-red-500 to-yellow-500 bg-[length:400%_400%] p-0.5 hover:bg-gradient-to-r"
                   >
-                    {currPlatform.text}
-                  </Button>
+                    <Button
+                      onClick={() => onLoginWithPlatform(currPlatform.id)}
+                      size="lg"
+                      light="text-[1.2em] bg-blue-600"
+                      fullWidth
+                      icon={currPlatform.icon}
+                      aria-label={`Sign in with ${currPlatform.text}`}
+                    >
+                      {currPlatform.text}
+                    </Button>
+                  </div>
                 );
               })}
             </div>

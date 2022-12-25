@@ -56,7 +56,7 @@ export async function create(req: NextApiRequest, res: NextApiResponse) {
     return reject({ reason: "max-workspaces", res });
 
   let givenId: string | boolean = false;
-  let length: number = CONSTANTS.DEFAULT_WORKSPACE_ID_LENGTH; // default id length
+  let length: number = Number(CONSTANTS.DEFAULT_WORKSPACE_ID_LENGTH); // default id length
 
   /**
    * Dynamic ID generator

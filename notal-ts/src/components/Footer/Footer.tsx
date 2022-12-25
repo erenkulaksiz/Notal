@@ -200,7 +200,7 @@ export function Footer({ className }: { className?: string }) {
           </Tooltip>
           {process.env.NEXT_PUBLIC_DEBUG_LOG == "true" && (
             <span className="uppercase mt-8 sm:mt-0 text-xs text-neutral-400 text-left">
-              Development build {CONSTANTS.APP_VERSION}
+              Development build {CONSTANTS.APP_VERSION.toString()}
             </span>
           )}
         </div>

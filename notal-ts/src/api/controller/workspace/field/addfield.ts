@@ -1,17 +1,23 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { ObjectId } from "mongodb";
 
+import Pusher from "@lib/pusherServer";
 import { connectToDatabase } from "@lib/mongodb";
 import { accept, reject } from "@api/utils";
 import { LIMITS } from "@constants/limits";
+import type { ValidateUserReturnType } from "@utils/api/validateUser";
 
-export async function addfield(req: NextApiRequest, res: NextApiResponse) {
+export async function addfield(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  validateUser: ValidateUserReturnType
+) {
   const { db } = await connectToDatabase();
   const workspacesCollection = await db.collection("workspaces");
 
   const { body } = req;
   const { uid } = body;
-  // get worskpace id
+  // get workspace id
   if (!body.id) return reject({ res });
   const { id } = body;
   // get title of field to add
@@ -46,11 +52,17 @@ export async function addfield(req: NextApiRequest, res: NextApiResponse) {
         },
       }
     )
-    .then(() =>
+    .then(async () => {
+      await Pusher?.trigger(`notal-workspace-${id}`, "workspace-updated", {
+        workspaceId: id,
+        sender: validateUser.decodedToken.user_id,
+        sendTime: Date.now(),
+        change: "field_add",
+      });
       accept({
         res,
         action: "addfield",
-      })
-    )
+      });
+    })
     .catch((error) => reject({ reason: error, res }));
 }
