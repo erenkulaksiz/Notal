@@ -1,12 +1,24 @@
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-import { Avatar, Tooltip } from "@components";
+import { Avatar, Tooltip, Button } from "@components";
 import { BuildComponent } from "@utils/style";
 import { useWorkspace } from "@hooks";
+import { ShareIcon } from "@icons";
+import { Log } from "@utils";
 
 export function WorkspaceOwnerProfile() {
   const { workspaceLoading, workspaceNotFound, workspace, isWorkspaceOwner } =
     useWorkspace();
+  const [shared, setShared] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (shared) {
+      setTimeout(() => {
+        setShared(false);
+      }, 3000);
+    }
+  }, [shared]);
 
   if (workspaceLoading) return null;
   if (workspaceNotFound) return null;
@@ -19,6 +31,26 @@ export function WorkspaceOwnerProfile() {
     conditionalClasses: [{ true: "left-[4.3rem]", false: "left-4" }],
     selectedClasses: [isWorkspaceOwner],
   });
+
+  function onShareWorkspace() {
+    if (navigator.share) {
+      navigator
+        .share({
+          title:
+            typeof workspace?.data?.data?.owner == "object"
+              ? `📍 @${workspace?.data?.data?.owner?.username}'s workspace`
+              : workspace?.data?.data?.title,
+          text: workspace?.data?.data?.title,
+          url: window.location.href,
+        })
+        .then(() => Log.debug("Successful share"))
+        .catch((error) => Log.debug("Error sharing", error));
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      if (shared) return;
+      setShared(true);
+    }
+  }
 
   if (workspaceLoading)
     return (
@@ -33,48 +65,70 @@ export function WorkspaceOwnerProfile() {
         outline
         direction="bottom"
         noPadding
-        containerClassName="px-2 py-1"
+        containerClassName="px-1 py-1"
         blockContent={false}
         content={
-          !isWorkspaceOwner && (
-            <Link
-              href="/profile/[username]"
-              as={`/profile/${
-                (typeof workspace?.data?.data?.owner == "object" &&
-                  workspace?.data?.data?.owner?.username) ||
-                "not-found"
-              }`}
-              passHref
+          <div className="flex flex-col gap-2">
+            <Button
+              light="border-2 border-neutral-600 dark:border-white"
+              size="sm"
+              onClick={onShareWorkspace}
             >
-              <a className="flex flex-row items-center min-w-max">
-                <div className="p-[2px] rounded-full cursor-pointer bg-gradient-to-tr from-blue-700 to-pink-700">
-                  <Avatar
-                    src={
-                      (typeof workspace?.data?.data?.owner == "object" &&
-                        workspace?.data?.data?.owner?.avatar) ||
-                      ""
-                    }
-                    size="2xl"
-                    className="border-[2px] dark:border-black border-white"
+              {shared ? (
+                <span>Copied link!</span>
+              ) : (
+                <>
+                  <ShareIcon
+                    size={24}
+                    fill="currentColor"
+                    className="scale-75 fill-neutral-600 dark:fill-white"
                   />
-                </div>
-                <div className="flex flex-col ml-1">
-                  <span className="text-md h-4">
-                    {typeof workspace?.data?.data?.owner == "object" &&
-                      (workspace?.data?.data?.owner?.fullname
-                        ? `${workspace?.data?.data?.owner?.fullname}`
-                        : `@${workspace?.data?.data?.owner?.username}`)}
+                  <span className="text-neutral-600 dark:text-white">
+                    Share
                   </span>
-                  {typeof workspace?.data?.data?.owner == "object" &&
-                    workspace?.data?.data?.owner?.username && (
-                      <span className="text-sm text-neutral-600">
-                        {`@${workspace?.data?.data?.owner?.username}`}
-                      </span>
-                    )}
-                </div>
-              </a>
-            </Link>
-          )
+                </>
+              )}
+            </Button>
+            {!isWorkspaceOwner && (
+              <Link
+                href="/profile/[username]"
+                as={`/profile/${
+                  (typeof workspace?.data?.data?.owner == "object" &&
+                    workspace?.data?.data?.owner?.username) ||
+                  "not-found"
+                }`}
+                passHref
+              >
+                <a className="flex flex-row items-center min-w-max">
+                  <div className="p-[2px] rounded-full cursor-pointer bg-gradient-to-tr from-blue-700 to-pink-700">
+                    <Avatar
+                      src={
+                        (typeof workspace?.data?.data?.owner == "object" &&
+                          workspace?.data?.data?.owner?.avatar) ||
+                        ""
+                      }
+                      size="2xl"
+                      className="border-[2px] dark:border-black border-white"
+                    />
+                  </div>
+                  <div className="flex flex-col ml-1">
+                    <span className="text-md h-4">
+                      {typeof workspace?.data?.data?.owner == "object" &&
+                        (workspace?.data?.data?.owner?.fullname
+                          ? `${workspace?.data?.data?.owner?.fullname}`
+                          : `@${workspace?.data?.data?.owner?.username}`)}
+                    </span>
+                    {typeof workspace?.data?.data?.owner == "object" &&
+                      workspace?.data?.data?.owner?.username && (
+                        <span className="text-sm text-neutral-600">
+                          {`@${workspace?.data?.data?.owner?.username}`}
+                        </span>
+                      )}
+                  </div>
+                </a>
+              </Link>
+            )}
+          </div>
         }
       >
         <div className="flex flex-col w-full justify-center">
