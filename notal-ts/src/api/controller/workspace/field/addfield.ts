@@ -32,7 +32,7 @@ export async function addfield(
 
   if (
     workspace.fields &&
-    workspace.fields.length > LIMITS.MAX.WORKSPACE_FIELD_LENGTH
+    workspace.fields.length >= LIMITS.MAX.WORKSPACE_FIELD_LENGTH
   )
     return reject({ reason: "max-fields-length", res });
 

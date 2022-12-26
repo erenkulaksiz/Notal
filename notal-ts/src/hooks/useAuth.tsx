@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import {
   createContext,
   Dispatch,
@@ -62,6 +63,7 @@ export default function useAuth() {
 export function AuthProvider(props: PropsWithChildren) {
   const auth = getAuth();
   const NotalUI = useNotalUI();
+  const router = useRouter();
 
   const [validatedUser, setValidatedUser] = useState(null);
 

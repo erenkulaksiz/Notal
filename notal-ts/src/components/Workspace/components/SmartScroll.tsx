@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 
 import { useWorkspace } from "@hooks";
-import { FieldTypes } from "@types";
+import { CardTypes, FieldTypes } from "@types";
 import { scale } from "@utils";
+import { Tooltip } from "@components";
 
 function getWindowDimensions() {
   const { innerWidth: width, innerHeight: height } = window;
@@ -22,7 +23,13 @@ export function SmartScroll({
   const smartScrollRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState<boolean>(false);
 
-  const fields = workspace?.workspace?.data?.data?.fields;
+  const fields = useMemo(
+    () =>
+      Array.isArray(workspace.workspace?.data?.data?.fields)
+        ? workspace.workspace?.data?.data?.fields
+        : [],
+    [workspace.workspace?.data?.data?.fields]
+  );
 
   const [windowDimensions, setWindowDimensions] = useState(
     getWindowDimensions()
@@ -68,36 +75,80 @@ export function SmartScroll({
   if (fields?.length === 0) return null;
 
   return (
-    <div
-      ref={smartScrollRef}
-      onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
-        setIsDragging(true);
-        calculatePos(e);
-      }}
-      onMouseLeave={() => setIsDragging(false)}
-      onMouseUp={() => setIsDragging(false)}
-      onMouseMove={(e: React.MouseEvent<HTMLDivElement>) => {
-        if (!isDragging) return;
-        calculatePos(e);
-      }}
-      className="fixed right-4 bottom-5 z-50 h-12 dark:bg-neutral-600/20 bg-neutral-100 overflow-hidden backdrop-blur rounded-md p-[6px] flex flex-row gap-1"
-    >
-      {Array.isArray(fields) &&
-        fields?.map((field: FieldTypes) => (
-          <div
-            key={`smartScroll_field_${field._id}`}
-            className="h-full w-6 dark:bg-neutral-500 bg-neutral-200 backdrop-blur-md"
-          ></div>
-        ))}
-      {workspace.isWorkspaceOwner && (
-        <div className="h-full w-6 dark:bg-neutral-600 bg-neutral-200 backdrop-blur-md flex items-center justify-center">
-          +
-        </div>
-      )}
+    <div className="fixed right-4 bottom-5 z-50 hover:opacity-80 opacity-20 ease-in-out duration-300 group">
       <div
-        className="absolute top-0 bottom-0 dark:bg-neutral-400/50 bg-neutral-300/50 cursor-col-resize"
-        style={{ width: windowDimensions.width * 0.1, left: scrollPos * 0.1 }}
-      ></div>
+        ref={smartScrollRef}
+        onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => {
+          setIsDragging(true);
+          calculatePos(e);
+        }}
+        onMouseLeave={() => setIsDragging(false)}
+        onMouseUp={() => setIsDragging(false)}
+        onMouseMove={(e: React.MouseEvent<HTMLDivElement>) => {
+          if (!isDragging) return;
+          calculatePos(e);
+        }}
+        className="cursor-col-resize shadow group-hover:pointer-events-auto pointer-events-none h-12 dark:bg-neutral-600/20 bg-neutral-200 backdrop-blur rounded-lg p-[6px] flex flex-row gap-[2px]"
+      >
+        {Array.isArray(fields) &&
+          fields?.map((field: FieldTypes, index: number) => {
+            let fieldClassnames =
+              "h-full w-6 dark:bg-neutral-500 bg-neutral-300 backdrop-blur-md flex flex-col gap-[1px]";
+            if (index == 0) {
+              fieldClassnames =
+                "h-full w-6 dark:bg-neutral-500 overflow-hidden rounded-tl-md rounded-bl-md bg-neutral-300 backdrop-blur-md flex flex-col gap-[1px]";
+            }
+            return (
+              <Tooltip
+                key={`smartScroll_field_${field._id}`}
+                content={
+                  <div>
+                    <div className="text-sm font-semibold">{field.title}</div>
+                    {field?.cards?.length > 0 ? (
+                      <div className="text-xs text-neutral-500">
+                        {`${field.cards?.length} ${
+                          field.cards?.length > 1 ? "cards" : "card"
+                        }`}
+                      </div>
+                    ) : (
+                      <div className="text-xs text-neutral-500">empty</div>
+                    )}
+                  </div>
+                }
+                noPadding
+                containerClassName="px-2 py-1"
+                blockContent
+                outline
+                animated={false}
+              >
+                <div className={fieldClassnames} title={field?.title}>
+                  {Array.isArray(field?.cards) &&
+                    field?.cards?.length > 0 &&
+                    field?.cards?.map((card: CardTypes) => {
+                      return (
+                        <div
+                          key={`smartScroll_card_${card?._id}`}
+                          className="w-full h-[4px] dark:bg-neutral-600"
+                        ></div>
+                      );
+                    })}
+                </div>
+              </Tooltip>
+            );
+          })}
+        {workspace.isWorkspaceOwner && (
+          <div className="h-full w-6 rounded-tr-md rounded-br-md dark:bg-neutral-700 bg-neutral-200 backdrop-blur-md flex items-center justify-center">
+            +
+          </div>
+        )}
+        <div
+          className="absolute rounded-lg top-0 bottom-0 dark:bg-neutral-400/30 bg-neutral-500/20 pointer-events-none"
+          style={{
+            width: windowDimensions.width * 0.09,
+            left: scrollPos * 0.1,
+          }}
+        ></div>
+      </div>
     </div>
   );
 }

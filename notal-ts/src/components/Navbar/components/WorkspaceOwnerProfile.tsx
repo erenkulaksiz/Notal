@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { Avatar } from "@components";
+import { Avatar, Tooltip } from "@components";
 import { BuildComponent } from "@utils/style";
 import { useWorkspace } from "@hooks";
 
@@ -29,50 +29,60 @@ export function WorkspaceOwnerProfile() {
 
   return (
     <div className={BuildWorkspaceOwnerProfileContainer.classes}>
-      <div className="flex flex-col w-full justify-center">
-        <span className="text-sm break-words w-full">
-          {workspace?.data?.data?.title}
-        </span>
-      </div>
-      {!isWorkspaceOwner && (
-        <Link
-          href="/profile/[username]"
-          as={`/profile/${
-            (typeof workspace?.data?.data?.owner == "object" &&
-              workspace?.data?.data?.owner?.username) ||
-            "not-found"
-          }`}
-          passHref
-        >
-          <a className="flex flex-row items-center ml-2 min-w-max">
-            <div className="p-[2px] rounded-full cursor-pointer bg-gradient-to-tr from-blue-700 to-pink-700">
-              <Avatar
-                src={
-                  (typeof workspace?.data?.data?.owner == "object" &&
-                    workspace?.data?.data?.owner?.avatar) ||
-                  ""
-                }
-                size="2xl"
-                className="border-[2px] dark:border-black border-white"
-              />
-            </div>
-            <div className="flex flex-col ml-1">
-              <span className="text-md h-4">
-                {typeof workspace?.data?.data?.owner == "object" &&
-                  (workspace?.data?.data?.owner?.fullname
-                    ? `${workspace?.data?.data?.owner?.fullname}`
-                    : `@${workspace?.data?.data?.owner?.username}`)}
-              </span>
-              {typeof workspace?.data?.data?.owner == "object" &&
-                workspace?.data?.data?.owner?.username && (
-                  <span className="text-sm text-neutral-600">
-                    {`@${workspace?.data?.data?.owner?.username}`}
+      <Tooltip
+        outline
+        direction="bottom"
+        noPadding
+        containerClassName="px-2 py-1"
+        blockContent={false}
+        content={
+          !isWorkspaceOwner && (
+            <Link
+              href="/profile/[username]"
+              as={`/profile/${
+                (typeof workspace?.data?.data?.owner == "object" &&
+                  workspace?.data?.data?.owner?.username) ||
+                "not-found"
+              }`}
+              passHref
+            >
+              <a className="flex flex-row items-center min-w-max">
+                <div className="p-[2px] rounded-full cursor-pointer bg-gradient-to-tr from-blue-700 to-pink-700">
+                  <Avatar
+                    src={
+                      (typeof workspace?.data?.data?.owner == "object" &&
+                        workspace?.data?.data?.owner?.avatar) ||
+                      ""
+                    }
+                    size="2xl"
+                    className="border-[2px] dark:border-black border-white"
+                  />
+                </div>
+                <div className="flex flex-col ml-1">
+                  <span className="text-md h-4">
+                    {typeof workspace?.data?.data?.owner == "object" &&
+                      (workspace?.data?.data?.owner?.fullname
+                        ? `${workspace?.data?.data?.owner?.fullname}`
+                        : `@${workspace?.data?.data?.owner?.username}`)}
                   </span>
-                )}
-            </div>
-          </a>
-        </Link>
-      )}
+                  {typeof workspace?.data?.data?.owner == "object" &&
+                    workspace?.data?.data?.owner?.username && (
+                      <span className="text-sm text-neutral-600">
+                        {`@${workspace?.data?.data?.owner?.username}`}
+                      </span>
+                    )}
+                </div>
+              </a>
+            </Link>
+          )
+        }
+      >
+        <div className="flex flex-col w-full justify-center">
+          <span className="text-sm break-words w-full">
+            {workspace?.data?.data?.title}
+          </span>
+        </div>
+      </Tooltip>
     </div>
   );
 }

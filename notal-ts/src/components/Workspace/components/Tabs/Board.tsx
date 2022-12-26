@@ -66,7 +66,7 @@ export default function Board() {
             {provided.placeholder}
             {workspace.isWorkspaceOwner &&
               fields &&
-              fields.length <= LIMITS.MAX.WORKSPACE_FIELD_LENGTH && (
+              fields.length < LIMITS.MAX.WORKSPACE_FIELD_LENGTH && (
                 <AddFieldButton />
               )}
             <SmartScroll containerRef={containerRef} />

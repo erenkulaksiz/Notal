@@ -152,17 +152,19 @@ export function Navbar({
               <>
                 <div className="flex flex-row gap-2">
                   <ThemeSwitcher />
-                  <Button
-                    light
-                    className="w-16 px-0"
-                    size="sm"
-                    onClick={() => setLoginModalVisible(true)}
-                    aria-label="Sign up button"
-                  >
-                    <span className="dark:text-neutral-400 text-neutral-600 font-medium">
-                      Sign Up
-                    </span>
-                  </Button>
+                  <div className="hidden sm:flex">
+                    <Button
+                      light
+                      className="w-16 px-0"
+                      size="sm"
+                      onClick={() => setLoginModalVisible(true)}
+                      aria-label="Sign up button"
+                    >
+                      <span className="dark:text-neutral-400 text-neutral-600 font-medium">
+                        Sign Up
+                      </span>
+                    </Button>
+                  </div>
                   <Button
                     gradient
                     className="w-14 sm:w-32"

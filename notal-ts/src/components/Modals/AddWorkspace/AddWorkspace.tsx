@@ -580,7 +580,7 @@ export function AddWorkspaceModal({
                 onChange={(e) =>
                   dispatch({
                     type: AddWorkspaceActionType.SET_WORKSPACE_TEAM_USERNAME,
-                    payload: e.target.value,
+                    payload: e.target.value.toLowerCase(),
                   })
                 }
                 value={state.team?.username}

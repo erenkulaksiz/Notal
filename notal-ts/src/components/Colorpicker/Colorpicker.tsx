@@ -25,11 +25,11 @@ export function Colorpicker({
             color={color}
             onChange={(color) => onChange(color.toUpperCase())}
           />
-          <div className="flex flex-row flex-wrap">
+          <div className="flex flex-row flex-wrap p-1 gap-[2px]">
             {CardColors.map((color: CardColorTypes, index: number) => (
               <button
                 key={index}
-                className="w-6 h-6 m-1 rounded-lg"
+                className="w-6 h-6 rounded-md"
                 style={{ backgroundColor: color.code }}
                 onClick={() => onChange(color.code.toUpperCase())}
               />
