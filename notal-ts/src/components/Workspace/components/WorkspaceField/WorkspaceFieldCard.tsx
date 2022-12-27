@@ -45,7 +45,10 @@ export function WorkspaceFieldCard({
       <Draggable
         draggableId={card?._id ?? "_default"}
         index={index}
-        isDragDisabled={!workspace.isWorkspaceOwner || !card?._id}
+        isDragDisabled={
+          (!workspace.isWorkspaceOwner && !workspace.isWorkspaceUser) ||
+          !card?._id
+        }
       >
         {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
           <div
@@ -88,33 +91,34 @@ export function WorkspaceFieldCard({
                 className="object-contain rounded-md"
               />
             )}
-            {card?._id && workspace.isWorkspaceOwner && (
-              <>
-                <button
-                  onClick={(event: React.MouseEvent<HTMLElement>) => {
-                    event.stopPropagation();
-                    onCardDelete();
-                  }}
-                  className="absolute flex flex-col items-center gap-1 justify-center px-2 left-0 top-0 bottom-0 bg-gradient-to-l from-transparent to-neutral-200/50 dark:to-neutral-700/50 rounded-lg opacity-0 hover:opacity-100 transition-all ease-in-out duration-250"
-                >
-                  <DeleteIcon
-                    size={24}
-                    fill="currentColor"
-                    className="scale-75"
-                  />
-                </button>
-                <div
-                  className="absolute flex items-center justify-center px-2 right-0 top-0 bottom-0 bg-gradient-to-r from-transparent to-neutral-200/50 dark:to-neutral-700/50 rounded-lg opacity-0 hover:opacity-100 transition-all ease-in-out duration-250"
-                  {...provided.dragHandleProps}
-                >
-                  <DragIcon
-                    size={24}
-                    fill="currentColor"
-                    className="scale-75"
-                  />
-                </div>
-              </>
-            )}
+            {card?._id &&
+              (workspace.isWorkspaceOwner || workspace.isWorkspaceUser) && (
+                <>
+                  <button
+                    onClick={(event: React.MouseEvent<HTMLElement>) => {
+                      event.stopPropagation();
+                      onCardDelete();
+                    }}
+                    className="absolute flex flex-col items-center gap-1 justify-center px-2 left-0 top-0 bottom-0 bg-gradient-to-l from-transparent to-neutral-200/50 dark:to-neutral-700/50 rounded-lg opacity-0 hover:opacity-100 transition-all ease-in-out duration-250"
+                  >
+                    <DeleteIcon
+                      size={24}
+                      fill="currentColor"
+                      className="scale-75"
+                    />
+                  </button>
+                  <div
+                    className="absolute flex items-center justify-center px-2 right-0 top-0 bottom-0 bg-gradient-to-r from-transparent to-neutral-200/50 dark:to-neutral-700/50 rounded-lg opacity-0 hover:opacity-100 transition-all ease-in-out duration-250"
+                    {...provided.dragHandleProps}
+                  >
+                    <DragIcon
+                      size={24}
+                      fill="currentColor"
+                      className="scale-75"
+                    />
+                  </div>
+                </>
+              )}
           </div>
         )}
       </Draggable>

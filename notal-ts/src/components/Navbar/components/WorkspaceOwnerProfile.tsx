@@ -8,8 +8,13 @@ import { ShareIcon } from "@icons";
 import { Log } from "@utils";
 
 export function WorkspaceOwnerProfile() {
-  const { workspaceLoading, workspaceNotFound, workspace, isWorkspaceOwner } =
-    useWorkspace();
+  const {
+    workspaceLoading,
+    workspaceNotFound,
+    workspace,
+    isWorkspaceOwner,
+    isWorkspaceUser,
+  } = useWorkspace();
   const [shared, setShared] = useState<boolean>(false);
 
   useEffect(() => {
@@ -29,7 +34,7 @@ export function WorkspaceOwnerProfile() {
     defaultClasses:
       "flex flex-row z-40 rounded-lg p-1 px-2 dark:bg-neutral-800/80 bg-neutral-100",
     conditionalClasses: [{ true: "left-[4.3rem]", false: "left-4" }],
-    selectedClasses: [isWorkspaceOwner],
+    selectedClasses: [isWorkspaceOwner || isWorkspaceUser],
   });
 
   function onShareWorkspace() {
@@ -39,14 +44,16 @@ export function WorkspaceOwnerProfile() {
           title:
             typeof workspace?.data?.data?.owner == "object"
               ? `📍 @${workspace?.data?.data?.owner?.username}'s workspace`
-              : workspace?.data?.data?.title,
+              : `📍 ${workspace?.data?.data?.title}`,
           text: workspace?.data?.data?.title,
-          url: window.location.href,
+          url: `https://notal.app/w/${workspace?.data?.data?.id}`,
         })
         .then(() => Log.debug("Successful share"))
         .catch((error) => Log.debug("Error sharing", error));
     } else {
-      navigator.clipboard.writeText(window.location.href);
+      navigator.clipboard.writeText(
+        `https://notal.app/w/${workspace?.data?.data?.id}`
+      );
       if (shared) return;
       setShared(true);
     }
@@ -70,7 +77,7 @@ export function WorkspaceOwnerProfile() {
         content={
           <div className="flex flex-col gap-2">
             <Button
-              light="border-2 border-neutral-600 dark:border-white"
+              light="border-2 border-neutral-500 dark:border-white"
               size="sm"
               onClick={onShareWorkspace}
             >
@@ -81,15 +88,15 @@ export function WorkspaceOwnerProfile() {
                   <ShareIcon
                     size={24}
                     fill="currentColor"
-                    className="scale-75 fill-neutral-600 dark:fill-white"
+                    className="scale-75 fill-neutral-500 dark:fill-white"
                   />
-                  <span className="text-neutral-600 dark:text-white">
+                  <span className="text-neutral-500 dark:text-white">
                     Share
                   </span>
                 </>
               )}
             </Button>
-            {!isWorkspaceOwner && (
+            {!isWorkspaceOwner && !isWorkspaceUser && (
               <Link
                 href="/profile/[username]"
                 as={`/profile/${

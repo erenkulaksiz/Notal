@@ -28,6 +28,10 @@ export async function reordercard(
 
   if (!workspace) return reject({ reason: "no-workspace", res });
 
+  const isOwner = workspace.owner == validateUser.decodedToken.user_id;
+  const isUser = workspace.users.includes(validateUser.decodedToken.user_id);
+  if (!isOwner && !isUser) return reject({ reason: "no-permission", res });
+
   // get destination and source
   if (!body.destination || !body.source)
     return reject({ reason: "no-destination-or-source", res });

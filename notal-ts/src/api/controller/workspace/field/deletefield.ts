@@ -28,6 +28,10 @@ export async function deletefield(
 
   if (!workspace) return reject({ reason: "no-workspace", res });
 
+  const isOwner = workspace.owner == validateUser.decodedToken.user_id;
+  const isUser = workspace.users.includes(validateUser.decodedToken.user_id);
+  if (!isOwner && !isUser) return reject({ reason: "no-permission", res });
+
   return await workspacesCollection
     .updateOne(
       { _id: new ObjectId(workspaceId) },

@@ -15,7 +15,7 @@ export default function TabHeader({
 }: TabHeaderProps) {
   const TabHeaderSkeleton = () => {
     return (
-      <div className="w-full h-10 flex flex-row dark:bg-neutral-800 bg-neutral-100 p-2 rounded-lg">
+      <div className="w-full h-10 flex flex-row border-neutral-500/40 dark:border-neutral-700 p-2 rounded-lg">
         {[1, 2, 3].map((item) => (
           <div
             key={item}
@@ -31,7 +31,7 @@ export default function TabHeader({
   const BuildTabHeader = BuildComponent({
     name: "Notal UI Tab Header",
     defaultClasses:
-      "h-10 flex flex-1 flex-row relative border-2 border-solid dark:border-neutral-800 border-neutral-300 rounded-lg",
+      "h-10 flex flex-1 flex-row relative border-2 border-solid border-neutral-500/40 dark:border-neutral-700 rounded-lg",
     extraClasses: headerClassName,
   });
 

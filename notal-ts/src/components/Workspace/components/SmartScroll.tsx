@@ -93,10 +93,10 @@ export function SmartScroll({
         {Array.isArray(fields) &&
           fields?.map((field: FieldTypes, index: number) => {
             let fieldClassnames =
-              "h-full w-6 dark:bg-neutral-500 bg-neutral-300 backdrop-blur-md flex flex-col gap-[1px]";
+              "h-full w-[24px] dark:bg-neutral-500 bg-neutral-300 backdrop-blur-md flex flex-col gap-[1px]";
             if (index == 0) {
               fieldClassnames =
-                "h-full w-6 dark:bg-neutral-500 overflow-hidden rounded-tl-md rounded-bl-md bg-neutral-300 backdrop-blur-md flex flex-col gap-[1px]";
+                "h-full w-[24px] dark:bg-neutral-500 overflow-hidden rounded-tl-md rounded-bl-md bg-neutral-300 backdrop-blur-md flex flex-col gap-[1px]";
             }
             return (
               <Tooltip
@@ -136,7 +136,7 @@ export function SmartScroll({
               </Tooltip>
             );
           })}
-        {workspace.isWorkspaceOwner && (
+        {(workspace.isWorkspaceOwner || workspace.isWorkspaceUser) && (
           <div className="h-full w-6 rounded-tr-md rounded-br-md dark:bg-neutral-700 bg-neutral-200 backdrop-blur-md flex items-center justify-center">
             +
           </div>

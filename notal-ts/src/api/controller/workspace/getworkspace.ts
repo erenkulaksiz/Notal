@@ -35,14 +35,10 @@ export async function getworkspace(req: NextApiRequest, res: NextApiResponse) {
         res,
       });
 
-    const isOwner =
-      workspace?.users?.findIndex(
-        (uid: string) => uid == validateUser.decodedToken.uid
-      ) == -1
-        ? false
-        : true;
+    const isOwner = validateUser?.decodedToken?.uid == workspace?.owner;
+    const isUser = workspace?.users?.includes(validateUser?.decodedToken?.uid);
 
-    if (!isOwner) {
+    if (!isOwner && !isUser) {
       return reject({
         reason: "user-workspace-private",
         res,

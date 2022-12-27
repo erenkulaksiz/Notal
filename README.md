@@ -19,6 +19,7 @@ Notal is a platform to keep your project management simple, as well as making it
 - Uses `tailwindcss` on frontend for styling, `framer-motion` for cool animations, `next-themes` for Dark theme and `react-beautiful-dnd` for beatiful drag drop experience
 - MongoDB on backend with custom API controller (see [./notal-ts/src/api/controller](https://github.com/erenkulaksiz/Notal/blob/master/notal-ts/src/api/controller/index.ts))
 - Introducing NotalUI, each components made custom for just for Notal, which even has Modal and Toast components built-in
+- Realtime workspace changes with Pusher
 - Comes with Google Material Icons
 - Google Analytics for analytics, page views and page view times: LCP, TTFB and FCP
 - Storybook ready to go for each component, view Storybook section
@@ -27,9 +28,11 @@ Notal is a platform to keep your project management simple, as well as making it
 ## Running locally in development mode
 
 First of all, you need to create a Firebase project, as well as MongoDB database. If you don't want to create these stuff, you will be able to run the project in Storybook mode in the future to review each component.
+Please create Pusher account and get your keys from there aswell and put the keys inside .env.local file.
 
 - [Create Firebase project from here](https://cloud.google.com/firestore/docs/client/get-firebase)
 - [Create MongoDB database from here](https://www.mongodb.com/blog/post/quick-start-nodejs-mongodb-how-to-get-connected-to-your-database)
+- [Register to Pusher from here](https://dashboard.pusher.com/accounts/sign_up)
 
 Then, clone the repository and run `npm install && npm run dev` inside `notal-ts` file:
 Make sure to configure the project for your needs from Configuring section
@@ -74,7 +77,7 @@ Run `npm run analyze` to view bundle sizes for client and server
 
 [View deployed Storybook here](https://ui.notal.app)
 
-Notal introduces Storybook to view each component individually without running the project.
+Notal introduces Storybook to view each component individually without running the main project.
 
 If you installed all dependencies, you can run `npm run sb` in notal-ts folder. Storybook will open the page for you when init is complete.
 

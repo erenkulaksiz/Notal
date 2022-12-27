@@ -68,10 +68,13 @@ export function WorkspaceFieldHeader({
         {!editingTitle && (
           <div
             className="flex font-medium uppercase break-words"
-            onClick={() => workspace.isWorkspaceOwner && setEditingTitle(true)}
+            onClick={() =>
+              (workspace.isWorkspaceOwner || workspace.isWorkspaceUser) &&
+              setEditingTitle(true)
+            }
           >
             <span>{field.title}</span>
-            {workspace.isWorkspaceOwner && (
+            {(workspace.isWorkspaceOwner || workspace.isWorkspaceUser) && (
               <div className="hidden group-hover:flex">
                 <EditIcon
                   fill="currentColor"
@@ -117,65 +120,12 @@ export function WorkspaceFieldHeader({
           </>
         )}
       </div>
-      {workspace.isWorkspaceOwner && !editingTitle && (
-        <div className="flex flex-row gap-2 absolute right-2 dark:bg-black/60 bg-neutral-200/60 backdrop-blur-lg rounded-lg">
-          <div className="relative group-hover:flex sm:hidden flex">
-            <Tooltip
-              content={`Delete field ${field.title}`}
-              outline
-              direction="left"
-            >
-              <Button
-                light="active:opacity-50"
-                size="h-8 w-8"
-                className="p-0"
-                title={`Delete Field ${field.title}`}
-                onClick={() =>
-                  field.cards.length > 0
-                    ? NotalUI.Alert.show({
-                        title: `Delete Field ${field.title}`,
-                        titleIcon: <DeleteIcon size={24} fill="currentColor" />,
-                        desc: (
-                          <div className="text-center w-full">
-                            Are you sure want to delete this field that has{" "}
-                            {field.cards?.length}{" "}
-                            {field.cards.length > 1 ? "cards" : "card"}?
-                          </div>
-                        ),
-                        showCloseButton: false,
-                        notCloseable: false,
-                        buttons: [
-                          <Button
-                            light="bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500"
-                            onClick={() => NotalUI.Alert.close()}
-                            key={1}
-                            fullWidth="w-[49%]"
-                          >
-                            <CrossIcon size={24} fill="currentColor" />
-                            Cancel
-                          </Button>,
-                          <Button
-                            onClick={() => onFieldDelete()}
-                            key={2}
-                            fullWidth="w-[49%]"
-                          >
-                            <CheckIcon size={24} fill="currentColor" />
-                            Delete
-                          </Button>,
-                        ],
-                      })
-                    : onFieldDelete()
-                }
-              >
-                <DeleteIcon
-                  size={24}
-                  className="scale-75 fill-black dark:fill-white"
-                />
-              </Button>
-            </Tooltip>
-            {field.cards.length < LIMITS.MAX.WORKSPACE_CARD_LENGTH && (
+      {(workspace.isWorkspaceOwner || workspace.isWorkspaceUser) &&
+        !editingTitle && (
+          <div className="flex flex-row gap-2 absolute right-2 dark:bg-black/60 bg-neutral-200/60 backdrop-blur-lg rounded-lg">
+            <div className="relative group-hover:flex sm:hidden flex">
               <Tooltip
-                content={`Add Card to ${field.title}`}
+                content={`Delete field ${field.title}`}
                 outline
                 direction="left"
               >
@@ -183,19 +133,75 @@ export function WorkspaceFieldHeader({
                   light="active:opacity-50"
                   size="h-8 w-8"
                   className="p-0"
-                  onClick={() => setAddCardModalOpen(true)}
-                  title={`Add Card to ${field.title}`}
+                  title={`Delete Field ${field.title}`}
+                  onClick={() =>
+                    field.cards.length > 0
+                      ? NotalUI.Alert.show({
+                          title: `Delete Field ${field.title}`,
+                          titleIcon: (
+                            <DeleteIcon size={24} fill="currentColor" />
+                          ),
+                          desc: (
+                            <div className="text-center w-full">
+                              Are you sure want to delete this field that has{" "}
+                              {field.cards?.length}{" "}
+                              {field.cards.length > 1 ? "cards" : "card"}?
+                            </div>
+                          ),
+                          showCloseButton: false,
+                          notCloseable: false,
+                          buttons: [
+                            <Button
+                              light="bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500"
+                              onClick={() => NotalUI.Alert.close()}
+                              key={1}
+                              fullWidth="w-[49%]"
+                            >
+                              <CrossIcon size={24} fill="currentColor" />
+                              Cancel
+                            </Button>,
+                            <Button
+                              onClick={() => onFieldDelete()}
+                              key={2}
+                              fullWidth="w-[49%]"
+                            >
+                              <CheckIcon size={24} fill="currentColor" />
+                              Delete
+                            </Button>,
+                          ],
+                        })
+                      : onFieldDelete()
+                  }
                 >
-                  <AddIcon
+                  <DeleteIcon
                     size={24}
                     className="scale-75 fill-black dark:fill-white"
                   />
                 </Button>
               </Tooltip>
-            )}
+              {field.cards.length < LIMITS.MAX.WORKSPACE_CARD_LENGTH && (
+                <Tooltip
+                  content={`Add Card to ${field.title}`}
+                  outline
+                  direction="left"
+                >
+                  <Button
+                    light="active:opacity-50"
+                    size="h-8 w-8"
+                    className="p-0"
+                    onClick={() => setAddCardModalOpen(true)}
+                    title={`Add Card to ${field.title}`}
+                  >
+                    <AddIcon
+                      size={24}
+                      className="scale-75 fill-black dark:fill-white"
+                    />
+                  </Button>
+                </Tooltip>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        )}
       <AddCardModal
         open={addCardModalOpen}
         onClose={() => setAddCardModalOpen(false)}

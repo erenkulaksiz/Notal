@@ -25,6 +25,9 @@ export async function star(
 
   if (!workspace) return reject({ reason: "no-workspace", res });
 
+  const isOwner = workspace.owner == validateUser.decodedToken.user_id;
+  if (!isOwner) return reject({ reason: "no-permission", res });
+
   return await workspacesCollection
     .updateOne(
       { _id: new ObjectId(id) },

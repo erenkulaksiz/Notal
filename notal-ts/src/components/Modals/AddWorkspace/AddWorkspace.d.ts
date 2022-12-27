@@ -1,10 +1,13 @@
-import { WorkspaceTypes } from "@types";
+import { WorkspaceReducer, WorkspaceTypes } from "@types";
 import { ReactNode } from "react";
 
 export interface AddWorkspaceModalProps {
   open: boolean;
   onClose: () => void;
-  onAdd: (workspace: WorkspaceTypes) => void;
+  onAdd?: (workspace: WorkspaceTypes | WorkspaceReducer) => void;
+  onEdit?: (workspace: WorkspaceReducer) => void;
+  editing?: boolean; // Edit mode
+  editWorkspace?: WorkspaceTypes; // Workspace to edit
 }
 
 export enum AddWorkspaceActionType {
@@ -24,6 +27,7 @@ export enum AddWorkspaceActionType {
   ADD_USER = "ADD_USER",
   RESET_USERS = "RESET_USERS",
   REMOVE_USER = "REMOVE_USER",
+  SET_LINK_COPIED = "SET_LINK_COPIED",
 }
 
 export interface WorkspaceAction {

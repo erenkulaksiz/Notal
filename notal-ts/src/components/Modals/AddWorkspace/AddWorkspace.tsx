@@ -1,29 +1,14 @@
-import { useState, useRef, useReducer } from "react";
+import { useState, useRef, useReducer, useEffect } from "react";
 
 import {
   Modal,
   Button,
-  Input,
-  Checkbox,
   HomeWorkspaceCard,
-  Select,
   Loading,
   Tab,
-  Colorpicker,
-  Avatar,
+  Tooltip,
 } from "@components";
-import {
-  AddIcon,
-  CrossIcon,
-  CheckIcon,
-  StarFilledIcon,
-  StarOutlineIcon,
-  VisibleIcon,
-  VisibleOffIcon,
-  CloudUploadIcon,
-  AtIcon,
-  DeleteIcon,
-} from "@icons";
+import { AddIcon, CrossIcon, CheckIcon, SettingsIcon, LinkIcon } from "@icons";
 import { Log, getRandomQuote, QUOTE_TYPES } from "@utils";
 import { useAuth, useNotalUI } from "@hooks";
 import { WorkspaceService } from "@services/WorkspaceService";
@@ -37,21 +22,60 @@ import { reducer } from "./reducer";
 import { fetchUserData } from "@utils/fetcher/userdata";
 import { OwnerTypes } from "@types";
 
+import Tabs from "./Tabs";
+
 export function AddWorkspaceModal({
   open,
   onClose,
   onAdd,
+  onEdit,
+  editing,
+  editWorkspace,
 }: AddWorkspaceModalProps) {
   const auth = useAuth();
   const [state, dispatch] = useReducer(reducer, {
     ...WorkspaceDefaults,
     thumbnailLoading: false,
     addUserLoading: false,
+    linkCopied: false,
   });
   const NotalUI = useNotalUI();
   const randomWorkspacePlaceholder = useRef(
     getRandomQuote(QUOTE_TYPES.WORKSPACE_TITLE)
   );
+
+  useEffect(() => {
+    if (open && editing) {
+      if (typeof editWorkspace?.users != "object") return;
+      if (typeof editWorkspace?.owner != "object") return;
+      const users = editWorkspace.users;
+      const workspaceOwner = editWorkspace?.owner?.uid;
+
+      dispatch({
+        type: AddWorkspaceActionType.SET_WORKSPACE,
+        payload: {
+          ...editWorkspace,
+          fields: null,
+          team: {
+            users: Object.keys(users)
+              .map((user: string) => users[user])
+              .filter((user: OwnerTypes) => user.uid != workspaceOwner),
+          },
+        },
+      });
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (state.linkCopied) {
+      setTimeout(() => {
+        dispatch({
+          type: AddWorkspaceActionType.SET_LINK_COPIED,
+          payload: false,
+        });
+      }, 3000);
+    }
+  }, [state.linkCopied]);
 
   const [newWorkspaceErr, setNewWorkspaceErr] = useState<{
     title: string | boolean;
@@ -121,16 +145,23 @@ export function AddWorkspaceModal({
 
     // on non-image type thumbnails
     if (state.thumbnail.type != "image") {
-      onAdd(state);
+      typeof onAdd == "function" && onAdd(state);
+      typeof onEdit == "function" && onEdit(state);
+      close();
+      return;
+    }
+
+    Log.debug("filedata", state.thumbnail.fileData);
+    if (!state.thumbnail.fileData && editing) {
+      typeof onEdit == "function" && onEdit(state);
       close();
       return;
     }
 
     if (!state.thumbnail.fileData) return;
-    Log.debug(state.thumbnail.fileData);
 
     // check file size
-    const file = Math.round(state.thumbnail.fileData.size / 1024);
+    const file = Math.round(state?.thumbnail?.fileData?.size / 1024);
     if (file >= LIMITS.MAX.WORKSPACE_THUMBNAIL_IMAGE_SIZE) {
       NotalUI.Toast.show({
         title: "Error",
@@ -178,17 +209,26 @@ export function AddWorkspaceModal({
         // send res data to server now
         Log.debug("thumbnail upload success! res: ", res);
 
-        onAdd({
-          ...state,
-          thumbnail: {
-            file: res.url,
-            type: "image",
-          },
-          _id: Date.now().toString(),
-          id: Date.now().toString(),
-          createdAt: Date.now(),
-          updatedAt: Date.now(),
-        });
+        typeof onAdd == "function" &&
+          onAdd({
+            ...state,
+            thumbnail: {
+              file: res.url,
+              type: "image",
+            },
+            _id: Date.now().toString(),
+            id: Date.now().toString(),
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+          });
+        typeof onEdit == "function" &&
+          onEdit({
+            ...state,
+            thumbnail: {
+              file: res.url,
+              type: "image",
+            },
+          });
         close();
         return;
       } else {
@@ -305,8 +345,18 @@ export function AddWorkspaceModal({
       animate
     >
       <Modal.Title animate>
-        <AddIcon size={24} fill="currentColor" />
-        <span className="text-lg font-medium ml-1">Add Workspace</span>
+        {editing && (
+          <>
+            <SettingsIcon size={24} fill="currentColor" />
+            <span className="text-lg font-medium ml-1">Workspace Settings</span>
+          </>
+        )}
+        {!editing && (
+          <>
+            <AddIcon size={24} fill="currentColor" />
+            <span className="text-lg font-medium ml-1">Add Workspace</span>
+          </>
+        )}
       </Modal.Title>
       <Modal.Body className="flex flex-col pb-2 " animate>
         {(state.thumbnailLoading || state.addUserLoading) && (
@@ -314,24 +364,49 @@ export function AddWorkspaceModal({
             <Loading size="xl" />
           </div>
         )}
-        <div className="w-full mb-4 relative pointer-events-none">
-          <div className="text-3xl font-medium absolute left-2 top-0 z-50 uppercase dark:text-white/50 text-black/30">
-            Preview
+        <div className="w-full relative gap-2 flex flex-col mb-2">
+          <div className="pointer-events-none">
+            <div className="text-3xl font-medium absolute left-2 top-0 z-50 uppercase dark:text-white/50 text-black/30">
+              Preview
+            </div>
+            <HomeWorkspaceCard
+              preview
+              workspace={{
+                workspaceVisible: state.workspaceVisible,
+                title: state.title.trim() || "Enter a title",
+                desc: state.desc?.trim(),
+                starred: state.starred,
+                thumbnail: state.thumbnail,
+                _id: WorkspaceDefaults._id,
+                id: WorkspaceDefaults.id,
+                createdAt: WorkspaceDefaults.createdAt,
+                updatedAt: WorkspaceDefaults.updatedAt,
+              }}
+            />
           </div>
-          <HomeWorkspaceCard
-            preview
-            workspace={{
-              workspaceVisible: state.workspaceVisible,
-              title: state.title.trim() || "Enter a title",
-              desc: state.desc?.trim(),
-              starred: state.starred,
-              thumbnail: state.thumbnail,
-              _id: WorkspaceDefaults._id,
-              id: WorkspaceDefaults.id,
-              createdAt: WorkspaceDefaults.createdAt,
-              updatedAt: WorkspaceDefaults.updatedAt,
-            }}
-          />
+          {editing && (
+            <div className="w-full flex flex-row items-center p-2 border-2 border-neutral-500/40 dark:border-neutral-700 rounded-lg gap-2">
+              <Tooltip
+                direction="left"
+                content={state.linkCopied ? "Copied!" : "Copy Link"}
+              >
+                <button
+                  className="border-2 rounded-md border-neutral-500/40 dark:border-neutral-700 px-1 cursor-pointer"
+                  onClick={() => {
+                    if (state.linkCopied) return;
+                    navigator.clipboard.writeText(`notal.app/w/${state.id}`);
+                    dispatch({
+                      type: AddWorkspaceActionType.SET_LINK_COPIED,
+                      payload: true,
+                    });
+                  }}
+                >
+                  <LinkIcon size={24} fill="currentColor" />
+                </button>
+              </Tooltip>
+              <span>{`notal.app/w/${state.id}`}</span>
+            </div>
+          )}
         </div>
         <Tab
           selected={tab}
@@ -341,293 +416,28 @@ export function AddWorkspaceModal({
           animated
         >
           <Tab.TabView title="Workspace">
-            <label
-              htmlFor="workspaceTitle"
-              className="flex flex-row items-center gap-2"
-            >
-              <span>Workspace Title*</span>
-              <div className="text-xs text-neutral-400">
-                {`${state.title.trim().length} / ${
-                  LIMITS.MAX.WORKSPACE_TITLE_CHARACTER_LENGTH
-                }`}
-              </div>
-            </label>
-            <Input
-              fullWidth
-              placeholder={randomWorkspacePlaceholder.current}
-              onChange={(e) =>
-                dispatch({
-                  type: AddWorkspaceActionType.SET_TITLE,
-                  payload: e.target.value,
-                })
-              }
-              value={state.title}
-              id="workspaceTitle"
-              maxLength={LIMITS.MAX.WORKSPACE_TITLE_CHARACTER_LENGTH}
-              onEnterPress={() => !state.thumbnailLoading && submit()}
+            <Tabs.Workspace
+              state={state}
+              dispatch={dispatch}
+              newWorkspaceErr={newWorkspaceErr}
+              submit={submit}
             />
-            {newWorkspaceErr.title != false && (
-              <span className="text-red-500">{newWorkspaceErr.title}</span>
-            )}
-            <label
-              htmlFor="workspaceDescription"
-              className="flex flex-row items-center gap-2"
-            >
-              Workspace Description
-              {state.desc?.trim().length != 0 && (
-                <div className="text-xs text-neutral-400">
-                  {`${state?.desc?.trim().length} / ${
-                    LIMITS.MAX.WORKSPACE_DESC_CHARACTER_LENGTH
-                  }`}
-                </div>
-              )}
-            </label>
-            <Input
-              fullWidth
-              placeholder="Workspace Description"
-              onChange={(e) =>
-                dispatch({
-                  type: AddWorkspaceActionType.SET_DESC,
-                  payload: e.target.value,
-                })
-              }
-              value={state.desc}
-              id="workspaceDescription"
-              maxLength={LIMITS.MAX.WORKSPACE_DESC_CHARACTER_LENGTH}
-            />
-            {newWorkspaceErr.desc != false && (
-              <span className="text-red-500">{newWorkspaceErr.desc}</span>
-            )}
-            <div className="grid grid-cols-1 gap-2">
-              <div className="flex flex-col">
-                <div className="flex flex-row items-center">
-                  {state.starred ? (
-                    <StarFilledIcon
-                      size={24}
-                      fill="currentColor"
-                      style={{ transform: "scale(0.7)" }}
-                      className="-ml-1"
-                    />
-                  ) : (
-                    <StarOutlineIcon
-                      size={24}
-                      fill="currentColor"
-                      style={{ transform: "scale(0.7)" }}
-                      className="-ml-1"
-                    />
-                  )}
-                  <Checkbox
-                    id="starredWorkspace"
-                    checked={state.starred}
-                    onChange={(starred) =>
-                      dispatch({
-                        type: AddWorkspaceActionType.SET_STARRED,
-                        payload: starred,
-                      })
-                    }
-                  >
-                    Add to favorites
-                  </Checkbox>
-                </div>
-                <div className="text-sm dark:text-neutral-400 text-neutral-500">
-                  Add this workspace to your favorites.
-                </div>
-              </div>
-              <div className="flex flex-col">
-                <div className="flex flex-row items-center">
-                  {state.workspaceVisible ? (
-                    <VisibleIcon
-                      width={24}
-                      height={24}
-                      fill="currentColor"
-                      style={{ transform: "scale(0.7)" }}
-                      className="-ml-1"
-                    />
-                  ) : (
-                    <VisibleOffIcon
-                      width={24}
-                      height={24}
-                      fill="currentColor"
-                      style={{ transform: "scale(0.7)" }}
-                      className="-ml-1"
-                    />
-                  )}
-                  <Checkbox
-                    id="privateWorkspace"
-                    checked={state.workspaceVisible}
-                    onChange={(workspaceVisible) =>
-                      dispatch({
-                        type: AddWorkspaceActionType.SET_VISIBLE,
-                        payload: workspaceVisible,
-                      })
-                    }
-                  >
-                    Public Workspace
-                  </Checkbox>
-                </div>
-                <div className="text-sm dark:text-neutral-400 text-neutral-500">
-                  If enabled, anyone can see your workspace even if they arent
-                  signed in.
-                </div>
-              </div>
-            </div>
           </Tab.TabView>
           <Tab.TabView title="Thumbnail">
-            <label htmlFor="thumbnailType">Workspace Thumbnail Type</label>
-            <Select
-              onChange={(e) =>
-                dispatch({
-                  type: AddWorkspaceActionType.SET_THUMB_TYPE,
-                  payload: e.target.value,
-                })
-              }
-              className="w-full"
-              id="thumbnailType"
-              options={[
-                {
-                  id: "gradient",
-                  text: "Color Gradient",
-                },
-                {
-                  id: "image",
-                  text: "Image",
-                },
-                {
-                  id: "singleColor",
-                  text: "Single Color",
-                },
-              ]}
+            <Tabs.Thumbnail
+              state={state}
+              dispatch={dispatch}
+              onThumbnailChange={onThumbnailChange}
+              thumbnailRef={thumbnailRef}
             />
-            {state?.thumbnail?.type == "image" && (
-              <div
-                className="flex flex-col text-blue-400 mt-2 items-center justify-center w-full h-16 border-2 border-solid border-blue-400 group hover:border-blue-300 hover:text-blue-300 rounded-xl cursor-pointer"
-                onClick={() => {
-                  if (!state.thumbnailLoading) {
-                    thumbnailRef?.current?.click();
-                  }
-                }}
-              >
-                <CloudUploadIcon size={24} fill="currentColor" />
-                Upload Thumbnail
-                <input
-                  type="file"
-                  ref={thumbnailRef}
-                  style={{ display: "none" }}
-                  onChange={onThumbnailChange}
-                  accept="image/png, image/jpeg"
-                />
-              </div>
-            )}
-            {state?.thumbnail?.type == "singleColor" && (
-              <div className="flex flex-col items-start">
-                <label htmlFor="cardColor">Workspace Color</label>
-                <Colorpicker
-                  id="cardColor"
-                  color={state?.thumbnail?.color}
-                  onChange={(color) => {
-                    dispatch({
-                      type: AddWorkspaceActionType.SET_THUMB_COLOR,
-                      payload: color,
-                    });
-                  }}
-                />
-              </div>
-            )}
-            {state?.thumbnail?.type == "gradient" && (
-              <div className="flex items-center gap-2">
-                <div>
-                  <label htmlFor="workspaceStartColor">Start Color</label>
-                  <Colorpicker
-                    id="workspaceStartColor"
-                    color={state?.thumbnail?.colors?.start}
-                    onChange={(color) => {
-                      dispatch({
-                        type: AddWorkspaceActionType.SET_THUMB_GRADIENT_COLORS,
-                        payload: {
-                          start: color,
-                        },
-                      });
-                    }}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="workspaceEndColor">End Color</label>
-                  <Colorpicker
-                    id="workspaceEndColor"
-                    color={state?.thumbnail?.colors?.end}
-                    onChange={(color) => {
-                      dispatch({
-                        type: AddWorkspaceActionType.SET_THUMB_GRADIENT_COLORS,
-                        payload: {
-                          end: color,
-                        },
-                      });
-                    }}
-                  />
-                </div>
-              </div>
-            )}
           </Tab.TabView>
           <Tab.TabView title="Users">
-            <div className="text-sm dark:text-neutral-400 text-neutral-500">
-              Add users to this workspace to work with together. You can edit
-              users later.
-            </div>
-            <div className="flex flex-row gap-2">
-              <Input
-                fullWidth
-                placeholder="Enter username..."
-                onChange={(e) =>
-                  dispatch({
-                    type: AddWorkspaceActionType.SET_WORKSPACE_TEAM_USERNAME,
-                    payload: e.target.value.toLowerCase(),
-                  })
-                }
-                value={state.team?.username}
-                id="teamAddUser"
-                icon={<AtIcon width={24} height={24} fill="currentColor" />}
-                onEnterPress={() =>
-                  state.team?.username?.trim() && addUserToWorkspace()
-                }
-              />
-              {state.team?.username?.trim() && (
-                <Button
-                  onClick={() => addUserToWorkspace()}
-                  title="Add User"
-                  className="items-center justify-center"
-                >
-                  <AddIcon width={24} height={24} fill="currentColor" />
-                </Button>
-              )}
-            </div>
-            {Array.isArray(state.team?.users) && state?.team?.users && (
-              <div className="flex flex-col gap-2">
-                {state.team?.users?.map((user) => (
-                  <div
-                    className="flex items-center border-2 border-neutral-500/40 dark:border-neutral-700 rounded-xl p-2 justify-between"
-                    key={`workspaceUser_${user.uid}`}
-                  >
-                    <div className="flex flex-row gap-2 items-center">
-                      <Avatar size="3xl" src={user?.avatar} />
-                      <div className="flex flex-col">
-                        <div className="text-lg font-semibold">
-                          {`@${user?.username}`}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-row items-center justify-end">
-                      <button>
-                        <DeleteIcon
-                          onClick={() => removeUserFromWorkspace(user)}
-                          size={24}
-                          className="fill-red-600 scale-90"
-                        />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+            <Tabs.Users
+              state={state}
+              dispatch={dispatch}
+              addUserToWorkspace={addUserToWorkspace}
+              removeUserFromWorkspace={removeUserFromWorkspace}
+            />
           </Tab.TabView>
         </Tab>
       </Modal.Body>
@@ -646,7 +456,7 @@ export function AddWorkspaceModal({
           fullWidth="w-[49%]"
         >
           <CheckIcon size={24} fill="currentColor" />
-          Add Workspace
+          {editing ? "Edit Workspace" : "Add Workspace"}
         </Button>
       </Modal.Footer>
     </Modal>

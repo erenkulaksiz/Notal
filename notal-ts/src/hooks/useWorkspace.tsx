@@ -24,6 +24,7 @@ export interface WorkspaceContextProps {
   >;
   workspaceNotFound: boolean;
   isWorkspaceOwner: boolean;
+  isWorkspaceUser: boolean;
   workspaceLoading: boolean;
   starWorkspace: () => Promise<WorkspaceFunctionReturnType>;
   visibilityToggle: () => Promise<WorkspaceFunctionReturnType>;
@@ -95,6 +96,7 @@ export function WorkspaceProvider(props: PropsWithChildren) {
 
   const [workspaceNotFound, setWorkspaceNotFound] = useState(false);
   const [isWorkspaceOwner, setIsWorkspaceOwner] = useState(false);
+  const [isWorkspaceUser, setIsWorkspaceUser] = useState(false);
   const [workspaceLoading, setWorkspaceLoading] = useState(false);
   const [workspace, setWorkspace] =
     useState<WorkspaceContextProps["workspace"]>();
@@ -119,14 +121,20 @@ export function WorkspaceProvider(props: PropsWithChildren) {
     if (!notFound) {
       if (!workspace?.data?.data?.users) return;
 
-      const isOwner =
+      if (typeof workspace?.data?.data?.owner == "object") {
+        const isOwner =
+          workspace?.data?.data?.owner?.uid == auth?.validatedUser?.uid;
+        setIsWorkspaceOwner(isOwner);
+      }
+
+      const isUser =
         Object.keys(workspace?.data?.data?.users).findIndex(
           (uid: string) => uid == auth?.validatedUser?.uid
         ) == -1
           ? false
           : true;
 
-      setIsWorkspaceOwner(isOwner);
+      setIsWorkspaceUser(isUser);
     }
 
     if (workspace?.data?.success) {
@@ -669,6 +677,7 @@ export function WorkspaceProvider(props: PropsWithChildren) {
     workspaceNotFound,
     workspaceLoading,
     isWorkspaceOwner,
+    isWorkspaceUser,
     starWorkspace,
     deleteWorkspace,
     visibilityToggle,

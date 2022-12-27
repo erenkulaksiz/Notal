@@ -45,7 +45,9 @@ export default function Board() {
             }}
             {...provided.droppableProps}
           >
-            {workspace.isWorkspaceOwner && <WorkspaceSidebar />}
+            {(workspace.isWorkspaceOwner || workspace.isWorkspaceUser) && (
+              <WorkspaceSidebar />
+            )}
             {fields && fields.length == 0 && (
               <div className="absolute top-0 bottom-0 right-0 left-0 flex z-0 flex-col gap-6 items-center justify-center">
                 <div className="flex dark:hidden">
@@ -64,7 +66,7 @@ export default function Board() {
                 ) : null
               )}
             {provided.placeholder}
-            {workspace.isWorkspaceOwner &&
+            {(workspace.isWorkspaceOwner || workspace.isWorkspaceUser) &&
               fields &&
               fields.length < LIMITS.MAX.WORKSPACE_FIELD_LENGTH && (
                 <AddFieldButton />

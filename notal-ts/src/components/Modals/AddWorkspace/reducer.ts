@@ -106,6 +106,9 @@ export function reducer(
         },
       };
 
+    case AddWorkspaceActionType.SET_LINK_COPIED:
+      return { ...state, linkCopied: action.payload };
+
     default:
       return state;
   }

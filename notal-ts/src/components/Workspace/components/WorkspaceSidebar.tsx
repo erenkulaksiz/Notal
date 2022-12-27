@@ -8,7 +8,7 @@ import {
   AddFieldModal,
   Tooltip,
   Avatar,
-  WorkspaceSettingsModal,
+  AddWorkspaceModal,
 } from "@components";
 import {
   StarFilledIcon,
@@ -20,22 +20,34 @@ import {
   CheckIcon,
   AddIcon,
   SettingsIcon,
+  Cross2Icon,
 } from "@icons";
-import { useNotalUI, useWorkspace } from "@hooks";
+import { useNotalUI, useWorkspace, useAuth } from "@hooks";
 import { LIMITS } from "@constants/limits";
 import { OwnerTypes } from "@types";
+import { Log } from "@utils/logger";
+import { WorkspaceDefaults } from "@constants/workspacedefaults";
+import type { WorkspaceReducer } from "@types";
 
 interface WorkspaceUsers extends OwnerTypes {
   owner?: boolean;
 }
 
 export function WorkspaceSidebar() {
-  const { workspace, starWorkspace, visibilityToggle, deleteWorkspace, field } =
-    useWorkspace();
+  const {
+    workspace,
+    starWorkspace,
+    visibilityToggle,
+    deleteWorkspace,
+    field,
+    isWorkspaceOwner,
+    isWorkspaceUser,
+  } = useWorkspace();
   const [addFieldModalOpen, setAddFieldModalOpen] = useState<boolean>(false);
-  const [workspaceSettingsModalOpen, setWorkspaceSettingsModalOpen] =
+  const [editWorkspaceModalOpen, setEditWorkspaceModalOpen] =
     useState<boolean>(false);
   const NotalUI = useNotalUI();
+  const auth = useAuth();
   const router = useRouter();
 
   function getWorkspaceUsers(): Array<WorkspaceUsers> {
@@ -73,85 +85,93 @@ export function WorkspaceSidebar() {
             onClick={() => setAddFieldModalOpen(true)}
           />
         )}
-        <WorkspaceSidebarItem
-          icon={
-            workspace?.data?.data?.starred ? (
-              <StarFilledIcon size={24} fill="#eab308" />
-            ) : (
-              <StarOutlineIcon
-                size={24}
-                className="dark:fill-white fill-black"
-              />
-            )
-          }
-          title={
-            workspace?.data?.data?.starred
-              ? "Remove from favorites"
-              : "Add to favorites"
-          }
-          onClick={async () => await starWorkspace()}
-        />
-        <WorkspaceSidebarItem
-          icon={
-            workspace?.data?.data?.workspaceVisible ? (
-              <VisibleIcon
-                width={24}
-                height={24}
-                className="dark:fill-white fill-black"
-              />
-            ) : (
-              <VisibleOffIcon
-                width={24}
-                height={24}
-                className="dark:fill-white fill-black"
-              />
-            )
-          }
-          title={
-            workspace?.data?.data?.workspaceVisible
-              ? "Set workspace private"
-              : "Set workspace public"
-          }
-          onClick={async () => await visibilityToggle()}
-        />
-        <WorkspaceSidebarItem
-          icon={
-            <DeleteIcon
-              width={24}
-              height={24}
-              className="dark:fill-white fill-black"
+        {isWorkspaceOwner && (
+          <>
+            <WorkspaceSidebarItem
+              icon={
+                workspace?.data?.data?.starred ? (
+                  <StarFilledIcon size={24} fill="#eab308" />
+                ) : (
+                  <StarOutlineIcon
+                    size={24}
+                    className="dark:fill-white fill-black"
+                  />
+                )
+              }
+              title={
+                workspace?.data?.data?.starred
+                  ? "Remove from favorites"
+                  : "Add to favorites"
+              }
+              onClick={async () => await starWorkspace()}
             />
-          }
-          title="Delete Workspace"
-          onClick={() =>
-            NotalUI.Alert.show({
-              title: "Delete Workspace",
-              titleIcon: <DeleteIcon size={24} fill="currentColor" />,
-              desc: (
-                <div className="text-center w-full">
-                  Are you sure want to delete this workspace?
-                </div>
-              ),
-              showCloseButton: false,
-              notCloseable: false,
-              buttons: [
-                <Button
-                  light="bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500"
-                  onClick={() => NotalUI.Alert.close()}
-                  key={1}
-                  fullWidth="w-[49%]"
-                >
-                  <CrossIcon size={24} fill="currentColor" />
-                  Cancel
-                </Button>,
-                <Button onClick={() => onDelete()} key={2} fullWidth="w-[49%]">
-                  <CheckIcon size={24} fill="currentColor" />
-                  Delete
-                </Button>,
-              ],
-            })
-          }
-        />
+            <WorkspaceSidebarItem
+              icon={
+                workspace?.data?.data?.workspaceVisible ? (
+                  <VisibleIcon
+                    width={24}
+                    height={24}
+                    className="dark:fill-white fill-black"
+                  />
+                ) : (
+                  <VisibleOffIcon
+                    width={24}
+                    height={24}
+                    className="dark:fill-white fill-black"
+                  />
+                )
+              }
+              title={
+                workspace?.data?.data?.workspaceVisible
+                  ? "Set workspace private"
+                  : "Set workspace public"
+              }
+              onClick={async () => await visibilityToggle()}
+            />
+            <WorkspaceSidebarItem
+              icon={
+                <DeleteIcon
+                  width={24}
+                  height={24}
+                  className="dark:fill-white fill-black"
+                />
+              }
+              title="Delete Workspace"
+              onClick={() =>
+                NotalUI.Alert.show({
+                  title: "Delete Workspace",
+                  titleIcon: <DeleteIcon size={24} fill="currentColor" />,
+                  desc: (
+                    <div className="text-center w-full">
+                      Are you sure want to delete this workspace?
+                    </div>
+                  ),
+                  showCloseButton: false,
+                  notCloseable: false,
+                  buttons: [
+                    <Button
+                      light="bg-red-500 hover:bg-red-600 active:bg-red-700 dark:bg-red-500 hover:dark:bg-red-500"
+                      onClick={() => NotalUI.Alert.close()}
+                      key={1}
+                      fullWidth="w-[49%]"
+                    >
+                      <CrossIcon size={24} fill="currentColor" />
+                      Cancel
+                    </Button>,
+                    <Button
+                      onClick={() => onDelete()}
+                      key={2}
+                      fullWidth="w-[49%]"
+                    >
+                      <CheckIcon size={24} fill="currentColor" />
+                      Delete
+                    </Button>,
+                  ],
+                })
+              }
+            />
+          </>
+        )}
         <WorkspaceSidebarItem
           icon={
             <SettingsIcon
@@ -161,16 +181,40 @@ export function WorkspaceSidebar() {
             />
           }
           title="Workspace Settings"
-          onClick={async () => setWorkspaceSettingsModalOpen(true)}
+          onClick={async () => setEditWorkspaceModalOpen(true)}
         />
       </div>
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1 group">
+        {isWorkspaceOwner && (
+          <Tooltip direction="right" content="Add User">
+            <button className="opacity-25 group-hover:opacity-100 transition-all ease-in-out duration-300 rounded-full w-6 h-6 flex items-center justify-center dark:bg-neutral-800 bg-neutral-200">
+              <AddIcon
+                width={24}
+                height={24}
+                className="dark:fill-white fill-black scale-75"
+              />
+            </button>
+          </Tooltip>
+        )}
         {users.map((user: WorkspaceUsers, index: number) => (
           <Tooltip
             containerClassName="px-2"
+            blockContent={false}
             key={`sidebarWorkspaceUsers_${user.uid}`}
             content={
-              <div className="items-center flex-row flex">
+              <div className="items-center flex-row flex gap-1">
+                {!user?.owner && isWorkspaceOwner && (
+                  <button
+                    title="Remove User"
+                    className="rounded-full w-6 h-6 flex items-center justify-center dark:bg-neutral-900 bg-neutral-200"
+                  >
+                    <Cross2Icon
+                      width={24}
+                      height={24}
+                      className="dark:fill-white fill-black scale-50"
+                    />
+                  </button>
+                )}
                 <div className="flex flex-col">
                   {user?.owner && (
                     <div className="text-[.6em] -mb-2 text-neutral-400">
@@ -208,10 +252,15 @@ export function WorkspaceSidebar() {
         onAdd={(_field) => field.add({ title: _field.title })}
         workspaceTitle={workspace?.data?.data?.title}
       />
-      <WorkspaceSettingsModal
-        open={workspaceSettingsModalOpen}
-        onClose={() => setWorkspaceSettingsModalOpen(false)}
-        onWorkspaceUpdate={() => {}}
+      <AddWorkspaceModal
+        open={editWorkspaceModalOpen}
+        onClose={() => setEditWorkspaceModalOpen(false)}
+        editing
+        editWorkspace={workspace?.data?.data}
+        onEdit={(workspace: WorkspaceReducer) => {
+          Log.debug("edited: ", workspace);
+          const { title, desc, team } = workspace;
+        }}
       />
     </nav>
   );

@@ -25,7 +25,7 @@ export function Workspace() {
   if (workspace.workspaceNotFound) return <WorkspaceNotFound />;
 
   return (
-    <div className="relative flex flex-1 overflow-auto w-full flex-row bg-white dark:bg-black">
+    <div className="relative flex flex-1 overflow-auto w-full flex-row bg-white dark:bg-black dot-bg">
       <Tab
         selected={workspaceTab}
         onSelect={(index) => setWorkspaceTab(index)}

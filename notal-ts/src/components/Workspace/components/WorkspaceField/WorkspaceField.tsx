@@ -33,7 +33,7 @@ export function WorkspaceField({ field, index }: WorkspaceFieldProps) {
     <Draggable
       draggableId={field._id}
       index={index}
-      isDragDisabled={!workspace.isWorkspaceOwner}
+      isDragDisabled={!workspace.isWorkspaceOwner && !workspace.isWorkspaceUser}
     >
       {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
         <motion.div
@@ -105,7 +105,7 @@ export function WorkspaceField({ field, index }: WorkspaceFieldProps) {
                       ) : null
                     )}
                   {dropProvided.placeholder}
-                  {workspace.isWorkspaceOwner &&
+                  {(workspace.isWorkspaceOwner || workspace.isWorkspaceUser) &&
                     field.cards.length < LIMITS.MAX.WORKSPACE_CARD_LENGTH && (
                       <AddCardButton fieldId={field._id} />
                     )}

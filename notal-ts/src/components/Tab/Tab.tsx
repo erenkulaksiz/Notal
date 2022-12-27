@@ -47,7 +47,7 @@ function Tab({
               {Array.isArray(children) &&
                 children?.map((children, index) => (
                   <TabButton
-                    className="flex items-center justify-center w-full min-w-[100px] h-full group relative text-sm sm:text-md text-black dark:text-white"
+                    className="flex items-center justify-center w-full min-w-[100px] h-full group relative text-sm sm:text-md text-black dark:text-white outline-none focus:outline-2 focus:outline-blue-500/50"
                     key={index}
                     selected={selected == index}
                     setSelected={() => onSelect(index)}

@@ -18,6 +18,14 @@ export async function deleteworkspace(
   if (!body.id) return reject({ res });
   const { id } = body;
 
+  const workspace = await workspacesCollection.findOne({
+    _id: new ObjectId(id),
+  });
+  if (!workspace) return reject({ reason: "no-workspace", res });
+
+  const isOwner = workspace.owner == validateUser.decodedToken.user_id;
+  if (!isOwner) return reject({ reason: "no-permission", res });
+
   return await workspacesCollection
     .updateOne(
       { _id: new ObjectId(id) },

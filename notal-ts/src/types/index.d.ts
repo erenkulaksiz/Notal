@@ -100,6 +100,7 @@ export interface WorkspaceReducer extends WorkspaceTypes {
   };
   thumbnailLoading: boolean;
   addUserLoading: boolean;
+  linkCopied: boolean;
 }
 
 export interface PlatformLogin {
