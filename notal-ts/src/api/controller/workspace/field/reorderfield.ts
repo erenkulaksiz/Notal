@@ -21,6 +21,8 @@ export async function reorderfield(
 
   const { id } = body;
 
+  if (!ObjectId.isValid(id)) return reject({ res });
+
   const workspace = await workspacesCollection.findOne({
     _id: new ObjectId(id),
   });

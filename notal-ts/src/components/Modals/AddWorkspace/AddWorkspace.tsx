@@ -404,7 +404,12 @@ export function AddWorkspaceModal({
                   <LinkIcon size={24} fill="currentColor" />
                 </button>
               </Tooltip>
-              <span>{`notal.app/w/${state.id}`}</span>
+              <div className="w-full flex flex-row">
+                <span>notal.app/w/</span>
+                <Tooltip content="You will be able to edit workspace id soon!">
+                  <span>{state.id}</span>
+                </Tooltip>
+              </div>
             </div>
           )}
         </div>

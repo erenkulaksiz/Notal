@@ -101,6 +101,11 @@ export function WorkspaceProvider(props: PropsWithChildren) {
   const [workspace, setWorkspace] =
     useState<WorkspaceContextProps["workspace"]>();
 
+  const subscribed = useRef({
+    workspace: false,
+    id: "",
+  });
+
   function refreshWorkspace() {
     workspace?.mutate();
   }
@@ -147,24 +152,36 @@ export function WorkspaceProvider(props: PropsWithChildren) {
   useEffect(() => {
     //Pusher?.unsubscribe(`notal-workspace-${workspace?.data?.data?._id}`);
 
+    const workspaceId = workspace?.data?.data?._id;
+
+    if (subscribed.current.workspace && subscribed.current.id == workspaceId)
+      return;
+
+    if (subscribed.current.workspace && subscribed.current.id != workspaceId) {
+      Pusher?.unsubscribe(`notal-workspace-${subscribed.current.id}`);
+    }
+
     if (!workspace?.data?.data) return;
     if (workspaceLoading) return;
 
-    const channel = Pusher?.subscribe(
-      `notal-workspace-${workspace?.data?.data?._id}`
-    );
+    const channel = Pusher?.subscribe(`notal-workspace-${workspaceId}`);
 
     channel?.bind("workspace-updated", function (data: any) {
       Log.debug(
-        `notal-workspace-${workspace?.data?.data?._id}`,
+        `notal-workspace-${workspaceId}`,
         data,
         "sendTime:",
         data.sendTime
       );
       if (data.sender == auth?.validatedUser?.uid) return; // Sender is self
-      if (data.workspaceId != workspace?.data?.data?._id) return;
+      if (data.workspaceId != workspaceId) return;
       refreshWorkspace();
     });
+
+    subscribed.current = {
+      workspace: true,
+      id: workspaceId ?? "",
+    };
   }, [workspace?.data?.data]);
 
   async function starWorkspace(): Promise<WorkspaceFunctionReturnType> {

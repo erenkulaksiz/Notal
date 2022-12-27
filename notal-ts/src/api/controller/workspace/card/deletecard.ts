@@ -24,6 +24,9 @@ export async function deletecard(
   if (!body.workspaceId) return reject({ res });
   const { workspaceId } = body;
 
+  if (!ObjectId.isValid(workspaceId)) return reject({ res });
+  if (!ObjectId.isValid(fieldId)) return reject({ res });
+
   const workspace = await workspacesCollection.findOne({
     _id: new ObjectId(workspaceId),
   });

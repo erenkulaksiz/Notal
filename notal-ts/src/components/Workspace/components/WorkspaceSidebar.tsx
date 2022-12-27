@@ -170,19 +170,19 @@ export function WorkspaceSidebar() {
                 })
               }
             />
+            <WorkspaceSidebarItem
+              icon={
+                <SettingsIcon
+                  width={24}
+                  height={24}
+                  className="dark:fill-white fill-black"
+                />
+              }
+              title="Workspace Settings"
+              onClick={async () => setEditWorkspaceModalOpen(true)}
+            />
           </>
         )}
-        <WorkspaceSidebarItem
-          icon={
-            <SettingsIcon
-              width={24}
-              height={24}
-              className="dark:fill-white fill-black"
-            />
-          }
-          title="Workspace Settings"
-          onClick={async () => setEditWorkspaceModalOpen(true)}
-        />
       </div>
       <div className="flex flex-col gap-1 group">
         {isWorkspaceOwner && (

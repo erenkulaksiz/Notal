@@ -18,10 +18,13 @@ export async function editfield(
   if (!body.id) return reject({ reason: "no-id", res });
 
   const { id } = body;
+  if (!ObjectId.isValid(id)) return reject({ res });
 
   // get workspaceId to edit field from
   if (!body.workspaceId) return reject({ res });
   const { workspaceId } = body;
+
+  if (!ObjectId.isValid(workspaceId)) return reject({ res });
 
   const workspace = await workspacesCollection.findOne({
     _id: new ObjectId(workspaceId),

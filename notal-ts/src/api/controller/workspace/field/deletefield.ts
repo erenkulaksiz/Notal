@@ -22,6 +22,9 @@ export async function deletefield(
   if (!body.workspaceId) return reject({ res });
   const { workspaceId } = body;
 
+  // check if workspaceId is valid ObjectId
+  if (!ObjectId.isValid(workspaceId)) return reject({ res });
+
   const workspace = await workspacesCollection.findOne({
     _id: new ObjectId(workspaceId),
   });

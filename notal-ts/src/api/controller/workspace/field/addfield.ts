@@ -24,6 +24,8 @@ export async function addfield(
   if (!body.title) return reject({ res });
   const { title } = body;
 
+  if (!ObjectId.isValid(id)) return reject({ res });
+
   const workspace = await workspacesCollection.findOne({
     _id: new ObjectId(id),
   });
