@@ -67,7 +67,7 @@ export async function reordercard(
   const cardIndex = field.cards.findIndex((card: CardTypes) => {
     return card?._id == cardId;
   });
-  const card = field.cards[cardIndex];
+  const card = { ...field.cards[cardIndex], updatedAt: Date.now() };
 
   // first remove card from field
   await workspacesCollection.updateOne(

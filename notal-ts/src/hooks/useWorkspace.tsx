@@ -635,10 +635,14 @@ export function WorkspaceProvider(props: PropsWithChildren) {
       (el: FieldTypes) => el._id == source.droppableId
     );
     const [copy] = newFields[sourceField].cards.splice(source.index, 1);
+    const card = {
+      ...copy,
+      updatedAt: Date.now(),
+    };
     const destinationField = newFields.findIndex(
       (el: FieldTypes) => el._id == destination.droppableId
     );
-    newFields[destinationField].cards.splice(destination.index, 0, copy);
+    newFields[destinationField].cards.splice(destination.index, 0, card);
 
     workspace.mutate(
       {

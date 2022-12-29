@@ -344,17 +344,17 @@ export function AddWorkspaceModal({
       className="w-[90%] sm:w-[400px] p-4 px-5 relative"
       animate
     >
-      <Modal.Title animate>
+      <Modal.Title animate className="gap-1 mb-2">
         {editing && (
           <>
             <SettingsIcon size={24} fill="currentColor" />
-            <span className="text-lg font-medium ml-1">Workspace Settings</span>
+            <span className="text-lg font-medium">Workspace Settings</span>
           </>
         )}
         {!editing && (
           <>
             <AddIcon size={24} fill="currentColor" />
-            <span className="text-lg font-medium ml-1">Add Workspace</span>
+            <span className="text-lg font-medium">Add Workspace</span>
           </>
         )}
       </Modal.Title>

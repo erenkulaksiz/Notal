@@ -25,6 +25,13 @@ export function HomeWorkspaceCard({
 }: HomeWorkspaceCardProps) {
   const auth = useAuth();
 
+  const isWorkspaceOwner = workspace?.owner === auth?.validatedUser?.uid;
+  const isWorkspaceUser = workspace?.users?.find(
+    (user: OwnerTypes) => user.uid === auth?.validatedUser?.uid
+  )
+    ? true
+    : false;
+
   if (skeleton)
     return (
       <motion.div
@@ -128,7 +135,7 @@ export function HomeWorkspaceCard({
               </div>
             )}
           </div>
-          {!preview && (
+          {!preview && isWorkspaceOwner && (
             <div className="flex flex-col justify-end pointer-events-auto drop-shadow">
               <Tooltip
                 outline

@@ -1,6 +1,8 @@
 import Link from "next/link";
 
-import { Modal, Tooltip, Avatar } from "@components";
+import { Modal, Tooltip, Avatar, Input, Button } from "@components";
+import { formatDate } from "@utils/formatDate";
+import { AddIcon } from "@icons";
 import type { ViewCardModalProps } from "./ViewCard.d";
 
 export function ViewCardModal({
@@ -14,7 +16,7 @@ export function ViewCardModal({
       open={open}
       onClose={onClose}
       animate
-      className="w-[100%] h-full sm:h-auto sm:w-[60%] md:w-[60%] max-w-[1900px] rounded-none sm:rounded-lg px-4 pt-4 py-4"
+      className="w-[100%] h-full sm:h-auto sm:w-[60%] md:w-[40%] max-w-[1900px] rounded-none sm:rounded-lg px-4 pt-4 py-4"
     >
       {card?.color && (
         <div
@@ -24,20 +26,36 @@ export function ViewCardModal({
       )}
       {cardOwner && (
         <div className="flex flex-col items-start">
-          <div className="uppercase text-xs dark:text-neutral-600 text-neutral-400 font-semibold">
-            author
+          <div className="flex flex-row w-full justify-between">
+            <div className="flex flex-col items-start">
+              <div className="uppercase text-xs dark:text-neutral-600 text-neutral-400 font-semibold">
+                author
+              </div>
+              <Tooltip content={`@${cardOwner.username}`}>
+                <Link
+                  href="/profile/[username]"
+                  as={`/profile/${cardOwner?.username || "not-found"}`}
+                  passHref
+                >
+                  <a target="_blank">
+                    <Avatar src={cardOwner.avatar} size="xl" />
+                  </a>
+                </Link>
+              </Tooltip>
+            </div>
+            <div className="flex flex-col">
+              <div className="uppercase text-xs dark:text-neutral-600 text-neutral-400 font-semibold">
+                created at
+              </div>
+              <div>{formatDate(card?.createdAt ?? 0)}</div>
+            </div>
+            <div className="flex flex-col">
+              <div className="uppercase text-xs dark:text-neutral-600 text-neutral-400 font-semibold">
+                updated at
+              </div>
+              <div>{formatDate(card?.updatedAt ?? 0)}</div>
+            </div>
           </div>
-          <Tooltip content={`@${cardOwner.username}`}>
-            <Link
-              href="/profile/[username]"
-              as={`/profile/${cardOwner?.username || "not-found"}`}
-              passHref
-            >
-              <a target="_blank">
-                <Avatar src={cardOwner.avatar} size="xl" />
-              </a>
-            </Link>
-          </Tooltip>
         </div>
       )}
       <div className="flex flex-col">
@@ -57,9 +75,27 @@ export function ViewCardModal({
             <span className="break-words whitespace-pre-line">{card.desc}</span>
           </div>
         )}
-        <div className="uppercase text-xs dark:text-neutral-600 text-neutral-400 font-semibold">
-          comments
-        </div>
+        {/*<div className="flex flex-col gap-1">
+          <div className="uppercase text-xs dark:text-neutral-600 text-neutral-400 font-semibold">
+            comments
+          </div>
+          <div className="w-full rounded-xl p-2 border-2 border-neutral-500/40 dark:border-neutral-700">
+            akdasjj
+          </div>
+          <Input
+            placeholder=""
+            onChange={(e) => {}}
+            textarea
+            height="h-20"
+            className="py-2 px-2"
+          />
+          <div className="flex w-full justify-end mt-2">
+            <Button>
+              <AddIcon size={24} fill="currentColor" />
+              <span className="uppercase">add comment</span>
+            </Button>
+          </div>
+        </div>*/}
       </div>
     </Modal>
   );
