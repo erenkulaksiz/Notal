@@ -47,6 +47,10 @@ export function SmartScroll({
     }
 
     function containerScroll() {
+      console.log(
+        containerRef.current?.scrollLeft,
+        smartScrollRef.current?.clientWidth
+      );
       setScrollPos(containerRef.current?.scrollLeft ?? 0);
     }
 
@@ -142,9 +146,13 @@ export function SmartScroll({
           </div>
         )}
         <div
-          className="absolute rounded-lg top-0 bottom-0 dark:bg-neutral-400/30 bg-neutral-500/20 pointer-events-none"
+          className="absolute rounded-lg top-0 bottom-0 border-2 border-blue-600 pointer-events-none"
           style={{
-            width: windowDimensions.width * 0.09,
+            width: scale(
+              windowDimensions.width,
+              [0, windowDimensions.width],
+              [0, windowDimensions.width * 0.09]
+            ),
             left: scrollPos * 0.1,
           }}
         ></div>
