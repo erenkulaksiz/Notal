@@ -80,6 +80,7 @@ export async function reordercard(
       },
       $set: {
         "fields.$.updatedAt": Date.now(),
+        updatedAt: Date.now(),
       },
     }
   );

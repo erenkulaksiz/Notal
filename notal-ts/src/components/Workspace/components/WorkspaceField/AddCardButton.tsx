@@ -36,7 +36,7 @@ export function AddCardButton({ fieldId }: { fieldId: string }) {
     <div className="flex flex-col relative w-full opacity-0 hover:opacity-100 transition-all ease-in-out pb-2">
       <div
         className="absolute -right-2 -top-1 z-10 text-[12px] rounded-full bg-neutral-200/20 dark:bg-neutral-600/50 backdrop-blur-sm px-1"
-        title={`Input must be between min ${LIMITS.MIN.WORKSPACE_CARD_DESC_CHARACTER_LENGTH} and max ${LIMITS.MAX.WORKSPACE_CARD_DESC_CHARACTER_LENGTH} characters.`}
+        title={`Input must be between min ${LIMITS.MIN.WORKSPACE_CARD_TITLE_CHARACTER_LENGTH} and max ${LIMITS.MAX.WORKSPACE_CARD_DESC_CHARACTER_LENGTH} characters.`}
       >
         {`${input?.trim().length} / ${
           LIMITS.MAX.WORKSPACE_CARD_DESC_CHARACTER_LENGTH

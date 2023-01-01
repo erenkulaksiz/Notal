@@ -13,7 +13,6 @@ import { WorkspaceFieldHeader } from "@components";
 import { AddCardButton } from "./AddCardButton";
 import { useWorkspace } from "@hooks";
 import { LIMITS } from "@constants/limits";
-import { Log } from "@utils";
 import type { WorkspaceTypes, CardTypes } from "@types";
 import type { WorkspaceFieldCardProps } from "./WorkspaceFieldCard";
 
@@ -37,8 +36,8 @@ export function WorkspaceField({ field, index }: WorkspaceFieldProps) {
     >
       {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
         <motion.div
-          ref={provided.innerRef}
           {...provided.draggableProps}
+          ref={provided.innerRef}
           animate="normal"
           title={field?.title}
           variants={{

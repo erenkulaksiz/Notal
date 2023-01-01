@@ -3,7 +3,7 @@ export { LocalSettings } from "./localStorage";
 export { Log } from "./logger";
 export { SendTelegramMessage } from "./bot";
 export { server } from "./server";
-export { formatDate } from "./formatDate";
+export { formatDateToHuman } from "./formatDateToHuman";
 export { formatString } from "./formatString";
 export { workspaceFetch } from "./workspaceFetch";
 export { fetchWorkspace } from "./fetcher/workspace";

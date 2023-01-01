@@ -44,6 +44,9 @@ export async function deletefield(
             _id: new ObjectId(id),
           },
         },
+        $set: {
+          updatedAt: Date.now(),
+        },
       }
     )
     .then(async () => {

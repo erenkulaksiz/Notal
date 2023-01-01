@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { Modal, Tooltip, Avatar, Input, Button } from "@components";
-import { formatDate } from "@utils/formatDate";
+import { formatDateToHuman } from "@utils";
 import { AddIcon } from "@icons";
 import type { ViewCardModalProps } from "./ViewCard.d";
 
@@ -47,13 +47,25 @@ export function ViewCardModal({
               <div className="uppercase text-xs dark:text-neutral-600 text-neutral-400 font-semibold">
                 created at
               </div>
-              <div>{formatDate(card?.createdAt ?? 0)}</div>
+              <div>
+                {formatDateToHuman({
+                  date: card?.createdAt ?? 0,
+                  output:
+                    "{DAY}/{MONTHDATE}/{YEAR} {HOURS}:{MINUTES}:{SECONDS}",
+                })}
+              </div>
             </div>
             <div className="flex flex-col">
               <div className="uppercase text-xs dark:text-neutral-600 text-neutral-400 font-semibold">
                 updated at
               </div>
-              <div>{formatDate(card?.updatedAt ?? 0)}</div>
+              <div>
+                {formatDateToHuman({
+                  date: card?.updatedAt ?? 0,
+                  output:
+                    "{DAY}/{MONTHDATE}/{YEAR} {HOURS}:{MINUTES}:{SECONDS}",
+                })}
+              </div>
             </div>
           </div>
         </div>

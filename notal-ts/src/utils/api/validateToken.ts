@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 import { Log } from "@utils";
 import { connectToDatabase } from "@lib/mongodb";
 import { ValidateUser } from "./validateUser";
-import { formatString, formatDate } from "@utils";
+import { formatString, formatDateToHuman } from "@utils";
 import { generateRandomUsername } from "@api/utils";
 import { SendTelegramMessage, server } from "@utils";
 import { CONSTANTS } from "@constants";
@@ -115,7 +115,10 @@ export async function ValidateToken({
 USERNAME: ${newUser.username}
 EMAIL: ${validateUser.decodedToken.email}
 UID: ${validateUser.decodedToken.user_id}
-TIME: ${formatDate(Date.now())}
+TIME: ${formatDateToHuman({
+        date: Date.now(),
+        output: "{DAY} {MONTH} {YEAR} {HOURS}:{MINUTES}:{SECONDS}",
+      })}
 TS: ${Date.now()}
 URL: ${server}
 ENV: ${process.env.NODE_ENV}

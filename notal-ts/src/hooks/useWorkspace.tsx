@@ -193,6 +193,7 @@ export function WorkspaceProvider(props: PropsWithChildren) {
         data: {
           ...workspace.data.data,
           starred: !workspace.data.data.starred,
+          updatedAt: Date.now(),
         },
       },
       false
@@ -229,6 +230,7 @@ export function WorkspaceProvider(props: PropsWithChildren) {
         data: {
           ...workspace.data.data,
           workspaceVisible: !workspace.data.data.workspaceVisible,
+          updatedAt: Date.now(),
         },
       },
       false
@@ -265,6 +267,7 @@ export function WorkspaceProvider(props: PropsWithChildren) {
         data: {
           ...workspace.data.data,
           workspaceVisible: !workspace.data.data.workspaceVisible,
+          updatedAt: Date.now(),
         },
       },
       false
@@ -316,6 +319,7 @@ export function WorkspaceProvider(props: PropsWithChildren) {
               cards: [],
             },
           ],
+          updatedAt: Date.now(),
         },
       },
       false
@@ -362,7 +366,11 @@ export function WorkspaceProvider(props: PropsWithChildren) {
     workspace?.mutate(
       {
         ...workspace.data,
-        data: { ...workspace.data.data, fields: newFields },
+        data: {
+          ...workspace.data.data,
+          fields: newFields,
+          updatedAt: Date.now(),
+        },
       },
       false
     );
@@ -419,6 +427,7 @@ export function WorkspaceProvider(props: PropsWithChildren) {
         data: {
           ...workspace.data.data,
           fields: [...newFields],
+          updatedAt: Date.now(),
         },
       },
       false
@@ -477,6 +486,7 @@ export function WorkspaceProvider(props: PropsWithChildren) {
         data: {
           ...workspace.data.data,
           fields: [...newFields],
+          updatedAt: Date.now(),
         },
       },
       false
@@ -531,7 +541,11 @@ export function WorkspaceProvider(props: PropsWithChildren) {
     workspace?.mutate(
       {
         ...workspace.data,
-        data: { ...workspace?.data?.data, fields: newFields },
+        data: {
+          ...workspace?.data?.data,
+          fields: newFields,
+          updatedAt: Date.now(),
+        },
       },
       false
     );
@@ -574,19 +588,19 @@ export function WorkspaceProvider(props: PropsWithChildren) {
     if (!workspace?.data?.data)
       return { success: false, error: "no-workspace" };
 
-    const newFields = [...workspace?.data?.data?.fields];
-    //const [copy] = newFields.splice(source.index, 1);
-    // get copy
+    const newFields = workspace?.data?.data?.fields;
     const copy = newFields[source.index];
-    // remove from old position
-    newFields.splice(source.index, 1);
-    // insert into new position
+    //const [copy] = newFields.splice(source.index, 1);
     newFields.splice(destination.index, 0, copy);
 
     workspace?.mutate(
       {
         ...workspace.data,
-        data: { ...workspace?.data?.data, fields: newFields },
+        data: {
+          ...workspace?.data?.data,
+          fields: newFields,
+          updatedAt: Date.now(),
+        },
       },
       false
     );
@@ -650,6 +664,7 @@ export function WorkspaceProvider(props: PropsWithChildren) {
         data: {
           ...workspace.data.data,
           fields: newFields,
+          updatedAt: Date.now(),
         },
       },
       false

@@ -56,6 +56,9 @@ export async function reorderfield(
           _id: new ObjectId(fieldId),
         },
       },
+      $set: {
+        updatedAt: Date.now(),
+      },
     }
   );
 

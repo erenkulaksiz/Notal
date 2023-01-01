@@ -56,6 +56,9 @@ export async function addfield(
             _id: new ObjectId(),
           },
         },
+        $set: {
+          updatedAt: Date.now(),
+        },
       }
     )
     .then(async () => {

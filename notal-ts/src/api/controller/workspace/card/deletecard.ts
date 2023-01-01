@@ -48,6 +48,7 @@ export async function deletecard(
         },
         $set: {
           "fields.$.updatedAt": Date.now(),
+          updatedAt: Date.now(),
         },
       }
     )

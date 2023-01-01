@@ -4,7 +4,7 @@ import { connectToDatabase } from "@lib/mongodb";
 import { server } from "@utils/server";
 import { ValidateUser } from "@utils/api/validateUser";
 import { accept, reject } from "@api/utils";
-import { formatDate, SendTelegramMessage } from "@utils";
+import { formatDateToHuman, SendTelegramMessage } from "@utils";
 import { CONSTANTS } from "@constants";
 
 /**
@@ -33,7 +33,10 @@ export async function login(req: NextApiRequest, res: NextApiResponse) {
 USERNAME: @${user?.username}
 EMAIL: ${validateUser.decodedToken.email}
 UID: ${validateUser.decodedToken.user_id}
-TIME: ${formatDate(Date.now())}
+TIME: ${formatDateToHuman({
+      date: Date.now(),
+      output: "{DAY}/{MONTHDATE}/{YEAR} {HOURS}:{MINUTES}:{SECONDS}",
+    })}
 TS: ${Date.now()}
 URL: ${server}
 ENV: ${process.env.NODE_ENV}

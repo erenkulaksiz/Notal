@@ -47,6 +47,7 @@ export async function editfield(
         $set: {
           "fields.$.title": title,
           "fields.$.updatedAt": Date.now(),
+          updatedAt: Date.now(),
         },
       }
     )

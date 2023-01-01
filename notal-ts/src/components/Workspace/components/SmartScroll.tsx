@@ -47,10 +47,12 @@ export function SmartScroll({
     }
 
     function containerScroll() {
+      /*
       console.log(
         containerRef.current?.scrollLeft,
         smartScrollRef.current?.clientWidth
       );
+      */
       setScrollPos(containerRef.current?.scrollLeft ?? 0);
     }
 

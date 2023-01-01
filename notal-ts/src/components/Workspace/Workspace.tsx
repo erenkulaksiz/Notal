@@ -5,15 +5,17 @@ import { WorkspaceNotFound, LoadingOverlay, Tab } from "@components";
 import { useAuth, useWorkspace } from "@hooks";
 import { DashboardOutlineIcon, BookmarkOutlineIcon, RoadIcon } from "@icons";
 
-const TabsBoard = dynamic<{}>(() =>
-  import("./components/Tabs/Board").then((mod) => mod.default)
-);
-const TabsRoadmap = dynamic<{}>(() =>
-  import("./components/Tabs/Roadmap").then((mod) => mod.default)
-);
-const TabsBookmarks = dynamic<{}>(() =>
-  import("./components/Tabs/Bookmarks").then((mod) => mod.default)
-);
+const Tabs = {
+  Board: dynamic<{}>(() =>
+    import("./components/Tabs/Board").then((mod) => mod.default)
+  ),
+  Roadmap: dynamic<{}>(() =>
+    import("./components/Tabs/Roadmap").then((mod) => mod.default)
+  ),
+  Bookmarks: dynamic<{}>(() =>
+    import("./components/Tabs/Bookmarks").then((mod) => mod.default)
+  ),
+};
 
 export function Workspace() {
   const workspace = useWorkspace();
@@ -46,7 +48,7 @@ export function Workspace() {
           }
           className="items-start flex overflow-auto flex-row"
         >
-          <TabsBoard />
+          <Tabs.Board />
         </Tab.TabView>
         <Tab.TabView
           title="Roadmap"
@@ -61,7 +63,7 @@ export function Workspace() {
           }
           className="relative flex flex-1 overflow-auto pb-2 gap-2 px-2 flex-row"
         >
-          <TabsRoadmap />
+          <Tabs.Roadmap />
         </Tab.TabView>
         <Tab.TabView
           title="Bookmarks"
@@ -75,7 +77,7 @@ export function Workspace() {
           }
           className="relative flex flex-1 overflow-auto pb-2 gap-2 px-2 flex-row"
         >
-          <TabsBookmarks />
+          <Tabs.Bookmarks />
         </Tab.TabView>
       </Tab>
     </div>

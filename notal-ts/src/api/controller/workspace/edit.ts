@@ -51,6 +51,7 @@ export async function editworkspace(
           desc,
           starred,
           workspaceVisible,
+          updatedAt: Date.now(),
         },
       }
     )

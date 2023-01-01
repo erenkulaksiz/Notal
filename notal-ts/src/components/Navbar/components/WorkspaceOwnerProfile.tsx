@@ -5,7 +5,7 @@ import { Avatar, Tooltip, Button } from "@components";
 import { BuildComponent } from "@utils/style";
 import { useWorkspace } from "@hooks";
 import { ShareIcon } from "@icons";
-import { Log } from "@utils";
+import { formatDateToHuman, Log } from "@utils";
 
 export function WorkspaceOwnerProfile() {
   const {
@@ -75,27 +75,7 @@ export function WorkspaceOwnerProfile() {
         containerClassName="px-1 py-1"
         blockContent={false}
         content={
-          <div className="flex flex-col gap-2">
-            <Button
-              light="border-2 border-neutral-500 dark:border-white"
-              size="sm"
-              onClick={onShareWorkspace}
-            >
-              {shared ? (
-                <span>Copied link!</span>
-              ) : (
-                <>
-                  <ShareIcon
-                    size={24}
-                    fill="currentColor"
-                    className="scale-75 fill-neutral-500 dark:fill-white"
-                  />
-                  <span className="text-neutral-500 dark:text-white">
-                    Share
-                  </span>
-                </>
-              )}
-            </Button>
+          <div className="flex flex-col gap-1">
             {!isWorkspaceOwner && !isWorkspaceUser && (
               <Link
                 href="/profile/[username]"
@@ -135,6 +115,38 @@ export function WorkspaceOwnerProfile() {
                 </a>
               </Link>
             )}
+            <Button
+              light="border-2 border-neutral-500 dark:border-white"
+              size="sm"
+              onClick={onShareWorkspace}
+            >
+              {shared ? (
+                <span>Copied link!</span>
+              ) : (
+                <>
+                  <ShareIcon
+                    size={24}
+                    fill="currentColor"
+                    className="scale-75 fill-neutral-500 dark:fill-white"
+                  />
+                  <span className="text-neutral-500 dark:text-white">
+                    Share
+                  </span>
+                </>
+              )}
+            </Button>
+            <div className="flex flex-col">
+              <span className="text-sm text-neutral-600">Created at</span>
+              {formatDateToHuman({
+                date: workspace?.data?.data?.createdAt || 0,
+                output: "{DAY}/{MONTHDATE}/{YEAR} {HOURS}:{MINUTES}:{SECONDS}",
+              })}
+              <span className="text-sm text-neutral-600">Last Updated at</span>
+              {formatDateToHuman({
+                date: workspace?.data?.data?.updatedAt || 0,
+                output: "{DAY}/{MONTHDATE}/{YEAR} {HOURS}:{MINUTES}:{SECONDS}",
+              })}
+            </div>
           </div>
         }
       >

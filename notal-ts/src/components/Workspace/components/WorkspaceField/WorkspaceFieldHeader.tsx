@@ -88,6 +88,7 @@ export function WorkspaceFieldHeader({
           <>
             <input
               type="text"
+              placeholder="Enter Title..."
               className="flex p-1 rounded dark:bg-black bg-white dark:text-white text-black font-medium uppercase break-words"
               maxLength={LIMITS.MAX.WORKSPACE_FIELD_TITLE_CHARACTER_LENGTH}
               value={editTitleValue}
@@ -143,9 +144,9 @@ export function WorkspaceFieldHeader({
                           ),
                           desc: (
                             <div className="text-center w-full">
-                              Are you sure want to delete this field that has{" "}
-                              {field.cards?.length}{" "}
-                              {field.cards.length > 1 ? "cards" : "card"}?
+                              {`Are you sure want to delete this field that has ${
+                                field.cards?.length
+                              } ${field.cards.length > 1 ? "cards" : "card"}?`}
                             </div>
                           ),
                           showCloseButton: false,

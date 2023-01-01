@@ -99,6 +99,9 @@ export async function addcard(
             _id: new ObjectId(),
           },
         },
+        $set: {
+          updatedAt: Date.now(),
+        },
       }
     )
     .then(async () => {
