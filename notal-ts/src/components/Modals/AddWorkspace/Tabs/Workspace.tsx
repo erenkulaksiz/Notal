@@ -77,6 +77,7 @@ export function WorkspaceTab({
         value={state.desc}
         id="workspaceDescription"
         maxLength={LIMITS.MAX.WORKSPACE_DESC_CHARACTER_LENGTH}
+        onEnterPress={() => !state.thumbnailLoading && submit()}
       />
       {newWorkspaceErr.desc != false && (
         <span className="text-red-500">{newWorkspaceErr.desc}</span>
