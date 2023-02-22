@@ -1,4 +1,3 @@
-import { CardTypes, WorkspaceTypes } from "@types";
 import {
   addWorkspace,
   starWorkspace,
@@ -12,9 +11,11 @@ import {
   deleteCard,
   reorderField,
   reorderCard,
+  editWorkspace,
 } from "./workspace";
 import type { AddFieldParams } from "./workspace/field/addField";
 import type { EditFieldParams } from "./workspace/field/editField";
+import type { CardTypes, WorkspaceTypes, WorkspaceReducer } from "@types";
 
 interface ReturnType {
   success: boolean;
@@ -27,6 +28,7 @@ interface WorkspaceServiceTypes {
     star: (id: string) => Promise<ReturnType>;
     delete: (id: string) => Promise<ReturnType>;
     toggleVisibility: (id: string) => Promise<ReturnType>;
+    edit: (workspace: WorkspaceReducer) => Promise<ReturnType>;
     uploadThumbnail: ({
       image,
     }: {
@@ -97,6 +99,7 @@ export const WorkspaceService = {
     add: addWorkspace,
     star: starWorkspace,
     delete: deleteWorkspace,
+    edit: editWorkspace,
     toggleVisibility,
     uploadThumbnail,
     field: {

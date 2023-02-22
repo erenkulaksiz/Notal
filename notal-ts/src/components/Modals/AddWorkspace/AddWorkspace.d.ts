@@ -8,6 +8,7 @@ export interface AddWorkspaceModalProps {
   onEdit?: (workspace: WorkspaceReducer) => void;
   editing?: boolean; // Edit mode
   editWorkspace?: WorkspaceTypes; // Workspace to edit
+  defaultTab?: number;
 }
 
 export enum AddWorkspaceActionType {

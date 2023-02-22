@@ -93,11 +93,11 @@ export function AddCardModal({
     } else if (!state.title?.trim() && !state.desc?.trim()) {
       dispatch({
         type: AddCardActionType.SET_TITLE_ERROR,
-        payload: `Please enter an title or description.`,
+        payload: `Please enter a title or description.`,
       });
       return dispatch({
         type: AddCardActionType.SET_DESC_ERROR,
-        payload: `Please enter an title or description.`,
+        payload: `Please enter a title or description.`,
       });
     }
     onAdd({

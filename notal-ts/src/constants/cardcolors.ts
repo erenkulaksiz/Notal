@@ -42,10 +42,4 @@ export const CardColors = [
     code: "#FF0080",
     showName: "Pink",
   },
-  {
-    type: "color",
-    name: "Orange",
-    code: "#FF8C00",
-    showName: "Orange",
-  },
 ] as Array<CardColorTypes>;

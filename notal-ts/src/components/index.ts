@@ -13,7 +13,6 @@ export {
   AddCardModal,
   AddFieldModal,
   LoginModal,
-  WorkspaceSettingsModal,
 } from "./Modals";
 export { AlertModal } from "./Alert";
 export { Button } from "./Button";

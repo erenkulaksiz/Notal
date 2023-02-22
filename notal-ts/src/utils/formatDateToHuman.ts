@@ -3,11 +3,6 @@ interface FormatDateToHuman {
   output: string;
 }
 
-/**
- *
- * @param param0
- * @returns
- */
 export function formatDateToHuman({ date, output }: FormatDateToHuman) {
   const unFormatted = new Date(date);
 

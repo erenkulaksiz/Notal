@@ -5,7 +5,7 @@ import { WorkspaceReducer } from "@types";
 export async function editWorkspace(
   workspace: WorkspaceReducer
 ): Promise<{ success: boolean; error?: string }> {
-  // Send a delete workspace request to API.
+  // edit workspace request
   const auth = getAuth();
   const token = await auth.currentUser?.getIdToken();
 

@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 
 import { WorkspaceSidebarItem } from "./WorkspaceSidebarItem";
@@ -20,13 +20,11 @@ import {
   CheckIcon,
   AddIcon,
   SettingsIcon,
-  Cross2Icon,
 } from "@icons";
-import { useNotalUI, useWorkspace, useAuth } from "@hooks";
+import { useNotalUI, useWorkspace } from "@hooks";
 import { LIMITS } from "@constants/limits";
 import { OwnerTypes } from "@types";
 import { Log } from "@utils/logger";
-import { WorkspaceDefaults } from "@constants/workspacedefaults";
 import type { WorkspaceReducer } from "@types";
 
 interface WorkspaceUsers extends OwnerTypes {
@@ -41,16 +39,16 @@ export function WorkspaceSidebar() {
     deleteWorkspace,
     field,
     isWorkspaceOwner,
-    isWorkspaceUser,
   } = useWorkspace();
   const [addFieldModalOpen, setAddFieldModalOpen] = useState<boolean>(false);
-  const [editWorkspaceModalOpen, setEditWorkspaceModalOpen] =
-    useState<boolean>(false);
+  const [editWorkspaceModal, setEditWorkspaceModal] = useState<{
+    visible: boolean;
+    defaultTab: number;
+  }>({ visible: false, defaultTab: 0 });
   const NotalUI = useNotalUI();
-  const auth = useAuth();
   const router = useRouter();
 
-  function getWorkspaceUsers(): Array<WorkspaceUsers> {
+  const users: Array<WorkspaceUsers> = useMemo(() => {
     if (typeof workspace?.data?.data?.users === "object") {
       return Object.keys(workspace?.data?.data?.users).map((userId: string) => {
         if (typeof workspace?.data?.data?.owner === "string")
@@ -64,9 +62,7 @@ export function WorkspaceSidebar() {
       });
     }
     return [];
-  }
-
-  const users = getWorkspaceUsers();
+  }, [workspace?.data?.data?.users, workspace?.data?.data?.owner]);
 
   async function onDelete() {
     await deleteWorkspace();
@@ -179,7 +175,13 @@ export function WorkspaceSidebar() {
                 />
               }
               title="Workspace Settings"
-              onClick={async () => setEditWorkspaceModalOpen(true)}
+              onClick={async () =>
+                setEditWorkspaceModal({
+                  ...editWorkspaceModal,
+                  visible: true,
+                  defaultTab: 0,
+                })
+              }
             />
           </>
         )}
@@ -187,7 +189,16 @@ export function WorkspaceSidebar() {
       <div className="flex flex-col gap-1 group">
         {isWorkspaceOwner && (
           <Tooltip direction="right" content="Add User">
-            <button className="opacity-25 group-hover:opacity-100 transition-all ease-in-out duration-300 rounded-full w-6 h-6 flex items-center justify-center dark:bg-neutral-800 bg-neutral-200">
+            <button
+              onClick={() =>
+                setEditWorkspaceModal({
+                  ...editWorkspaceModal,
+                  visible: true,
+                  defaultTab: 2,
+                })
+              }
+              className="opacity-25 group-hover:opacity-100 transition-all ease-in-out duration-300 rounded-full w-6 h-6 flex items-center justify-center dark:bg-neutral-800 bg-neutral-200"
+            >
               <AddIcon
                 width={24}
                 height={24}
@@ -203,18 +214,6 @@ export function WorkspaceSidebar() {
             key={`sidebarWorkspaceUsers_${user.uid}`}
             content={
               <div className="items-center flex-row flex gap-1">
-                {!user?.owner && isWorkspaceOwner && (
-                  <button
-                    title="Remove User"
-                    className="rounded-full w-6 h-6 flex items-center justify-center dark:bg-neutral-900 bg-neutral-200"
-                  >
-                    <Cross2Icon
-                      width={24}
-                      height={24}
-                      className="dark:fill-white fill-black scale-50"
-                    />
-                  </button>
-                )}
                 <div className="flex flex-col">
                   {user?.owner && (
                     <div className="text-[.6em] -mb-2 text-neutral-400">
@@ -253,14 +252,21 @@ export function WorkspaceSidebar() {
         workspaceTitle={workspace?.data?.data?.title}
       />
       <AddWorkspaceModal
-        open={editWorkspaceModalOpen}
-        onClose={() => setEditWorkspaceModalOpen(false)}
+        open={editWorkspaceModal.visible}
+        onClose={() =>
+          setEditWorkspaceModal({
+            ...editWorkspaceModal,
+            visible: false,
+            defaultTab: 0,
+          })
+        }
         editing
         editWorkspace={workspace?.data?.data}
         onEdit={(workspace: WorkspaceReducer) => {
           Log.debug("edited: ", workspace);
           const { title, desc, team } = workspace;
         }}
+        defaultTab={editWorkspaceModal.defaultTab}
       />
     </nav>
   );

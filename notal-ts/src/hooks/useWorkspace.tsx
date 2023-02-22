@@ -150,8 +150,6 @@ export function WorkspaceProvider(props: PropsWithChildren) {
   }, [workspace]);
 
   useEffect(() => {
-    //Pusher?.unsubscribe(`notal-workspace-${workspace?.data?.data?._id}`);
-
     const workspaceId = workspace?.data?.data?._id;
 
     if (subscribed.current.workspace && subscribed.current.id == workspaceId)
@@ -589,8 +587,8 @@ export function WorkspaceProvider(props: PropsWithChildren) {
       return { success: false, error: "no-workspace" };
 
     const newFields = workspace?.data?.data?.fields;
-    const copy = newFields[source.index];
-    //const [copy] = newFields.splice(source.index, 1);
+    //const copy = newFields[source.index];
+    const [copy] = newFields.splice(source.index, 1);
     newFields.splice(destination.index, 0, copy);
 
     workspace?.mutate(

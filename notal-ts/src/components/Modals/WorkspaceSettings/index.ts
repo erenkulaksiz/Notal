@@ -1,1 +1,0 @@
-export { WorkspaceSettingsModal } from "./WorkspaceSettings";

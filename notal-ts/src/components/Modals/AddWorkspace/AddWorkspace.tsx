@@ -31,6 +31,7 @@ export function AddWorkspaceModal({
   onEdit,
   editing,
   editWorkspace,
+  defaultTab,
 }: AddWorkspaceModalProps) {
   const auth = useAuth();
   const [state, dispatch] = useReducer(reducer, {
@@ -43,6 +44,19 @@ export function AddWorkspaceModal({
   const randomWorkspacePlaceholder = useRef(
     getRandomQuote(QUOTE_TYPES.WORKSPACE_TITLE)
   );
+  const [newWorkspaceErr, setNewWorkspaceErr] = useState<{
+    title: string | boolean;
+    desc: string | boolean;
+  }>({
+    title: false,
+    desc: false,
+  });
+  const [tab, setTab] = useState<number>(0);
+  const thumbnailRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setTab(defaultTab || 0);
+  }, [defaultTab]);
 
   useEffect(() => {
     if (open && editing) {
@@ -76,16 +90,6 @@ export function AddWorkspaceModal({
       }, 3000);
     }
   }, [state.linkCopied]);
-
-  const [newWorkspaceErr, setNewWorkspaceErr] = useState<{
-    title: string | boolean;
-    desc: string | boolean;
-  }>({
-    title: false,
-    desc: false,
-  });
-  const [tab, setTab] = useState<number>(0);
-  const thumbnailRef = useRef<HTMLInputElement>(null);
 
   function close() {
     onClose();
